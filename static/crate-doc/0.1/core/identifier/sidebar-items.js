@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"mod":[["derive","Print derivation module"],["error",""]],"struct":[["DigestIdentifier","Digest based identifier"],["KeyIdentifier","Key based identifier"],["SignatureIdentifier","Signature based identifier"]],"trait":[["Derivable","Derivable Identifiers"]]};

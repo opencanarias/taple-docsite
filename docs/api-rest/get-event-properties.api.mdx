@@ -1,0 +1,45 @@
+---
+id: get-event-properties
+title: "Get Event Properties"
+description: ""
+sidebar_label: "Get Event Properties"
+hide_title: true
+hide_table_of_contents: true
+api: {"tags":["Events"],"description":"","operationId":"Get Event Properties","parameters":[{"name":"id","in":"path","description":"Subject's unique id","required":true,"deprecated":false,"schema":{"type":"string"}},{"name":"sn","in":"path","description":"Event sn","required":true,"deprecated":false,"schema":{"type":"integer","format":"int64"}}],"responses":{"200":{"description":"Subjects Data successfully retrieved","content":{"application/json":{"schema":{"oneOf":[{"type":"object","properties":{"Create":{"type":"object","required":["governance_id","schema_id","namespace","payload"],"properties":{"governance_id":{"type":"string"},"namespace":{"type":"string"},"payload":{"oneOf":[{"type":"object","properties":{"Json":{"type":"string"}}},{"type":"object","properties":{"JsonPatch":{"type":"string"}}}]},"schema_id":{"type":"string"}}}}},{"type":"object","properties":{"State":{"type":"object","required":["subject_id","payload"],"properties":{"payload":{"oneOf":[{"type":"object","properties":{"Json":{"type":"string"}}},{"type":"object","properties":{"JsonPatch":{"type":"string"}}}]},"subject_id":{"type":"string"}}}}}]},"example":{"State":{"payload":{"Json":"{\"localizacion\":\"Argentina\",\"temperatura\":-3}"},"subject_id":"JKZgYhPjQdWNWWwkac0wSwqLKoOJsT0QimJmj6zjimWc"}}}}},"400":{"description":"Bad Request"},"401":{"description":"Unauthorized"},"404":{"description":"Not Found"},"500":{"description":"Internal Server Error"}},"deprecated":false,"security":[{"api_key":[]}],"method":"get","path":"/api/subjects/{id}/events/{sn}/properties","securitySchemes":{"api_key":{"type":"apiKey","in":"header","name":"x-api-key"}},"info":{"title":"client","description":"","contact":{"name":""},"license":{"name":""},"version":"0.1.0"},"postman":{"name":"Get Event Properties","description":{"content":"","type":"text/plain"},"url":{"path":["api","subjects",":id","events",":sn","properties"],"host":["{{baseUrl}}"],"query":[],"variable":[{"disabled":false,"description":{"content":"(Required) Subject's unique id","type":"text/plain"},"type":"any","value":"","key":"id"},{"disabled":false,"description":{"content":"(Required) Event sn","type":"text/plain"},"type":"any","value":"","key":"sn"}]},"header":[{"key":"Accept","value":"application/json"}],"method":"GET","auth":{"type":"apikey","apikey":[{"type":"any","value":"x-api-key","key":"key"},{"type":"any","value":"<API Key>","key":"value"},{"type":"any","value":"header","key":"in"}]}}}
+sidebar_class_name: "get api-method"
+info_path: docs/api-rest/client
+---
+
+import ApiTabs from "@theme/ApiTabs";
+import MimeTabs from "@theme/MimeTabs";
+import ParamsItem from "@theme/ParamsItem";
+import ResponseSamples from "@theme/ResponseSamples";
+import SchemaItem from "@theme/SchemaItem"
+import SchemaTabs from "@theme/SchemaTabs";
+import DiscriminatorTabs from "@theme/DiscriminatorTabs";
+import TabItem from "@theme/TabItem";
+
+## Get Event Properties
+
+<details style={{"marginBottom":"1rem"}} data-collapsed={false} open={true}><summary style={{}}><strong>Path Parameters</strong></summary><div><ul><ParamsItem className={"paramsItem"} param={{"name":"id","in":"path","description":"Subject's unique id","required":true,"deprecated":false,"schema":{"type":"string"}}}></ParamsItem><ParamsItem className={"paramsItem"} param={{"name":"sn","in":"path","description":"Event sn","required":true,"deprecated":false,"schema":{"type":"integer","format":"int64"}}}></ParamsItem></ul></div></details><div><ApiTabs><TabItem label={"200"} value={"200"}><div>
+
+Subjects Data successfully retrieved
+
+</div><div><MimeTabs schemaType={"response"}><TabItem label={"application/json"} value={"application/json"}><SchemaTabs><TabItem label={"Schema"} value={"Schema"}><details style={{}} data-collapsed={false} open={true}><summary style={{"textAlign":"left"}}><strong>Schema</strong></summary><div style={{"textAlign":"left","marginLeft":"1rem"}}></div><ul style={{"marginLeft":"1rem"}}><div><div><span className={"badge badge--info"}>oneOf</span><SchemaTabs><TabItem label={"MOD1"} value={"0-item-properties"}><SchemaItem collapsible={true} className={"schemaItem"}><details style={{}}><summary style={{}}><strong>Create</strong><span style={{"opacity":"0.6"}}> object</span></summary><div style={{"marginLeft":"1rem"}}><SchemaItem collapsible={false} name={"governance_id"} required={false} schemaDescription={undefined} schemaName={"string"} qualifierMessage={undefined} defaultValue={undefined}></SchemaItem><SchemaItem collapsible={false} name={"namespace"} required={false} schemaDescription={undefined} schemaName={"string"} qualifierMessage={undefined} defaultValue={undefined}></SchemaItem><SchemaItem collapsible={true} className={"schemaItem"}><details style={{}}><summary style={{}}><strong>payload</strong><span style={{"opacity":"0.6"}}> object</span></summary><div style={{"marginLeft":"1rem"}}><div><div><span className={"badge badge--info"}>oneOf</span><SchemaTabs><TabItem label={"MOD1"} value={"0-item-properties"}><SchemaItem collapsible={false} name={"Json"} required={false} schemaDescription={undefined} schemaName={"string"} qualifierMessage={undefined} defaultValue={undefined}></SchemaItem></TabItem><TabItem label={"MOD2"} value={"1-item-properties"}><SchemaItem collapsible={false} name={"JsonPatch"} required={false} schemaDescription={undefined} schemaName={"string"} qualifierMessage={undefined} defaultValue={undefined}></SchemaItem></TabItem></SchemaTabs></div></div></div></details></SchemaItem><SchemaItem collapsible={false} name={"schema_id"} required={false} schemaDescription={undefined} schemaName={"string"} qualifierMessage={undefined} defaultValue={undefined}></SchemaItem></div></details></SchemaItem></TabItem><TabItem label={"MOD2"} value={"1-item-properties"}><SchemaItem collapsible={true} className={"schemaItem"}><details style={{}}><summary style={{}}><strong>State</strong><span style={{"opacity":"0.6"}}> object</span></summary><div style={{"marginLeft":"1rem"}}><SchemaItem collapsible={true} className={"schemaItem"}><details style={{}}><summary style={{}}><strong>payload</strong><span style={{"opacity":"0.6"}}> object</span></summary><div style={{"marginLeft":"1rem"}}><div><div><span className={"badge badge--info"}>oneOf</span><SchemaTabs><TabItem label={"MOD1"} value={"0-item-properties"}><SchemaItem collapsible={false} name={"Json"} required={false} schemaDescription={undefined} schemaName={"string"} qualifierMessage={undefined} defaultValue={undefined}></SchemaItem></TabItem><TabItem label={"MOD2"} value={"1-item-properties"}><SchemaItem collapsible={false} name={"JsonPatch"} required={false} schemaDescription={undefined} schemaName={"string"} qualifierMessage={undefined} defaultValue={undefined}></SchemaItem></TabItem></SchemaTabs></div></div></div></details></SchemaItem><SchemaItem collapsible={false} name={"subject_id"} required={false} schemaDescription={undefined} schemaName={"string"} qualifierMessage={undefined} defaultValue={undefined}></SchemaItem></div></details></SchemaItem></TabItem></SchemaTabs></div></div></ul></details></TabItem><TabItem label={"Example (from schema)"} value={"Example (from schema)"}><ResponseSamples responseExample={"{\n  \"Create\": {\n    \"governance_id\": \"string\",\n    \"namespace\": \"string\",\n    \"payload\": {\n      \"Json\": \"string\"\n    },\n    \"schema_id\": \"string\"\n  }\n}"} language={"json"}></ResponseSamples></TabItem><TabItem label={"Example"} value={"Example"}><ResponseSamples responseExample={"{\n  \"State\": {\n    \"payload\": {\n      \"Json\": \"{\\\"localizacion\\\":\\\"Argentina\\\",\\\"temperatura\\\":-3}\"\n    },\n    \"subject_id\": \"JKZgYhPjQdWNWWwkac0wSwqLKoOJsT0QimJmj6zjimWc\"\n  }\n}"} language={"json"}></ResponseSamples></TabItem></SchemaTabs></TabItem></MimeTabs></div></TabItem><TabItem label={"400"} value={"400"}><div>
+
+Bad Request
+
+</div><div></div></TabItem><TabItem label={"401"} value={"401"}><div>
+
+Unauthorized
+
+</div><div></div></TabItem><TabItem label={"404"} value={"404"}><div>
+
+Not Found
+
+</div><div></div></TabItem><TabItem label={"500"} value={"500"}><div>
+
+Internal Server Error
+
+</div><div></div></TabItem></ApiTabs></div>
+      

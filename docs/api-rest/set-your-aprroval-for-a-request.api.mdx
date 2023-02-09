@@ -1,0 +1,49 @@
+---
+id: set-your-aprroval-for-a-request
+title: "Set your Aprroval for a request"
+description: ""
+sidebar_label: "Set your Aprroval for a request"
+hide_title: true
+hide_table_of_contents: true
+api: {"tags":["Approvals"],"description":"","operationId":"Set your Aprroval for a request","parameters":[{"name":"id","in":"path","description":"Request's unique id","required":true,"deprecated":false,"schema":{"type":"string"}}],"requestBody":{"description":"Vote of the user for an existing request","content":{"application/json":{"schema":{"oneOf":[{"type":"object","required":["approvalType"],"properties":{"approvalType":{"type":"string","enum":["Accept"]}}},{"type":"object","required":["approvalType"],"properties":{"approvalType":{"type":"string","enum":["Reject"]}}}]}}},"required":true},"responses":{"200":{"description":"Request successfully voted"},"400":{"description":"Bad Request"},"401":{"description":"Unauthorized"},"404":{"description":"Not Found"},"500":{"description":"Internal Server Error"}},"deprecated":false,"security":[{"api_key":[]}],"method":"put","path":"/api/approvals{id}","securitySchemes":{"api_key":{"type":"apiKey","in":"header","name":"x-api-key"}},"jsonRequestBodyExample":{"approvalType":"Accept"},"info":{"title":"client","description":"","contact":{"name":""},"license":{"name":""},"version":"0.1.0"}}
+sidebar_class_name: "put api-method"
+info_path: docs/api-rest/client
+---
+
+import ApiTabs from "@theme/ApiTabs";
+import MimeTabs from "@theme/MimeTabs";
+import ParamsItem from "@theme/ParamsItem";
+import ResponseSamples from "@theme/ResponseSamples";
+import SchemaItem from "@theme/SchemaItem"
+import SchemaTabs from "@theme/SchemaTabs";
+import DiscriminatorTabs from "@theme/DiscriminatorTabs";
+import TabItem from "@theme/TabItem";
+
+## Set your Aprroval for a request
+
+<details style={{"marginBottom":"1rem"}} data-collapsed={false} open={true}><summary style={{}}><strong>Path Parameters</strong></summary><div><ul><ParamsItem className={"paramsItem"} param={{"name":"id","in":"path","description":"Request's unique id","required":true,"deprecated":false,"schema":{"type":"string"}}}></ParamsItem></ul></div></details><MimeTabs><TabItem label={"application/json"} value={"application/json-schema"}><details style={{}} data-collapsed={false} open={true}><summary style={{"textAlign":"left"}}><strong>Request Body</strong><strong style={{"fontSize":"var(--ifm-code-font-size)","color":"var(--openapi-required)"}}> required</strong></summary><div style={{"textAlign":"left","marginLeft":"1rem"}}><div style={{"marginTop":"1rem","marginBottom":"1rem"}}>
+
+Vote of the user for an existing request
+
+</div></div><ul style={{"marginLeft":"1rem"}}><div><div><span className={"badge badge--info"}>oneOf</span><SchemaTabs><TabItem label={"MOD1"} value={"0-item-properties"}><SchemaItem collapsible={false} name={"approvalType"} required={true} schemaDescription={undefined} schemaName={"string"} qualifierMessage={"**Possible values:** [`Accept`]"} defaultValue={undefined}></SchemaItem></TabItem><TabItem label={"MOD2"} value={"1-item-properties"}><SchemaItem collapsible={false} name={"approvalType"} required={true} schemaDescription={undefined} schemaName={"string"} qualifierMessage={"**Possible values:** [`Reject`]"} defaultValue={undefined}></SchemaItem></TabItem></SchemaTabs></div></div></ul></details></TabItem></MimeTabs><div><ApiTabs><TabItem label={"200"} value={"200"}><div>
+
+Request successfully voted
+
+</div><div></div></TabItem><TabItem label={"400"} value={"400"}><div>
+
+Bad Request
+
+</div><div></div></TabItem><TabItem label={"401"} value={"401"}><div>
+
+Unauthorized
+
+</div><div></div></TabItem><TabItem label={"404"} value={"404"}><div>
+
+Not Found
+
+</div><div></div></TabItem><TabItem label={"500"} value={"500"}><div>
+
+Internal Server Error
+
+</div><div></div></TabItem></ApiTabs></div>
+      

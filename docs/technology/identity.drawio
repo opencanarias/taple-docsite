@@ -1,0 +1,40 @@
+<mxfile host="65bd71144e" modified="2022-12-28T15:05:32.128Z" agent="5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Code/1.74.2 Chrome/102.0.5005.167 Electron/19.1.8 Safari/537.36" version="20.7.4" etag="N9UJOhZPnTpivRUAW5sp" type="embed">
+    <diagram id="D-pSSFbaa6TZaP8_UH-x" name="identifier">
+        <mxGraphModel dx="968" dy="725" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="3" value="&lt;font style=&quot;font-size: 23px;&quot;&gt;zVycxrz4cw9UV3lpEitwYo5sydVLiDjmL9NPI9cD8dk=&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                    <mxGeometry x="120" y="90" width="580" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="4" value="&lt;font style=&quot;font-size: 23px;&quot;&gt;zVycxrz4cw9UV3lpEitwYo5sydVLiDjmL9NPI9cD8dk=&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                    <mxGeometry x="120" y="140" width="580" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="9" value="" style="shape=image;html=1;verticalAlign=top;verticalLabelPosition=bottom;labelBackgroundColor=#ffffff;imageAspect=0;aspect=fixed;image=https://cdn0.iconfinder.com/data/icons/evericons-16px/16/x-128.png;fontSize=35;fontColor=#FF0000;" vertex="1" parent="1">
+                    <mxGeometry x="660" y="140" width="40" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="10" value="" style="group" vertex="1" connectable="0" parent="1">
+                    <mxGeometry x="120" y="230" width="580" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="5" value="&lt;font style=&quot;font-size: 23px;&quot;&gt;zVycxrz4cw9UV3lpEitwYo5sydVLiDjmL9NPI9cD8dk&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="10">
+                    <mxGeometry x="30" width="550" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="6" value="&lt;font style=&quot;font-size: 23px;&quot;&gt;E&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="10">
+                    <mxGeometry width="30" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="12" value="" style="shape=flexArrow;endArrow=classic;html=1;strokeWidth=2;fontSize=35;fontColor=#FF0000;width=6.19047619047619;endSize=4.633333333333334;endWidth=10.38548752834467;fillColor=#000000;" edge="1" parent="1">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="360" y="210" as="sourcePoint"/>
+                        <mxPoint x="460" y="210" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="14" value="&lt;font style=&quot;font-size: 15px;&quot; color=&quot;#000000&quot;&gt;Base 64 Public Key&lt;/font&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=35;fontColor=#FF0000;fontStyle=1" vertex="1" parent="1">
+                    <mxGeometry x="240.75" y="280" width="338.5" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="15" value="&lt;p style=&quot;line-height: 30%;&quot;&gt;&lt;font style=&quot;font-size: 15px;&quot; color=&quot;#000000&quot;&gt;Derivation&lt;br&gt;code&lt;br&gt;&lt;/font&gt;&lt;/p&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;fontSize=35;fontColor=#FF0000;fontStyle=1" vertex="1" parent="1">
+                    <mxGeometry x="90" y="280" width="90" height="30" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>

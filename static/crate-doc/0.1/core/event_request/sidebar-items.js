@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":[["EventRequestType",""],["RequestPayload",""]],"struct":[["CreateRequest",""],["EventRequest","Request that originated the event. It contains basically  the proposed change and the votes obtained related to it."],["RequestData",""],["StateRequest",""]]};

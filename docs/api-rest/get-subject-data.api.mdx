@@ -1,0 +1,45 @@
+---
+id: get-subject-data
+title: "Get Subject Data"
+description: ""
+sidebar_label: "Get Subject Data"
+hide_title: true
+hide_table_of_contents: true
+api: {"tags":["Subjects"],"description":"","operationId":"Get Subject Data","parameters":[{"name":"id","in":"path","description":"Subject's unique id","required":true,"deprecated":false,"schema":{"type":"string"}}],"responses":{"200":{"description":"Subject Data successfully retrieved","content":{"application/json":{"schema":{"type":"object","description":"TAPLE protocol subject data structure","required":["subject_id","governance_id","sn","public_key","namespace","schema_id","owner","properties"],"properties":{"governance_id":{"type":"string","description":"Governance identifier"},"namespace":{"type":"string"},"owner":{"type":"string","description":"Subject owner identifier"},"properties":{"type":"string","description":"Current status of the subject"},"public_key":{"type":"string","description":"Public key of the subject"},"schema_id":{"type":"string","description":"Identifier of the schema used by the subject and defined in associated governance"},"sn":{"type":"integer","format":"int64","description":"Current sequence number of the subject"},"subject_id":{"type":"string","description":"Subject identifier"}}},"example":{"governance_id":"J7BgD3dqZ8vO4WEH7-rpWIH-IhMqaSDnuJ3Jb8K6KvL0","namespace":"namespace1","owner":"EFXv0jBIr6BtoqFMR7G_JBSuozRc2jZnu5VGUH2gy6-w","properties":"{\"localizacion\":\"España\",\"temperatura\":10}","public_key":"ELZ_b-kZzdPykcYuRNC2ZZe_2lCTCUoo60GXfR4cuXMw","schema_id":"Prueba","sn":0,"subject_id":"JKZgYhPjQdWNWWwkac0wSwqLKoOJsT0QimJmj6zjimWc"}}}},"400":{"description":"Bad Request"},"401":{"description":"Unauthorized"},"404":{"description":"Not Found"},"500":{"description":"Internal Server Error"}},"deprecated":false,"security":[{"api_key":[]}],"method":"get","path":"/api/subjects/{id}","securitySchemes":{"api_key":{"type":"apiKey","in":"header","name":"x-api-key"}},"info":{"title":"client","description":"","contact":{"name":""},"license":{"name":""},"version":"0.1.0"},"postman":{"name":"Get Subject Data","description":{"content":"","type":"text/plain"},"url":{"path":["api","subjects",":id"],"host":["{{baseUrl}}"],"query":[],"variable":[{"disabled":false,"description":{"content":"(Required) Subject's unique id","type":"text/plain"},"type":"any","value":"","key":"id"}]},"header":[{"key":"Accept","value":"application/json"}],"method":"GET","auth":{"type":"apikey","apikey":[{"type":"any","value":"x-api-key","key":"key"},{"type":"any","value":"<API Key>","key":"value"},{"type":"any","value":"header","key":"in"}]}}}
+sidebar_class_name: "get api-method"
+info_path: docs/api-rest/client
+---
+
+import ApiTabs from "@theme/ApiTabs";
+import MimeTabs from "@theme/MimeTabs";
+import ParamsItem from "@theme/ParamsItem";
+import ResponseSamples from "@theme/ResponseSamples";
+import SchemaItem from "@theme/SchemaItem"
+import SchemaTabs from "@theme/SchemaTabs";
+import DiscriminatorTabs from "@theme/DiscriminatorTabs";
+import TabItem from "@theme/TabItem";
+
+## Get Subject Data
+
+<details style={{"marginBottom":"1rem"}} data-collapsed={false} open={true}><summary style={{}}><strong>Path Parameters</strong></summary><div><ul><ParamsItem className={"paramsItem"} param={{"name":"id","in":"path","description":"Subject's unique id","required":true,"deprecated":false,"schema":{"type":"string"}}}></ParamsItem></ul></div></details><div><ApiTabs><TabItem label={"200"} value={"200"}><div>
+
+Subject Data successfully retrieved
+
+</div><div><MimeTabs schemaType={"response"}><TabItem label={"application/json"} value={"application/json"}><SchemaTabs><TabItem label={"Schema"} value={"Schema"}><details style={{}} data-collapsed={false} open={true}><summary style={{"textAlign":"left"}}><strong>Schema</strong></summary><div style={{"textAlign":"left","marginLeft":"1rem"}}></div><ul style={{"marginLeft":"1rem"}}><SchemaItem collapsible={false} name={"governance_id"} required={false} schemaDescription={"Governance identifier"} schemaName={"string"} qualifierMessage={undefined} defaultValue={undefined}></SchemaItem><SchemaItem collapsible={false} name={"namespace"} required={false} schemaDescription={undefined} schemaName={"string"} qualifierMessage={undefined} defaultValue={undefined}></SchemaItem><SchemaItem collapsible={false} name={"owner"} required={false} schemaDescription={"Subject owner identifier"} schemaName={"string"} qualifierMessage={undefined} defaultValue={undefined}></SchemaItem><SchemaItem collapsible={false} name={"properties"} required={false} schemaDescription={"Current status of the subject"} schemaName={"string"} qualifierMessage={undefined} defaultValue={undefined}></SchemaItem><SchemaItem collapsible={false} name={"public_key"} required={false} schemaDescription={"Public key of the subject"} schemaName={"string"} qualifierMessage={undefined} defaultValue={undefined}></SchemaItem><SchemaItem collapsible={false} name={"schema_id"} required={false} schemaDescription={"Identifier of the schema used by the subject and defined in associated governance"} schemaName={"string"} qualifierMessage={undefined} defaultValue={undefined}></SchemaItem><SchemaItem collapsible={false} name={"sn"} required={false} schemaDescription={"Current sequence number of the subject"} schemaName={"int64"} qualifierMessage={undefined} defaultValue={undefined}></SchemaItem><SchemaItem collapsible={false} name={"subject_id"} required={false} schemaDescription={"Subject identifier"} schemaName={"string"} qualifierMessage={undefined} defaultValue={undefined}></SchemaItem></ul></details></TabItem><TabItem label={"Example (from schema)"} value={"Example (from schema)"}><ResponseSamples responseExample={"{\n  \"governance_id\": \"string\",\n  \"namespace\": \"string\",\n  \"owner\": \"string\",\n  \"properties\": \"string\",\n  \"public_key\": \"string\",\n  \"schema_id\": \"string\",\n  \"sn\": 0,\n  \"subject_id\": \"string\"\n}"} language={"json"}></ResponseSamples></TabItem><TabItem label={"Example"} value={"Example"}><ResponseSamples responseExample={"{\n  \"governance_id\": \"J7BgD3dqZ8vO4WEH7-rpWIH-IhMqaSDnuJ3Jb8K6KvL0\",\n  \"namespace\": \"namespace1\",\n  \"owner\": \"EFXv0jBIr6BtoqFMR7G_JBSuozRc2jZnu5VGUH2gy6-w\",\n  \"properties\": \"{\\\"localizacion\\\":\\\"España\\\",\\\"temperatura\\\":10}\",\n  \"public_key\": \"ELZ_b-kZzdPykcYuRNC2ZZe_2lCTCUoo60GXfR4cuXMw\",\n  \"schema_id\": \"Prueba\",\n  \"sn\": 0,\n  \"subject_id\": \"JKZgYhPjQdWNWWwkac0wSwqLKoOJsT0QimJmj6zjimWc\"\n}"} language={"json"}></ResponseSamples></TabItem></SchemaTabs></TabItem></MimeTabs></div></TabItem><TabItem label={"400"} value={"400"}><div>
+
+Bad Request
+
+</div><div></div></TabItem><TabItem label={"401"} value={"401"}><div>
+
+Unauthorized
+
+</div><div></div></TabItem><TabItem label={"404"} value={"404"}><div>
+
+Not Found
+
+</div><div></div></TabItem><TabItem label={"500"} value={"500"}><div>
+
+Internal Server Error
+
+</div><div></div></TabItem></ApiTabs></div>
+      

@@ -1,0 +1,362 @@
+{
+  "mainSidebar": [
+    {
+      "type": "category",
+      "label": "TAPLE Technology",
+      "className": "sidebar-section",
+      "collapsible": false,
+      "collapsed": false,
+      "items": [
+        {
+          "type": "doc",
+          "label": "DLT & Blockchain",
+          "id": "technology/dlt-blockchain"
+        },
+        {
+          "type": "doc",
+          "label": "What is TAPLE",
+          "id": "technology/what-is-taple"
+        },
+        {
+          "type": "doc",
+          "label": "When to use it",
+          "id": "technology/when-to-use-taple"
+        },
+        {
+          "type": "doc",
+          "label": "Overview",
+          "id": "technology/overview"
+        },
+        {
+          "type": "doc",
+          "label": "Under the Hood",
+          "id": "technology/under-the-hood"
+        },
+        {
+          "type": "doc",
+          "label": "Glossary",
+          "id": "technology/glossary"
+        },
+        {
+          "type": "link",
+          "label": "Whitepaper (DRAFT)",
+          "href": "pathname:///whitepaper/taple-whitepaper.pdf"
+        }
+      ]
+    },
+    {
+      "type": "category",
+      "label": "Key concepts",
+      "className": "sidebar-section",
+      "collapsible": false,
+      "collapsed": false,
+      "items": [
+        {
+          "type": "doc",
+          "label": "Subjects",
+          "id": "technology/subjects"
+        },
+        {
+          "type": "doc",
+          "label": "Schemas",
+          "id": "technology/schemas"
+        },
+        {
+          "type": "doc",
+          "label": "Events",
+          "id": "technology/events"
+        },
+        {
+          "type": "doc",
+          "label": "Identity",
+          "id": "technology/identity"
+        },
+        {
+          "type": "doc",
+          "label": "Governance",
+          "id": "technology/governance"
+        }
+      ]
+    },
+    {
+      "type": "category",
+      "label": "Advanced concepts",
+      "className": "sidebar-section",
+      "collapsible": false,
+      "collapsed": false,
+      "items": [
+        {
+          "type": "doc",
+          "id": "technology/event-life-cycle",
+          "label": "Event life cycle"
+        },
+        {
+          "type": "doc",
+          "id": "technology/event-approval-process",
+          "label": "Event approval process"
+        }
+      ]
+    }
+  ],
+  "developSidebar": [
+    {
+      "type": "category",
+      "label": "Getting started",
+      "className": "sidebar-section",
+      "collapsible": false,
+      "collapsed": false,
+      "items": [
+        {
+          "type": "doc",
+          "label": "Requirements",
+          "id": "develop/requirements"
+        },
+        {
+          "type": "doc",
+          "label": "Quickstart",
+          "id": "develop/quickstart"
+        },
+        {
+          "type": "category",
+          "label": "Tutorials",
+          "collapsed": false,
+          "collapsible": false,
+          "items": [
+            {
+              "type": "category",
+              "collapsible": true,
+              "collapsed": true,
+              "label": "TAPLE from 0",
+              "link": {
+                "type": "doc",
+                "id": "develop/tutorial-from-0/introduction"
+              },
+              "items": [
+                {
+                  "type": "doc",
+                  "label": "Running nodes",
+                  "id": "develop/tutorial-from-0/running-nodes"
+                },
+                {
+                  "type": "doc",
+                  "label": "Defining the governance",
+                  "id": "develop/tutorial-from-0/governance-operations"
+                },
+                {
+                  "type": "doc",
+                  "label": "Creating subjects",
+                  "id": "develop/tutorial-from-0/subject-operations"
+                },
+                {
+                  "type": "doc",
+                  "label": "Adding events",
+                  "id": "develop/tutorial-from-0/event-operations"
+                },
+                {
+                  "type": "doc",
+                  "label": "Adding a new node",
+                  "id": "develop/tutorial-from-0/updating-governance"
+                }
+              ]
+            },
+            {
+              "type": "doc",
+              "label": "Access control",
+              "id": "develop/uc-hotel-access-control"
+            }
+          ]
+        },
+        {
+          "type": "doc",
+          "label": "Issues and Workarounds",
+          "id": "develop/issues-and-workarounds"
+        }
+      ]
+    },
+    {
+      "type": "category",
+      "label": "Operational guides",
+      "className": "sidebar-section",
+      "collapsible": false,
+      "collapsed": false,
+      "items": [
+        {
+          "type": "doc",
+          "label": "Governance configuration",
+          "id": "develop/operational-guides/governance-configuration"
+        },
+        {
+          "type": "doc",
+          "label": "Creating a JSON-Schema",
+          "id": "develop/operational-guides/creating-a-json-schema"
+        }
+      ]
+    },
+    {
+      "type": "category",
+      "label": "Reference",
+      "className": "sidebar-section",
+      "collapsible": false,
+      "collapsed": false,
+      "items": [
+        {
+          "type": "category",
+          "label": "TAPLE Core",
+          "collapsed": true,
+          "items": [
+            {
+              "type": "link",
+              "label": "Documentation",
+              "href": "pathname:///crate-doc/0.1/core/index.html"
+            }
+          ]
+        },
+        {
+          "type": "category",
+          "label": "TAPLE Client",
+          "collapsed": true,
+          "items": [
+            {
+              "type": "doc",
+              "label": "Configuration",
+              "id": "develop/taple-client-config"
+            },
+            {
+              "type": "doc",
+              "label": "Backups",
+              "id": "develop/backups"
+            },
+            {
+              "type": "category",
+              "label": "REST API",
+              "collapsed": true,
+              "items": [
+                {
+                  "type": "category",
+                  "label": "Subjects",
+                  "link": {
+                    "type": "doc",
+                    "id": "api-rest/subjects"
+                  },
+                  "items": [
+                    {
+                      "type": "doc",
+                      "id": "api-rest/get-all-subjects-data",
+                      "label": "Get All Subjects Data",
+                      "className": "api-method get"
+                    },
+                    {
+                      "type": "doc",
+                      "id": "api-rest/get-subject-data",
+                      "label": "Get Subject Data",
+                      "className": "api-method get"
+                    }
+                  ]
+                },
+                {
+                  "type": "category",
+                  "label": "Events",
+                  "link": {
+                    "type": "doc",
+                    "id": "api-rest/events"
+                  },
+                  "items": [
+                    {
+                      "type": "doc",
+                      "id": "api-rest/get-all-events-from-indicated-subject",
+                      "label": "Get all Events from indicated Subject",
+                      "className": "api-method get"
+                    },
+                    {
+                      "type": "doc",
+                      "id": "api-rest/get-the-event-data-of-indicated-events",
+                      "label": "Get the Event data of indicated Events",
+                      "className": "api-method get"
+                    },
+                    {
+                      "type": "doc",
+                      "id": "api-rest/get-event-properties",
+                      "label": "Get Event Properties",
+                      "className": "api-method get"
+                    }
+                  ]
+                },
+                {
+                  "type": "category",
+                  "label": "Requests",
+                  "link": {
+                    "type": "doc",
+                    "id": "api-rest/requests"
+                  },
+                  "items": [
+                    {
+                      "type": "doc",
+                      "id": "api-rest/create-a-new-event-request",
+                      "label": "Create a new Event Request",
+                      "className": "api-method post"
+                    }
+                  ]
+                },
+                {
+                  "type": "category",
+                  "label": "Approvals",
+                  "link": {
+                    "type": "doc",
+                    "id": "api-rest/approvals"
+                  },
+                  "items": [
+                    {
+                      "type": "doc",
+                      "id": "api-rest/get-all-the-pending-requests-for-approval",
+                      "label": "Get all the pending requests for Approval",
+                      "className": "api-method get"
+                    },
+                    {
+                      "type": "doc",
+                      "id": "api-rest/get-a-specific-pending-request-for-approval",
+                      "label": "Get a specific pending request for Approval",
+                      "className": "api-method get"
+                    },
+                    {
+                      "type": "doc",
+                      "id": "api-rest/set-your-aprroval-for-a-request",
+                      "label": "Set your Aprroval for a request",
+                      "className": "api-method put"
+                    }
+                  ]
+                },
+                {
+                  "type": "category",
+                  "label": "Governances",
+                  "link": {
+                    "type": "doc",
+                    "id": "api-rest/governances"
+                  },
+                  "items": [
+                    {
+                      "type": "doc",
+                      "id": "api-rest/get-all-governances-data",
+                      "label": "Get all Governances data",
+                      "className": "api-method get"
+                    },
+                    {
+                      "type": "doc",
+                      "id": "api-rest/get-governance-data",
+                      "label": "Get Governance Data",
+                      "className": "api-method get"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "doc",
+          "label": "TAPLE Tools",
+          "id": "develop/taple-tools"
+        }
+      ]
+    }
+  ]
+}

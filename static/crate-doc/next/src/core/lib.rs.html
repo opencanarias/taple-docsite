@@ -1,0 +1,192 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `core/src/lib.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>lib.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../normalize.css"><link rel="stylesheet" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../ayu.css" disabled><link rel="stylesheet" href="../../dark.css" disabled><link rel="stylesheet" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../core/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../core/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../core/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<span id="2">2</span>
+<span id="3">3</span>
+<span id="4">4</span>
+<span id="5">5</span>
+<span id="6">6</span>
+<span id="7">7</span>
+<span id="8">8</span>
+<span id="9">9</span>
+<span id="10">10</span>
+<span id="11">11</span>
+<span id="12">12</span>
+<span id="13">13</span>
+<span id="14">14</span>
+<span id="15">15</span>
+<span id="16">16</span>
+<span id="17">17</span>
+<span id="18">18</span>
+<span id="19">19</span>
+<span id="20">20</span>
+<span id="21">21</span>
+<span id="22">22</span>
+<span id="23">23</span>
+<span id="24">24</span>
+<span id="25">25</span>
+<span id="26">26</span>
+<span id="27">27</span>
+<span id="28">28</span>
+<span id="29">29</span>
+<span id="30">30</span>
+<span id="31">31</span>
+<span id="32">32</span>
+<span id="33">33</span>
+<span id="34">34</span>
+<span id="35">35</span>
+<span id="36">36</span>
+<span id="37">37</span>
+<span id="38">38</span>
+<span id="39">39</span>
+<span id="40">40</span>
+<span id="41">41</span>
+<span id="42">42</span>
+<span id="43">43</span>
+<span id="44">44</span>
+<span id="45">45</span>
+<span id="46">46</span>
+<span id="47">47</span>
+<span id="48">48</span>
+<span id="49">49</span>
+<span id="50">50</span>
+<span id="51">51</span>
+<span id="52">52</span>
+<span id="53">53</span>
+<span id="54">54</span>
+<span id="55">55</span>
+<span id="56">56</span>
+<span id="57">57</span>
+<span id="58">58</span>
+<span id="59">59</span>
+<span id="60">60</span>
+<span id="61">61</span>
+<span id="62">62</span>
+<span id="63">63</span>
+<span id="64">64</span>
+<span id="65">65</span>
+<span id="66">66</span>
+<span id="67">67</span>
+<span id="68">68</span>
+<span id="69">69</span>
+<span id="70">70</span>
+<span id="71">71</span>
+<span id="72">72</span>
+<span id="73">73</span>
+<span id="74">74</span>
+<span id="75">75</span>
+<span id="76">76</span>
+<span id="77">77</span>
+<span id="78">78</span>
+<span id="79">79</span>
+<span id="80">80</span>
+<span id="81">81</span>
+<span id="82">82</span>
+<span id="83">83</span>
+<span id="84">84</span>
+<span id="85">85</span>
+<span id="86">86</span>
+<span id="87">87</span>
+<span id="88">88</span>
+<span id="89">89</span>
+<span id="90">90</span>
+<span id="91">91</span>
+<span id="92">92</span>
+<span id="93">93</span>
+<span id="94">94</span>
+<span id="95">95</span>
+</pre><pre class="rust"><code><span class="doccomment">//! TAPLE is a DLT focused on traceability characterized by its level of scalability,
+//! its flexibility to be employed in different devices and use cases and its reduced resource consumption,
+//! including power consumption.
+//!
+//! The TAPLE crate provides the library that allows instantiating nodes of this DLT in order to create a
+//! functional network through a single structure containing all the required logic.
+//! Applications can interact with these nodes through the API they expose, thus enabling read and write operations
+//! against the network. The API also allows the design and creation of customized clients for the technology
+//! according to the user&#39;s needs.
+//!
+//! In addition to the node itself, the library also exposes a series of data structures specific to the protocol
+//! that can be obtained when interacting with the API or, in some cases, may be necessary to interact with it.
+//!
+//! # Basic usage
+//! ```
+//!use core::{ApiModuleInterface, Taple, identifier::Derivable};
+//!use std::{error::Error, time::Duration};
+//!use commons::crypto::{Ed25519KeyPair, KeyGenerator, KeyMaterial};
+//!
+//!#[tokio::main]
+//!async fn main() -&gt; Result&lt;(), Box&lt;dyn Error&gt;&gt; {
+//!    let mut settings = Taple::get_default_settings();
+//!    // Generate ramdon cryptographic material
+//!    let keypair = Ed25519KeyPair::from_seed(&amp;[]);
+//!    let hex_private_key = hex::encode(&amp;keypair.secret_key_bytes());
+//!    settings.node.secret_key = Some(hex_private_key);
+//!    
+//!    let mut taple = Taple::new(settings);
+//!    // The TAPLE node generates several Tokyo tasks to manage the different
+//!    // components of its architecture.
+//!    // The &quot;start&quot; method initiates these tasks and returns the control flow.
+//!    taple.start().await.expect(&quot;TAPLE started&quot;);
+//!    // From this point the user can start interacting with the node.
+//!    // It is the user&#39;s responsibility to decide whether to keep the node running.
+//!    // To do so, the main thread of the application must not terminate.
+//!    let api = taple.get_api();
+//!
+//!    // First we need to create the governance, the game set of rules of our future network, to start creating subject on it.
+//!    let payload = taple.get_default_governance();
+//!
+//!    // Next we will send the request to create a governance and we will save the response in a variable for later use.
+//!    let response = api
+//!        .create_governance(payload)
+//!        .await
+//!        .expect(&quot;Error getting server response&quot;);
+//!    let subject_id = response
+//!        .subject_id
+//!        .expect(&quot;Error.Response returned empty subject_id&quot;);
+//!
+//!    // wait until validation phase is resolved
+//!    let max_attemps = 4;
+//!    let mut attemp = 0;
+//!    while attemp &lt;= max_attemps {
+//!        if let Ok(data) = api.get_signatures(subject_id.clone(), 0, None, None).await {
+//!            if data.len() == 1 {
+//!                break;
+//!            }
+//!        }
+//!        tokio::time::sleep(Duration::from_millis(100)).await;
+//!        attemp += 1;
+//!    }
+//!    // Our governance is treated like a subject so, when we create it, inside the response, we have it&#39;s subject_id.
+//!    // We can use this to retrieve our governance data:
+//!    let subject = api.get_subject(subject_id.clone()).await.expect(&amp;format!(
+//!        &quot;Error getting subject content with id: {}&quot;,
+//!        subject_id
+//!    ));
+//!
+//!    println!(&quot;Governance subject Id: {:#?}&quot;, subject.subject_id.to_str());
+//!    println!(&quot;Governance subject SN: {:#?}&quot;, subject.sn);
+//!
+//!    // Now we send a signal to stop our TAPLE node:
+//!    api.shutdown().await.expect(&quot;TAPLE shutdown&quot;);
+//!    Ok(())
+//!}
+//! ```
+//!
+</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">mod </span>api;
+<span class="kw">pub mod </span>error;
+<span class="kw">mod </span>unitary_component;
+<span class="kw">pub use </span>api::{
+    ApiError, ApiModuleInterface, CreateRequest, CreateType, ExternalEventRequest,
+    ExternalEventRequestBody, NodeAPI, SignatureRequest, SignatureRequestContent, StateRequestBody,
+    StateRequestBodyUpper, StateType,
+};
+<span class="kw">pub use </span>commons::identifier;
+<span class="kw">pub use </span>commons::models::{event::Event, state::SubjectData};
+<span class="kw">pub use </span>commons::models::{event_content, event_request, signature};
+<span class="kw">pub use </span>commons::{
+    config::{DatabaseSettings, NetworkSettings, NodeSettings, TapleSettings},
+    identifier::derive::{digest::DigestDerivator, KeyDerivator},
+    models::notification::Notification,
+};
+<span class="kw">pub use </span>error::Error;
+<span class="kw">pub use </span>unitary_component::{NotificationHandler, Taple};
+</code></pre></div>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="core" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0 (897e37553 2022-11-02)" ></div></body></html>

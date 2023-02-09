@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":[["Error","Possible errors that a TAPLE node can generate.  It does not include internal errors that may be produced by architecture modules."]]};
