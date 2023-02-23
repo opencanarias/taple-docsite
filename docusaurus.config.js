@@ -186,10 +186,10 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
         logo: {
           alt: 'Open Canarias',
           src: 'img/logo-open-footer.png',
-          href: 'https://www.opencanarias.com',
+          href: 'https://www.opencanarias.com/en/',
           width: 125,
         },
-        copyright: `Copyright © ${new Date().getFullYear()} <a target="_blank" href="https://www.opencanarias.com">Open Canarias S.L.</a>. TAPLE is a trademark registered by <a target="_blank" href="https://www.opencanarias.com">Open Canarias S.L.</a>. <a target="_blank" href="https://www.opencanarias.com/legal/#aviso-legal">Legal Notice</a>.`,
+        copyright: `Copyright © ${new Date().getFullYear()} <a target="_blank" href="https://www.opencanarias.com/en/">Open Canarias S.L.</a>. TAPLE is a trademark registered by <a target="_blank" href="https://www.opencanarias.com/en/">Open Canarias S.L.</a>. <a target="_blank" href="https://www.opencanarias.com/en/legal/#legal-warning">Legal Warning</a>.`,
       },
       prism: {
         theme: lightCodeTheme,
