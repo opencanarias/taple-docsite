@@ -409,7 +409,7 @@
 <a href="#409" id="409">409</a>
 <a href="#410" id="410">410</a>
 </pre><pre class="rust"><code><span class="kw">use super</span>::{CreateRequest <span class="kw">as </span>ApiCreateRequest, ExternalEventRequest};
-<span class="kw">use </span>chrono::Utc;
+<span class="kw">use </span>time::OffsetDateTime;
 <span class="kw">use </span>commons::{
     bd::{db::DB, TapleDB},
     config::TapleSettings,
@@ -489,7 +489,7 @@
                 })
             }
         };
-        <span class="kw">let </span>timestamp = Utc::now().timestamp_millis();
+        <span class="kw">let </span>timestamp = OffsetDateTime::now_utc().unix_timestamp();
         <span class="kw">let </span><span class="prelude-val">Ok</span>(signature) = <span class="self">self</span>.signature_manager.sign(<span class="kw-2">&amp;</span>(<span class="kw-2">&amp;</span>request, timestamp)) <span class="kw">else </span>{
             <span class="kw">return </span>APIResponses::CreateRequest(<span class="prelude-val">Err</span>(ApiError::SignError));
         };
@@ -707,7 +707,7 @@
         <span class="kw">let </span>event_request = EventRequest {
             request,
             signature,
-            timestamp: Utc::now().timestamp_millis(),
+            timestamp: OffsetDateTime::now_utc().unix_timestamp(),
             approvals: HashSet::new(),
         };
         <span class="kw">let </span>schema = <span class="kw">match </span><span class="self">self

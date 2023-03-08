@@ -552,7 +552,7 @@
 <span class="kw">use </span>protocol::protocol_message_manager::ProtocolManagerMessages;
 <span class="kw">use </span>protocol::request_manager::manager::RequestManager;
 <span class="kw">use </span>protocol::request_manager::{RequestManagerMessage, RequestManagerResponse};
-<span class="kw">use </span>tempdir::TempDir;
+<span class="kw">use </span>tempfile::tempdir <span class="kw">as </span>tempdirf;
 <span class="kw">use </span>tokio::sync::broadcast::error::{RecvError, TryRecvError};
 
 <span class="kw">use </span><span class="kw">crate</span>::api::{APICommands, APIResponses, NodeAPI, API};
@@ -833,7 +833,7 @@
         <span class="comment">// Creation BBDD
         </span><span class="kw">let </span>tempdir;
         <span class="kw">let </span>path = <span class="kw">if </span><span class="self">self</span>.settings.database.path.is_empty() {
-            tempdir = TempDir::new(<span class="string">&quot;store&quot;</span>).unwrap();
+            tempdir = tempdirf().unwrap();
             tempdir.path().clone()
         } <span class="kw">else </span>{
             std::path::Path::new(<span class="kw-2">&amp;</span><span class="self">self</span>.settings.database.path)
