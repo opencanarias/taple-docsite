@@ -1,1 +1,1 @@
-window.ALL_CRATES = ["core"];
+window.ALL_CRATES = ["taple_core"];
