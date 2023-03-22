@@ -382,12 +382,11 @@
 <a href="#382" id="382">382</a>
 <a href="#383" id="383">383</a>
 <a href="#384" id="384">384</a>
-</pre><pre class="rust"><code><span class="kw">use </span>std::collections::HashSet;
+</pre><pre class="rust"><code><span class="kw">use </span>std::{collections::HashSet};
 
 <span class="kw">use </span>async_trait::async_trait;
 
-<span class="kw">use </span><span class="kw">crate</span>::commons::{
-    bd::db::DB,
+<span class="kw">use crate</span>::{commons::{
     channel::{ChannelData, MpscChannel, SenderEnd},
     identifier::{DigestIdentifier, KeyIdentifier},
     models::{
@@ -395,7 +394,7 @@
         event_request::EventRequest,
     },
     schema_handler::get_governance_schema,
-};
+}, DatabaseManager, DB};
 
 <span class="kw">use super</span>::{
     error::{InternalError, RequestError},
@@ -403,19 +402,19 @@
     GovernanceMessage, GovernanceResponse, RequestQuorum,
 };
 
-<span class="kw">pub struct </span>Governance {
+<span class="kw">pub struct </span>Governance&lt;D: DatabaseManager&gt; {
     input: MpscChannel&lt;GovernanceMessage, GovernanceResponse&gt;,
     shutdown_sender: tokio::sync::broadcast::Sender&lt;()&gt;,
     shutdown_receiver: tokio::sync::broadcast::Receiver&lt;()&gt;,
-    inner_governance: InnerGovernance,
+    inner_governance: InnerGovernance&lt;D&gt;,
 }
 
-<span class="kw">impl </span>Governance {
+<span class="kw">impl</span>&lt;D: DatabaseManager&gt; Governance&lt;D&gt; {
     <span class="kw">pub fn </span>new(
         input: MpscChannel&lt;GovernanceMessage, GovernanceResponse&gt;,
         shutdown_sender: tokio::sync::broadcast::Sender&lt;()&gt;,
         shutdown_receiver: tokio::sync::broadcast::Receiver&lt;()&gt;,
-        repo_access: DB,
+        repo_access: DB&lt;D&gt;,
     ) -&gt; <span class="self">Self </span>{
         <span class="self">Self </span>{
             input,
@@ -431,6 +430,7 @@
                 msg = <span class="self">self</span>.input.receive() =&gt; {
                     <span class="kw">let </span>result = <span class="self">self</span>.process_input(msg).<span class="kw">await</span>;
                     <span class="kw">if </span>result.is_err() {
+                        <span class="macro">log::error!</span>(<span class="string">&quot;Error at governance module {}&quot;</span>, result.unwrap_err());
                         <span class="self">self</span>.shutdown_sender.send(()).expect(<span class="string">&quot;Channel Closed&quot;</span>);
                     }
                 },

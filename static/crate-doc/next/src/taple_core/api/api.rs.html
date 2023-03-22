@@ -594,7 +594,7 @@
 };
 <span class="kw">use super</span>::{CreateRequest, CreateType, ExternalEventRequest, GetEventsOfSubject};
 <span class="kw">use </span>async_trait::async_trait;
-<span class="kw">use </span><span class="kw">crate</span>::commons::bd::db::DB;
+<span class="kw">use crate</span>::{DB, DatabaseManager};
 <span class="kw">use </span><span class="kw">crate</span>::commons::models::approval_signature::Acceptance;
 <span class="kw">use </span><span class="kw">crate</span>::commons::models::event::Event;
 <span class="kw">use </span><span class="kw">crate</span>::commons::models::event_request::{EventRequest, RequestData, RequestPayload};
@@ -1055,15 +1055,15 @@
     }
 }
 
-<span class="kw">pub struct </span>API {
+<span class="kw">pub struct </span>API&lt;D: DatabaseManager&gt; {
     input: MpscChannel&lt;APICommands, APIResponses&gt;,
     _settings_sender: Sender&lt;TapleSettings&gt;,
-    inner_api: InnerAPI,
+    inner_api: InnerAPI&lt;D&gt;,
     shutdown_sender: <span class="prelude-ty">Option</span>&lt;tokio::sync::broadcast::Sender&lt;()&gt;&gt;,
     shutdown_receiver: tokio::sync::broadcast::Receiver&lt;()&gt;,
 }
 
-<span class="kw">impl </span>API {
+<span class="kw">impl</span>&lt;D: DatabaseManager&gt; API&lt;D&gt; {
     <span class="kw">pub fn </span>new(
         input: MpscChannel&lt;APICommands, APIResponses&gt;,
         command_output: SenderEnd&lt;Commands, CommandManagerResponses&gt;,
@@ -1073,7 +1073,7 @@
         keys: KeyPair,
         shutdown_sender: tokio::sync::broadcast::Sender&lt;()&gt;,
         shutdown_receiver: tokio::sync::broadcast::Receiver&lt;()&gt;,
-        db: DB,
+        db: DB&lt;D&gt;,
     ) -&gt; <span class="self">Self </span>{
         <span class="self">Self </span>{
             input,

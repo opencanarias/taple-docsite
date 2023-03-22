@@ -28,6 +28,8 @@
 <a href="#28" id="28">28</a>
 <a href="#29" id="29">29</a>
 <a href="#30" id="30">30</a>
+<a href="#31" id="31">31</a>
+<a href="#32" id="32">32</a>
 </pre><pre class="rust"><code><span class="doccomment">//! Possible errors of a TAPLE Node
 </span><span class="kw">use </span>config::ConfigError;
 <span class="kw">use </span>thiserror::Error;
@@ -57,6 +59,8 @@
     </span>InvalidHexString,
     <span class="attr">#[error(<span class="string">&quot;Node has previously executed with a different KeyPair. Please, specify the same KeyPair as before. Current ControllerID {0}&quot;</span>)]
     </span>InvalidKeyPairSpecified(String),
+    <span class="attr">#[error(<span class="string">&quot;A database error has ocurred at main component {0}&quot;</span>)]
+    </span>DatabaseError(String)
 }
 </code></pre></div>
 </section></main><div id="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="taple_core" data-themes="" data-resource-suffix="" data-rustdoc-version="1.68.0 (2c8cc3432 2023-03-06)" data-search-js="search-98d53477a794af0b.js" data-settings-js="settings-c3c521c753752a1a.js" data-settings-css="settings-08ddfdda51b8ee2e.css" ></div></body></html>

@@ -411,21 +411,37 @@
 <a href="#411" id="411">411</a>
 <a href="#412" id="412">412</a>
 <a href="#413" id="413">413</a>
+<a href="#414" id="414">414</a>
+<a href="#415" id="415">415</a>
+<a href="#416" id="416">416</a>
+<a href="#417" id="417">417</a>
+<a href="#418" id="418">418</a>
+<a href="#419" id="419">419</a>
+<a href="#420" id="420">420</a>
+<a href="#421" id="421">421</a>
+<a href="#422" id="422">422</a>
+<a href="#423" id="423">423</a>
+<a href="#424" id="424">424</a>
+<a href="#425" id="425">425</a>
+<a href="#426" id="426">426</a>
+<a href="#427" id="427">427</a>
+<a href="#428" id="428">428</a>
+<a href="#429" id="429">429</a>
+<a href="#430" id="430">430</a>
+<a href="#431" id="431">431</a>
+<a href="#432" id="432">432</a>
+<a href="#433" id="433">433</a>
+<a href="#434" id="434">434</a>
+<a href="#435" id="435">435</a>
+<a href="#436" id="436">436</a>
+<a href="#437" id="437">437</a>
+<a href="#438" id="438">438</a>
+<a href="#439" id="439">439</a>
+<a href="#440" id="440">440</a>
+<a href="#441" id="441">441</a>
+<a href="#442" id="442">442</a>
+<a href="#443" id="443">443</a>
 </pre><pre class="rust"><code><span class="kw">use super</span>::{CreateRequest <span class="kw">as </span>ApiCreateRequest, ExternalEventRequest};
-<span class="kw">use </span><span class="kw">crate</span>::commons::{
-    bd::{db::DB, TapleDB},
-    config::TapleSettings,
-    crypto::KeyPair,
-    identifier::{derive::KeyDerivator, DigestIdentifier, KeyIdentifier, SignatureIdentifier},
-    models::{
-        approval_signature::Acceptance,
-        event_content::{EventContent, Metadata},
-        event_request::{CreateRequest, EventRequest, EventRequestType, StateRequest},
-        signature::{Signature, SignatureContent},
-        state::SubjectData,
-        timestamp::TimeStamp,
-    },
-};
 <span class="kw">use </span><span class="kw">crate</span>::governance::error::RequestError;
 <span class="kw">use </span><span class="kw">crate</span>::ledger::errors::LedgerManagerError;
 <span class="kw">use </span><span class="kw">crate</span>::protocol::{
@@ -437,6 +453,22 @@
     errors::{EventCreationError, ResponseError},
     request_manager::manager::{RequestManagerAPI, RequestManagerInterface},
 };
+<span class="kw">use crate</span>::{
+    commons::{
+        config::TapleSettings,
+        crypto::KeyPair,
+        identifier::{derive::KeyDerivator, DigestIdentifier, KeyIdentifier, SignatureIdentifier},
+        models::{
+            approval_signature::Acceptance,
+            event_content::{EventContent, Metadata},
+            event_request::{CreateRequest, EventRequest, EventRequestType, StateRequest},
+            signature::{Signature, SignatureContent},
+            state::SubjectData,
+            timestamp::TimeStamp,
+        },
+    },
+    DatabaseManager, DB,
+};
 <span class="kw">use </span>std::{collections::HashSet, str::FromStr};
 <span class="kw">use </span>time::OffsetDateTime;
 
@@ -445,21 +477,23 @@
     GetSingleSubject <span class="kw">as </span>GetSingleSubjectAPI,
 };
 
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct </span>InnerAPI {
+<span class="kw">use </span><span class="kw">crate</span>::database::Error <span class="kw">as </span>DbError;
+
+<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct </span>InnerAPI&lt;D: DatabaseManager&gt; {
     signature_manager: SelfSignatureManager,
     command_api: CommandAPI,
     request_api: RequestManagerAPI,
-    db: DB,
+    db: DB&lt;D&gt;,
 }
 
 <span class="kw">const </span>MAX_QUANTITY: isize = <span class="number">100</span>;
 
-<span class="kw">impl </span>InnerAPI {
+<span class="kw">impl</span>&lt;D: DatabaseManager&gt; InnerAPI&lt;D&gt; {
     <span class="kw">pub fn </span>new(
         keys: KeyPair,
         settings: <span class="kw-2">&amp;</span>TapleSettings,
         command_api: CommandAPI,
-        db: DB,
+        db: DB&lt;D&gt;,
         request_api: RequestManagerAPI,
     ) -&gt; <span class="self">Self </span>{
         <span class="self">Self </span>{
@@ -616,9 +650,15 @@
         } <span class="kw">else </span>{
             (data.quantity.unwrap() <span class="kw">as </span>isize).min(MAX_QUANTITY)
         };
-        <span class="kw">let </span>result = <span class="self">self
-            </span>.db
-            .get_subjects(from, quantity)
+        <span class="kw">let </span>result = <span class="kw">match </span><span class="self">self</span>.db.get_subjects(from, quantity) {
+            <span class="prelude-val">Ok</span>(subjects) =&gt; subjects,
+            <span class="prelude-val">Err</span>(error) =&gt; {
+                <span class="kw">return </span>APIResponses::GetAllSubjects(<span class="prelude-val">Err</span>(ApiError::DatabaseError(
+                    error.to_string(),
+                )))
+            }
+        };
+        <span class="kw">let </span>result = result
             .into_iter()
             .map(|subject| subject.subject_data.unwrap())
             .collect::&lt;Vec&lt;SubjectData&gt;&gt;();
@@ -636,9 +676,15 @@
         } <span class="kw">else </span>{
             (data.quantity.unwrap() <span class="kw">as </span>isize).min(MAX_QUANTITY)
         };
-        <span class="kw">let </span>result = <span class="self">self
-            </span>.db
-            .get_governances(from, quantity)
+        <span class="kw">let </span>result = <span class="kw">match </span><span class="self">self</span>.db.get_governances(from, quantity) {
+            <span class="prelude-val">Ok</span>(subjects) =&gt; subjects,
+            <span class="prelude-val">Err</span>(error) =&gt; {
+                <span class="kw">return </span>APIResponses::GetAllGovernances(<span class="prelude-val">Err</span>(ApiError::DatabaseError(
+                    error.to_string(),
+                )))
+            }
+        };
+        <span class="kw">let </span>result = result
             .into_iter()
             .map(|subject| subject.subject_data.unwrap())
             .collect::&lt;Vec&lt;SubjectData&gt;&gt;();
@@ -649,8 +695,19 @@
         <span class="kw">let </span><span class="prelude-val">Ok</span>(id) = DigestIdentifier::from_str(<span class="kw-2">&amp;</span>data.subject_id) <span class="kw">else </span>{
             <span class="kw">return </span>APIResponses::GetSingleSubject(<span class="prelude-val">Err</span>(ApiError::InvalidParameters(<span class="macro">format!</span>(<span class="string">&quot;SubjectID {}&quot;</span>, data.subject_id))));
         };
-        <span class="kw">let </span><span class="prelude-val">Some</span>(subject) = <span class="self">self</span>.db.get_subject(<span class="kw-2">&amp;</span>id) <span class="kw">else </span>{
-            <span class="kw">return </span>APIResponses::GetSingleSubject(<span class="prelude-val">Err</span>(ApiError::NotFound(<span class="macro">format!</span>(<span class="string">&quot;Subject {}&quot;</span>, data.subject_id))))
+        <span class="kw">let </span>subject = <span class="kw">match </span><span class="self">self</span>.db.get_subject(<span class="kw-2">&amp;</span>id) {
+            <span class="prelude-val">Ok</span>(subject) =&gt; subject,
+            <span class="prelude-val">Err</span>(DbError::EntryNotFound) =&gt; {
+                <span class="kw">return </span>APIResponses::GetSingleSubject(<span class="prelude-val">Err</span>(ApiError::NotFound(<span class="macro">format!</span>(
+                    <span class="string">&quot;Subject {}&quot;</span>,
+                    data.subject_id
+                ))))
+            }
+            <span class="prelude-val">Err</span>(error) =&gt; {
+                <span class="kw">return </span>APIResponses::GetSingleSubject(<span class="prelude-val">Err</span>(ApiError::DatabaseError(
+                    error.to_string(),
+                )))
+            }
         };
         <span class="kw">if </span>subject.subject_data.is_some() {
             APIResponses::GetSingleSubject(<span class="prelude-val">Ok</span>(subject.subject_data.unwrap()))
@@ -673,19 +730,20 @@
         <span class="kw">let </span><span class="prelude-val">Ok</span>(id) = DigestIdentifier::from_str(<span class="kw-2">&amp;</span>data.subject_id) <span class="kw">else </span>{
             <span class="kw">return </span>APIResponses::GetEventsOfSubject(<span class="prelude-val">Err</span>(ApiError::InvalidParameters(<span class="macro">format!</span>(<span class="string">&quot;SubjectID {}&quot;</span>, data.subject_id))));
         };
-        <span class="kw">let </span>events = <span class="self">self</span>.db.get_events_by_range(<span class="kw-2">&amp;</span>id, from, quantity);
-        APIResponses::GetEventsOfSubject(<span class="prelude-val">Ok</span>(events))
+        <span class="kw">match </span><span class="self">self</span>.db.get_events_by_range(<span class="kw-2">&amp;</span>id, from, quantity) {
+            <span class="prelude-val">Ok</span>(events) =&gt; APIResponses::GetEventsOfSubject(<span class="prelude-val">Ok</span>(events)),
+            <span class="prelude-val">Err</span>(error) =&gt; APIResponses::GetEventsOfSubject(<span class="prelude-val">Err</span>(ApiError::DatabaseError(error.to_string())))
+        }
     }
 
     <span class="kw">pub async fn </span>get_signatures(<span class="kw-2">&amp;</span><span class="self">self</span>, data: GetSignatures) -&gt; APIResponses {
         <span class="kw">let </span><span class="prelude-val">Ok</span>(id) = DigestIdentifier::from_str(<span class="kw-2">&amp;</span>data.subject_id) <span class="kw">else </span>{
             <span class="kw">return </span>APIResponses::GetSignatures(<span class="prelude-val">Err</span>(ApiError::InvalidParameters(<span class="macro">format!</span>(<span class="string">&quot;SubjectID {}&quot;</span>, data.subject_id))));
         };
-        <span class="kw">let </span><span class="prelude-val">Some</span>(signatures) = <span class="self">self</span>.db.get_signatures(
-            <span class="kw-2">&amp;</span>id,
-            data.sn,
-        ) <span class="kw">else </span>{
-            <span class="kw">return </span>APIResponses::GetSignatures(<span class="prelude-val">Err</span>(ApiError::NotFound(<span class="macro">format!</span>(<span class="string">&quot;Subject {} SN {}&quot;</span>, data.subject_id, data.sn))));
+        <span class="kw">let </span>signatures = <span class="kw">match </span><span class="self">self</span>.db.get_signatures(<span class="kw-2">&amp;</span>id, data.sn) {
+            <span class="prelude-val">Ok</span>(signatures) =&gt; signatures,
+            <span class="prelude-val">Err</span>(DbError::EntryNotFound) =&gt; <span class="kw">return </span>APIResponses::GetSignatures(<span class="prelude-val">Err</span>(ApiError::NotFound(<span class="macro">format!</span>(<span class="string">&quot;Subject {} SN {}&quot;</span>, data.subject_id, data.sn)))),
+            <span class="prelude-val">Err</span>(error) =&gt; <span class="kw">return </span>APIResponses::GetSignatures(<span class="prelude-val">Err</span>(ApiError::DatabaseError(error.to_string())))
         };
         <span class="kw">let </span>signatures = Vec::from_iter(signatures);
         <span class="kw">let </span>(init, end) = get_init_and_end(data.from, data.quantity, <span class="kw-2">&amp;</span>signatures);
@@ -704,8 +762,10 @@
         <span class="kw">let </span><span class="prelude-val">Ok</span>(signature) = <span class="self">self</span>.signature_manager.sign(<span class="kw-2">&amp;</span>request) <span class="kw">else </span>{
             <span class="kw">return </span>APIResponses::SimulateEvent(<span class="prelude-val">Err</span>(ApiError::SignError));
         };
-        <span class="kw">let </span><span class="prelude-val">Some</span>(subject) = <span class="self">self</span>.db.get_subject(<span class="kw-2">&amp;</span>id) <span class="kw">else </span>{
-            <span class="kw">return </span>APIResponses::SimulateEvent(<span class="prelude-val">Err</span>(ApiError::NotFound(<span class="macro">format!</span>(<span class="string">&quot;Subject {}&quot;</span>, data.subject_id))));
+        <span class="kw">let </span>subject = <span class="kw">match </span><span class="self">self</span>.db.get_subject(<span class="kw-2">&amp;</span>id) {
+            <span class="prelude-val">Ok</span>(subject) =&gt; subject,
+            <span class="prelude-val">Err</span>(DbError::EntryNotFound) =&gt; <span class="kw">return </span>APIResponses::SimulateEvent(<span class="prelude-val">Err</span>(ApiError::NotFound(<span class="macro">format!</span>(<span class="string">&quot;Subject {}&quot;</span>, data.subject_id)))),
+            <span class="prelude-val">Err</span>(error) =&gt; <span class="kw">return </span>APIResponses::SimulateEvent(<span class="prelude-val">Err</span>(ApiError::DatabaseError(error.to_string())))
         };
         <span class="kw">let </span><span class="prelude-val">Some</span>(subject_data) = subject.subject_data.clone() <span class="kw">else </span>{
             <span class="kw">return </span>APIResponses::SimulateEvent(<span class="prelude-val">Err</span>(ApiError::NotFound(<span class="macro">format!</span>(<span class="string">&quot;Subject data of {}&quot;</span>, data.subject_id))));

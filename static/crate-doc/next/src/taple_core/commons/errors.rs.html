@@ -289,7 +289,7 @@
     </span>BorshSerializationFailed,
 }
 
-<span class="attr">#[derive(Error, Debug, Clone)]
+<span class="attr">#[derive(Error, Debug, Clone, PartialEq)]
 </span><span class="kw">pub enum </span>ChannelErrors {
     <span class="attr">#[error(<span class="string">&quot;Channel is closed at the other end. Cannot send data&quot;</span>)]
     </span>ChannelClosed,

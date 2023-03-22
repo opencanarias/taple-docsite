@@ -524,37 +524,40 @@
 <a href="#524" id="524">524</a>
 <a href="#525" id="525">525</a>
 <a href="#526" id="526">526</a>
-</pre><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::commons::bd::db::open_db_with_comparator;
+<a href="#527" id="527">527</a>
+<a href="#528" id="528">528</a>
+<a href="#529" id="529">529</a>
+<a href="#530" id="530">530</a>
+</pre><pre class="rust"><code><span class="kw">use </span>std::sync::Arc;
+
 <span class="kw">use </span><span class="kw">crate</span>::commons::channel::MpscChannel;
+<span class="kw">use </span><span class="kw">crate</span>::commons::config::NetworkSettings;
 <span class="kw">use </span><span class="kw">crate</span>::commons::config::{DatabaseSettings, NodeSettings, TapleSettings};
-<span class="kw">use </span><span class="kw">crate</span>::commons::crypto::{Ed25519KeyPair, KeyGenerator, KeyMaterial, KeyPair, Secp256k1KeyPair};
+<span class="kw">use </span><span class="kw">crate</span>::commons::crypto::{
+    Ed25519KeyPair, KeyGenerator, KeyMaterial, KeyPair, Secp256k1KeyPair,
+};
 <span class="kw">use </span><span class="kw">crate</span>::commons::identifier::derive::KeyDerivator;
 <span class="kw">use </span><span class="kw">crate</span>::commons::identifier::{Derivable, KeyIdentifier};
 <span class="kw">use </span><span class="kw">crate</span>::commons::models::event_request::RequestPayload;
 <span class="kw">use </span><span class="kw">crate</span>::commons::models::notification::Notification;
-<span class="kw">use </span><span class="kw">crate</span>::commons::{
-    bd::{
-        db::{open_db, DB},
-        TapleDB,
-    },
-    config::NetworkSettings,
-};
-<span class="kw">use </span>futures::future::BoxFuture;
-<span class="kw">use </span>futures::FutureExt;
+<span class="kw">use </span><span class="kw">crate</span>::database::{DatabaseManager, DB};
 <span class="kw">use </span><span class="kw">crate</span>::governance::{governance::Governance, GovernanceMessage, GovernanceResponse};
 <span class="kw">use </span><span class="kw">crate</span>::ledger::errors::LedgerManagerError;
 <span class="kw">use </span><span class="kw">crate</span>::ledger::ledger_manager::{CommandManagerMessage, CommandManagerResponse, LedgerManager};
-<span class="kw">use </span>libp2p::{Multiaddr, PeerId};
 <span class="kw">use </span><span class="kw">crate</span>::message::{
     Message, MessageReceiver, MessageSender, MessageTaskCommand, MessageTaskManager, NetworkEvent,
 };
 <span class="kw">use </span><span class="kw">crate</span>::network::network::NetworkProcessor;
-<span class="kw">use </span><span class="kw">crate</span>::protocol::command_head_manager::{manager::CommandManager, CommandManagerResponses, Commands};
+<span class="kw">use </span><span class="kw">crate</span>::protocol::command_head_manager::{
+    manager::CommandManager, CommandManagerResponses, Commands,
+};
 <span class="kw">use </span><span class="kw">crate</span>::protocol::protocol_message_manager::manager::ProtocolMessageManager;
 <span class="kw">use </span><span class="kw">crate</span>::protocol::protocol_message_manager::ProtocolManagerMessages;
 <span class="kw">use </span><span class="kw">crate</span>::protocol::request_manager::manager::RequestManager;
 <span class="kw">use </span><span class="kw">crate</span>::protocol::request_manager::{RequestManagerMessage, RequestManagerResponse};
-<span class="kw">use </span>tempfile::tempdir <span class="kw">as </span>tempdirf;
+<span class="kw">use </span>futures::future::BoxFuture;
+<span class="kw">use </span>futures::FutureExt;
+<span class="kw">use </span>libp2p::{Multiaddr, PeerId};
 <span class="kw">use </span>tokio::sync::broadcast::error::{RecvError, TryRecvError};
 
 <span class="kw">use </span><span class="kw">crate</span>::api::{APICommands, APIResponses, NodeAPI, API};
@@ -624,7 +627,7 @@
 /// of [configuration](Settings) parameters in order to be properly initialized.
 ///
 </span><span class="attr">#[derive(Debug)]
-</span><span class="kw">pub struct </span>Taple {
+</span><span class="kw">pub struct </span>Taple&lt;D: DatabaseManager&gt; {
     api: NodeAPI,
     peer_id: <span class="prelude-ty">Option</span>&lt;PeerId&gt;,
     controller_id: <span class="prelude-ty">Option</span>&lt;String&gt;,
@@ -632,9 +635,10 @@
     api_input: <span class="prelude-ty">Option</span>&lt;MpscChannel&lt;APICommands, APIResponses&gt;&gt;,
     notification_sender: tokio::sync::broadcast::Sender&lt;Notification&gt;,
     settings: TapleSettings,
+    database: <span class="prelude-ty">Option</span>&lt;D&gt;,
 }
 
-<span class="kw">impl </span>Taple {
+<span class="kw">impl</span>&lt;D: DatabaseManager + <span class="lifetime">&#39;static</span>&gt; Taple&lt;D&gt; {
     <span class="doccomment">/// Returns the [PeerId] of the node is available.
     /// This ID is the identifier of the node at the network level.
     /// **None** can only be get if the node has not been started yet.
@@ -675,7 +679,7 @@
     <span class="doccomment">/// This method allows the creation of cryptographic material through a
     /// given public key.
     </span><span class="kw">fn </span>generate_mc(<span class="kw-2">&amp;mut </span><span class="self">self</span>, stored_public_key: <span class="prelude-ty">Option</span>&lt;String&gt;) -&gt; <span class="prelude-ty">Result</span>&lt;KeyPair, Error&gt; {
-        <span class="kw">let </span>kp = Taple::create_key_pair(
+        <span class="kw">let </span>kp = <span class="self">Self</span>::create_key_pair(
             <span class="kw-2">&amp;</span><span class="self">self</span>.settings.node.key_derivator,
             <span class="self">self</span>.settings.node.seed.clone(),
             <span class="self">self</span>.settings.node.secret_key.clone(),
@@ -694,7 +698,7 @@
     }
 
     <span class="doccomment">/// Main and unique method to create an instance of a TAPLE node.
-    </span><span class="kw">pub fn </span>new(settings: TapleSettings) -&gt; <span class="self">Self </span>{
+    </span><span class="kw">pub fn </span>new(settings: TapleSettings, database: D) -&gt; <span class="self">Self </span>{
         check_dev_settings(<span class="kw-2">&amp;</span>settings);
         <span class="kw">let </span>(api_input, api_sender) = MpscChannel::new(BUFFER_SIZE);
         <span class="kw">let </span>(sender, <span class="kw">_</span>) = tokio::sync::broadcast::channel(BUFFER_SIZE);
@@ -707,6 +711,7 @@
             api_input: <span class="prelude-val">Some</span>(api_input),
             notification_sender: sender,
             settings,
+            database: <span class="prelude-val">Some</span>(database),
         }
     }
 
@@ -722,15 +727,14 @@
                 key_derivator: KeyDerivator::Ed25519,
                 secret_key: <span class="prelude-ty">Option</span>::&lt;String&gt;::None,
                 seed: <span class="prelude-val">None</span>,
-                digest_derivator: <span class="kw">crate</span>::commons::identifier::derive::digest::DigestDerivator::Blake3_256,
+                digest_derivator:
+                    <span class="kw">crate</span>::commons::identifier::derive::digest::DigestDerivator::Blake3_256,
                 replication_factor: <span class="number">0.25f64</span>,
                 timeout: <span class="number">3000u32</span>,
                 passvotation: <span class="number">0</span>,
                 dev_mode: <span class="bool-val">false</span>,
             },
-            database: DatabaseSettings {
-                path: <span class="string">&quot;&quot;</span>.into(),
-            },
+            database: DatabaseSettings { path: <span class="string">&quot;&quot;</span>.into() },
         }
     }
 
@@ -833,20 +837,24 @@
             tokio::sync::watch::Receiver&lt;TapleSettings&gt;,
         ) = tokio::sync::watch::channel(<span class="self">self</span>.settings.clone());
         <span class="comment">// Creation BBDD
-        </span><span class="kw">let </span>tempdir;
-        <span class="kw">let </span>path = <span class="kw">if </span><span class="self">self</span>.settings.database.path.is_empty() {
-            tempdir = tempdirf().unwrap();
-            tempdir.path().clone()
-        } <span class="kw">else </span>{
-            std::path::Path::new(<span class="kw-2">&amp;</span><span class="self">self</span>.settings.database.path)
-        };
-        <span class="kw">let </span>db = open_db_with_comparator(path);
+        // let tempdir;
+        // let path = if self.settings.database.path.is_empty() {
+        //     tempdir = tempdirf().unwrap();
+        //     tempdir.path().clone()
+        // } else {
+        //     std::path::Path::new(&amp;self.settings.database.path)
+        // };
+        </span><span class="kw">let </span>db = <span class="self">self</span>.database.take().unwrap();
+        <span class="kw">let </span>db = Arc::new(db);
+
         <span class="kw">let </span>db_access = DB::new(db.clone());
         <span class="comment">// Creation of cryptographic material
-        </span><span class="kw">let </span>stored_public_key = db_access.get_controller_id();
+        </span><span class="kw">let </span>stored_public_key = db_access.get_controller_id().ok();
         <span class="kw">let </span>kp = <span class="self">self</span>.generate_mc(stored_public_key)<span class="question-mark">?</span>;
         <span class="comment">// Store controller_id in database
-        </span>db_access.set_controller_id(<span class="self">self</span>.controller_id().unwrap());
+        </span>db_access
+            .set_controller_id(<span class="self">self</span>.controller_id().unwrap())
+            .map_err(|e| Error::DatabaseError(e.to_string()))<span class="question-mark">?</span>;
         <span class="kw">let </span>public_key = kp.public_key_bytes();
         <span class="kw">let </span>key_identifier = KeyIdentifier::new(kp.get_key_derivator(), <span class="kw-2">&amp;</span>public_key);
         <span class="comment">// Creation Network
@@ -934,7 +942,7 @@
             command_sender,
             <span class="self">self</span>.notification_sender.clone(),
             governance_sender,
-            DB::new(db),
+            DB::new(db.clone()),
             kp,
             <span class="kw-2">&amp;</span><span class="self">self</span>.settings,
         );

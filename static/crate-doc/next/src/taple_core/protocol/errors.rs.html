@@ -135,12 +135,14 @@
 <a href="#135" id="135">135</a>
 <a href="#136" id="136">136</a>
 <a href="#137" id="137">137</a>
+<a href="#138" id="138">138</a>
+<a href="#139" id="139">139</a>
 </pre><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::governance::error::RequestError;
 <span class="kw">use </span><span class="kw">crate</span>::ledger::errors::LedgerManagerError;
 <span class="kw">use </span>std::convert::Infallible;
 <span class="kw">use </span>thiserror::Error;
 
-<span class="attr">#[derive(Error, Debug, Clone)]
+<span class="attr">#[derive(Error, Debug, Clone, PartialEq)]
 </span><span class="kw">pub enum </span>ProtocolErrors {
     <span class="attr">#[error(<span class="string">&quot;Errors that can never happen&quot;</span>)]
     </span>InfalibleError {
@@ -271,6 +273,8 @@
     },
     <span class="attr">#[error(<span class="string">&quot;Database corrupted {0}&quot;</span>)]
     </span>DatabaseCorrupted(String),
+    <span class="attr">#[error(<span class="string">&quot;A database error has ocurred at request manager&quot;</span>)]
+    </span>DatabaseError(String)
 }
 </code></pre></div>
 </section></main><div id="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="taple_core" data-themes="" data-resource-suffix="" data-rustdoc-version="1.68.0 (2c8cc3432 2023-03-06)" data-search-js="search-98d53477a794af0b.js" data-settings-js="settings-c3c521c753752a1a.js" data-settings-css="settings-08ddfdda51b8ee2e.css" ></div></body></html>

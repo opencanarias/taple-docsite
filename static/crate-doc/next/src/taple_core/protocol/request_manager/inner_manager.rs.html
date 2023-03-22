@@ -806,11 +806,22 @@
 <a href="#806" id="806">806</a>
 <a href="#807" id="807">807</a>
 <a href="#808" id="808">808</a>
+<a href="#809" id="809">809</a>
+<a href="#810" id="810">810</a>
+<a href="#811" id="811">811</a>
+<a href="#812" id="812">812</a>
+<a href="#813" id="813">813</a>
+<a href="#814" id="814">814</a>
+<a href="#815" id="815">815</a>
+<a href="#816" id="816">816</a>
+<a href="#817" id="817">817</a>
+<a href="#818" id="818">818</a>
+<a href="#819" id="819">819</a>
+<a href="#820" id="820">820</a>
+<a href="#821" id="821">821</a>
 </pre><pre class="rust"><code><span class="kw">use </span>std::collections::{HashMap, HashSet};
 
-<span class="kw">use </span>time::OffsetDateTime;
 <span class="kw">use </span><span class="kw">crate</span>::commons::{
-    bd::TapleDB,
     identifier::{Derivable, DigestIdentifier, KeyIdentifier},
     models::{
         approval_signature::{ApprovalResponse, ApprovalResponseContent},
@@ -818,8 +829,14 @@
         notification::Notification, timestamp::TimeStamp,
     },
 };
+
+<span class="kw">use </span><span class="kw">crate</span>::database::Error <span class="kw">as </span>DbError;
 <span class="kw">use </span><span class="kw">crate</span>::governance::GovernanceInterface;
 <span class="kw">use </span><span class="kw">crate</span>::message::{MessageConfig, MessageTaskCommand};
+<span class="kw">use crate</span>::{
+    database::DB,
+    DatabaseManager,
+};
 
 <span class="kw">use </span><span class="kw">super</span>::<span class="kw">super</span>::{
     command_head_manager::{
@@ -886,13 +903,13 @@
 
 <span class="kw">pub struct </span>InnerManager&lt;Database, N, C, G, S&gt;
 <span class="kw">where
-    </span>Database: TapleDB,
+    </span>Database: DatabaseManager,
     N: NotifierInterface,
     C: CommandManagerInterface,
     G: GovernanceInterface,
     S: SelfSignatureInterface,
 {
-    db: Database,
+    db: DB&lt;Database&gt;,
     notifier: N,
     command_api: C,
     governance_api: G,
@@ -904,7 +921,7 @@
 }
 
 <span class="kw">impl</span>&lt;
-        Database: TapleDB,
+        Database: DatabaseManager,
         N: NotifierInterface,
         C: CommandManagerInterface,
         G: GovernanceInterface,
@@ -912,7 +929,7 @@
     &gt; InnerManager&lt;Database, N, C, G, S&gt;
 {
     <span class="kw">pub fn </span>new(
-        db: Database,
+        db: DB&lt;Database&gt;,
         notifier: N,
         command_api: C,
         governance_api: G,
@@ -960,12 +977,12 @@
                         .<span class="kw">await
                         </span>.map_err(|e| RequestManagerError::RequestError(e))<span class="question-mark">?</span>;
                     <span class="kw">if </span>!invokation_permissions.<span class="number">0 </span>|| !invokation_permissions.<span class="number">1 </span>{
-                        <span class="self">self</span>.db.del_request(<span class="kw-2">&amp;</span>subject_id, <span class="kw-2">&amp;</span>request_id);
+                        <span class="self">self</span>.db.del_request(<span class="kw-2">&amp;</span>subject_id, <span class="kw-2">&amp;</span>request_id).map_err(|e| RequestManagerError::DatabaseError(e.to_string()))<span class="question-mark">?</span>;
                     }
                     subject_id
                 }
             };
-            <span class="kw">let </span><span class="prelude-val">Some</span>(subject) = <span class="self">self</span>.db.get_subject(<span class="kw-2">&amp;</span>subject_id) <span class="kw">else </span>{
+            <span class="kw">let </span><span class="prelude-val">Ok</span>(subject) = <span class="self">self</span>.db.get_subject(<span class="kw-2">&amp;</span>subject_id) <span class="kw">else </span>{
                 <span class="kw">return </span><span class="prelude-val">Err</span>(RequestManagerError::DatabaseCorrupted(
                     <span class="string">&quot;Subject of request stored not found&quot;</span>.into(),
                 ));
@@ -1080,13 +1097,19 @@
                     ));
                 }
                 <span class="comment">// Check if subject is present
-                </span><span class="kw">let </span><span class="prelude-val">Some</span>(subject) = <span class="self">self</span>.db.get_subject(<span class="kw-2">&amp;</span>data.subject_id) <span class="kw">else </span>{
-                    <span class="kw">return </span><span class="prelude-val">Ok</span>((
-                        RequestManagerResponse::CreateRequest(<span class="prelude-val">Err</span>(
-                            ResponseError::SubjectNotFound,
-                        )),
-                        <span class="prelude-val">None</span>,
-                    ));
+                </span><span class="kw">let </span>subject = <span class="kw">match </span><span class="self">self</span>.db.get_subject(<span class="kw-2">&amp;</span>data.subject_id) {
+                    <span class="prelude-val">Ok</span>(subject) =&gt; subject,
+                    <span class="prelude-val">Err</span>(DbError::EntryNotFound) =&gt; {
+                        <span class="kw">return </span><span class="prelude-val">Ok</span>((
+                            RequestManagerResponse::CreateRequest(<span class="prelude-val">Err</span>(
+                                ResponseError::SubjectNotFound,
+                            )),
+                            <span class="prelude-val">None</span>,
+                        ))
+                    }
+                    <span class="prelude-val">Err</span>(error) =&gt; {
+                        <span class="kw">return </span><span class="prelude-val">Err</span>(RequestManagerError::DatabaseError(error.to_string()))
+                    }
                 };
                 <span class="kw">let </span><span class="prelude-val">Some</span>(<span class="kw">_</span>) = <span class="kw-2">&amp;</span>subject.keys <span class="kw">else </span>{
                     <span class="kw">return </span><span class="prelude-val">Ok</span>((
@@ -1110,8 +1133,8 @@
                         RequestManagerResponse::CreateRequest(<span class="prelude-val">Err</span>(
                             ResponseError::SubjectBeingValidated,
                         )),
-                        <span class="prelude-val">None
-                    </span>))
+                        <span class="prelude-val">None</span>,
+                    ));
                 }
                 <span class="kw">let </span>schema_id = subject_data.schema_id.clone();
                 <span class="kw">let </span><span class="prelude-val">Ok</span>(schema) = <span class="self">self
@@ -1144,7 +1167,9 @@
                         ));
                     }
                     <span class="comment">// TODO: It should be managed in memory also the votes. Ask whether to implement it in this version
-                    </span><span class="self">self</span>.db.set_request(<span class="kw-2">&amp;</span>data.subject_id, request.clone());
+                    </span><span class="self">self</span>.db
+                        .set_request(<span class="kw-2">&amp;</span>data.subject_id, request.clone())
+                        .map_err(|e| RequestManagerError::DatabaseError(e.to_string()))<span class="question-mark">?</span>;
                     <span class="kw">let </span>(<span class="kw">_</span>, <span class="kw-2">mut </span>targets) = <span class="self">self
                         </span>.governance_api
                         .check_quorum_request(request.clone(), HashSet::new())
@@ -1338,16 +1363,12 @@
                 <span class="self">self</span>.notifier
                     .quorum_reached(<span class="kw-2">&amp;</span>request_id.to_str(), <span class="kw-2">&amp;</span>data.subject_id.to_str());
                 <span class="comment">// TODO: What to do if CommandManager fails
-                </span><span class="kw">let </span>result = <span class="self">self
-                    </span>.command_api
-                    .create_event(
-                        request,
-                        <span class="bool-val">true</span>,
-                    )
-                    .<span class="kw">await</span>;
+                </span><span class="kw">let </span>result = <span class="self">self</span>.command_api.create_event(request, <span class="bool-val">true</span>).<span class="kw">await</span>;
                 <span class="kw">if </span>result.is_ok() {
                     <span class="comment">// It is now safe to delete the Request from the database, as the event has been created.
-                    </span><span class="self">self</span>.db.del_request(<span class="kw-2">&amp;</span>subject_id, <span class="kw-2">&amp;</span>request_id);
+                    </span><span class="self">self</span>.db
+                        .del_request(<span class="kw-2">&amp;</span>subject_id, <span class="kw-2">&amp;</span>request_id)
+                        .map_err(|e| RequestManagerError::DatabaseError(e.to_string()))<span class="question-mark">?</span>;
                 }
                 <span class="kw">match </span>result {
                     <span class="prelude-val">Err</span>(ResponseError::ComunnicationClosed) =&gt; {
@@ -1362,19 +1383,17 @@
             <span class="kw">crate</span>::governance::RequestQuorum::Rejected =&gt; {
                 <span class="self">self</span>.request_stack.remove(<span class="kw-2">&amp;</span>data.subject_id);
                 <span class="self">self</span>.request_table.remove(<span class="kw-2">&amp;</span>request_id);
-                <span class="self">self</span>.db.del_request(<span class="kw-2">&amp;</span>subject_id, <span class="kw-2">&amp;</span>request_id);
+                <span class="self">self</span>.db
+                    .del_request(<span class="kw-2">&amp;</span>subject_id, <span class="kw-2">&amp;</span>request_id)
+                    .map_err(|e| RequestManagerError::DatabaseError(e.to_string()))<span class="question-mark">?</span>;
                 <span class="self">self</span>.notifier
                     .negative_quorum_reached(<span class="kw-2">&amp;</span>request_id.to_str(), <span class="kw-2">&amp;</span>data.subject_id.to_str());
-                <span class="kw">let </span>result = <span class="self">self
-                    </span>.command_api
-                    .create_event(
-                        request,
-                        <span class="bool-val">false</span>,
-                    )
-                    .<span class="kw">await</span>;
+                <span class="kw">let </span>result = <span class="self">self</span>.command_api.create_event(request, <span class="bool-val">false</span>).<span class="kw">await</span>;
                 <span class="kw">if </span>result.is_ok() {
                     <span class="comment">// It is now safe to delete the Request from the database, as the event has been created.
-                    </span><span class="self">self</span>.db.del_request(<span class="kw-2">&amp;</span>subject_id, <span class="kw-2">&amp;</span>request_id);
+                    </span><span class="self">self</span>.db
+                        .del_request(<span class="kw-2">&amp;</span>subject_id, <span class="kw-2">&amp;</span>request_id)
+                        .map_err(|e| RequestManagerError::DatabaseError(e.to_string()))<span class="question-mark">?</span>;
                 }
                 <span class="kw">match </span>result {
                     <span class="prelude-val">Err</span>(ResponseError::ComunnicationClosed) =&gt; {
@@ -1472,8 +1491,15 @@
             <span class="comment">// TODO: It is possible that the vote has already been generated and we can respond.
             </span><span class="kw">return </span><span class="prelude-val">Ok</span>((RequestManagerResponse::ApprovalRequest(<span class="prelude-val">Err</span>(ResponseError::RequestAlreadyKnown)), <span class="prelude-val">None</span>));
         };
-        <span class="kw">let </span><span class="prelude-val">Some</span>(subject) = <span class="self">self</span>.db.get_subject(<span class="kw-2">&amp;</span>data.subject_id) <span class="kw">else </span>{
-            <span class="kw">return </span><span class="prelude-val">Ok</span>((RequestManagerResponse::ApprovalRequest(<span class="prelude-val">Err</span>(ResponseError::SubjectNotFound)), <span class="prelude-val">None</span>));
+        <span class="kw">let </span>subject = <span class="kw">match </span><span class="self">self</span>.db.get_subject(<span class="kw-2">&amp;</span>data.subject_id) {
+            <span class="prelude-val">Ok</span>(subject) =&gt; subject,
+            <span class="prelude-val">Err</span>(DbError::EntryNotFound) =&gt; {
+                <span class="kw">return </span><span class="prelude-val">Ok</span>((
+                    RequestManagerResponse::ApprovalRequest(<span class="prelude-val">Err</span>(ResponseError::SubjectNotFound)),
+                    <span class="prelude-val">None</span>,
+                ))
+            }
+            <span class="prelude-val">Err</span>(error) =&gt; <span class="kw">return </span><span class="prelude-val">Err</span>(RequestManagerError::DatabaseError(error.to_string())),
         };
         <span class="kw">let </span><span class="prelude-val">Some</span>(subject_data) = subject.subject_data <span class="kw">else </span>{
             <span class="kw">return </span><span class="prelude-val">Ok</span>((RequestManagerResponse::ApprovalRequest(<span class="prelude-val">Err</span>(ResponseError::SubjectNotFound)), <span class="prelude-val">None</span>));
@@ -1561,7 +1587,7 @@
             <span class="kw">let </span><span class="prelude-val">Some</span>((request, expected_sn)) = <span class="self">self</span>.to_approval_request.get(<span class="kw-2">&amp;</span>subject_id) <span class="kw">else </span>{
                 <span class="kw">return </span><span class="prelude-val">Ok</span>((RequestManagerResponse::VoteResolve(<span class="prelude-val">Err</span>(ResponseError::VoteNotNeeded)), <span class="prelude-val">None</span>));
             };
-            <span class="kw">let </span><span class="prelude-val">None </span>= <span class="self">self</span>.db.get_event(subject_id, <span class="kw-2">*</span>expected_sn) <span class="kw">else </span>{
+            <span class="kw">let </span><span class="prelude-val">Err</span>(<span class="kw">_</span>) = <span class="self">self</span>.db.get_event(subject_id, <span class="kw-2">*</span>expected_sn) <span class="kw">else </span>{
                 <span class="self">self</span>.to_approval_request.remove(<span class="kw-2">&amp;</span>subject_id);
                 <span class="self">self</span>.request_table.remove(id);
                 <span class="kw">return </span><span class="prelude-val">Ok</span>((RequestManagerResponse::VoteResolve(<span class="prelude-val">Err</span>(ResponseError::EventAlreadyOnChain)), <span class="prelude-val">None</span>));

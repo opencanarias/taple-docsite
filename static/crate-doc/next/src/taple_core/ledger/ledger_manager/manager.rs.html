@@ -1355,10 +1355,8 @@
 <a href="#1355" id="1355">1355</a>
 <a href="#1356" id="1356">1356</a>
 <a href="#1357" id="1357">1357</a>
-<a href="#1358" id="1358">1358</a>
 </pre><pre class="rust"><code><span class="kw">use </span>async_trait::async_trait;
-<span class="kw">use </span><span class="kw">crate</span>::commons::{
-    bd::db::DB,
+<span class="kw">use crate</span>::{commons::{
     channel::{AskData, ChannelData, MpscChannel, SenderEnd},
     identifier::{DigestIdentifier, KeyIdentifier},
     models::{
@@ -1367,9 +1365,9 @@
         signature::Signature,
         state::{LedgerState, Subject, SubjectData},
     },
-};
+}, DatabaseManager, DB};
 <span class="kw">use </span><span class="kw">crate</span>::governance::{GovernanceAPI, GovernanceMessage, GovernanceResponse};
-<span class="kw">use </span>std::collections::{HashMap, HashSet};
+<span class="kw">use </span>std::{collections::{HashMap, HashSet}};
 
 <span class="kw">use </span><span class="kw">super</span>::<span class="kw">super</span>::errors::LedgerManagerError;
 
@@ -1675,21 +1673,21 @@
     }
 }
 
-<span class="kw">pub struct </span>LedgerManager {
+<span class="kw">pub struct </span>LedgerManager&lt;D: DatabaseManager&gt; {
     command_input:
         MpscChannel&lt;CommandManagerMessage, <span class="prelude-ty">Result</span>&lt;CommandManagerResponse, LedgerManagerError&gt;&gt;,
-    inner_ledger_manager: Ledger,
+    inner_ledger_manager: Ledger&lt;D&gt;,
     shutdown_receiver: tokio::sync::broadcast::Receiver&lt;()&gt;,
 }
 
-<span class="kw">impl </span>LedgerManager {
+<span class="kw">impl</span>&lt;D: DatabaseManager&gt; LedgerManager&lt;D&gt; {
     <span class="kw">pub fn </span>new(
         command_input: MpscChannel&lt;
             CommandManagerMessage,
             <span class="prelude-ty">Result</span>&lt;CommandManagerResponse, LedgerManagerError&gt;,
         &gt;,
         gobernance_channel: SenderEnd&lt;GovernanceMessage, GovernanceResponse&gt;,
-        repo_access: DB,
+        repo_access: DB&lt;D&gt;,
         id: KeyIdentifier,
         shutdown_receiver: tokio::sync::broadcast::Receiver&lt;()&gt;,
     ) -&gt; <span class="self">Self </span>{
