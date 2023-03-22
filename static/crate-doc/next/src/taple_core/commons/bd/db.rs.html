@@ -415,22 +415,70 @@
 <a href="#415" id="415">415</a>
 <a href="#416" id="416">416</a>
 <a href="#417" id="417">417</a>
+<a href="#418" id="418">418</a>
+<a href="#419" id="419">419</a>
+<a href="#420" id="420">420</a>
+<a href="#421" id="421">421</a>
+<a href="#422" id="422">422</a>
+<a href="#423" id="423">423</a>
+<a href="#424" id="424">424</a>
+<a href="#425" id="425">425</a>
+<a href="#426" id="426">426</a>
+<a href="#427" id="427">427</a>
+<a href="#428" id="428">428</a>
+<a href="#429" id="429">429</a>
+<a href="#430" id="430">430</a>
+<a href="#431" id="431">431</a>
+<a href="#432" id="432">432</a>
+<a href="#433" id="433">433</a>
+<a href="#434" id="434">434</a>
+<a href="#435" id="435">435</a>
+<a href="#436" id="436">436</a>
+<a href="#437" id="437">437</a>
+<a href="#438" id="438">438</a>
+<a href="#439" id="439">439</a>
+<a href="#440" id="440">440</a>
+<a href="#441" id="441">441</a>
+<a href="#442" id="442">442</a>
+<a href="#443" id="443">443</a>
+<a href="#444" id="444">444</a>
+<a href="#445" id="445">445</a>
+<a href="#446" id="446">446</a>
+<a href="#447" id="447">447</a>
+<a href="#448" id="448">448</a>
+<a href="#449" id="449">449</a>
+<a href="#450" id="450">450</a>
+<a href="#451" id="451">451</a>
+<a href="#452" id="452">452</a>
+<a href="#453" id="453">453</a>
+<a href="#454" id="454">454</a>
+<a href="#455" id="455">455</a>
+<a href="#456" id="456">456</a>
+<a href="#457" id="457">457</a>
+<a href="#458" id="458">458</a>
+<a href="#459" id="459">459</a>
+<a href="#460" id="460">460</a>
+<a href="#461" id="461">461</a>
+<a href="#462" id="462">462</a>
 </pre><pre class="rust"><code><span class="kw">use </span>std::{
     collections::{HashMap, HashSet},
     path::Path,
     str::FromStr,
 };
 
-<span class="kw">use </span><span class="kw">crate</span>::commons::{
-    errors::SubjectError,
-    identifier::{Derivable, DigestIdentifier},
-    models::{
-        event::Event,
-        event_content::EventContent,
-        event_request::EventRequest,
-        signature::Signature,
-        state::{LedgerState, Subject},
+<span class="kw">use crate</span>::{
+    commons::{
+        errors::SubjectError,
+        identifier::{Derivable, DigestIdentifier},
+        models::{
+            event::Event,
+            event_content::EventContent,
+            event_request::EventRequest,
+            signature::Signature,
+            state::{LedgerState, Subject},
+        },
     },
+    identifier::KeyIdentifier,
 };
 
 <span class="kw">use super</span>::{
@@ -446,6 +494,7 @@
 <span class="kw">const </span>EVENT_TABLE: <span class="kw-2">&amp;</span>str = <span class="string">&quot;event&quot;</span>;
 <span class="kw">const </span>REQUEST_TABLE: <span class="kw-2">&amp;</span>str = <span class="string">&quot;request&quot;</span>;
 <span class="kw">const </span>ID_TABLE: <span class="kw-2">&amp;</span>str = <span class="string">&quot;controller-id&quot;</span>;
+<span class="kw">const </span>NOTARY_TABLE: <span class="kw-2">&amp;</span>str = <span class="string">&quot;notary&quot;</span>;
 
 <span class="kw">pub struct </span>DB {
     signature_db: WrapperLevelDB&lt;StringKey, HashSet&lt;Signature&gt;&gt;,
@@ -453,6 +502,7 @@
     event_db: WrapperLevelDB&lt;StringKey, Event&gt;,
     request_db: WrapperLevelDB&lt;StringKey, EventRequest&gt;,
     id_db: WrapperLevelDB&lt;StringKey, String&gt;,
+    notary_db: WrapperLevelDB&lt;StringKey, (DigestIdentifier, u64)&gt;,
 }
 
 <span class="kw">impl </span>DB {
@@ -466,6 +516,10 @@
             event_db: WrapperLevelDB::&lt;StringKey, Event&gt;::new(db.clone(), EVENT_TABLE),
             request_db: WrapperLevelDB::&lt;StringKey, EventRequest&gt;::new(db.clone(), REQUEST_TABLE),
             id_db: WrapperLevelDB::&lt;StringKey, String&gt;::new(db.clone(), ID_TABLE),
+            notary_db: WrapperLevelDB::&lt;StringKey, (DigestIdentifier, u64)&gt;::new(
+                db.clone(),
+                NOTARY_TABLE,
+            ),
         }
     }
 }
@@ -746,6 +800,42 @@
                 <span class="string">&quot;Error while inserting request id:{} on subject_id:[{}]. Error --&gt; {}&quot;</span>,
                 req_id, id, error
             );
+        }
+    }
+
+    <span class="comment">// Notary
+    </span><span class="kw">fn </span>set_notary_register(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        owner: <span class="kw-2">&amp;</span>KeyIdentifier,
+        subject_id: <span class="kw-2">&amp;</span>DigestIdentifier,
+        event_hash: DigestIdentifier,
+        sn: u64,
+    ) {
+        <span class="kw">let </span>owner_id = owner.to_str();
+        <span class="kw">let </span>subject_id = subject_id.to_str();
+        <span class="kw">let </span>notary_partition = <span class="self">self</span>.notary_db.partition(<span class="kw-2">&amp;</span>owner_id);
+        <span class="kw">if let </span><span class="prelude-val">Err</span>(error) = notary_partition.put(<span class="kw-2">&amp;</span>subject_id, (event_hash, sn)) {
+            <span class="macro">panic!</span>(
+                <span class="string">&quot;Error while inserting notary register: on owner:[{}],on subject_id:[{}]. Error --&gt; {}&quot;</span>,
+                owner_id, subject_id, error
+            );
+        }
+    }
+
+    <span class="kw">fn </span>get_notary_register(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        owner: <span class="kw-2">&amp;</span>KeyIdentifier,
+        subject_id: <span class="kw-2">&amp;</span>DigestIdentifier,
+    ) -&gt; <span class="prelude-ty">Option</span>&lt;(DigestIdentifier, u64)&gt; {
+        <span class="kw">let </span>owner_id = owner.to_str();
+        <span class="kw">let </span>subject_id = subject_id.to_str();
+        <span class="kw">let </span>notary_partition = <span class="self">self</span>.notary_db.partition(<span class="kw-2">&amp;</span>owner_id);
+        <span class="kw">match </span>notary_partition.get(<span class="kw-2">&amp;</span>subject_id) {
+            <span class="prelude-val">Ok</span>(notary_register) =&gt; <span class="prelude-val">Some</span>(notary_register),
+            <span class="prelude-val">Err</span>(error) =&gt; <span class="kw">match </span>error {
+                WrapperLevelDBErrors::EntryNotFoundError =&gt; <span class="prelude-val">None</span>,
+                <span class="kw">_ </span>=&gt; <span class="macro">panic!</span>(<span class="string">&quot;Not recoverable error get request&quot;</span>),
+            },
         }
     }
 }

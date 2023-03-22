@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":[["Content",""],["EventId",""],["ProtocolManagerMessages",""]],"mod":[["manager",""]],"struct":[["GetMessage",""],["SendMessage",""]]};

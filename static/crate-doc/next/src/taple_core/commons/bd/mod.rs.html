@@ -77,21 +77,31 @@
 <a href="#77" id="77">77</a>
 <a href="#78" id="78">78</a>
 <a href="#79" id="79">79</a>
+<a href="#80" id="80">80</a>
+<a href="#81" id="81">81</a>
+<a href="#82" id="82">82</a>
+<a href="#83" id="83">83</a>
+<a href="#84" id="84">84</a>
+<a href="#85" id="85">85</a>
+<a href="#86" id="86">86</a>
 </pre><pre class="rust"><code><span class="kw">pub mod </span>db;
 <span class="kw">pub mod </span>level_db;
 
 <span class="kw">use </span>std::collections::{HashMap, HashSet};
 
-<span class="kw">use </span><span class="kw">crate</span>::commons::{
-    errors::SubjectError,
-    identifier::DigestIdentifier,
-    models::{
-        event::Event,
-        event_content::EventContent,
-        event_request::EventRequest,
-        signature::Signature,
-        state::{LedgerState, Subject},
+<span class="kw">use crate</span>::{
+    commons::{
+        errors::SubjectError,
+        identifier::DigestIdentifier,
+        models::{
+            event::Event,
+            event_content::EventContent,
+            event_request::EventRequest,
+            signature::Signature,
+            state::{LedgerState, Subject},
+        },
     },
+    identifier::KeyIdentifier,
 };
 
 <span class="kw">pub trait </span>TapleDB: Sized {
@@ -124,21 +134,11 @@
 
     <span class="kw">fn </span>get_all_heads(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; HashMap&lt;DigestIdentifier, LedgerState&gt;;
 
-    <span class="kw">fn </span>get_all_subjects(
-        <span class="kw-2">&amp;</span><span class="self">self
-    </span>) -&gt; Vec&lt;Subject&gt;;
+    <span class="kw">fn </span>get_all_subjects(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Vec&lt;Subject&gt;;
 
-    <span class="kw">fn </span>get_subjects(
-        <span class="kw-2">&amp;</span><span class="self">self</span>,
-        from: <span class="prelude-ty">Option</span>&lt;String&gt;,
-        quantity: isize,
-    ) -&gt; Vec&lt;Subject&gt;;
+    <span class="kw">fn </span>get_subjects(<span class="kw-2">&amp;</span><span class="self">self</span>, from: <span class="prelude-ty">Option</span>&lt;String&gt;, quantity: isize) -&gt; Vec&lt;Subject&gt;;
 
-    <span class="kw">fn </span>get_governances(
-        <span class="kw-2">&amp;</span><span class="self">self</span>,
-        from: <span class="prelude-ty">Option</span>&lt;String&gt;,
-        quantity: isize,
-    ) -&gt; Vec&lt;Subject&gt;;
+    <span class="kw">fn </span>get_governances(<span class="kw-2">&amp;</span><span class="self">self</span>, from: <span class="prelude-ty">Option</span>&lt;String&gt;, quantity: isize) -&gt; Vec&lt;Subject&gt;;
 
     <span class="kw">fn </span>get_all_request(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Vec&lt;EventRequest&gt;;
     <span class="kw">fn </span>get_request(
@@ -155,6 +155,20 @@
 
     <span class="kw">fn </span>get_controller_id(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;String&gt;;
     <span class="kw">fn </span>set_controller_id(<span class="kw-2">&amp;</span><span class="self">self</span>, controller_id: String);
+
+    <span class="comment">// Notary
+    </span><span class="kw">fn </span>set_notary_register(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        owner: <span class="kw-2">&amp;</span>KeyIdentifier,
+        subject_id: <span class="kw-2">&amp;</span>DigestIdentifier,
+        event_hash: DigestIdentifier,
+        sn: u64,
+    );
+    <span class="kw">fn </span>get_notary_register(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        owner: <span class="kw-2">&amp;</span>KeyIdentifier,
+        subject_id: <span class="kw-2">&amp;</span>DigestIdentifier,
+    ) -&gt; <span class="prelude-ty">Option</span>&lt;(DigestIdentifier, u64)&gt;;
 }
 </code></pre></div>
 </section></main><div id="rustdoc-vars" data-root-path="../../../../" data-static-root-path="../../../../static.files/" data-current-crate="taple_core" data-themes="" data-resource-suffix="" data-rustdoc-version="1.68.0 (2c8cc3432 2023-03-06)" data-search-js="search-98d53477a794af0b.js" data-settings-js="settings-c3c521c753752a1a.js" data-settings-css="settings-08ddfdda51b8ee2e.css" ></div></body></html>

@@ -140,7 +140,7 @@
 <span class="kw">use </span>std::convert::Infallible;
 <span class="kw">use </span>thiserror::Error;
 
-<span class="attr">#[derive(Error, Debug)]
+<span class="attr">#[derive(Error, Debug, Clone)]
 </span><span class="kw">pub enum </span>ProtocolErrors {
     <span class="attr">#[error(<span class="string">&quot;Errors that can never happen&quot;</span>)]
     </span>InfalibleError {

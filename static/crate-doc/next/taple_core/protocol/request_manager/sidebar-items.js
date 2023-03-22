@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":[["RequestManagerMessage",""],["RequestManagerResponse",""],["VotationType",""]],"mod":[["manager",""]],"struct":[["ApprovalRequest",""]]};
