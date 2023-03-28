@@ -528,6 +528,7 @@
 <a href="#528" id="528">528</a>
 <a href="#529" id="529">529</a>
 <a href="#530" id="530">530</a>
+<a href="#531" id="531">531</a>
 </pre><pre class="rust"><code><span class="kw">use </span>std::sync::Arc;
 
 <span class="kw">use </span><span class="kw">crate</span>::commons::channel::MpscChannel;
@@ -733,6 +734,7 @@
                 timeout: <span class="number">3000u32</span>,
                 passvotation: <span class="number">0</span>,
                 dev_mode: <span class="bool-val">false</span>,
+                smartcontracts_directory: <span class="string">&quot;../../../contracts&quot;</span>.into(),
             },
             database: DatabaseSettings { path: <span class="string">&quot;&quot;</span>.into() },
         }

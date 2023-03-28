@@ -382,6 +382,11 @@
 <a href="#382" id="382">382</a>
 <a href="#383" id="383">383</a>
 <a href="#384" id="384">384</a>
+<a href="#385" id="385">385</a>
+<a href="#386" id="386">386</a>
+<a href="#387" id="387">387</a>
+<a href="#388" id="388">388</a>
+<a href="#389" id="389">389</a>
 </pre><pre class="rust"><code><span class="kw">use </span>std::{collections::HashSet};
 
 <span class="kw">use </span>async_trait::async_trait;
@@ -394,7 +399,7 @@
         event_request::EventRequest,
     },
     schema_handler::get_governance_schema,
-}, DatabaseManager, DB};
+}, DatabaseManager, DB, evaluator::compiler::ContractType};
 
 <span class="kw">use super</span>::{
     error::{InternalError, RequestError},
@@ -538,7 +543,7 @@
 }
 
 <span class="attr">#[async_trait]
-</span><span class="kw">pub trait </span>GovernanceInterface {
+</span><span class="kw">pub trait </span>GovernanceInterface: Sync + Send {
     <span class="kw">async fn </span>check_quorum(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         event: Event,
@@ -579,6 +584,7 @@
         additional_payload: <span class="prelude-ty">Option</span>&lt;String&gt;,
         metadata: <span class="prelude-ty">Option</span>&lt;Metadata&gt;,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;(bool, bool), RequestError&gt;;
+    <span class="kw">async fn </span>get_contracts(<span class="kw-2">&amp;</span><span class="self">self</span>, governance_id: DigestIdentifier) -&gt; <span class="prelude-ty">Result</span>&lt;Vec&lt;(String, ContractType)&gt; , RequestError&gt;;
 }
 
 <span class="attr">#[derive(Debug, Clone)]
@@ -764,6 +770,10 @@
         } <span class="kw">else </span>{
             <span class="prelude-val">Err</span>(RequestError::UnexpectedResponse)
         }
+    }
+
+    <span class="kw">async fn </span>get_contracts(<span class="kw-2">&amp;</span><span class="self">self</span>, governance_id: DigestIdentifier) -&gt; <span class="prelude-ty">Result</span>&lt;Vec&lt;(String, ContractType)&gt; , RequestError&gt; {
+        <span class="macro">todo!</span>()
     }
 }
 </code></pre></div>

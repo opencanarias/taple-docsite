@@ -74,9 +74,12 @@
 <a href="#74" id="74">74</a>
 <a href="#75" id="75">75</a>
 <a href="#76" id="76">76</a>
+<a href="#77" id="77">77</a>
+<a href="#78" id="78">78</a>
 </pre><pre class="rust"><code><span class="kw">use </span>std::collections::HashMap;
 
 <span class="kw">use </span><span class="kw">super</span>::identifier::derive::{digest::DigestDerivator, KeyDerivator};
+<span class="kw">use </span>async_std::path::Path;
 <span class="kw">use </span>config::Value;
 <span class="kw">use </span>serde::Deserialize;
 
@@ -131,6 +134,7 @@
     <span class="attr">#[doc(hidden)]
     #[serde(rename = <span class="string">&quot;devmode&quot;</span>)]
     </span><span class="kw">pub </span>dev_mode: bool,
+    <span class="kw">pub </span>smartcontracts_directory: String,
 }
 
 <span class="doccomment">/// Configuration parameters of the database

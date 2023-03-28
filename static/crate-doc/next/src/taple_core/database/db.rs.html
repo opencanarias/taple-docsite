@@ -302,6 +302,34 @@
 <a href="#302" id="302">302</a>
 <a href="#303" id="303">303</a>
 <a href="#304" id="304">304</a>
+<a href="#305" id="305">305</a>
+<a href="#306" id="306">306</a>
+<a href="#307" id="307">307</a>
+<a href="#308" id="308">308</a>
+<a href="#309" id="309">309</a>
+<a href="#310" id="310">310</a>
+<a href="#311" id="311">311</a>
+<a href="#312" id="312">312</a>
+<a href="#313" id="313">313</a>
+<a href="#314" id="314">314</a>
+<a href="#315" id="315">315</a>
+<a href="#316" id="316">316</a>
+<a href="#317" id="317">317</a>
+<a href="#318" id="318">318</a>
+<a href="#319" id="319">319</a>
+<a href="#320" id="320">320</a>
+<a href="#321" id="321">321</a>
+<a href="#322" id="322">322</a>
+<a href="#323" id="323">323</a>
+<a href="#324" id="324">324</a>
+<a href="#325" id="325">325</a>
+<a href="#326" id="326">326</a>
+<a href="#327" id="327">327</a>
+<a href="#328" id="328">328</a>
+<a href="#329" id="329">329</a>
+<a href="#330" id="330">330</a>
+<a href="#331" id="331">331</a>
+<a href="#332" id="332">332</a>
 </pre><pre class="rust"><code><span class="kw">use </span>std::collections::{HashMap, HashSet};
 <span class="kw">use </span>std::str::FromStr;
 <span class="kw">use </span>std::sync::Arc;
@@ -325,6 +353,7 @@
 <span class="kw">const </span>REQUEST_TABLE: <span class="kw-2">&amp;</span>str = <span class="string">&quot;request&quot;</span>;
 <span class="kw">const </span>ID_TABLE: <span class="kw-2">&amp;</span>str = <span class="string">&quot;controller-id&quot;</span>;
 <span class="kw">const </span>NOTARY_TABLE: <span class="kw-2">&amp;</span>str = <span class="string">&quot;notary&quot;</span>;
+<span class="kw">const </span>CONTRACT_TABLE: <span class="kw-2">&amp;</span>str = <span class="string">&quot;contract&quot;</span>;
 
 <span class="kw">pub struct </span>DB&lt;M: DatabaseManager&gt; {
     _manager: Arc&lt;M&gt;,
@@ -334,6 +363,7 @@
     request_db: Box&lt;<span class="kw">dyn </span>DatabaseCollection&lt;InnerDataType = EventRequest&gt;&gt;,
     id_db: Box&lt;<span class="kw">dyn </span>DatabaseCollection&lt;InnerDataType = String&gt;&gt;,
     notary_db: Box&lt;<span class="kw">dyn </span>DatabaseCollection&lt;InnerDataType = (DigestIdentifier, u64)&gt;&gt;,
+    contract_db: Box&lt;<span class="kw">dyn </span>DatabaseCollection&lt;InnerDataType = (Vec&lt;u8&gt;, DigestIdentifier, u64)&gt;&gt;,
 }
 
 <span class="kw">impl</span>&lt;M: DatabaseManager&gt; DB&lt;M&gt; {
@@ -344,6 +374,7 @@
         <span class="kw">let </span>request_db = manager.create_collection(REQUEST_TABLE);
         <span class="kw">let </span>id_db = manager.create_collection(ID_TABLE);
         <span class="kw">let </span>notary_db = manager.create_collection(NOTARY_TABLE);
+        <span class="kw">let </span>contract_db = manager.create_collection(CONTRACT_TABLE);
         <span class="self">Self </span>{
             _manager: manager,
             signature_db,
@@ -352,6 +383,7 @@
             request_db,
             id_db,
             notary_db,
+            contract_db,
         }
     }
 
@@ -604,6 +636,30 @@
         <span class="kw">let </span>subject_id = subject_id.to_str();
         <span class="kw">let </span>notary_partition = <span class="self">self</span>.notary_db.partition(<span class="kw-2">&amp;</span>owner_id);
         notary_partition.get(<span class="kw-2">&amp;</span>subject_id)
+    }
+
+    <span class="comment">// Contracts Section
+    </span><span class="kw">pub fn </span>get_contract(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        governance_id: <span class="kw-2">&amp;</span>DigestIdentifier,
+        schema_id: <span class="kw-2">&amp;</span>str,
+    ) -&gt; <span class="prelude-ty">Result</span>&lt;(Vec&lt;u8&gt;, DigestIdentifier, u64), Error&gt; {
+        <span class="kw">let </span>id = governance_id.to_str();
+        <span class="kw">let </span>schemas_by_governances = <span class="self">self</span>.contract_db.partition(<span class="kw-2">&amp;</span>id);
+        schemas_by_governances.get(schema_id)
+    }
+
+    <span class="kw">pub fn </span>put_contract(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        governance_id: <span class="kw-2">&amp;</span>DigestIdentifier,
+        schema_id: <span class="kw-2">&amp;</span>str,
+        contract: Vec&lt;u8&gt;,
+        hash: DigestIdentifier,
+        gov_version: u64,
+    ) -&gt; <span class="prelude-ty">Result</span>&lt;(), Error&gt; {
+        <span class="kw">let </span>id = governance_id.to_str();
+        <span class="kw">let </span>schemas_by_governances = <span class="self">self</span>.contract_db.partition(<span class="kw-2">&amp;</span>id);
+        schemas_by_governances.put(schema_id, (contract, hash, gov_version))
     }
 }
 </code></pre></div>
