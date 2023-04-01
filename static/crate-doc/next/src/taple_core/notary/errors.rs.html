@@ -27,13 +27,9 @@
 <a href="#27" id="27">27</a>
 <a href="#28" id="28">28</a>
 <a href="#29" id="29">29</a>
-<a href="#30" id="30">30</a>
-<a href="#31" id="31">31</a>
 </pre><pre class="rust"><code><span class="kw">use </span>thiserror::Error;
 
 <span class="kw">use crate</span>::{commons::errors::ChannelErrors, protocol::errors::ProtocolErrors};
-
-<span class="kw">use </span><span class="kw">crate</span>::database::Error <span class="kw">as </span>DatabaseError;
 
 <span class="attr">#[derive(Error, Debug, Clone, PartialEq)]
 </span><span class="kw">pub enum </span>NotaryError {

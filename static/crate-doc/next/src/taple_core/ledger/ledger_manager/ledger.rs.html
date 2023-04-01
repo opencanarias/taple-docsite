@@ -1184,7 +1184,7 @@
         ledger_state.negociating_next = <span class="bool-val">false</span>;
         ledger_state.head_sn = <span class="prelude-val">Some</span>(ev_sn);
         <span class="kw">let </span><span class="kw-2">mut </span>prev_hash = event.signature.content.event_content_hash.clone();
-        <span class="kw">let </span>event_sourcing = <span class="self">self</span>.repo_access.apply_event_sourcing(event.event_content);
+        <span class="kw">let </span>event_sourcing = <span class="self">self</span>.repo_access.apply_event_sourcing(<span class="kw-2">&amp;</span>event.event_content);
         <span class="kw">if let </span><span class="prelude-val">Err</span>(e) = event_sourcing {
             <span class="kw">return </span><span class="prelude-val">Err</span>(LedgerManagerError::DatabaseError(e.to_string()));
         }
@@ -1204,7 +1204,7 @@
                     <span class="comment">// Event Sourcing and updating head and prev_hash
                     </span>ledger_state.head_sn = <span class="prelude-val">Some</span>(sn);
                     prev_hash = ev.signature.content.event_content_hash.clone();
-                    <span class="kw">let </span>event_sourcing = <span class="self">self</span>.repo_access.apply_event_sourcing(ev.event_content);
+                    <span class="kw">let </span>event_sourcing = <span class="self">self</span>.repo_access.apply_event_sourcing(<span class="kw-2">&amp;</span>ev.event_content);
                     <span class="kw">if let </span><span class="prelude-val">Err</span>(e) = event_sourcing {
                         <span class="kw">return </span><span class="prelude-val">Err</span>(LedgerManagerError::DatabaseError(e.to_string()));
                     }
@@ -1656,7 +1656,7 @@
                     <span class="comment">// Event sourcing and updating head and prev_hash
                     </span>ledger_state.head_sn = <span class="prelude-val">Some</span>(sn);
                     prev_hash = ev.signature.content.event_content_hash.clone();
-                    <span class="kw">let </span>event_sourcing = <span class="self">self</span>.repo_access.apply_event_sourcing(ev.event_content);
+                    <span class="kw">let </span>event_sourcing = <span class="self">self</span>.repo_access.apply_event_sourcing(<span class="kw-2">&amp;</span>ev.event_content);
                     <span class="kw">if let </span><span class="prelude-val">Err</span>(e) = event_sourcing {
                         <span class="kw">return </span><span class="prelude-val">Err</span>(LedgerManagerError::DatabaseError(e.to_string()));
                     }

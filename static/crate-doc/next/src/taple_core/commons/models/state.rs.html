@@ -779,7 +779,7 @@
         }
     }
 
-    <span class="kw">pub fn </span>apply(<span class="kw-2">&amp;mut </span><span class="self">self</span>, event_content: EventContent) -&gt; <span class="prelude-ty">Result</span>&lt;(), SubjectError&gt; {
+    <span class="kw">pub fn </span>apply(<span class="kw-2">&amp;mut </span><span class="self">self</span>, event_content: <span class="kw-2">&amp;</span>EventContent) -&gt; <span class="prelude-ty">Result</span>&lt;(), SubjectError&gt; {
         <span class="kw">match </span><span class="self">self</span>.ledger_state.head_sn {
             <span class="prelude-val">Some</span>(<span class="number">0</span>) =&gt; (),
             <span class="prelude-val">Some</span>(head_sn) =&gt; {
@@ -798,15 +798,15 @@
                 <span class="prelude-val">None </span>=&gt; <span class="kw">return </span><span class="prelude-val">Err</span>(SubjectError::SubjectHasNoData),
             }
         };
-        subject_data.properties = <span class="kw">match </span>event_content.event_request.request {
+        subject_data.properties = <span class="kw">match </span><span class="kw-2">&amp;</span>event_content.event_request.request {
             EventRequestType::Create(<span class="kw">_</span>) =&gt; {
                 <span class="comment">// It should never be create, because it creates the subject, it does not make an event sourcing, in that case it is looked at in the new
                 </span><span class="macro">unreachable!</span>(<span class="string">&quot;Haciendo apply en create event&quot;</span>);
             }
-            EventRequestType::State(req) =&gt; <span class="kw">match </span>req.payload {
+            EventRequestType::State(req) =&gt; <span class="kw">match </span><span class="kw-2">&amp;</span>req.payload {
                 RequestPayload::Json(props) =&gt; {
                     <span class="kw">if </span>event_content.approved {
-                        props
+                        props.clone()
                     } <span class="kw">else </span>{
                         subject_data.properties
                     }

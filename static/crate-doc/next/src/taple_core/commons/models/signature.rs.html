@@ -50,6 +50,7 @@
 <a href="#50" id="50">50</a>
 <a href="#51" id="51">51</a>
 <a href="#52" id="52">52</a>
+<a href="#53" id="53">53</a>
 </pre><pre class="rust"><code><span class="doccomment">//! Define the data structures related to signatures
 </span><span class="kw">use </span><span class="kw">crate</span>::identifier::{DigestIdentifier, KeyIdentifier, SignatureIdentifier};
 <span class="kw">use </span>borsh::{BorshDeserialize, BorshSerialize};
@@ -60,7 +61,7 @@
 <span class="kw">use </span><span class="kw">super</span>::timestamp::TimeStamp;
 
 <span class="doccomment">/// Defines the data used to generate the signature, as well as the signer&#39;s identifier.
-</span><span class="attr">#[derive(Debug, Clone, Serialize, Deserialize, Eq, BorshSerialize, BorshDeserialize, ToSchema)]
+</span><span class="attr">#[derive(Debug, Clone, Serialize, Deserialize, Eq, BorshSerialize, BorshDeserialize, PartialOrd, ToSchema)]
 </span><span class="kw">pub struct </span>SignatureContent {
     <span class="attr">#[schema(value_type = String)]
     </span><span class="kw">pub </span>signer: KeyIdentifier,
@@ -96,6 +97,7 @@
     BorshSerialize,
     BorshDeserialize,
     ToSchema,
+    PartialOrd
 )]
 </span><span class="kw">pub struct </span>Signature {
     <span class="kw">pub </span>content: SignatureContent,

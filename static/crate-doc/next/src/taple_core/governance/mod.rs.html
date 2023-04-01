@@ -111,7 +111,7 @@
 <span class="kw">use </span>error::RequestError;
 <span class="kw">use </span>serde_json::Value;
 
-<span class="attr">#[derive(Debug, Clone)]
+<span class="attr">#[derive(Debug, Clone, PartialEq)]
 </span><span class="kw">pub enum </span>RequestQuorum {
     Accepted,
     Rejected,

@@ -946,7 +946,7 @@
             != <span class="number">0
         </span>{
             <span class="kw">return </span><span class="prelude-val">Ok</span>(<span class="prelude-val">Err</span>(RequestError::InvalidKeyIdentifier(String::from(
-                <span class="string">&quot;One or more Signers are not valid validators&quot;</span>,
+                <span class="string">&quot;One or more Signers are not valid approvers&quot;</span>,
             ))));
         };
         <span class="kw">let </span>acceptance_quorum = (all_approvers.len() <span class="kw">as </span>f64 * quorum_percentage).ceil() <span class="kw">as </span>usize;
