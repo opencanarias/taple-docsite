@@ -529,6 +529,12 @@
 <a href="#529" id="529">529</a>
 <a href="#530" id="530">530</a>
 <a href="#531" id="531">531</a>
+<a href="#532" id="532">532</a>
+<a href="#533" id="533">533</a>
+<a href="#534" id="534">534</a>
+<a href="#535" id="535">535</a>
+<a href="#536" id="536">536</a>
+<a href="#537" id="537">537</a>
 </pre><pre class="rust"><code><span class="kw">use </span>std::sync::Arc;
 
 <span class="kw">use </span><span class="kw">crate</span>::commons::channel::MpscChannel;
@@ -548,7 +554,7 @@
 <span class="kw">use </span><span class="kw">crate</span>::message::{
     Message, MessageReceiver, MessageSender, MessageTaskCommand, MessageTaskManager, NetworkEvent,
 };
-<span class="kw">use </span><span class="kw">crate</span>::network::network::NetworkProcessor;
+<span class="kw">use </span><span class="kw">crate</span>::network::network::{NetworkProcessor, SendMode};
 <span class="kw">use </span><span class="kw">crate</span>::protocol::command_head_manager::{
     manager::CommandManager, CommandManagerResponses, Commands,
 };
@@ -735,6 +741,7 @@
                 passvotation: <span class="number">0</span>,
                 dev_mode: <span class="bool-val">false</span>,
                 smartcontracts_directory: <span class="string">&quot;../../../contracts&quot;</span>.into(),
+                req_res: <span class="bool-val">false</span>,
             },
             database: DatabaseSettings { path: <span class="string">&quot;&quot;</span>.into() },
         }
@@ -870,6 +877,11 @@
             </span>sender_network,
             kp.clone(),
             bsx.subscribe(),
+            <span class="kw">if </span><span class="self">self</span>.settings.node.req_res {
+                SendMode::RequestResponse
+            } <span class="kw">else </span>{
+                SendMode::Tell
+            },
         )
         .<span class="kw">await
         </span>.expect(<span class="string">&quot;Error en creación de la capa de red&quot;</span>);

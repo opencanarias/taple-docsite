@@ -76,6 +76,8 @@
 <a href="#76" id="76">76</a>
 <a href="#77" id="77">77</a>
 <a href="#78" id="78">78</a>
+<a href="#79" id="79">79</a>
+<a href="#80" id="80">80</a>
 </pre><pre class="rust"><code><span class="kw">use </span>std::collections::HashMap;
 
 <span class="kw">use </span><span class="kw">super</span>::identifier::derive::{digest::DigestDerivator, KeyDerivator};
@@ -129,6 +131,8 @@
     </span><span class="kw">pub </span>replication_factor: f64,
     <span class="doccomment">/// Timeout to be used between protocol iterations
     </span><span class="kw">pub </span>timeout: u32,
+    <span class="doccomment">/// Use Request-Response protocol to send messages throught the network
+    </span><span class="kw">pub </span>req_res: bool,
     <span class="attr">#[doc(hidden)]
     </span><span class="kw">pub </span>passvotation: u8,
     <span class="attr">#[doc(hidden)]
