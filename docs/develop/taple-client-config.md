@@ -3,8 +3,8 @@
 The configuration of a TAPLE node can be done at different levels, each of which overwrites the previous one in case of conflict. The order, and consequently the list of existing options, is as follows:
 - Default configuration.
 - Configuration by **.toml** file.
-- Configuration by environment variables.
 - Configuration by input parameters.
+- Configuration by environment variables.
 
 ## Configuration by file
 
