@@ -737,7 +737,7 @@ The governance in TAPLE is [modeled as a subject](../../technology/governance.md
 This property defines the list of members in the network, meaning, users that have the right to participate in the network, and each member has the following properties:
 - **id**. A short, colloquial name by which the node is known in the network. It serves no functionality other than being descriptive. It does not act as a unique identifier within the network.
 - **description**. A longer text that serves to further define the subject. It serves no functionality other than being descriptive.
-- **dey**. Corresponds to the controller-id of the node. Acts as a unique [identifier](../../technology/identity#identifiers) within the network and corresponds to the node's cryptographic public key.
+- **key**. Corresponds to the controller-id of the node. Acts as a unique [identifier](../../technology/identity#identifiers) within the network and corresponds to the node's cryptographic public key.
 
 ```json title="Members section example"
 {
@@ -774,10 +774,10 @@ Defines the list of schemas that are allowed to be used in the subjects associat
         "additionalProperties": false,
         "required": ["temperature", "location"],
         "properties": {
-          "temperatura": {
+          "temperature": {
             "type": "integer"
           },
-          "localizacion": {
+          "location": {
             "type": "string"
           }
         }

@@ -395,7 +395,7 @@ We will proceed to raise the four TAPLE nodes required for the system. For this 
 
 - Smart lock
     <details>
-      <summary>Levantando nodo TAPLE - Cerradura 1</summary>
+      <summary>Lifting TAPLE node - Lock 1</summary>
 
   ```bash
   docker run -d --rm --network=host -e TAPLE_HTTPPORT=9003 \
@@ -615,7 +615,7 @@ We will use the private key to sign the lock opening request with the [**sign**]
 sign bdc3ea6396f0a60dfb4d92f1811e2fead7e436ebd5449a913c3af2f761983caf "{\"subject_id\":\"{{subject_id}}\",\"payload\":{\"Json\":{\"current_state\":\"CLOSED\"}}}"
 ```
 
-Resultado:
+Result:
 
 ```json
 {
