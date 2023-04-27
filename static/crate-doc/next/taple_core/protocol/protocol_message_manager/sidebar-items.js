@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"enum":[["Content",""],["EventId",""],["ProtocolManagerMessages",""]],"mod":[["manager",""]],"struct":[["GetMessage",""],["SendMessage",""]]};
+window.SIDEBAR_ITEMS = {"enum":["TapleMessages"],"struct":["ProtocolManager"]};

@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `core/src/evaluator/manager.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>manager.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-1f7d512b176f0f72.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Bold-124a1ca42af929b6.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-93196c7a1c3542a8.css" id="mainThemeStyle"><link rel="stylesheet" id="themeStyle" href="../../../static.files/light-4743e13df3dfe8c4.css"><link rel="stylesheet" disabled href="../../../static.files/dark-0e1b889528bd466b.css"><link rel="stylesheet" disabled href="../../../static.files/ayu-65289d5d067c7c66.css"><script id="default-settings" ></script><script src="../../../static.files/storage-d43fa987303ecbbb.js"></script><script defer src="../../../static.files/source-script-ea63cb6500f71309.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../static.files/main-3367e395607fafc1.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-13285aec31fa243e.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../../taple_core/index.html"><img class="rust-logo" src="../../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-5ec35bf9ca753509.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `core/src/evaluator/manager.rs`."><title>manager.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-c4dbdcde0fbd8430.css" id="mainThemeStyle"><link rel="stylesheet" id="themeStyle" href="../../../static.files/light-db279b6232be9c13.css"><link rel="stylesheet" disabled href="../../../static.files/dark-cf923f49f397b216.css"><link rel="stylesheet" disabled href="../../../static.files/ayu-be46fdc453a55015.css"><script src="../../../static.files/storage-3891ce972e3a2bf8.js"></script><script defer src="../../../static.files/source-script-1b95b7cca98b26e5.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../static.files/main-98a684e84ae5b08b.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-13285aec31fa243e.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../../taple_core/index.html"><img class="rust-logo" src="../../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -838,29 +838,6 @@
 <a href="#838" id="838">838</a>
 <a href="#839" id="839">839</a>
 <a href="#840" id="840">840</a>
-<a href="#841" id="841">841</a>
-<a href="#842" id="842">842</a>
-<a href="#843" id="843">843</a>
-<a href="#844" id="844">844</a>
-<a href="#845" id="845">845</a>
-<a href="#846" id="846">846</a>
-<a href="#847" id="847">847</a>
-<a href="#848" id="848">848</a>
-<a href="#849" id="849">849</a>
-<a href="#850" id="850">850</a>
-<a href="#851" id="851">851</a>
-<a href="#852" id="852">852</a>
-<a href="#853" id="853">853</a>
-<a href="#854" id="854">854</a>
-<a href="#855" id="855">855</a>
-<a href="#856" id="856">856</a>
-<a href="#857" id="857">857</a>
-<a href="#858" id="858">858</a>
-<a href="#859" id="859">859</a>
-<a href="#860" id="860">860</a>
-<a href="#861" id="861">861</a>
-<a href="#862" id="862">862</a>
-<a href="#863" id="863">863</a>
 </pre><pre class="rust"><code><span class="kw">use </span>std::sync::Arc;
 
 <span class="kw">use </span>wasmtime::Engine;
@@ -868,18 +845,18 @@
 <span class="kw">use </span><span class="kw">super</span>::compiler::manager::TapleCompiler;
 <span class="kw">use </span><span class="kw">super</span>::compiler::{CompilerMessages, CompilerResponses};
 <span class="kw">use </span><span class="kw">super</span>::errors::EvaluatorError;
-<span class="kw">use </span><span class="kw">super</span>::runner::ExecuteContract;
 <span class="kw">use super</span>::{EvaluatorMessage, EvaluatorResponse};
+<span class="kw">use </span><span class="kw">crate</span>::commons::self_signature_manager::{SelfSignatureInterface, SelfSignatureManager};
 <span class="kw">use </span><span class="kw">crate</span>::database::{DatabaseManager, DB};
 <span class="kw">use </span><span class="kw">crate</span>::evaluator::errors::ExecutorErrorResponses;
 <span class="kw">use </span><span class="kw">crate</span>::evaluator::runner::manager::TapleRunner;
-<span class="kw">use </span><span class="kw">crate</span>::evaluator::AskForEvaluationResponse;
-<span class="kw">use </span><span class="kw">crate</span>::event_request::{EventRequestType, RequestPayload};
+<span class="kw">use </span><span class="kw">crate</span>::event_request::{EventRequestType};
 <span class="kw">use </span><span class="kw">crate</span>::governance::GovernanceInterface;
-<span class="kw">use </span><span class="kw">crate</span>::protocol::command_head_manager::self_signature_manager::SelfSignatureInterface;
+<span class="kw">use </span><span class="kw">crate</span>::message::{MessageConfig, MessageTaskCommand};
+<span class="kw">use </span><span class="kw">crate</span>::protocol::protocol_message_manager::TapleMessages;
+<span class="kw">use </span><span class="kw">crate</span>::utils::message::event::create_evaluator_response;
 <span class="kw">use crate</span>::{
-    commons::channel::{ChannelData, MpscChannel, SenderEnd},
-    protocol::command_head_manager::self_signature_manager::SelfSignatureManager,
+    commons::channel::{ChannelData, MpscChannel, SenderEnd}
 };
 
 <span class="attr">#[derive(Clone, Debug)]
@@ -893,18 +870,22 @@
     }
 }
 
-<span class="kw">pub struct </span>EvaluatorManager&lt;D: DatabaseManager + Send + <span class="lifetime">&#39;static</span>&gt; {
+<span class="kw">pub struct </span>EvaluatorManager&lt;
+    D: DatabaseManager + Send + <span class="lifetime">&#39;static</span>,
+    G: GovernanceInterface + Send + Clone + <span class="lifetime">&#39;static</span>,
+&gt; {
     <span class="doccomment">/// Communication channel for incoming petitions
     </span>input_channel: MpscChannel&lt;EvaluatorMessage, EvaluatorResponse&gt;,
     <span class="doccomment">/// Contract executioner
-    </span>runner: TapleRunner&lt;D&gt;,
+    </span>runner: TapleRunner&lt;D, G&gt;,
     signature_manager: SelfSignatureManager,
     shutdown_sender: tokio::sync::broadcast::Sender&lt;()&gt;,
     shutdown_receiver: tokio::sync::broadcast::Receiver&lt;()&gt;,
+    messenger_channel: SenderEnd&lt;MessageTaskCommand&lt;TapleMessages&gt;, ()&gt;,
 }
 
-<span class="kw">impl</span>&lt;D: DatabaseManager&gt; EvaluatorManager&lt;D&gt; {
-    <span class="kw">pub fn </span>new&lt;G: GovernanceInterface + Send + <span class="lifetime">&#39;static</span>&gt;(
+<span class="kw">impl</span>&lt;D: DatabaseManager, G: GovernanceInterface + Send + Clone + <span class="lifetime">&#39;static</span>&gt; EvaluatorManager&lt;D, G&gt; {
+    <span class="kw">pub fn </span>new(
         input_channel: MpscChannel&lt;EvaluatorMessage, EvaluatorResponse&gt;,
         database: Arc&lt;D&gt;,
         signature_manager: SelfSignatureManager,
@@ -913,25 +894,28 @@
         shutdown_receiver: tokio::sync::broadcast::Receiver&lt;()&gt;,
         gov_api: G,
         contracts_path: String,
+        messenger_channel: SenderEnd&lt;MessageTaskCommand&lt;TapleMessages&gt;, ()&gt;,
     ) -&gt; <span class="self">Self </span>{
         <span class="kw">let </span>engine = Engine::default();
         <span class="kw">let </span>compiler = TapleCompiler::new(
             compiler_channel,
             DB::new(database.clone()),
-            gov_api,
+            gov_api.clone(),
             contracts_path,
             engine.clone(),
             shutdown_sender.subscribe(),
+            shutdown_sender.clone(),
         );
         tokio::spawn(<span class="kw">async move </span>{
             compiler.start().<span class="kw">await</span>;
         });
         <span class="self">Self </span>{
             input_channel,
-            runner: TapleRunner::new(DB::new(database.clone()), engine),
+            runner: TapleRunner::new(DB::new(database.clone()), engine, gov_api),
             signature_manager,
             shutdown_receiver,
             shutdown_sender,
+            messenger_channel,
         }
     }
 
@@ -967,42 +951,47 @@
                 <span class="kw">let </span>(sender, data) = data.get();
                 (<span class="prelude-val">Some</span>(sender), data)
             }
-            ChannelData::TellData(<span class="kw">_</span>) =&gt; {
-                <span class="kw">return </span><span class="prelude-val">Err</span>(EvaluatorError::TellNotAvailable);
+            ChannelData::TellData(data) =&gt; {
+                <span class="kw">let </span>data = data.get();
+                (<span class="prelude-val">None</span>, data)
             }
         };
         <span class="kw">let </span>response = <span class="lifetime">&#39;response</span>: {
             <span class="kw">match </span>data {
                 EvaluatorMessage::AskForEvaluation(data) =&gt; {
-                    <span class="kw">let </span>EventRequestType::State(state_data) = <span class="kw-2">&amp;</span>data.invokation.request <span class="kw">else </span>{
+                    <span class="kw">let </span>EventRequestType::State(state_data) = <span class="kw-2">&amp;</span>data.event_request.request <span class="kw">else </span>{
                         <span class="kw">break </span><span class="lifetime">&#39;response </span>EvaluatorResponse::AskForEvaluation(<span class="prelude-val">Err</span>(<span class="kw">super</span>::errors::EvaluatorErrorResponses::CreateRequestNotAllowed));
                     };
-                    <span class="kw">let </span>result = <span class="self">self
-                        </span>.runner
-                        .execute_contract(ExecuteContract {
-                            governance_id: data.governance_id,
-                            schema: data.schema_id,
-                            state: data.state,
-                            event: extract_data_from_payload(<span class="kw-2">&amp;</span>state_data.payload),
-                        })
-                        .<span class="kw">await</span>;
+                    <span class="kw">let </span>result = <span class="self">self</span>.runner.execute_contract(<span class="kw-2">&amp;</span>data, state_data).<span class="kw">await</span>;
                     <span class="kw">match </span>result {
                         <span class="prelude-val">Ok</span>(executor_response) =&gt; {
                             <span class="kw">let </span>governance_version = executor_response.governance_version;
                             <span class="kw">let </span>signature = <span class="self">self
                                 </span>.signature_manager
                                 .sign(<span class="kw-2">&amp;</span>(
+                                    <span class="kw-2">&amp;</span>executor_response.context_hash,
                                     <span class="kw-2">&amp;</span>executor_response.hash_new_state,
-                                    <span class="kw-2">&amp;</span>executor_response.json_patch,
                                     governance_version,
+                                    <span class="kw-2">&amp;</span>executor_response.success,
+                                    <span class="kw-2">&amp;</span>executor_response.approval_required,
                                 ))
                                 .map_err(|<span class="kw">_</span>| EvaluatorError::SignatureGenerationFailed)<span class="question-mark">?</span>;
-                            EvaluatorResponse::AskForEvaluation(<span class="prelude-val">Ok</span>(AskForEvaluationResponse {
+                            <span class="kw">let </span>msg = create_evaluator_response(
+                                executor_response.context_hash,
+                                executor_response.hash_new_state,
                                 governance_version,
-                                hash_new_state: executor_response.hash_new_state,
-                                json_patch: executor_response.json_patch,
+                                executor_response.success,
+                                executor_response.approval_required,
+                                executor_response.json_patch,
                                 signature,
-                            }))
+                            );
+                            <span class="self">self</span>.messenger_channel.tell(MessageTaskCommand::Request(
+                                <span class="prelude-val">None</span>,
+                                msg,
+                                <span class="macro">vec!</span>[data.context.owner],
+                                MessageConfig::direct_response(),
+                            )).<span class="kw">await</span>.map_err(|<span class="kw">_</span>| EvaluatorError::ChannelNotAvailable)<span class="question-mark">?</span>;
+                            EvaluatorResponse::AskForEvaluation(<span class="prelude-val">Ok</span>(()))
                         }
                         <span class="prelude-val">Err</span>(ExecutorErrorResponses::DatabaseError(error)) =&gt; {
                             <span class="kw">return </span><span class="prelude-val">Err</span>(EvaluatorError::DatabaseError(error))
@@ -1022,54 +1011,49 @@
                 }
             }
         };
-        sender
-            .unwrap()
-            .send(response)
-            .map_err(|<span class="kw">_</span>| EvaluatorError::ChannelNotAvailable)<span class="question-mark">?</span>;
+        <span class="kw">if </span>sender.is_some() {
+            sender
+                .unwrap()
+                .send(response)
+                .map_err(|<span class="kw">_</span>| EvaluatorError::ChannelNotAvailable)<span class="question-mark">?</span>;
+        }
         <span class="prelude-val">Ok</span>(())
     }
 }
 
-<span class="kw">fn </span>extract_data_from_payload(payload: <span class="kw-2">&amp;</span>RequestPayload) -&gt; String {
-    <span class="kw">match </span>payload {
-        RequestPayload::Json(data) =&gt; data.clone(),
-        RequestPayload::JsonPatch(data) =&gt; data.clone(),
-    }
-}
+<span class="comment">/*
+#[cfg(test)]
+mod test {
+    use std::{str::FromStr, sync::Arc};
 
-<span class="attr">#[cfg(test)]
-</span><span class="kw">mod </span>test {
-    <span class="kw">use </span>std::{collections::HashSet, str::FromStr, sync::Arc};
+    use async_trait::async_trait;
+    use json_patch::diff;
+    use serde::{Deserialize, Serialize};
 
-    <span class="kw">use </span>async_trait::async_trait;
-    <span class="kw">use </span>json_patch::diff;
-    <span class="kw">use </span>serde::{Deserialize, Serialize};
-
-    <span class="kw">use crate</span>::{
+    use crate::{
         commons::{
             channel::{MpscChannel, SenderEnd},
-            crypto::{Ed25519KeyPair, KeyGenerator, KeyMaterial, KeyPair}, models::notary::NotaryEventResponse,
+            crypto::{Ed25519KeyPair, KeyGenerator, KeyMaterial, KeyPair},
         },
         evaluator::{
             compiler::{CompilerMessages, CompilerResponses, ContractType, NewGovVersion},
-            errors::{EvaluatorErrorResponses, ExecutorErrorResponses, CompilerErrorResponses},
+            errors::CompilerErrorResponses,
             EvaluatorMessage, EvaluatorResponse,
         },
-        event_content::Metadata,
-        event_request::{EventRequest, EventRequestType, RequestPayload, StateRequest},
-        governance::{error::RequestError, GovernanceInterface, RequestQuorum},
+        event_request::{EventRequest, EventRequestType, StateRequest},
+        governance::{error::RequestError, GovernanceInterface},
         identifier::{DigestIdentifier, KeyIdentifier},
         protocol::command_head_manager::self_signature_manager::{
             SelfSignatureInterface, SelfSignatureManager,
         },
-        ApprovalResponse, Event, MemoryManager, TimeStamp, signature::Signature,
+        MemoryManager, TimeStamp,
     };
 
-    <span class="kw">use </span><span class="kw">crate</span>::evaluator::manager::EvaluatorManager;
+    use crate::evaluator::manager::EvaluatorManager;
 
-    <span class="comment">// Event Family
-    </span><span class="attr">#[derive(Serialize, Deserialize, Debug)]
-    </span><span class="kw">pub enum </span>EventType {
+    // Event Family
+    #[derive(Serialize, Deserialize, Debug)]
+    pub enum EventType {
         Notify {
             chunk: Vec&lt;u8&gt;,
         },
@@ -1091,241 +1075,214 @@
         },
     }
 
-    <span class="comment">// Subject State
-    </span><span class="attr">#[derive(Serialize, Deserialize, Debug)]
-    </span><span class="kw">pub struct </span>Data {
-        <span class="kw">pub </span>one: u32,
-        <span class="kw">pub </span>two: u32,
-        <span class="kw">pub </span>three: u32,
+    // Subject State
+    #[derive(Serialize, Deserialize, Debug)]
+    pub struct Data {
+        pub one: u32,
+        pub two: u32,
+        pub three: u32,
     }
 
-    <span class="kw">struct </span>GovernanceMockup {}
+    #[derive(Clone)]
+    struct GovernanceMockup {}
 
-    <span class="kw">fn </span>get_file_wrong() -&gt; String {
+    fn get_file_wrong() -&gt; String {
         String::from(
-            <span class="string">r#&quot;
+            r#&quot;
         #[no_mangle]
-        pub unsafe fn main_function(state_ptr: i32, event_ptr: i32) {
+        pub unsafe fn main_function(state_ptr: i32, event_ptr: i32, roles_ptr: i32) {
+            
         }
-      &quot;#</span>,
+      &quot;#,
         )
     }
 
-    <span class="kw">fn </span>get_file_wrong2() -&gt; String {
+    fn get_file_wrong2() -&gt; String {
         String::from(
-            <span class="string">r#&quot;
+            r#&quot;
         #[no_mangle]
-        pub unsafe fn main_function(state_ptr: i32, event_ptr: i32) -&gt; i32 {
+        pub unsafe fn main_function(state_ptr: i32, event_ptr: i32, roles_ptr: i32) -&gt; i32 {
             4
         }
-      &quot;#</span>,
+      &quot;#,
         )
     }
 
-    <span class="kw">fn </span>get_file() -&gt; String {
+    fn get_file() -&gt; String {
         String::from(
-            <span class="string">r#&quot;
-        mod externf;
-        mod sdk;
-        use serde::{Deserialize, Serialize};
-    
-        // Intento de simulación de cómo podría ser un contrato
-    
-        // Definir &quot;estado del sujeto&quot;
-        #[repr(C)]
-        #[derive(Serialize, Deserialize)]
-        pub struct Data {
-            pub one: u32,
-            pub two: u32,
-            pub three: u32,
-        }
-    
-        // Definir &quot;Familia de eventos&quot;
-        #[derive(Serialize, Deserialize, Debug)]
-        pub enum EventType {
-            Notify,
-            ModOne{data: u32},
-            ModTwo{data: u32},
-            ModThree{data: u32},
-            ModAll{data: (u32, u32, u32)},
-        }
-    
-        #[no_mangle]
-        pub unsafe fn main_function(state_ptr: i32, event_ptr: i32) -&gt; u32 {
-            sdk::execute_contract(state_ptr, event_ptr, contract_logic)
-        }
-    
-        // Lógica del contrato con los tipos de datos esperados
-        // Devuelve el puntero a los datos escritos con el estado modificado
-        fn contract_logic(state: &amp;mut Data, event: &amp;EventType) {
-            // Sería posible añadir gestión de errores
-            // Podría ser interesante hacer las operaciones directamente como serde_json:Value en lugar de &quot;Custom Data&quot;
-            match event {
-                EventType::ModAll{data} =&gt; {
-                    // Evento que modifica el estado entero
-                    state.one = data.0;
-                    state.two = data.1;
-                    state.three = data.2;
-                }
-                EventType::ModOne{data} =&gt; {
-                    // Evento que modifica Data.one
-                    state.one = *data;
-                }
-                EventType::ModTwo{data} =&gt; {
-                    // Evento que modifica Data.two
-                    state.two = *data;
-                }
-                EventType::ModThree{data} =&gt; {
-                    // Evento que modifica Data.three
-                    state.three = *data;
-                }
-                EventType::Notify =&gt; {
-                    // Evento que no modifica el estado
-                    // Estos eventos se añadirían a la cadena, pero dentro del contrato apenas harían algo
-                }
+            r#&quot;
+            mod sdk;
+            use serde::{Deserialize, Serialize};
+            
+            // Intento de simulación de cómo podría ser un contrato
+            
+            // Definir &quot;estado del sujeto&quot;
+            #[repr(C)]
+            #[derive(Serialize, Deserialize, Clone)]
+            pub struct Data {
+                pub one: u32,
+                pub two: u32,
+                pub three: u32,
             }
-        } 
-      &quot;#</span>,
+            
+            // Definir &quot;Familia de eventos&quot;
+            #[derive(Serialize, Deserialize, Debug)]
+            pub enum EventType {
+                Notify,
+                Patch { data: String },
+                ModOne { data: u32 },
+                ModTwo { data: u32 },
+                ModThree { data: u32 },
+                ModAll { data: (u32, u32, u32) },
+            }
+            
+            #[no_mangle]
+            pub unsafe fn main_function(state_ptr: i32, event_ptr: i32, roles_ptr: i32) -&gt; u32 {
+                sdk::execute_contract(state_ptr, event_ptr, roles_ptr, contract_logic)
+            }
+            
+            /*
+               context -&gt; inmutable con estado inicial roles y evento
+               result -&gt; mutable success y approvalRequired, y estado final
+               approvalRequired por defecto a false y siempre false si KO o error
+            */
+            
+            // Lógica del contrato con los tipos de datos esperados
+            // Devuelve el puntero a los datos escritos con el estado modificado
+            fn contract_logic(
+                context: &amp;sdk::Context&lt;Data, EventType&gt;,
+                contract_result: &amp;mut sdk::ContractResult&lt;Data&gt;,
+            ) {
+                // Sería posible añadir gestión de errores
+                // Podría ser interesante hacer las operaciones directamente como serde_json:Value en lugar de &quot;Custom Data&quot;
+                let state = &amp;mut contract_result.final_state;
+                let roles = &amp;context.roles;
+                match &amp;context.event {
+                    EventType::ModAll { data } =&gt; {
+                        // Evento que modifica el estado entero
+                        state.one = data.0;
+                        state.two = data.1;
+                        state.three = data.2;
+                    }
+                    EventType::ModOne { data } =&gt; {
+                        // Evento que modifica Data.one
+                        if roles.contains(&amp;&quot;RolA&quot;.into()) {
+                            state.one = *data;
+                        }
+                    }
+                    EventType::ModTwo { data } =&gt; {
+                        // Evento que modifica Data.two
+                        state.two = *data;
+                    }
+                    EventType::ModThree { data } =&gt; {
+                        // Evento que modifica Data.three
+                        state.three = *data;
+                    }
+                    EventType::Notify =&gt; {
+                        // Evento que no modifica el estado
+                        // Estos eventos se añadirían a la cadena, pero dentro del contrato apenas harían algo
+                    }
+                    EventType::Patch { data } =&gt; {
+                        // Se recibe un JSON PATCH
+                        // Se aplica directamente al estado
+                        let patched_state = sdk::apply_patch(&amp;data, &amp;context.initial_state).unwrap();
+                        *state = patched_state;
+                        // El usuario debería añadir una función que compruebe el estado del sujeto.
+                    }
+                }
+                contract_result.success = true;
+            }            
+      &quot;#,
         )
     }
 
-    <span class="attr">#[async_trait]
-    </span><span class="kw">impl </span>GovernanceInterface <span class="kw">for </span>GovernanceMockup {
-        <span class="kw">async fn </span>check_quorum(
-            <span class="kw-2">&amp;</span><span class="self">self</span>,
-            _event: Event,
-            _signers: <span class="kw-2">&amp;</span>HashSet&lt;KeyIdentifier&gt;,
-        ) -&gt; <span class="prelude-ty">Result</span>&lt;(bool, HashSet&lt;KeyIdentifier&gt;), RequestError&gt; {
-            <span class="macro">unimplemented!</span>()
+    #[async_trait]
+    impl GovernanceInterface for GovernanceMockup {
+        async fn get_governance_version(
+            &amp;self,
+            _governance_id: &amp;DigestIdentifier,
+        ) -&gt; Result&lt;u64, RequestError&gt; {
+            unimplemented!()
         }
-        <span class="kw">async fn </span>check_quorum_request(
-            <span class="kw-2">&amp;</span><span class="self">self</span>,
-            _event_request: EventRequest,
-            _approvals: HashSet&lt;ApprovalResponse&gt;,
-        ) -&gt; <span class="prelude-ty">Result</span>&lt;(RequestQuorum, HashSet&lt;KeyIdentifier&gt;), RequestError&gt; {
-            <span class="macro">unimplemented!</span>()
+        async fn get_schema(
+            &amp;self,
+            _governance_id: &amp;DigestIdentifier,
+            _schema_id: &amp;String,
+        ) -&gt; Result&lt;serde_json::Value, RequestError&gt; {
+            unimplemented!()
         }
-        <span class="kw">async fn </span>check_policy(
-            <span class="kw-2">&amp;</span><span class="self">self</span>,
-            _governance_id: <span class="kw-2">&amp;</span>DigestIdentifier,
-            _governance_version: u64,
-            _schema_id: <span class="kw-2">&amp;</span>String,
-            _subject_namespace: <span class="kw-2">&amp;</span>String,
-            _controller_namespace: <span class="kw-2">&amp;</span>String,
-        ) -&gt; <span class="prelude-ty">Result</span>&lt;bool, RequestError&gt; {
-            <span class="macro">unimplemented!</span>()
+        async fn is_governance(
+            &amp;self,
+            _subject_id: &amp;DigestIdentifier,
+        ) -&gt; Result&lt;bool, RequestError&gt; {
+            unimplemented!()
         }
-        <span class="kw">async fn </span>get_validators(
-            <span class="kw-2">&amp;</span><span class="self">self</span>,
-            _event: Event,
-        ) -&gt; <span class="prelude-ty">Result</span>&lt;HashSet&lt;KeyIdentifier&gt;, RequestError&gt; {
-            <span class="macro">unimplemented!</span>()
-        }
-        <span class="kw">async fn </span>get_approvers(
-            <span class="kw-2">&amp;</span><span class="self">self</span>,
-            _event_request: EventRequest,
-        ) -&gt; <span class="prelude-ty">Result</span>&lt;HashSet&lt;KeyIdentifier&gt;, RequestError&gt; {
-            <span class="macro">unimplemented!</span>()
-        }
-        <span class="kw">async fn </span>get_governance_version(
-            <span class="kw-2">&amp;</span><span class="self">self</span>,
-            _governance_id: <span class="kw-2">&amp;</span>DigestIdentifier,
-        ) -&gt; <span class="prelude-ty">Result</span>&lt;u64, RequestError&gt; {
-            <span class="macro">unimplemented!</span>()
-        }
-        <span class="kw">async fn </span>get_schema(
-            <span class="kw-2">&amp;</span><span class="self">self</span>,
-            _governance_id: <span class="kw-2">&amp;</span>DigestIdentifier,
-            _schema_id: <span class="kw-2">&amp;</span>String,
-        ) -&gt; <span class="prelude-ty">Result</span>&lt;serde_json::Value, RequestError&gt; {
-            <span class="macro">unimplemented!</span>()
-        }
-        <span class="kw">async fn </span>is_governance(
-            <span class="kw-2">&amp;</span><span class="self">self</span>,
-            _subject_id: <span class="kw-2">&amp;</span>DigestIdentifier,
-        ) -&gt; <span class="prelude-ty">Result</span>&lt;bool, RequestError&gt; {
-            <span class="macro">unimplemented!</span>()
-        }
-        <span class="kw">async fn </span>check_if_witness(
-            <span class="kw-2">&amp;</span><span class="self">self</span>,
+        async fn get_contracts(
+            &amp;self,
             governance_id: DigestIdentifier,
-            namespace: String,
-            schema_id: String,
-        ) -&gt; <span class="prelude-ty">Result</span>&lt;bool, RequestError&gt; {
-            <span class="macro">unimplemented!</span>()
-        }
-        <span class="kw">async fn </span>check_notary_signatures(
-            <span class="kw-2">&amp;</span><span class="self">self</span>,
-            signatures: HashSet&lt;NotaryEventResponse&gt;,
-            data_hash: DigestIdentifier,
-            governance_id: DigestIdentifier,
-            namespace: String,
-        ) -&gt; <span class="prelude-ty">Result</span>&lt;(), RequestError&gt; {
-            <span class="macro">unimplemented!</span>()
-        }
-        <span class="kw">async fn </span>check_evaluator_signatures(
-            <span class="kw-2">&amp;</span><span class="self">self</span>,
-            signatures: HashSet&lt;Signature&gt;,
-            governance_id: DigestIdentifier,
-            governance_version: u64,
-            namespace: String,
-        ) -&gt; <span class="prelude-ty">Result</span>&lt;(), RequestError&gt; {
-            <span class="macro">unimplemented!</span>()
-        }
-        <span class="kw">async fn </span>check_invokation_permission(
-            <span class="kw-2">&amp;</span><span class="self">self</span>,
-            _subject_id: DigestIdentifier,
-            _invokator: KeyIdentifier,
-            _additional_payload: <span class="prelude-ty">Option</span>&lt;String&gt;,
-            _metadata: <span class="prelude-ty">Option</span>&lt;Metadata&gt;,
-        ) -&gt; <span class="prelude-ty">Result</span>&lt;(bool, bool), RequestError&gt; {
-            <span class="macro">unimplemented!</span>()
-        }
-        <span class="kw">async fn </span>get_contracts(
-            <span class="kw-2">&amp;</span><span class="self">self</span>,
-            governance_id: DigestIdentifier,
-        ) -&gt; <span class="prelude-ty">Result</span>&lt;Vec&lt;(String, ContractType)&gt;, RequestError&gt; {
-            <span class="kw">if </span>governance_id
-                == DigestIdentifier::from_str(<span class="string">&quot;Jg2Nuv5bNs4swQGcPQ1CXs9MtcfwMVoeQDR2Ea1YNYJw&quot;</span>)
+        ) -&gt; Result&lt;Vec&lt;(String, ContractType)&gt;, RequestError&gt; {
+            if governance_id
+                == DigestIdentifier::from_str(&quot;Jg2Nuv5bNs4swQGcPQ1CXs9MtcfwMVoeQDR2Ea1YNYJw&quot;)
                     .unwrap()
             {
-                <span class="prelude-val">Ok</span>(<span class="macro">vec!</span>[(
-                    <span class="string">&quot;test&quot;</span>.to_owned(),
-                    ContractType::String(String::from(<span class="string">&quot;test&quot;</span>)),
+                Ok(vec![(
+                    &quot;test&quot;.to_owned(),
+                    ContractType::String(String::from(&quot;test&quot;)),
                 )])
-            } <span class="kw">else if </span>governance_id
-            == DigestIdentifier::from_str(<span class="string">&quot;Jg2Nuc5bNs4swQGcPQ1CXs9MtcfwMVoeQDR2Ea1YNYJw&quot;</span>)
-                .unwrap() {
-                    <span class="prelude-val">Ok</span>(<span class="macro">vec!</span>[(<span class="string">&quot;test&quot;</span>.to_owned(), ContractType::String(get_file_wrong()))])
-                } <span class="kw">else if </span>governance_id
-                == DigestIdentifier::from_str(<span class="string">&quot;Jg2Nuc5bNs4swQGcPQ2CXs9MtcfwMVoeQDR2Ea2YNYJw&quot;</span>)
-                    .unwrap() {
-                        <span class="prelude-val">Ok</span>(<span class="macro">vec!</span>[(<span class="string">&quot;test&quot;</span>.to_owned(), ContractType::String(get_file_wrong2()))])
-                    } <span class="kw">else </span>{
-                <span class="prelude-val">Ok</span>(<span class="macro">vec!</span>[(<span class="string">&quot;test&quot;</span>.to_owned(), ContractType::String(get_file()))])
+            } else if governance_id
+                == DigestIdentifier::from_str(&quot;Jg2Nuc5bNs4swQGcPQ1CXs9MtcfwMVoeQDR2Ea1YNYJw&quot;)
+                    .unwrap()
+            {
+                Ok(vec![(
+                    &quot;test&quot;.to_owned(),
+                    ContractType::String(get_file_wrong()),
+                )])
+            } else if governance_id
+                == DigestIdentifier::from_str(&quot;Jg2Nuc5bNs4swQGcPQ2CXs9MtcfwMVoeQDR2Ea2YNYJw&quot;)
+                    .unwrap()
+            {
+                Ok(vec![(
+                    &quot;test&quot;.to_owned(),
+                    ContractType::String(get_file_wrong2()),
+                )])
+            } else {
+                Ok(vec![(&quot;test&quot;.to_owned(), ContractType::String(get_file()))])
             }
         }
+
+        // async fn get_roles_of_invokator(
+        //     &amp;self,
+        //     invokator: &amp;KeyIdentifier,
+        //     governance_id: &amp;DigestIdentifier,
+        //     governance_version: u64,
+        //     schema_id: &amp;str,
+        //     namespace: &amp;str,
+        // ) -&gt; Result&lt;Vec&lt;String&gt;, RequestError&gt; {
+        //     Ok(vec![])
+        // }
     }
 
-    <span class="kw">fn </span>build_module() -&gt; (
-        EvaluatorManager&lt;MemoryManager&gt;,
+    fn build_module() -&gt; (
+        EvaluatorManager&lt;MemoryManager, GovernanceMockup&gt;,
         SenderEnd&lt;EvaluatorMessage, EvaluatorResponse&gt;,
         SenderEnd&lt;CompilerMessages, CompilerResponses&gt;,
         SelfSignatureManager,
+        MpscChannel&lt;EvaluatorMessage, EvaluatorResponse&gt;,
     ) {
-        <span class="kw">let </span>(rx, sx) = MpscChannel::new(<span class="number">100</span>);
-        <span class="kw">let </span>(rx_compiler, sx_compiler) = MpscChannel::new(<span class="number">100</span>);
-        <span class="kw">let </span>database = Arc::new(MemoryManager::new());
-        <span class="kw">let </span>keypair = KeyPair::Ed25519(Ed25519KeyPair::from_seed(<span class="kw-2">&amp;</span>[]));
-        <span class="kw">let </span>pk = keypair.public_key_bytes();
-        <span class="kw">let </span>signature_manager = SelfSignatureManager {
+        let (rx, sx) = MpscChannel::new(100);
+        let (msg_rx, msg_sx) = MpscChannel::new(100);
+        let (rx_compiler, sx_compiler) = MpscChannel::new(100);
+        let database = Arc::new(MemoryManager::new());
+        let keypair = KeyPair::Ed25519(Ed25519KeyPair::from_seed(&amp;[]));
+        let pk = keypair.public_key_bytes();
+        let signature_manager = SelfSignatureManager {
             keys: keypair,
-            identifier: KeyIdentifier::new(<span class="kw">crate</span>::KeyDerivator::Ed25519, <span class="kw-2">&amp;</span>pk),
-            digest_derivator: <span class="kw">crate</span>::DigestDerivator::Blake3_256,
+            identifier: KeyIdentifier::new(crate::KeyDerivator::Ed25519, &amp;pk),
+            digest_derivator: crate::DigestDerivator::Blake3_256,
         };
-        <span class="kw">let </span>(shutdown_sx, shutdown_rx) = tokio::sync::broadcast::channel(<span class="number">100</span>);
-        <span class="kw">let </span>governance = GovernanceMockup {};
-        <span class="kw">let </span>manager = EvaluatorManager::new(
+        let (shutdown_sx, shutdown_rx) = tokio::sync::broadcast::channel(100);
+        let governance = GovernanceMockup {};
+        let manager = EvaluatorManager::new(
             rx,
             database,
             signature_manager.clone(),
@@ -1333,396 +1290,392 @@
             shutdown_sx,
             shutdown_rx,
             governance,
-            <span class="string">&quot;../contract&quot;</span>.into(),
+            &quot;../contract&quot;.into(),
+            msg_sx,
         );
-        (manager, sx, sx_compiler, signature_manager)
+        (manager, sx, sx_compiler, signature_manager, msg_rx)
     }
 
-    <span class="kw">fn </span>create_event_request(
+    fn create_event_request(
         json: String,
-        signature_manager: <span class="kw-2">&amp;</span>SelfSignatureManager,
+        signature_manager: &amp;SelfSignatureManager,
     ) -&gt; EventRequest {
-        <span class="kw">let </span>request = EventRequestType::State(StateRequest {
-            subject_id: DigestIdentifier::from_str(<span class="string">&quot;JXtZRpNgBWVg9v5YG9AaTNfCpPd-rCTTKrFW9cV8-JKs&quot;</span>)
+        let request = EventRequestType::State(StateRequest {
+            subject_id: DigestIdentifier::from_str(&quot;JXtZRpNgBWVg9v5YG9AaTNfCpPd-rCTTKrFW9cV8-JKs&quot;)
                 .unwrap(),
-            payload: RequestPayload::Json(json),
+            invokation: json,
         });
-        <span class="kw">let </span>timestamp = TimeStamp::now();
-        <span class="kw">let </span>signature = signature_manager.sign(<span class="kw-2">&amp;</span>(<span class="kw-2">&amp;</span>request, <span class="kw-2">&amp;</span>timestamp)).unwrap();
-        <span class="kw">let </span>event_request = EventRequest {
+        let timestamp = TimeStamp::now();
+        let signature = signature_manager.sign(&amp;(&amp;request, &amp;timestamp)).unwrap();
+        let event_request = EventRequest {
             request,
             timestamp,
             signature,
-            approvals: HashSet::new(),
         };
         event_request
     }
 
-    <span class="kw">fn </span>generate_json_patch(prev_state: <span class="kw-2">&amp;</span>str, new_state: <span class="kw-2">&amp;</span>str) -&gt; String {
-        <span class="kw">let </span>prev_state = serde_json::to_value(prev_state).unwrap();
-        <span class="kw">let </span>new_state = serde_json::to_value(new_state).unwrap();
-        <span class="kw">let </span>patch = diff(<span class="kw-2">&amp;</span>prev_state, <span class="kw-2">&amp;</span>new_state);
-        serde_json::to_string(<span class="kw-2">&amp;</span>patch).unwrap()
+    fn generate_json_patch(prev_state: &amp;str, new_state: &amp;str) -&gt; String {
+        let prev_state = serde_json::to_value(prev_state).unwrap();
+        let new_state = serde_json::to_value(new_state).unwrap();
+        let patch = diff(&amp;prev_state, &amp;new_state);
+        serde_json::to_string(&amp;patch).unwrap()
     }
 
-    <span class="attr">#[test]
-    </span><span class="kw">fn </span>contract_execution() {
-        <span class="kw">let </span>rt = tokio::runtime::Runtime::new().unwrap();
-        rt.block_on(<span class="kw">async move </span>{
-            <span class="kw">let </span>(evaluator, sx_evaluator, sx_compiler, signature_manager) = build_module();
-            <span class="kw">let </span>initial_state = Data {
-                one: <span class="number">10</span>,
-                two: <span class="number">11</span>,
-                three: <span class="number">13</span>,
+    #[test]
+    fn contract_execution() {
+        let rt = tokio::runtime::Runtime::new().unwrap();
+        rt.block_on(async move {
+            let (evaluator, sx_evaluator, sx_compiler, signature_manager) = build_module();
+            let initial_state = Data {
+                one: 10,
+                two: 11,
+                three: 13,
             };
-            <span class="kw">let </span>initial_state_json = serde_json::to_string(<span class="kw-2">&amp;</span>initial_state).unwrap();
-            <span class="kw">let </span>event = EventType::ModTwo {
-                data: <span class="number">100</span>,
-                chunk: <span class="macro">vec!</span>[<span class="number">123</span>, <span class="number">45</span>, <span class="number">20</span>],
+            let initial_state_json = serde_json::to_string(&amp;initial_state).unwrap();
+            let event = EventType::ModTwo {
+                data: 100,
+                chunk: vec![123, 45, 20],
             };
 
-            <span class="kw">let </span>handler = tokio::spawn(<span class="kw">async move </span>{
-                evaluator.start().<span class="kw">await</span>;
+            let handler = tokio::spawn(async move {
+                evaluator.start().await;
             });
 
             sx_compiler
                 .ask(CompilerMessages::NewGovVersion(NewGovVersion {
                     governance_id: DigestIdentifier::from_str(
-                        <span class="string">&quot;JGSPR6FL-vE7iZxWMd17o09qn7NeTqlcImDVWmijXczw&quot;</span>,
+                        &quot;JGSPR6FL-vE7iZxWMd17o09qn7NeTqlcImDVWmijXczw&quot;,
                     )
                     .unwrap(),
-                    governance_version: <span class="number">0</span>,
+                    governance_version: 0,
                 }))
-                .<span class="kw">await
-                </span>.unwrap();
+                .await
+                .unwrap();
 
-            <span class="kw">let </span>response = sx_evaluator
+            let response = sx_evaluator
                 .ask(EvaluatorMessage::AskForEvaluation(
-                    <span class="kw">crate</span>::evaluator::AskForEvaluation {
-                        governance_id: DigestIdentifier::from_str(
-                            <span class="string">&quot;JGSPR6FL-vE7iZxWMd17o09qn7NeTqlcImDVWmijXczw&quot;</span>,
-                        )
-                        .unwrap(),
-                        schema_id: <span class="string">&quot;test&quot;</span>.into(),
-                        state: initial_state_json.clone(),
+                    crate::evaluator::AskForEvaluation {
                         invokation: create_event_request(
-                            serde_json::to_string(<span class="kw-2">&amp;</span>event).unwrap(),
-                            <span class="kw-2">&amp;</span>signature_manager,
+                            serde_json::to_string(&amp;event).unwrap(),
+                            &amp;signature_manager,
                         ),
+                        // hash_request: DigestIdentifier::default().to_str(),
+                        context: Context {
+                            governance_id: DigestIdentifier::from_str(
+                                &quot;JGSPR6FL-vE7iZxWMd17o09qn7NeTqlcImDVWmijXczw&quot;,
+                            )
+                            .unwrap(),
+                            schema_id: &quot;test&quot;.into(),
+                            invokator: KeyIdentifier::from_str(
+                                &quot;EF3E6fTSLrsEWzkD2tkB6QbJU9R7IOkunImqp0PB_ejg&quot;,
+                            )
+                            .unwrap(),
+                            creator: KeyIdentifier::from_str(
+                                &quot;EF3E6fTSLrsEWzkD2tkB6QbJU9R7IOkunImqp0PB_ejg&quot;,
+                            )
+                            .unwrap(),
+                            owner: KeyIdentifier::from_str(
+                                &quot;EF3E6fTSLrsEWzkD2tkB6QbJU9R7IOkunImqp0PB_ejg&quot;,
+                            )
+                            .unwrap(),
+                            state: initial_state_json.clone(),
+                            namespace: &quot;namespace1&quot;.into(),
+                        },
+                        sn: 1,
                     },
                 ))
-                .<span class="kw">await
-                </span>.unwrap();
-            <span class="kw">let </span>EvaluatorResponse::AskForEvaluation(result) = response;
-            <span class="macro">assert!</span>(result.is_ok());
-            <span class="kw">let </span>result = result.unwrap();
-            <span class="kw">let </span>new_state = Data {
-                one: <span class="number">10</span>,
-                two: <span class="number">100</span>,
-                three: <span class="number">13</span>,
+                .await
+                .unwrap();
+            let EvaluatorResponse::AskForEvaluation(result) = response;
+            assert!(result.is_ok());
+            let result = result.unwrap();
+            let new_state = Data {
+                one: 10,
+                two: 100,
+                three: 13,
             };
-            <span class="kw">let </span>new_state_json = <span class="kw-2">&amp;</span>serde_json::to_string(<span class="kw-2">&amp;</span>new_state).unwrap();
-            <span class="kw">let </span>hash = DigestIdentifier::from_serializable_borsh(new_state_json).unwrap();
-            <span class="macro">assert_eq!</span>(hash, result.hash_new_state);
-            <span class="kw">let </span>patch = generate_json_patch(<span class="kw-2">&amp;</span>initial_state_json, <span class="kw-2">&amp;</span>new_state_json);
-            <span class="macro">assert_eq!</span>(patch, result.json_patch);
-            <span class="macro">assert_eq!</span>(result.governance_version, <span class="number">0</span>);
-            <span class="kw">let </span>own_identifier = signature_manager.get_own_identifier();
-            <span class="macro">assert_eq!</span>(result.signature.content.signer, own_identifier);
+            let new_state_json = &amp;serde_json::to_string(&amp;new_state).unwrap();
+            let hash = DigestIdentifier::from_serializable_borsh(new_state_json).unwrap();
+            assert_eq!(hash, result.hash_new_state);
+            let patch = generate_json_patch(&amp;initial_state_json, &amp;new_state_json);
+            assert_eq!(patch, result.json_patch);
+            assert_eq!(result.governance_version, 0);
+            let own_identifier = signature_manager.get_own_identifier();
+            assert_eq!(result.signature.content.signer, own_identifier);
             handler.abort();
         });
     }
 
-    <span class="attr">#[test]
-    </span><span class="kw">fn </span>contract_execution_fail() {
-        <span class="kw">let </span>rt = tokio::runtime::Runtime::new().unwrap();
-        rt.block_on(<span class="kw">async move </span>{
-            <span class="kw">let </span>(evaluator, sx_evaluator, sx_compiler, signature_manager) = build_module();
-            <span class="kw">let </span>initial_state = Data {
-                one: <span class="number">10</span>,
-                two: <span class="number">11</span>,
-                three: <span class="number">13</span>,
+    #[test]
+    fn contract_execution_fail() {
+        // Fail reason: Bad Event
+        let rt = tokio::runtime::Runtime::new().unwrap();
+        rt.block_on(async move {
+            let (evaluator, sx_evaluator, sx_compiler, signature_manager) = build_module();
+            let initial_state = Data {
+                one: 10,
+                two: 11,
+                three: 13,
             };
-            <span class="kw">let </span>initial_state_json = serde_json::to_string(<span class="kw-2">&amp;</span>initial_state).unwrap();
-            <span class="kw">let </span>event = String::from(<span class="string">&quot;hola&quot;</span>);
+            let initial_state_json = serde_json::to_string(&amp;initial_state).unwrap();
+            let event = String::from(&quot;hola&quot;);
 
-            <span class="kw">let </span>handler = tokio::spawn(<span class="kw">async move </span>{
-                evaluator.start().<span class="kw">await</span>;
+            let handler = tokio::spawn(async move {
+                evaluator.start().await;
             });
 
             sx_compiler
                 .ask(CompilerMessages::NewGovVersion(NewGovVersion {
                     governance_id: DigestIdentifier::from_str(
-                        <span class="string">&quot;JGSPR6FL-vE7iZxWMd17o09qn7NeTqlcImDVWmijXczw&quot;</span>,
+                        &quot;JGSPR6FL-vE7iZxWMd17o09qn7NeTqlcImDVWmijXczw&quot;,
                     )
                     .unwrap(),
-                    governance_version: <span class="number">0</span>,
+                    governance_version: 0,
                 }))
-                .<span class="kw">await
-                </span>.unwrap();
+                .await
+                .unwrap();
 
-            <span class="kw">let </span>response = sx_evaluator
+            let response = sx_evaluator
                 .ask(EvaluatorMessage::AskForEvaluation(
-                    <span class="kw">crate</span>::evaluator::AskForEvaluation {
-                        governance_id: DigestIdentifier::from_str(
-                            <span class="string">&quot;JGSPR6FL-vE7iZxWMd17o09qn7NeTqlcImDVWmijXczw&quot;</span>,
-                        )
-                        .unwrap(),
-                        schema_id: <span class="string">&quot;test&quot;</span>.into(),
-                        state: initial_state_json.clone(),
+                    crate::evaluator::AskForEvaluation {
                         invokation: create_event_request(
-                            serde_json::to_string(<span class="kw-2">&amp;</span>event).unwrap(),
-                            <span class="kw-2">&amp;</span>signature_manager,
+                            serde_json::to_string(&amp;event).unwrap(),
+                            &amp;signature_manager,
                         ),
+                        // hash_request: DigestIdentifier::default().to_str(),
+                        context: Context {
+                            governance_id: DigestIdentifier::from_str(
+                                &quot;JGSPR6FL-vE7iZxWMd17o09qn7NeTqlcImDVWmijXczw&quot;,
+                            )
+                            .unwrap(),
+                            schema_id: &quot;test&quot;.into(),
+                            invokator: KeyIdentifier::from_str(
+                                &quot;EF3E6fTSLrsEWzkD2tkB6QbJU9R7IOkunImqp0PB_ejg&quot;,
+                            )
+                            .unwrap(),
+                            creator: KeyIdentifier::from_str(
+                                &quot;EF3E6fTSLrsEWzkD2tkB6QbJU9R7IOkunImqp0PB_ejg&quot;,
+                            )
+                            .unwrap(),
+                            owner: KeyIdentifier::from_str(
+                                &quot;EF3E6fTSLrsEWzkD2tkB6QbJU9R7IOkunImqp0PB_ejg&quot;,
+                            )
+                            .unwrap(),
+                            state: initial_state_json.clone(),
+                            namespace: &quot;namespace1&quot;.into(),
+                        },
+                        sn: 1,
                     },
                 ))
-                .<span class="kw">await
-                </span>.unwrap();
-            <span class="kw">let </span>EvaluatorResponse::AskForEvaluation(result) = response;
-            <span class="macro">assert!</span>(result.is_err());
-            <span class="kw">let </span>EvaluatorErrorResponses::ContractExecutionError(ExecutorErrorResponses::ContractExecutionFailed) = result.unwrap_err() <span class="kw">else </span>{
-                <span class="macro">panic!</span>(<span class="string">&quot;Invalid response received&quot;</span>);
-            };
+                .await
+                .unwrap();
+            let EvaluatorResponse::AskForEvaluation(result) = response;
+            assert!(result.is_ok());
+            let result = result.unwrap();
+            assert!(!result.success);
             handler.abort();
         });
     }
 
-    <span class="attr">#[test]
-    </span><span class="kw">fn </span>contract_execution_fail2() {
-        <span class="kw">let </span>rt = tokio::runtime::Runtime::new().unwrap();
-        rt.block_on(<span class="kw">async move </span>{
-            <span class="kw">let </span>(evaluator, sx_evaluator, sx_compiler, signature_manager) = build_module();
-            <span class="kw">let </span>initial_state = String::from(<span class="string">&quot;hola&quot;</span>);
-            <span class="kw">let </span>initial_state_json = serde_json::to_string(<span class="kw-2">&amp;</span>initial_state).unwrap();
-            <span class="kw">let </span>event = EventType::ModTwo {
-                data: <span class="number">100</span>,
-                chunk: <span class="macro">vec!</span>[<span class="number">123</span>, <span class="number">45</span>, <span class="number">20</span>],
+    #[test]
+    fn contract_execution_fail2() {
+        // Fail reason: Bad State
+        let rt = tokio::runtime::Runtime::new().unwrap();
+        rt.block_on(async move {
+            let (evaluator, sx_evaluator, sx_compiler, signature_manager) = build_module();
+            let initial_state = String::from(&quot;hola&quot;);
+            let initial_state_json = serde_json::to_string(&amp;initial_state).unwrap();
+            let event = EventType::ModTwo {
+                data: 100,
+                chunk: vec![123, 45, 20],
             };
 
-            <span class="kw">let </span>handler = tokio::spawn(<span class="kw">async move </span>{
-                evaluator.start().<span class="kw">await</span>;
+            let handler = tokio::spawn(async move {
+                evaluator.start().await;
             });
 
             sx_compiler
                 .ask(CompilerMessages::NewGovVersion(NewGovVersion {
                     governance_id: DigestIdentifier::from_str(
-                        <span class="string">&quot;JGSPR6FL-vE7iZxWMd17o09qn7NeTqlcImDVWmijXczw&quot;</span>,
+                        &quot;JGSPR6FL-vE7iZxWMd17o09qn7NeTqlcImDVWmijXczw&quot;,
                     )
                     .unwrap(),
-                    governance_version: <span class="number">0</span>,
+                    governance_version: 0,
                 }))
-                .<span class="kw">await
-                </span>.unwrap();
+                .await
+                .unwrap();
 
-            <span class="kw">let </span>response = sx_evaluator
+            let response = sx_evaluator
                 .ask(EvaluatorMessage::AskForEvaluation(
-                    <span class="kw">crate</span>::evaluator::AskForEvaluation {
-                        governance_id: DigestIdentifier::from_str(
-                            <span class="string">&quot;JGSPR6FL-vE7iZxWMd17o09qn7NeTqlcImDVWmijXczw&quot;</span>,
-                        )
-                        .unwrap(),
-                        schema_id: <span class="string">&quot;test&quot;</span>.into(),
-                        state: initial_state_json.clone(),
+                    crate::evaluator::AskForEvaluation {
                         invokation: create_event_request(
-                            serde_json::to_string(<span class="kw-2">&amp;</span>event).unwrap(),
-                            <span class="kw-2">&amp;</span>signature_manager,
+                            serde_json::to_string(&amp;event).unwrap(),
+                            &amp;signature_manager,
                         ),
+                        // hash_request: DigestIdentifier::default().to_str(),
+                        context: Context {
+                            governance_id: DigestIdentifier::from_str(
+                                &quot;JGSPR6FL-vE7iZxWMd17o09qn7NeTqlcImDVWmijXczw&quot;,
+                            )
+                            .unwrap(),
+                            schema_id: &quot;test&quot;.into(),
+                            invokator: KeyIdentifier::from_str(
+                                &quot;EF3E6fTSLrsEWzkD2tkB6QbJU9R7IOkunImqp0PB_ejg&quot;,
+                            )
+                            .unwrap(),
+                            creator: KeyIdentifier::from_str(
+                                &quot;EF3E6fTSLrsEWzkD2tkB6QbJU9R7IOkunImqp0PB_ejg&quot;,
+                            )
+                            .unwrap(),
+                            owner: KeyIdentifier::from_str(
+                                &quot;EF3E6fTSLrsEWzkD2tkB6QbJU9R7IOkunImqp0PB_ejg&quot;,
+                            )
+                            .unwrap(),
+                            state: initial_state_json.clone(),
+                            namespace: &quot;namespace1&quot;.into(),
+                        },
+                        sn: 1,
                     },
                 ))
-                .<span class="kw">await
-                </span>.unwrap();
-            <span class="kw">let </span>EvaluatorResponse::AskForEvaluation(result) = response;
-            <span class="macro">assert!</span>(result.is_err());
-            <span class="macro">println!</span>(<span class="string">&quot;{:?}&quot;</span>, result);
-            <span class="kw">let </span>EvaluatorErrorResponses::ContractExecutionError(ExecutorErrorResponses::ContractExecutionFailed) = result.unwrap_err() <span class="kw">else </span>{
-                <span class="macro">panic!</span>(<span class="string">&quot;Invalid response received&quot;</span>);
-            };
+                .await
+                .unwrap();
+            let EvaluatorResponse::AskForEvaluation(result) = response;
+            assert!(result.is_ok());
+            let result = result.unwrap();
+            assert!(!result.success);
             handler.abort();
         });
     }
 
-    <span class="attr">#[test]
-    </span><span class="kw">fn </span>contract_execution_wrong_gov_id() {
-        <span class="kw">let </span>rt = tokio::runtime::Runtime::new().unwrap();
-        rt.block_on(<span class="kw">async move </span>{
-            <span class="kw">let </span>(evaluator, sx_evaluator, sx_compiler, signature_manager) = build_module();
-            <span class="kw">let </span>initial_state = Data {
-                one: <span class="number">10</span>,
-                two: <span class="number">11</span>,
-                three: <span class="number">13</span>,
+    #[test]
+    fn contract_execution_wrong_gov_id() {
+        let rt = tokio::runtime::Runtime::new().unwrap();
+        rt.block_on(async move {
+            let (evaluator, sx_evaluator, sx_compiler, signature_manager) = build_module();
+            let initial_state = Data {
+                one: 10,
+                two: 11,
+                three: 13,
             };
-            <span class="kw">let </span>initial_state_json = serde_json::to_string(<span class="kw-2">&amp;</span>initial_state).unwrap();
-            <span class="kw">let </span>event = EventType::ModTwo {
-                data: <span class="number">100</span>,
-                chunk: <span class="macro">vec!</span>[<span class="number">123</span>, <span class="number">45</span>, <span class="number">20</span>],
+            let initial_state_json = serde_json::to_string(&amp;initial_state).unwrap();
+            let event = EventType::ModTwo {
+                data: 100,
+                chunk: vec![123, 45, 20],
             };
 
-            <span class="kw">let </span>handler = tokio::spawn(<span class="kw">async move </span>{
-                evaluator.start().<span class="kw">await</span>;
+            let handler = tokio::spawn(async move {
+                evaluator.start().await;
             });
 
             sx_compiler
                 .ask(CompilerMessages::NewGovVersion(NewGovVersion {
                     governance_id: DigestIdentifier::from_str(
-                        <span class="string">&quot;JGSPR6FL-vE7iZxWMd17o09qn7NeTqlcImDVWmijXczw&quot;</span>,
+                        &quot;JGSPR6FL-vE7iZxWMd17o09qn7NeTqlcImDVWmijXczw&quot;,
                     )
                     .unwrap(),
-                    governance_version: <span class="number">0</span>,
+                    governance_version: 0,
                 }))
-                .<span class="kw">await
-                </span>.unwrap();
+                .await
+                .unwrap();
 
-            <span class="kw">let </span>response = sx_evaluator
+            let response = sx_evaluator
                 .ask(EvaluatorMessage::AskForEvaluation(
-                    <span class="kw">crate</span>::evaluator::AskForEvaluation {
-                        governance_id: DigestIdentifier::from_str(
-                            <span class="string">&quot;Jg2Nuv5bNs4swQGcPQ1CXs9MtcfwMVoeQDR2Ea1YNYJw&quot;</span>,
-                        )
-                        .unwrap(),
-                        schema_id: <span class="string">&quot;teste&quot;</span>.into(),
-                        state: initial_state_json.clone(),
+                    crate::evaluator::AskForEvaluation {
                         invokation: create_event_request(
-                            serde_json::to_string(<span class="kw-2">&amp;</span>event).unwrap(),
-                            <span class="kw-2">&amp;</span>signature_manager,
+                            serde_json::to_string(&amp;event).unwrap(),
+                            &amp;signature_manager,
                         ),
+                        // hash_request: DigestIdentifier::default().to_str(),
+                        context: Context {
+                            governance_id: DigestIdentifier::from_str(
+                                &quot;Jg2Nuv5bNs4swQGcPQ1CXs9MtcfwMVoeQDR2Ea1YNYJw&quot;,
+                            )
+                            .unwrap(),
+                            schema_id: &quot;test&quot;.into(),
+                            invokator: KeyIdentifier::from_str(
+                                &quot;EF3E6fTSLrsEWzkD2tkB6QbJU9R7IOkunImqp0PB_ejg&quot;,
+                            )
+                            .unwrap(),
+                            creator: KeyIdentifier::from_str(
+                                &quot;EF3E6fTSLrsEWzkD2tkB6QbJU9R7IOkunImqp0PB_ejg&quot;,
+                            )
+                            .unwrap(),
+                            owner: KeyIdentifier::from_str(
+                                &quot;EF3E6fTSLrsEWzkD2tkB6QbJU9R7IOkunImqp0PB_ejg&quot;,
+                            )
+                            .unwrap(),
+                            state: initial_state_json.clone(),
+                            namespace: &quot;namespace1&quot;.into(),
+                        },
+                        sn: 1,
                     },
                 ))
-                .<span class="kw">await</span>;
-            <span class="kw">let </span>result = response.unwrap();
-            <span class="kw">let </span>EvaluatorResponse::AskForEvaluation(result) = result <span class="kw">else </span>{
-                <span class="macro">panic!</span>(<span class="string">&quot;Invalid response received&quot;</span>);
-            };
-            <span class="macro">assert!</span>(result.is_err());
-            <span class="kw">let </span>EvaluatorErrorResponses::ContractExecutionError(ExecutorErrorResponses::ContractNotFound(<span class="kw">_</span>,<span class="kw">_</span>)) = result.unwrap_err() <span class="kw">else </span>{
-                <span class="macro">panic!</span>(<span class="string">&quot;Invalid response received&quot;</span>);
-            };
+                .await
+                .unwrap();
+            let EvaluatorResponse::AskForEvaluation(result) = response;
+            assert!(result.is_ok());
+            let result = result.unwrap();
+            assert!(!result.success);
             handler.abort();
         });
     }
 
-    <span class="attr">#[test]
-    </span><span class="kw">fn </span>contract_compilation_no_sdk() {
-        <span class="kw">let </span>rt = tokio::runtime::Runtime::new().unwrap();
-        rt.block_on(<span class="kw">async move </span>{
-            <span class="kw">let </span>(evaluator, sx_evaluator, sx_compiler, signature_manager) = build_module();
-            <span class="kw">let </span>initial_state = Data {
-                one: <span class="number">10</span>,
-                two: <span class="number">11</span>,
-                three: <span class="number">13</span>,
-            };
-            <span class="kw">let </span>initial_state_json = serde_json::to_string(<span class="kw-2">&amp;</span>initial_state).unwrap();
-            <span class="kw">let </span>event = EventType::ModTwo {
-                data: <span class="number">100</span>,
-                chunk: <span class="macro">vec!</span>[<span class="number">123</span>, <span class="number">45</span>, <span class="number">20</span>],
-            };
+    #[test]
+    fn contract_compilation_no_sdk() {
+        let rt = tokio::runtime::Runtime::new().unwrap();
+        rt.block_on(async move {
+            let (evaluator, _sx_evaluator, sx_compiler, signature_manager) = build_module();
 
-            <span class="kw">let </span>handler = tokio::spawn(<span class="kw">async move </span>{
-                evaluator.start().<span class="kw">await</span>;
+            let handler = tokio::spawn(async move {
+                evaluator.start().await;
             });
 
-            <span class="kw">let </span>response = sx_compiler
+            let response = sx_compiler
                 .ask(CompilerMessages::NewGovVersion(NewGovVersion {
                     governance_id: DigestIdentifier::from_str(
-                        <span class="string">&quot;Jg2Nuc5bNs4swQGcPQ2CXs9MtcfwMVoeQDR2Ea2YNYJw&quot;</span>,
+                        &quot;Jg2Nuc5bNs4swQGcPQ2CXs9MtcfwMVoeQDR2Ea2YNYJw&quot;,
                     )
                     .unwrap(),
-                    governance_version: <span class="number">0</span>,
+                    governance_version: 0,
                 }))
-                .<span class="kw">await
-                </span>.unwrap();
-            <span class="kw">if let </span>CompilerResponses::CompileContract(<span class="prelude-val">Err</span>(CompilerErrorResponses::NoSDKFound)) = response {
+                .await
+                .unwrap();
+            if let CompilerResponses::CompileContract(Err(CompilerErrorResponses::NoSDKFound)) =
+                response
+            {
                 handler.abort();
-            } <span class="kw">else </span>{
-                <span class="macro">assert!</span>(<span class="bool-val">false</span>)
+            } else {
+                assert!(false)
             };
         });
     }
 
-    <span class="attr">#[test]
-    </span><span class="kw">fn </span>contract_execution_wrong_entrypoint() {
-        <span class="kw">let </span>rt = tokio::runtime::Runtime::new().unwrap();
-        rt.block_on(<span class="kw">async move </span>{
-            <span class="kw">let </span>(evaluator, sx_evaluator, sx_compiler, signature_manager) = build_module();
-            <span class="kw">let </span>initial_state = Data {
-                one: <span class="number">10</span>,
-                two: <span class="number">11</span>,
-                three: <span class="number">13</span>,
-            };
-            <span class="kw">let </span>initial_state_json = serde_json::to_string(<span class="kw-2">&amp;</span>initial_state).unwrap();
-            <span class="kw">let </span>event = EventType::ModTwo {
-                data: <span class="number">100</span>,
-                chunk: <span class="macro">vec!</span>[<span class="number">123</span>, <span class="number">45</span>, <span class="number">20</span>],
-            };
+    #[test]
+    fn compilation_error() {
+        let rt = tokio::runtime::Runtime::new().unwrap();
+        rt.block_on(async move {
+            let (_evaluator, _sx_evaluator, sx_compiler, signature_manager) = build_module();
 
-            <span class="kw">let </span>handler = tokio::spawn(<span class="kw">async move </span>{
-                evaluator.start().<span class="kw">await</span>;
-            });
-
-            <span class="kw">let </span>response = sx_compiler
+            let response = sx_compiler
                 .ask(CompilerMessages::NewGovVersion(NewGovVersion {
                     governance_id: DigestIdentifier::from_str(
-                        <span class="string">&quot;Jg2Nuc5bNs4swQGcPQ1CXs9MtcfwMVoeQDR2Ea1YNYJw&quot;</span>,
+                        &quot;Jg2Nuv5bNs4swQGcPQ1CXs9MtcfwMVoeQDR2Ea1YNYJw&quot;,
                     )
                     .unwrap(),
-                    governance_version: <span class="number">0</span>,
+                    governance_version: 10,
                 }))
-                .<span class="kw">await
-                </span>.unwrap();
-            <span class="macro">println!</span>(<span class="string">&quot;{:?}&quot;</span>, response);
-            <span class="kw">let </span>response = sx_evaluator
-                .ask(EvaluatorMessage::AskForEvaluation(
-                    <span class="kw">crate</span>::evaluator::AskForEvaluation {
-                        governance_id: DigestIdentifier::from_str(
-                            <span class="string">&quot;Jg2Nuc5bNs4swQGcPQ1CXs9MtcfwMVoeQDR2Ea1YNYJw&quot;</span>,
-                        )
-                        .unwrap(),
-                        schema_id: <span class="string">&quot;test&quot;</span>.into(),
-                        state: initial_state_json.clone(),
-                        invokation: create_event_request(
-                            serde_json::to_string(<span class="kw-2">&amp;</span>event).unwrap(),
-                            <span class="kw-2">&amp;</span>signature_manager,
-                        ),
-                    },
-                ))
-                .<span class="kw">await</span>;
-            <span class="kw">let </span>result = response.unwrap();
-            <span class="kw">let </span>EvaluatorResponse::AskForEvaluation(result) = result <span class="kw">else </span>{
-                <span class="macro">panic!</span>(<span class="string">&quot;Invalid response received&quot;</span>);
+                .await
+                .unwrap();
+            let CompilerResponses::CompileContract(result) = response else {
+                panic!(&quot;Invalid response received&quot;);
             };
-            <span class="macro">assert!</span>(result.is_err());
-            <span class="macro">println!</span>(<span class="string">&quot;{:?}&quot;</span>, result);
-            <span class="kw">let </span>EvaluatorErrorResponses::ContractExecutionError(ExecutorErrorResponses::ContractEntryPointNotFound) = result.unwrap_err() <span class="kw">else </span>{
-                <span class="macro">panic!</span>(<span class="string">&quot;Invalid response received&quot;</span>);
-            };
-            handler.abort();
-        });
-    }
-
-    <span class="attr">#[test]
-    </span><span class="kw">fn </span>compilation_error() {
-        <span class="kw">let </span>rt = tokio::runtime::Runtime::new().unwrap();
-        rt.block_on(<span class="kw">async move </span>{
-            <span class="kw">let </span>(_evaluator, _sx_evaluator, sx_compiler, signature_manager) = build_module();
-
-            <span class="kw">let </span>response = sx_compiler
-                .ask(CompilerMessages::NewGovVersion(NewGovVersion {
-                    governance_id: DigestIdentifier::from_str(
-                        <span class="string">&quot;Jg2Nuv5bNs4swQGcPQ1CXs9MtcfwMVoeQDR2Ea1YNYJw&quot;</span>,
-                    )
-                    .unwrap(),
-                    governance_version: <span class="number">10</span>,
-                }))
-                .<span class="kw">await
-                </span>.unwrap();
-            <span class="kw">let </span>CompilerResponses::CompileContract(result) = response <span class="kw">else </span>{
-                <span class="macro">panic!</span>(<span class="string">&quot;Invalid response received&quot;</span>);
-            };
-            <span class="macro">assert!</span>(result.is_err());
-            <span class="kw">let </span>CompilerErrorResponses::CargoExecError = result.unwrap_err() <span class="kw">else </span>{
-                <span class="macro">panic!</span>(<span class="string">&quot;Invalid response received&quot;</span>);
+            assert!(result.is_err());
+            let CompilerErrorResponses::CargoExecError = result.unwrap_err() else {
+                panic!(&quot;Invalid response received&quot;);
             };
         });
     }
 }
-</code></pre></div>
-</section></main><div id="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="taple_core" data-themes="" data-resource-suffix="" data-rustdoc-version="1.68.2 (9eb3afe9e 2023-03-27)" data-search-js="search-98d53477a794af0b.js" data-settings-js="settings-c3c521c753752a1a.js" data-settings-css="settings-08ddfdda51b8ee2e.css" ></div></body></html>
+ */</span></code></pre></div>
+</section></main><div id="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="taple_core" data-themes="" data-resource-suffix="" data-rustdoc-version="1.69.0 (84c898d65 2023-04-16)" data-search-js="search-8a59a8356673ec1f.js" data-settings-js="settings-f0c5c39777a9a2f6.js" data-settings-css="settings-0bcba95ff279c1db.css" ></div></body></html>

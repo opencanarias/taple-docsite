@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `core/src/database/db.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>db.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-1f7d512b176f0f72.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Bold-124a1ca42af929b6.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-93196c7a1c3542a8.css" id="mainThemeStyle"><link rel="stylesheet" id="themeStyle" href="../../../static.files/light-4743e13df3dfe8c4.css"><link rel="stylesheet" disabled href="../../../static.files/dark-0e1b889528bd466b.css"><link rel="stylesheet" disabled href="../../../static.files/ayu-65289d5d067c7c66.css"><script id="default-settings" ></script><script src="../../../static.files/storage-d43fa987303ecbbb.js"></script><script defer src="../../../static.files/source-script-ea63cb6500f71309.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../static.files/main-3367e395607fafc1.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-13285aec31fa243e.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../../taple_core/index.html"><img class="rust-logo" src="../../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-5ec35bf9ca753509.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `core/src/database/db.rs`."><title>db.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-c4dbdcde0fbd8430.css" id="mainThemeStyle"><link rel="stylesheet" id="themeStyle" href="../../../static.files/light-db279b6232be9c13.css"><link rel="stylesheet" disabled href="../../../static.files/dark-cf923f49f397b216.css"><link rel="stylesheet" disabled href="../../../static.files/ayu-be46fdc453a55015.css"><script src="../../../static.files/storage-3891ce972e3a2bf8.js"></script><script defer src="../../../static.files/source-script-1b95b7cca98b26e5.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../static.files/main-98a684e84ae5b08b.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-13285aec31fa243e.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../../taple_core/index.html"><img class="rust-logo" src="../../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -369,7 +369,62 @@
 <a href="#369" id="369">369</a>
 <a href="#370" id="370">370</a>
 <a href="#371" id="371">371</a>
-</pre><pre class="rust"><code><span class="kw">use </span>std::collections::{HashMap, HashSet};
+<a href="#372" id="372">372</a>
+<a href="#373" id="373">373</a>
+<a href="#374" id="374">374</a>
+<a href="#375" id="375">375</a>
+<a href="#376" id="376">376</a>
+<a href="#377" id="377">377</a>
+<a href="#378" id="378">378</a>
+<a href="#379" id="379">379</a>
+<a href="#380" id="380">380</a>
+<a href="#381" id="381">381</a>
+<a href="#382" id="382">382</a>
+<a href="#383" id="383">383</a>
+<a href="#384" id="384">384</a>
+<a href="#385" id="385">385</a>
+<a href="#386" id="386">386</a>
+<a href="#387" id="387">387</a>
+<a href="#388" id="388">388</a>
+<a href="#389" id="389">389</a>
+<a href="#390" id="390">390</a>
+<a href="#391" id="391">391</a>
+<a href="#392" id="392">392</a>
+<a href="#393" id="393">393</a>
+<a href="#394" id="394">394</a>
+<a href="#395" id="395">395</a>
+<a href="#396" id="396">396</a>
+<a href="#397" id="397">397</a>
+<a href="#398" id="398">398</a>
+<a href="#399" id="399">399</a>
+<a href="#400" id="400">400</a>
+<a href="#401" id="401">401</a>
+<a href="#402" id="402">402</a>
+<a href="#403" id="403">403</a>
+<a href="#404" id="404">404</a>
+<a href="#405" id="405">405</a>
+<a href="#406" id="406">406</a>
+<a href="#407" id="407">407</a>
+<a href="#408" id="408">408</a>
+<a href="#409" id="409">409</a>
+<a href="#410" id="410">410</a>
+<a href="#411" id="411">411</a>
+<a href="#412" id="412">412</a>
+<a href="#413" id="413">413</a>
+<a href="#414" id="414">414</a>
+<a href="#415" id="415">415</a>
+<a href="#416" id="416">416</a>
+<a href="#417" id="417">417</a>
+<a href="#418" id="418">418</a>
+<a href="#419" id="419">419</a>
+<a href="#420" id="420">420</a>
+<a href="#421" id="421">421</a>
+<a href="#422" id="422">422</a>
+<a href="#423" id="423">423</a>
+<a href="#424" id="424">424</a>
+<a href="#425" id="425">425</a>
+<a href="#426" id="426">426</a>
+</pre><pre class="rust"><code><span class="kw">use </span>std::collections::HashSet;
 <span class="kw">use </span>std::str::FromStr;
 <span class="kw">use </span>std::sync::Arc;
 
@@ -377,8 +432,7 @@
 <span class="kw">use </span>serde::Serialize;
 
 <span class="kw">use </span><span class="kw">crate</span>::commons::models::notary::NotaryEventResponse;
-<span class="kw">use </span><span class="kw">crate</span>::commons::models::state::{LedgerState, Subject};
-<span class="kw">use </span><span class="kw">crate</span>::event_content::EventContent;
+<span class="kw">use </span><span class="kw">crate</span>::commons::models::state::Subject;
 <span class="kw">use </span><span class="kw">crate</span>::event_request::EventRequest;
 <span class="kw">use </span><span class="kw">crate</span>::identifier::{Derivable, DigestIdentifier, KeyIdentifier};
 <span class="kw">use </span><span class="kw">crate</span>::signature::Signature;
@@ -390,22 +444,27 @@
 <span class="kw">const </span>SIGNATURE_TABLE: <span class="kw-2">&amp;</span>str = <span class="string">&quot;signature&quot;</span>;
 <span class="kw">const </span>SUBJECT_TABLE: <span class="kw-2">&amp;</span>str = <span class="string">&quot;subject&quot;</span>;
 <span class="kw">const </span>EVENT_TABLE: <span class="kw-2">&amp;</span>str = <span class="string">&quot;event&quot;</span>;
+<span class="kw">const </span>PREVALIDATED_EVENT_TABLE: <span class="kw-2">&amp;</span>str = <span class="string">&quot;prevalidated-event&quot;</span>;
 <span class="kw">const </span>REQUEST_TABLE: <span class="kw-2">&amp;</span>str = <span class="string">&quot;request&quot;</span>;
 <span class="kw">const </span>ID_TABLE: <span class="kw-2">&amp;</span>str = <span class="string">&quot;controller-id&quot;</span>;
 <span class="kw">const </span>NOTARY_TABLE: <span class="kw-2">&amp;</span>str = <span class="string">&quot;notary&quot;</span>;
 <span class="kw">const </span>CONTRACT_TABLE: <span class="kw-2">&amp;</span>str = <span class="string">&quot;contract&quot;</span>;
 <span class="kw">const </span>NOTARY_SIGNATURES: <span class="kw-2">&amp;</span>str = <span class="string">&quot;notary-signatures&quot;</span>;
+<span class="kw">const </span>WITNESS_SIGNATURES: <span class="kw-2">&amp;</span>str = <span class="string">&quot;witness-signatures&quot;</span>;
 
 <span class="kw">pub struct </span>DB&lt;M: DatabaseManager&gt; {
     _manager: Arc&lt;M&gt;,
     signature_db: Box&lt;<span class="kw">dyn </span>DatabaseCollection&lt;InnerDataType = HashSet&lt;Signature&gt;&gt;&gt;,
     subject_db: Box&lt;<span class="kw">dyn </span>DatabaseCollection&lt;InnerDataType = Subject&gt;&gt;,
     event_db: Box&lt;<span class="kw">dyn </span>DatabaseCollection&lt;InnerDataType = Event&gt;&gt;,
+    prevalidated_event_db: Box&lt;<span class="kw">dyn </span>DatabaseCollection&lt;InnerDataType = Event&gt;&gt;,
     request_db: Box&lt;<span class="kw">dyn </span>DatabaseCollection&lt;InnerDataType = EventRequest&gt;&gt;,
     id_db: Box&lt;<span class="kw">dyn </span>DatabaseCollection&lt;InnerDataType = String&gt;&gt;,
     notary_db: Box&lt;<span class="kw">dyn </span>DatabaseCollection&lt;InnerDataType = (DigestIdentifier, u64)&gt;&gt;,
     contract_db: Box&lt;<span class="kw">dyn </span>DatabaseCollection&lt;InnerDataType = (Vec&lt;u8&gt;, DigestIdentifier, u64)&gt;&gt;,
-    notary_signatures_db: Box&lt;<span class="kw">dyn </span>DatabaseCollection&lt;InnerDataType = (u64, HashSet&lt;NotaryEventResponse&gt;)&gt;&gt;,
+    notary_signatures_db:
+        Box&lt;<span class="kw">dyn </span>DatabaseCollection&lt;InnerDataType = (u64, HashSet&lt;NotaryEventResponse&gt;)&gt;&gt;,
+    witness_signatures_db: Box&lt;<span class="kw">dyn </span>DatabaseCollection&lt;InnerDataType = (u64, HashSet&lt;Signature&gt;)&gt;&gt;,
 }
 
 <span class="kw">impl</span>&lt;M: DatabaseManager&gt; DB&lt;M&gt; {
@@ -413,21 +472,25 @@
         <span class="kw">let </span>signature_db = manager.create_collection(SIGNATURE_TABLE);
         <span class="kw">let </span>subject_db = manager.create_collection(SUBJECT_TABLE);
         <span class="kw">let </span>event_db = manager.create_collection(EVENT_TABLE);
+        <span class="kw">let </span>prevalidated_event_db = manager.create_collection(PREVALIDATED_EVENT_TABLE);
         <span class="kw">let </span>request_db = manager.create_collection(REQUEST_TABLE);
         <span class="kw">let </span>id_db = manager.create_collection(ID_TABLE);
         <span class="kw">let </span>notary_db = manager.create_collection(NOTARY_TABLE);
         <span class="kw">let </span>contract_db = manager.create_collection(CONTRACT_TABLE);
         <span class="kw">let </span>notary_signatures_db = manager.create_collection(NOTARY_SIGNATURES);
+        <span class="kw">let </span>witness_signatures_db = manager.create_collection(WITNESS_SIGNATURES);
         <span class="self">Self </span>{
             _manager: manager,
             signature_db,
             subject_db,
             event_db,
+            prevalidated_event_db,
             request_db,
             id_db,
             notary_db,
             contract_db,
             notary_signatures_db,
+            witness_signatures_db,
         }
     }
 
@@ -466,7 +529,8 @@
                     }
                     iter.next();
                 }
-                (convert(iter), quantity.abs())
+                iter.next(); <span class="comment">// Exclusive From
+                </span>(convert(iter), quantity.abs())
             }
             <span class="prelude-val">None </span>=&gt; {
                 <span class="kw">if </span>quantity &lt; <span class="number">0 </span>{
@@ -480,7 +544,7 @@
         <span class="kw">let </span><span class="kw-2">mut </span>counter = <span class="number">0</span>;
         <span class="kw">while </span>counter &lt; quantity {
             <span class="kw">let </span><span class="prelude-val">Some</span>((<span class="kw">_</span>, event)) = iter.next() <span class="kw">else </span>{
-              <span class="kw">break</span>;
+                <span class="kw">break</span>;
             };
             result.push(event);
             counter += <span class="number">1</span>;
@@ -491,10 +555,14 @@
     <span class="kw">pub fn </span>get_events_by_range(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         subject_id: <span class="kw-2">&amp;</span>DigestIdentifier,
-        from: <span class="prelude-ty">Option</span>&lt;String&gt;,
+        from: <span class="prelude-ty">Option</span>&lt;i64&gt;,
         quantity: isize,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;Vec&lt;Event&gt;, Error&gt; {
         <span class="kw">let </span>id = subject_id.to_str();
+        <span class="kw">let </span>from = <span class="kw">match </span>from {
+            <span class="prelude-val">Some</span>(from) =&gt; <span class="prelude-val">Some</span>(from.to_string()),
+            <span class="prelude-val">None </span>=&gt; <span class="prelude-val">None</span>,
+        };
         <span class="kw">let </span>events_by_subject = <span class="self">self</span>.event_db.partition(<span class="kw-2">&amp;</span>id);
         <span class="self">self</span>.get_by_range(from, quantity, <span class="kw-2">&amp;</span>events_by_subject)
     }
@@ -503,8 +571,28 @@
         <span class="comment">// TODO: DETERMINAR SI DEVOLVER RESULT
         </span><span class="kw">let </span>id = subject_id.to_str();
         <span class="kw">let </span>events_by_subject = <span class="self">self</span>.event_db.partition(<span class="kw-2">&amp;</span>id);
-        <span class="kw">let </span>sn = event.event_content.sn.to_string();
+        <span class="kw">let </span>sn = event.content.event_proposal.proposal.sn.to_string();
         events_by_subject.put(<span class="kw-2">&amp;</span>sn, event)
+    }
+
+    <span class="kw">pub fn </span>get_prevalidated_event(<span class="kw-2">&amp;</span><span class="self">self</span>, subject_id: <span class="kw-2">&amp;</span>DigestIdentifier) -&gt; <span class="prelude-ty">Result</span>&lt;Event, Error&gt; {
+        <span class="kw">let </span>id = subject_id.to_str();
+        <span class="self">self</span>.prevalidated_event_db.get(<span class="kw-2">&amp;</span>id)
+    }
+
+    <span class="kw">pub fn </span>set_prevalidated_event(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        subject_id: <span class="kw-2">&amp;</span>DigestIdentifier,
+        event: Event,
+    ) -&gt; <span class="prelude-ty">Result</span>&lt;(), Error&gt; {
+        <span class="comment">// TODO: DETERMINAR SI DEVOLVER RESULT
+        </span><span class="kw">let </span>id = subject_id.to_str();
+        <span class="self">self</span>.prevalidated_event_db.put(<span class="kw-2">&amp;</span>id, event)
+    }
+
+    <span class="kw">pub fn </span>del_prevalidated_event(<span class="kw-2">&amp;</span><span class="self">self</span>, subject_id: <span class="kw-2">&amp;</span>DigestIdentifier) -&gt; <span class="prelude-ty">Result</span>&lt;(), Error&gt; {
+        <span class="kw">let </span>id = subject_id.to_str();
+        <span class="self">self</span>.prevalidated_event_db.del(<span class="kw-2">&amp;</span>id)
     }
 
     <span class="kw">pub fn </span>get_signatures(
@@ -517,6 +605,14 @@
         events_by_subject.get(<span class="kw-2">&amp;</span>sn.to_string())
     }
 
+    <span class="kw">pub fn </span>get_witness_signatures(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        subject_id: <span class="kw-2">&amp;</span>DigestIdentifier,
+    ) -&gt; <span class="prelude-ty">Result</span>&lt;(u64, HashSet&lt;Signature&gt;), Error&gt; {
+        <span class="kw">let </span>id = subject_id.to_str();
+        <span class="self">self</span>.witness_signatures_db.get(<span class="kw-2">&amp;</span>id)
+    }
+
     <span class="kw">pub fn </span>get_notary_signatures(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         subject_id: <span class="kw-2">&amp;</span>DigestIdentifier,
@@ -526,10 +622,7 @@
         <span class="self">self</span>.notary_signatures_db.get(<span class="kw-2">&amp;</span>id)
     }
 
-    <span class="kw">pub fn </span>delete_notary_signatures(
-        <span class="kw-2">&amp;</span><span class="self">self</span>,
-        subject_id: <span class="kw-2">&amp;</span>DigestIdentifier,
-    ) -&gt; <span class="prelude-ty">Result</span>&lt;(), Error&gt; {
+    <span class="kw">pub fn </span>delete_notary_signatures(<span class="kw-2">&amp;</span><span class="self">self</span>, subject_id: <span class="kw-2">&amp;</span>DigestIdentifier) -&gt; <span class="prelude-ty">Result</span>&lt;(), Error&gt; {
         <span class="self">self</span>.notary_signatures_db.del(<span class="kw-2">&amp;</span>subject_id.to_str())
     }
 
@@ -571,6 +664,29 @@
         <span class="self">self</span>.notary_signatures_db.put(<span class="kw-2">&amp;</span>id, (sn, total_signatures))
     }
 
+    <span class="kw">pub fn </span>set_witness_signatures(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        subject_id: <span class="kw-2">&amp;</span>DigestIdentifier,
+        sn: u64,
+        signatures: HashSet&lt;Signature&gt;,
+    ) -&gt; <span class="prelude-ty">Result</span>&lt;(), Error&gt; {
+        <span class="kw">let </span>id = subject_id.to_str();
+        <span class="kw">let </span>total_signatures = <span class="kw">match </span><span class="self">self</span>.witness_signatures_db.get(<span class="kw-2">&amp;</span>id) {
+            <span class="prelude-val">Ok</span>((<span class="kw">_</span>, other)) =&gt; signatures.union(<span class="kw-2">&amp;</span>other).cloned().collect(),
+            <span class="prelude-val">Err</span>(Error::EntryNotFound) =&gt; signatures,
+            <span class="prelude-val">Err</span>(error) =&gt; {
+                <span class="comment">// logError!(&quot;Error detected in database get_event operation: {}&quot;, error);
+                </span><span class="kw">return </span><span class="prelude-val">Err</span>(error);
+            }
+        };
+        <span class="self">self</span>.witness_signatures_db.put(<span class="kw-2">&amp;</span>id, (sn, total_signatures))
+    }
+
+    <span class="kw">pub fn </span>del_witness_signatures(<span class="kw-2">&amp;</span><span class="self">self</span>, subject_id: <span class="kw-2">&amp;</span>DigestIdentifier) -&gt; <span class="prelude-ty">Result</span>&lt;(), Error&gt; {
+        <span class="kw">let </span>id = subject_id.to_str();
+        <span class="self">self</span>.witness_signatures_db.del(<span class="kw-2">&amp;</span>id)
+    }
+
     <span class="kw">pub fn </span>get_subject(<span class="kw-2">&amp;</span><span class="self">self</span>, subject_id: <span class="kw-2">&amp;</span>DigestIdentifier) -&gt; <span class="prelude-ty">Result</span>&lt;Subject, Error&gt; {
         <span class="self">self</span>.subject_db.get(<span class="kw-2">&amp;</span>subject_id.to_str())
     }
@@ -584,41 +700,34 @@
         <span class="self">self</span>.subject_db.put(<span class="kw-2">&amp;</span>id, subject)
     }
 
-    <span class="kw">pub fn </span>set_negociating_true(<span class="kw-2">&amp;</span><span class="self">self</span>, subject_id: <span class="kw-2">&amp;</span>DigestIdentifier) -&gt; <span class="prelude-ty">Result</span>&lt;(), Error&gt; {
-        <span class="kw">let </span><span class="kw-2">mut </span>subject = <span class="self">self</span>.get_subject(subject_id)<span class="question-mark">?</span>;
-        subject.ledger_state.negociating_next = <span class="bool-val">true</span>;
-        <span class="comment">// Persist the change
-        </span><span class="self">self</span>.set_subject(<span class="kw-2">&amp;</span>subject_id, subject)
-    }
+    <span class="comment">// pub fn apply_event_sourcing(&amp;self, event_content: &amp;EventContent) -&gt; Result&lt;(), Error&gt; {
+    //     // TODO: Consultar sobre si este método debería existir
+    //     let subject_id = &amp;event_content.subject_id;
+    //     let mut subject = self.get_subject(&amp;subject_id)?;
+    //     subject
+    //         .apply(event_content)
+    //         .map_err(|_| Error::SubjectApplyFailed)?;
+    //     // Persist the change
+    //     self.set_subject(subject_id, subject)?;
+    //     let id = subject_id.to_str();
+    //     let signatures_by_subject = self.signature_db.partition(&amp;id);
+    //     match signatures_by_subject.del(&amp;(event_content.sn - 1).to_string()) {
+    //         Ok(_) | Err(Error::EntryNotFound) =&gt; Ok(()),
+    //         Err(error) =&gt; Err(error),
+    //     }
+    // }
 
-    <span class="kw">pub fn </span>apply_event_sourcing(<span class="kw-2">&amp;</span><span class="self">self</span>, event_content: <span class="kw-2">&amp;</span>EventContent) -&gt; <span class="prelude-ty">Result</span>&lt;(), Error&gt; {
-        <span class="comment">// TODO: Consultar sobre si este método debería existir
-        </span><span class="kw">let </span>subject_id = <span class="kw-2">&amp;</span>event_content.subject_id;
-        <span class="kw">let </span><span class="kw-2">mut </span>subject = <span class="self">self</span>.get_subject(<span class="kw-2">&amp;</span>subject_id)<span class="question-mark">?</span>;
-        subject
-            .apply(event_content)
-            .map_err(|<span class="kw">_</span>| Error::SubjectApplyFailed)<span class="question-mark">?</span>;
-        <span class="comment">// Persist the change
-        </span><span class="self">self</span>.set_subject(subject_id, subject)<span class="question-mark">?</span>;
-        <span class="kw">let </span>id = subject_id.to_str();
-        <span class="kw">let </span>signatures_by_subject = <span class="self">self</span>.signature_db.partition(<span class="kw-2">&amp;</span>id);
-        <span class="kw">match </span>signatures_by_subject.del(<span class="kw-2">&amp;</span>(event_content.sn - <span class="number">1</span>).to_string()) {
-            <span class="prelude-val">Ok</span>(<span class="kw">_</span>) | <span class="prelude-val">Err</span>(Error::EntryNotFound) =&gt; <span class="prelude-val">Ok</span>(()),
-            <span class="prelude-val">Err</span>(error) =&gt; <span class="prelude-val">Err</span>(error),
-        }
-    }
+    // pub fn get_all_heads(&amp;self) -&gt; Result&lt;HashMap&lt;DigestIdentifier, LedgerState&gt;, Error&gt; {
+    //     let mut result = HashMap::new();
+    //     for (key, subject) in self.subject_db.iter() {
+    //         let subject_id =
+    //             DigestIdentifier::from_str(&amp;key).map_err(|_| Error::NoDigestIdentifier)?;
+    //         result.insert(subject_id, subject.ledger_state);
+    //     }
+    //     Ok(result)
+    // }
 
-    <span class="kw">pub fn </span>get_all_heads(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;HashMap&lt;DigestIdentifier, LedgerState&gt;, Error&gt; {
-        <span class="kw">let </span><span class="kw-2">mut </span>result = HashMap::new();
-        <span class="kw">for </span>(key, subject) <span class="kw">in </span><span class="self">self</span>.subject_db.iter() {
-            <span class="kw">let </span>subject_id =
-                DigestIdentifier::from_str(<span class="kw-2">&amp;</span>key).map_err(|<span class="kw">_</span>| Error::NoDigestIdentifier)<span class="question-mark">?</span>;
-            result.insert(subject_id, subject.ledger_state);
-        }
-        <span class="prelude-val">Ok</span>(result)
-    }
-
-    <span class="kw">pub fn </span>get_all_subjects(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Vec&lt;Subject&gt; {
+    </span><span class="kw">pub fn </span>get_all_subjects(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Vec&lt;Subject&gt; {
         <span class="kw">let </span><span class="kw-2">mut </span>result = Vec::new();
         <span class="kw">for </span>(<span class="kw">_</span>, subject) <span class="kw">in </span><span class="self">self</span>.subject_db.iter() {
             result.push(subject);
@@ -651,14 +760,9 @@
         result
     }
 
-    <span class="kw">pub fn </span>get_request(
-        <span class="kw-2">&amp;</span><span class="self">self</span>,
-        subject_id: <span class="kw-2">&amp;</span>DigestIdentifier,
-        request_id: <span class="kw-2">&amp;</span>DigestIdentifier,
-    ) -&gt; <span class="prelude-ty">Result</span>&lt;EventRequest, Error&gt; {
+    <span class="kw">pub fn </span>get_request(<span class="kw-2">&amp;</span><span class="self">self</span>, subject_id: <span class="kw-2">&amp;</span>DigestIdentifier) -&gt; <span class="prelude-ty">Result</span>&lt;EventRequest, Error&gt; {
         <span class="kw">let </span>id = subject_id.to_str();
-        <span class="kw">let </span>requests_by_subject = <span class="self">self</span>.request_db.partition(<span class="kw-2">&amp;</span>id);
-        requests_by_subject.get(<span class="kw-2">&amp;</span>request_id.to_str())
+        <span class="self">self</span>.request_db.get(<span class="kw-2">&amp;</span>id)
     }
 
     <span class="kw">pub fn </span>set_request(
@@ -667,19 +771,12 @@
         request: EventRequest,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;(), Error&gt; {
         <span class="kw">let </span>id = subject_id.to_str();
-        <span class="kw">let </span>requests_by_subject = <span class="self">self</span>.request_db.partition(<span class="kw-2">&amp;</span>id);
-        <span class="kw">let </span>req_id = request.signature.content.event_content_hash.to_str();
-        requests_by_subject.put(<span class="kw-2">&amp;</span>req_id, request)
+        <span class="self">self</span>.request_db.put(<span class="kw-2">&amp;</span>id, request)
     }
 
-    <span class="kw">pub fn </span>del_request(
-        <span class="kw-2">&amp;</span><span class="self">self</span>,
-        subject_id: <span class="kw-2">&amp;</span>DigestIdentifier,
-        request_id: <span class="kw-2">&amp;</span>DigestIdentifier,
-    ) -&gt; <span class="prelude-ty">Result</span>&lt;(), Error&gt; {
+    <span class="kw">pub fn </span>del_request(<span class="kw-2">&amp;</span><span class="self">self</span>, subject_id: <span class="kw-2">&amp;</span>DigestIdentifier) -&gt; <span class="prelude-ty">Result</span>&lt;(), Error&gt; {
         <span class="kw">let </span>id = subject_id.to_str();
-        <span class="kw">let </span>requests_by_subject = <span class="self">self</span>.request_db.partition(<span class="kw-2">&amp;</span>id);
-        requests_by_subject.del(<span class="kw-2">&amp;</span>request_id.to_str())
+        <span class="self">self</span>.request_db.del(<span class="kw-2">&amp;</span>id)
     }
 
     <span class="kw">pub fn </span>get_controller_id(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;String, Error&gt; {
@@ -727,6 +824,19 @@
         schemas_by_governances.get(schema_id)
     }
 
+    <span class="kw">pub fn </span>get_governance_contract(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;Vec&lt;u8&gt;, Error&gt; {
+        <span class="kw">let </span>contract = <span class="self">self</span>.contract_db.get(<span class="string">&quot;governance&quot;</span>);
+        <span class="kw">match </span>contract {
+            <span class="prelude-val">Ok</span>(result) =&gt; <span class="prelude-val">Ok</span>(result.<span class="number">0</span>),
+            <span class="prelude-val">Err</span>(error) =&gt; <span class="prelude-val">Err</span>(error),
+        }
+    }
+
+    <span class="kw">pub fn </span>put_governance_contract(<span class="kw-2">&amp;</span><span class="self">self</span>, contract: Vec&lt;u8&gt;) -&gt; <span class="prelude-ty">Result</span>&lt;(), Error&gt; {
+        <span class="self">self</span>.contract_db
+            .put(<span class="string">&quot;governance&quot;</span>, (contract, DigestIdentifier::default(), <span class="number">0</span>))
+    }
+
     <span class="kw">pub fn </span>put_contract(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         governance_id: <span class="kw-2">&amp;</span>DigestIdentifier,
@@ -741,4 +851,4 @@
     }
 }
 </code></pre></div>
-</section></main><div id="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="taple_core" data-themes="" data-resource-suffix="" data-rustdoc-version="1.68.2 (9eb3afe9e 2023-03-27)" data-search-js="search-98d53477a794af0b.js" data-settings-js="settings-c3c521c753752a1a.js" data-settings-css="settings-08ddfdda51b8ee2e.css" ></div></body></html>
+</section></main><div id="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="taple_core" data-themes="" data-resource-suffix="" data-rustdoc-version="1.69.0 (84c898d65 2023-04-16)" data-search-js="search-8a59a8356673ec1f.js" data-settings-js="settings-f0c5c39777a9a2f6.js" data-settings-css="settings-0bcba95ff279c1db.css" ></div></body></html>

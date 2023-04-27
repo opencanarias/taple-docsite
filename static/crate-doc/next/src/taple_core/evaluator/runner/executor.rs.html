@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `core/src/evaluator/runner/executor.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>executor.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceSerif4-Regular-1f7d512b176f0f72.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceSerif4-Bold-124a1ca42af929b6.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../../static.files/rustdoc-93196c7a1c3542a8.css" id="mainThemeStyle"><link rel="stylesheet" id="themeStyle" href="../../../../static.files/light-4743e13df3dfe8c4.css"><link rel="stylesheet" disabled href="../../../../static.files/dark-0e1b889528bd466b.css"><link rel="stylesheet" disabled href="../../../../static.files/ayu-65289d5d067c7c66.css"><script id="default-settings" ></script><script src="../../../../static.files/storage-d43fa987303ecbbb.js"></script><script defer src="../../../../static.files/source-script-ea63cb6500f71309.js"></script><script defer src="../../../../source-files.js"></script><script defer src="../../../../static.files/main-3367e395607fafc1.js"></script><noscript><link rel="stylesheet" href="../../../../static.files/noscript-13285aec31fa243e.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../../../taple_core/index.html"><img class="rust-logo" src="../../../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../static.files/wheel-5ec35bf9ca753509.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `core/src/evaluator/runner/executor.rs`."><title>executor.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../../static.files/rustdoc-c4dbdcde0fbd8430.css" id="mainThemeStyle"><link rel="stylesheet" id="themeStyle" href="../../../../static.files/light-db279b6232be9c13.css"><link rel="stylesheet" disabled href="../../../../static.files/dark-cf923f49f397b216.css"><link rel="stylesheet" disabled href="../../../../static.files/ayu-be46fdc453a55015.css"><script src="../../../../static.files/storage-3891ce972e3a2bf8.js"></script><script defer src="../../../../static.files/source-script-1b95b7cca98b26e5.js"></script><script defer src="../../../../source-files.js"></script><script defer src="../../../../static.files/main-98a684e84ae5b08b.js"></script><noscript><link rel="stylesheet" href="../../../../static.files/noscript-13285aec31fa243e.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../../../taple_core/index.html"><img class="rust-logo" src="../../../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -103,38 +103,136 @@
 <a href="#103" id="103">103</a>
 <a href="#104" id="104">104</a>
 <a href="#105" id="105">105</a>
-</pre><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::evaluator::errors::ExecutorErrorResponses;
+<a href="#106" id="106">106</a>
+<a href="#107" id="107">107</a>
+<a href="#108" id="108">108</a>
+<a href="#109" id="109">109</a>
+<a href="#110" id="110">110</a>
+<a href="#111" id="111">111</a>
+<a href="#112" id="112">112</a>
+<a href="#113" id="113">113</a>
+<a href="#114" id="114">114</a>
+<a href="#115" id="115">115</a>
+<a href="#116" id="116">116</a>
+<a href="#117" id="117">117</a>
+<a href="#118" id="118">118</a>
+<a href="#119" id="119">119</a>
+<a href="#120" id="120">120</a>
+<a href="#121" id="121">121</a>
+<a href="#122" id="122">122</a>
+<a href="#123" id="123">123</a>
+<a href="#124" id="124">124</a>
+<a href="#125" id="125">125</a>
+<a href="#126" id="126">126</a>
+<a href="#127" id="127">127</a>
+<a href="#128" id="128">128</a>
+<a href="#129" id="129">129</a>
+<a href="#130" id="130">130</a>
+<a href="#131" id="131">131</a>
+<a href="#132" id="132">132</a>
+<a href="#133" id="133">133</a>
+<a href="#134" id="134">134</a>
+<a href="#135" id="135">135</a>
+<a href="#136" id="136">136</a>
+<a href="#137" id="137">137</a>
+<a href="#138" id="138">138</a>
+<a href="#139" id="139">139</a>
+<a href="#140" id="140">140</a>
+<a href="#141" id="141">141</a>
+<a href="#142" id="142">142</a>
+<a href="#143" id="143">143</a>
+<a href="#144" id="144">144</a>
+<a href="#145" id="145">145</a>
+<a href="#146" id="146">146</a>
+<a href="#147" id="147">147</a>
+<a href="#148" id="148">148</a>
+<a href="#149" id="149">149</a>
+<a href="#150" id="150">150</a>
+<a href="#151" id="151">151</a>
+<a href="#152" id="152">152</a>
+<a href="#153" id="153">153</a>
+<a href="#154" id="154">154</a>
+<a href="#155" id="155">155</a>
+<a href="#156" id="156">156</a>
+<a href="#157" id="157">157</a>
+<a href="#158" id="158">158</a>
+<a href="#159" id="159">159</a>
+<a href="#160" id="160">160</a>
+<a href="#161" id="161">161</a>
+<a href="#162" id="162">162</a>
+<a href="#163" id="163">163</a>
+<a href="#164" id="164">164</a>
+<a href="#165" id="165">165</a>
+<a href="#166" id="166">166</a>
+<a href="#167" id="167">167</a>
+<a href="#168" id="168">168</a>
+<a href="#169" id="169">169</a>
+<a href="#170" id="170">170</a>
+<a href="#171" id="171">171</a>
+<a href="#172" id="172">172</a>
+<a href="#173" id="173">173</a>
+<a href="#174" id="174">174</a>
+<a href="#175" id="175">175</a>
+<a href="#176" id="176">176</a>
+</pre><pre class="rust"><code><span class="kw">use crate</span>::{
+    commons::models::{event_preevaluation::Context, Acceptance},
+    evaluator::errors::ExecutorErrorResponses,
+    event_content::Metadata,
+    governance::GovernanceInterface,
+    identifier::{DigestIdentifier, KeyIdentifier},
+};
 
 <span class="kw">use </span><span class="kw">super</span>::context::MemoryManager;
+<span class="kw">use </span>serde::{Deserialize, Serialize};
 <span class="kw">use </span>wasmtime::{Caller, Engine, Linker, Module, Store};
 
-<span class="kw">pub struct </span>ContractExecutor {
-    engine: Engine,
+<span class="attr">#[derive(Serialize, Deserialize)]
+</span><span class="kw">struct </span>WasmContractResult {
+    <span class="kw">pub </span>final_state: String,
+    <span class="kw">pub </span>approval_required: bool,
+    <span class="kw">pub </span>success: bool,
 }
 
-<span class="kw">impl </span>ContractExecutor {
-    <span class="kw">pub fn </span>new(engine: Engine) -&gt; <span class="self">Self </span>{
-        <span class="self">Self </span>{
-            engine,
-        }
+<span class="attr">#[derive(Serialize, Deserialize)]
+</span><span class="kw">pub struct </span>ContractResult {
+    <span class="kw">pub </span>final_state: String,
+    <span class="kw">pub </span>approval_required: bool,
+    <span class="kw">pub </span>success: Acceptance,
+}
+
+<span class="kw">pub struct </span>ContractExecutor&lt;G: GovernanceInterface + Send&gt; {
+    engine: Engine,
+    gov_api: G,
+}
+
+<span class="kw">impl</span>&lt;G: GovernanceInterface + Send&gt; ContractExecutor&lt;G&gt; {
+    <span class="kw">pub fn </span>new(engine: Engine, gov_api: G) -&gt; <span class="self">Self </span>{
+        <span class="self">Self </span>{ engine, gov_api }
     }
 
-    <span class="kw">pub fn </span>execute_contract(
+    <span class="kw">pub async fn </span>execute_contract(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        state: String,
-        event: String,
+        state: <span class="kw-2">&amp;</span>str,
+        event: <span class="kw-2">&amp;</span>str,
+        invokator: <span class="kw-2">&amp;</span>KeyIdentifier,
+        context: <span class="kw-2">&amp;</span>Context,
+        governance_version: u64,
         compiled_contract: Vec&lt;u8&gt;,
-    ) -&gt; <span class="prelude-ty">Result</span>&lt;String, ExecutorErrorResponses&gt; {
-        <span class="comment">// Cargar wasm
-        </span><span class="kw">let </span>module = <span class="kw">unsafe </span>{
-            Module::deserialize(
-                <span class="kw-2">&amp;</span><span class="self">self</span>.engine,
-                compiled_contract,
+        subject_id: <span class="kw-2">&amp;</span>DigestIdentifier,
+    ) -&gt; <span class="prelude-ty">Result</span>&lt;ContractResult, ExecutorErrorResponses&gt; {
+        <span class="comment">// Obtener Roles del usuario
+        </span><span class="kw">let </span>roles = <span class="self">self
+            </span>.gov_api
+            .get_roles_of_invokator(
+                invokator.clone(),
+                build_metadata(<span class="kw-2">&amp;</span>context, governance_version, <span class="kw-2">&amp;</span>subject_id),
             )
-            .unwrap()
-        };
+            .<span class="kw">await
+            </span>.map_err(|<span class="kw">_</span>| ExecutorErrorResponses::RolesObtentionFailed)<span class="question-mark">?</span>;
+        <span class="comment">// Cargar wasm
+        </span><span class="kw">let </span>module = <span class="kw">unsafe </span>{ Module::deserialize(<span class="kw-2">&amp;</span><span class="self">self</span>.engine, compiled_contract).unwrap() };
         <span class="comment">// Generar contexto
-        </span><span class="kw">let </span>(context, state_ptr, event_ptr) = <span class="self">self</span>.generate_context(state, event);
+        </span><span class="kw">let </span>(context, state_ptr, event_ptr, roles_ptr) = <span class="self">self</span>.generate_context(state, event, roles);
         <span class="kw">let </span><span class="kw-2">mut </span>store = Store::new(<span class="kw-2">&amp;</span><span class="self">self</span>.engine, context);
         <span class="comment">// Generar Linker
         </span><span class="kw">let </span>linker = <span class="self">self</span>.generate_linker(<span class="kw-2">&amp;</span><span class="self">self</span>.engine)<span class="question-mark">?</span>;
@@ -144,28 +242,56 @@
             .map_err(|<span class="kw">_</span>| ExecutorErrorResponses::ContractNotInstantiated)<span class="question-mark">?</span>;
         <span class="comment">// Ejecución contrato
         </span><span class="kw">let </span>contract_entrypoint = instance
-            .get_typed_func::&lt;(u32, u32), u32&gt;(<span class="kw-2">&amp;mut </span>store, <span class="string">&quot;main_function&quot;</span>)
+            .get_typed_func::&lt;(u32, u32, u32), u32&gt;(<span class="kw-2">&amp;mut </span>store, <span class="string">&quot;main_function&quot;</span>)
             .map_err(|<span class="kw">_</span>| ExecutorErrorResponses::ContractEntryPointNotFound)<span class="question-mark">?</span>;
         <span class="kw">let </span>result_ptr = contract_entrypoint
-            .call(<span class="kw-2">&amp;mut </span>store, (state_ptr, event_ptr))
+            .call(<span class="kw-2">&amp;mut </span>store, (state_ptr, event_ptr, roles_ptr))
             .map_err(|<span class="kw">_</span>| ExecutorErrorResponses::ContractExecutionFailed)<span class="question-mark">?</span>;
         <span class="comment">// Obtención &quot;NEW STATE&quot; almacenado en el contexto
-        </span><span class="prelude-val">Ok</span>(<span class="self">self</span>.get_new_state(<span class="kw-2">&amp;</span>store, result_ptr)<span class="question-mark">?</span>)
+        </span><span class="prelude-val">Ok</span>(<span class="self">self</span>.get_result(<span class="kw-2">&amp;</span>store, result_ptr)<span class="question-mark">?</span>)
     }
 
-    <span class="kw">fn </span>generate_context(<span class="kw-2">&amp;</span><span class="self">self</span>, state: String, event: String) -&gt; (MemoryManager, u32, u32) {
+    <span class="kw">fn </span>generate_context(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        state: <span class="kw-2">&amp;</span>str,
+        event: <span class="kw-2">&amp;</span>str,
+        roles: Vec&lt;String&gt;,
+    ) -&gt; (MemoryManager, u32, u32, u32) {
         <span class="kw">let </span><span class="kw-2">mut </span>context = MemoryManager::new();
         <span class="kw">let </span>state_ptr = context.add_date_raw(state.as_bytes());
         <span class="kw">let </span>event_ptr = context.add_date_raw(event.as_bytes());
-        (context, state_ptr <span class="kw">as </span>u32, event_ptr <span class="kw">as </span>u32)
+        <span class="kw">let </span>roles_ptr = context.add_data(roles);
+        (
+            context,
+            state_ptr <span class="kw">as </span>u32,
+            event_ptr <span class="kw">as </span>u32,
+            roles_ptr <span class="kw">as </span>u32,
+        )
     }
 
-    <span class="kw">fn </span>get_new_state(<span class="kw-2">&amp;</span><span class="self">self</span>, store: <span class="kw-2">&amp;</span>Store&lt;MemoryManager&gt;, pointer: u32) -&gt; <span class="prelude-ty">Result</span>&lt;String, ExecutorErrorResponses&gt; {
-        <span class="kw">let </span>new_state_bytes = store.data().read_data(pointer <span class="kw">as </span>usize)<span class="question-mark">?</span>;
-        <span class="prelude-val">Ok</span>(String::from_utf8(new_state_bytes.to_vec()).expect(<span class="string">&quot;No UTF8&quot;</span>))
+    <span class="kw">fn </span>get_result(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        store: <span class="kw-2">&amp;</span>Store&lt;MemoryManager&gt;,
+        pointer: u32,
+    ) -&gt; <span class="prelude-ty">Result</span>&lt;ContractResult, ExecutorErrorResponses&gt; {
+        <span class="kw">let </span>bytes = store.data().read_data(pointer <span class="kw">as </span>usize)<span class="question-mark">?</span>;
+        <span class="kw">let </span>contract_result: WasmContractResult = bincode::deserialize(bytes)
+            .map_err(|<span class="kw">_</span>| ExecutorErrorResponses::CantGenerateContractResult)<span class="question-mark">?</span>;
+        <span class="kw">let </span>result = ContractResult {
+            final_state: contract_result.final_state,
+            approval_required: contract_result.approval_required,
+            success: <span class="kw">match </span>contract_result.success {
+                <span class="bool-val">true </span>=&gt; Acceptance::Ok,
+                <span class="bool-val">false </span>=&gt; Acceptance::Ko,
+            },
+        };
+        <span class="prelude-val">Ok</span>(result)
     }
 
-    <span class="kw">fn </span>generate_linker(<span class="kw-2">&amp;</span><span class="self">self</span>, engine: <span class="kw-2">&amp;</span>Engine) -&gt; <span class="prelude-ty">Result</span>&lt;Linker&lt;MemoryManager&gt;, ExecutorErrorResponses&gt; {
+    <span class="kw">fn </span>generate_linker(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        engine: <span class="kw-2">&amp;</span>Engine,
+    ) -&gt; <span class="prelude-ty">Result</span>&lt;Linker&lt;MemoryManager&gt;, ExecutorErrorResponses&gt; {
         <span class="kw">let </span><span class="kw-2">mut </span>linker = Linker::new(<span class="kw-2">&amp;</span>engine);
         linker
             .func_wrap(
@@ -208,5 +334,21 @@
         <span class="prelude-val">Ok</span>(linker)
     }
 }
+
+<span class="kw">fn </span>build_metadata(
+    context: <span class="kw-2">&amp;</span>Context,
+    governance_version: u64,
+    subject_id: <span class="kw-2">&amp;</span>DigestIdentifier,
+) -&gt; Metadata {
+    Metadata {
+        namespace: context.namespace.clone(),
+        subject_id: subject_id.clone(),
+        governance_id: context.governance_id.clone(),
+        governance_version: governance_version,
+        schema_id: context.schema_id.clone(),
+        owner: context.owner.clone(),
+        creator: context.creator.clone(),
+    }
+}
 </code></pre></div>
-</section></main><div id="rustdoc-vars" data-root-path="../../../../" data-static-root-path="../../../../static.files/" data-current-crate="taple_core" data-themes="" data-resource-suffix="" data-rustdoc-version="1.68.2 (9eb3afe9e 2023-03-27)" data-search-js="search-98d53477a794af0b.js" data-settings-js="settings-c3c521c753752a1a.js" data-settings-css="settings-08ddfdda51b8ee2e.css" ></div></body></html>
+</section></main><div id="rustdoc-vars" data-root-path="../../../../" data-static-root-path="../../../../static.files/" data-current-crate="taple_core" data-themes="" data-resource-suffix="" data-rustdoc-version="1.69.0 (84c898d65 2023-04-16)" data-search-js="search-8a59a8356673ec1f.js" data-settings-js="settings-f0c5c39777a9a2f6.js" data-settings-css="settings-0bcba95ff279c1db.css" ></div></body></html>

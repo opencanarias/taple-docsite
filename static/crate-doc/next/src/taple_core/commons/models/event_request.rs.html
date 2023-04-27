@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `core/src/commons/models/event_request.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>event_request.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceSerif4-Regular-1f7d512b176f0f72.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceSerif4-Bold-124a1ca42af929b6.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../../static.files/rustdoc-93196c7a1c3542a8.css" id="mainThemeStyle"><link rel="stylesheet" id="themeStyle" href="../../../../static.files/light-4743e13df3dfe8c4.css"><link rel="stylesheet" disabled href="../../../../static.files/dark-0e1b889528bd466b.css"><link rel="stylesheet" disabled href="../../../../static.files/ayu-65289d5d067c7c66.css"><script id="default-settings" ></script><script src="../../../../static.files/storage-d43fa987303ecbbb.js"></script><script defer src="../../../../static.files/source-script-ea63cb6500f71309.js"></script><script defer src="../../../../source-files.js"></script><script defer src="../../../../static.files/main-3367e395607fafc1.js"></script><noscript><link rel="stylesheet" href="../../../../static.files/noscript-13285aec31fa243e.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../../../taple_core/index.html"><img class="rust-logo" src="../../../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../static.files/wheel-5ec35bf9ca753509.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `core/src/commons/models/event_request.rs`."><title>event_request.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../../static.files/rustdoc-c4dbdcde0fbd8430.css" id="mainThemeStyle"><link rel="stylesheet" id="themeStyle" href="../../../../static.files/light-db279b6232be9c13.css"><link rel="stylesheet" disabled href="../../../../static.files/dark-cf923f49f397b216.css"><link rel="stylesheet" disabled href="../../../../static.files/ayu-be46fdc453a55015.css"><script src="../../../../static.files/storage-3891ce972e3a2bf8.js"></script><script defer src="../../../../static.files/source-script-1b95b7cca98b26e5.js"></script><script defer src="../../../../source-files.js"></script><script defer src="../../../../static.files/main-98a684e84ae5b08b.js"></script><noscript><link rel="stylesheet" href="../../../../static.files/noscript-13285aec31fa243e.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../../../taple_core/index.html"><img class="rust-logo" src="../../../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -253,37 +253,146 @@
 <a href="#253" id="253">253</a>
 <a href="#254" id="254">254</a>
 <a href="#255" id="255">255</a>
+<a href="#256" id="256">256</a>
+<a href="#257" id="257">257</a>
+<a href="#258" id="258">258</a>
+<a href="#259" id="259">259</a>
+<a href="#260" id="260">260</a>
+<a href="#261" id="261">261</a>
+<a href="#262" id="262">262</a>
+<a href="#263" id="263">263</a>
+<a href="#264" id="264">264</a>
+<a href="#265" id="265">265</a>
+<a href="#266" id="266">266</a>
+<a href="#267" id="267">267</a>
+<a href="#268" id="268">268</a>
+<a href="#269" id="269">269</a>
+<a href="#270" id="270">270</a>
+<a href="#271" id="271">271</a>
+<a href="#272" id="272">272</a>
+<a href="#273" id="273">273</a>
+<a href="#274" id="274">274</a>
+<a href="#275" id="275">275</a>
+<a href="#276" id="276">276</a>
+<a href="#277" id="277">277</a>
+<a href="#278" id="278">278</a>
+<a href="#279" id="279">279</a>
+<a href="#280" id="280">280</a>
+<a href="#281" id="281">281</a>
+<a href="#282" id="282">282</a>
+<a href="#283" id="283">283</a>
+<a href="#284" id="284">284</a>
+<a href="#285" id="285">285</a>
+<a href="#286" id="286">286</a>
+<a href="#287" id="287">287</a>
+<a href="#288" id="288">288</a>
+<a href="#289" id="289">289</a>
+<a href="#290" id="290">290</a>
+<a href="#291" id="291">291</a>
+<a href="#292" id="292">292</a>
+<a href="#293" id="293">293</a>
+<a href="#294" id="294">294</a>
+<a href="#295" id="295">295</a>
+<a href="#296" id="296">296</a>
+<a href="#297" id="297">297</a>
+<a href="#298" id="298">298</a>
+<a href="#299" id="299">299</a>
+<a href="#300" id="300">300</a>
+<a href="#301" id="301">301</a>
+<a href="#302" id="302">302</a>
 </pre><pre class="rust"><code><span class="doccomment">//! Contains the data structures related to event requests.
-</span><span class="kw">use </span>std::collections::HashSet;
-
-<span class="kw">use </span>borsh::{BorshDeserialize, BorshSerialize};
-<span class="kw">use </span>json_patch::patch;
+</span><span class="kw">use </span>borsh::{BorshDeserialize, BorshSerialize};
 
 <span class="kw">use </span>serde::{Deserialize, Serialize};
-<span class="kw">use </span>serde_json::Value;
 
 <span class="kw">use </span><span class="kw">crate</span>::commons::{
-    crypto::{Ed25519KeyPair, KeyGenerator, KeyMaterial, KeyPair},
-    errors::{CryptoErrorEvent, SubjectError},
+    crypto::{check_cryptography, Ed25519KeyPair, KeyGenerator, KeyMaterial, KeyPair},
+    errors::SubjectError,
     identifier::{Derivable, DigestIdentifier, KeyIdentifier},
     schema_handler::Schema,
 };
 <span class="kw">use </span>utoipa::ToSchema;
 
 <span class="kw">use super</span>::{
-    approval_signature::ApprovalResponse,
-    event::Event,
-    event_content::{EventContent, Metadata},
     signature::Signature,
-    state::Subject, timestamp::TimeStamp,
+    state::Subject,
+    timestamp::TimeStamp,
 };
 
-<span class="attr">#[derive(
+<span class="comment">// #[derive(
+//     Debug, Clone, Serialize, Deserialize, Eq, PartialEq, BorshSerialize, BorshDeserialize, ToSchema,
+// )]
+// pub enum RequestPayload {
+//     Json(String),
+//     JsonPatch(String),
+// }
+
+// #[derive(
+//     Debug, Clone, Serialize, Deserialize, Eq, PartialEq, BorshSerialize, BorshDeserialize, ToSchema,
+// )]
+// pub struct CreateRequest {
+//     #[schema(value_type = String)]
+//     pub governance_id: DigestIdentifier,
+//     pub schema_id: String,
+//     pub namespace: String,
+//     pub payload: RequestPayload,
+// }
+
+// #[derive(
+//     Debug, Clone, Serialize, Deserialize, Eq, PartialEq, BorshSerialize, BorshDeserialize, ToSchema,
+// )]
+// pub struct StateRequest {
+//     #[schema(value_type = String)]
+//     pub subject_id: DigestIdentifier,
+//     pub payload: RequestPayload,
+// }
+
+// #[derive(
+//     Debug, Clone, Serialize, Deserialize, Eq, PartialEq, BorshSerialize, BorshDeserialize, ToSchema,
+// )]
+// pub enum EventRequestType {
+//     Create(CreateRequest),
+//     State(StateRequest),
+// }
+
+// /// Request that originated the event. It contains basically
+// /// the proposed change and the votes obtained related to it.
+// #[derive(
+//     Debug, Clone, Serialize, Deserialize, Eq, PartialEq, BorshSerialize, BorshDeserialize, ToSchema,
+// )]
+// pub struct EventRequest {
+//     pub request: EventRequestType,
+//     pub timestamp: TimeStamp,
+//     pub signature: Signature,
+//     #[schema(value_type = Vec&lt;ApprovalResponse&gt;)]
+//     pub approvals: HashSet&lt;ApprovalResponse&gt;,
+// }
+
+// #[derive(
+//     Debug, Clone, Serialize, Deserialize, Eq, PartialEq, BorshSerialize, BorshDeserialize, ToSchema,
+// )]
+// pub struct RequestData {
+//     pub request: EventRequestType,
+//     pub request_id: String,
+//     pub timestamp: TimeStamp,
+//     pub subject_id: Option&lt;String&gt;,
+//     pub sn: Option&lt;u64&gt;,
+// }
+
+</span><span class="attr">#[derive(
     Debug, Clone, Serialize, Deserialize, Eq, PartialEq, BorshSerialize, BorshDeserialize, ToSchema,
 )]
-</span><span class="kw">pub enum </span>RequestPayload {
-    Json(String),
-    JsonPatch(String),
+</span><span class="kw">pub struct </span>EventRequest {
+    <span class="kw">pub </span>request: EventRequestType,
+    <span class="kw">pub </span>timestamp: TimeStamp,
+    <span class="kw">pub </span>signature: Signature,
+}
+
+
+<span class="attr">#[derive(Debug, Clone, Serialize, Deserialize, Eq, PartialEq, BorshSerialize, BorshDeserialize, ToSchema)]
+</span><span class="kw">pub enum </span>EventRequestType {
+    Create(CreateRequest),
+    State(StateRequest),
 }
 
 <span class="attr">#[derive(
@@ -294,7 +403,6 @@
     </span><span class="kw">pub </span>governance_id: DigestIdentifier,
     <span class="kw">pub </span>schema_id: String,
     <span class="kw">pub </span>namespace: String,
-    <span class="kw">pub </span>payload: RequestPayload,
 }
 
 <span class="attr">#[derive(
@@ -303,210 +411,196 @@
 </span><span class="kw">pub struct </span>StateRequest {
     <span class="attr">#[schema(value_type = String)]
     </span><span class="kw">pub </span>subject_id: DigestIdentifier,
-    <span class="kw">pub </span>payload: RequestPayload,
-}
-
-<span class="attr">#[derive(
-    Debug, Clone, Serialize, Deserialize, Eq, PartialEq, BorshSerialize, BorshDeserialize, ToSchema,
-)]
-</span><span class="kw">pub enum </span>EventRequestType {
-    Create(CreateRequest),
-    State(StateRequest),
-}
-
-<span class="doccomment">/// Request that originated the event. It contains basically 
-/// the proposed change and the votes obtained related to it.
-</span><span class="attr">#[derive(
-    Debug, Clone, Serialize, Deserialize, Eq, PartialEq, BorshSerialize, BorshDeserialize, ToSchema,
-)]
-</span><span class="kw">pub struct </span>EventRequest {
-    <span class="kw">pub </span>request: EventRequestType,
-    <span class="kw">pub </span>timestamp: TimeStamp,
-    <span class="kw">pub </span>signature: Signature,
-    <span class="attr">#[schema(value_type = Vec&lt;ApprovalResponse&gt;)]
-    </span><span class="kw">pub </span>approvals: HashSet&lt;ApprovalResponse&gt;,
-}
-
-<span class="attr">#[derive(
-    Debug, Clone, Serialize, Deserialize, Eq, PartialEq, BorshSerialize, BorshDeserialize, ToSchema,
-)]
-</span><span class="kw">pub struct </span>RequestData {
-    <span class="kw">pub </span>request: EventRequestType,
-    <span class="kw">pub </span>request_id: String,
-    <span class="kw">pub </span>timestamp: TimeStamp,
-    <span class="kw">pub </span>subject_id: <span class="prelude-ty">Option</span>&lt;String&gt;,
-    <span class="kw">pub </span>sn: <span class="prelude-ty">Option</span>&lt;u64&gt;,
+    <span class="kw">pub </span>invokation: String,
 }
 
 <span class="kw">impl </span>EventRequest {
-    <span class="kw">pub fn </span>check_against_schema(
-        <span class="kw-2">&amp;</span><span class="self">self</span>,
-        schema: <span class="kw-2">&amp;</span>Value,
-        subject: <span class="kw-2">&amp;</span>Subject,
-    ) -&gt; <span class="prelude-ty">Result</span>&lt;(), SubjectError&gt; {
-        <span class="kw">let </span>subject_schema =
-            Schema::compile(<span class="kw-2">&amp;</span>schema).map_err(|<span class="kw">_</span>| SubjectError::SchemaDoesNotCompile)<span class="question-mark">?</span>;
-        <span class="kw">let </span>payload = <span class="kw">match </span><span class="kw-2">&amp;</span><span class="self">self</span>.request {
-            EventRequestType::State(data) =&gt; <span class="kw-2">&amp;</span>data.payload,
-            EventRequestType::Create(data) =&gt; <span class="kw-2">&amp;</span>data.payload,
-        };
-        <span class="kw">match </span>payload {
-            RequestPayload::Json(props) =&gt; {
-                <span class="comment">// Validate with schema
-                </span><span class="kw">let </span><span class="prelude-val">Ok</span>(properties) = serde_json::from_str(<span class="kw-2">&amp;</span>props) <span class="kw">else </span>{
-                    <span class="kw">return </span><span class="prelude-val">Err</span>(SubjectError::ErrorParsingJsonString);
-                };
-                <span class="kw">if </span>!subject_schema.validate(<span class="kw-2">&amp;</span>properties) {
-                    <span class="kw">return </span><span class="prelude-val">Err</span>(SubjectError::SchemaValidationFailed);
-                }
-                <span class="prelude-val">Ok</span>(())
-            }
-            RequestPayload::JsonPatch(patch_string) =&gt; {
-                <span class="kw">let </span><span class="prelude-val">Ok</span>(patch_json) = serde_json::from_str(<span class="kw-2">&amp;</span>patch_string) <span class="kw">else </span>{
-                    <span class="kw">return </span><span class="prelude-val">Err</span>(SubjectError::ErrorParsingJsonString);
-                };
-                <span class="kw">let </span><span class="prelude-val">Some</span>(subject_data) = <span class="kw-2">&amp;</span>subject.subject_data <span class="kw">else </span>{
-                    <span class="kw">return </span><span class="prelude-val">Err</span>(SubjectError::InvalidUseOfJSONPATCH);
-                };
-                <span class="kw">let </span><span class="prelude-val">Ok</span>(<span class="kw-2">mut </span>properties) = serde_json::from_str(<span class="kw-2">&amp;</span>subject_data.properties) <span class="kw">else </span>{
-                    <span class="kw">return </span><span class="prelude-val">Err</span>(SubjectError::ErrorParsingJsonString);
-                };
-                <span class="kw">let </span><span class="prelude-val">Ok</span>(()) = patch(<span class="kw-2">&amp;mut </span>properties, <span class="kw-2">&amp;</span>patch_json) <span class="kw">else </span>{
-                    <span class="kw">return </span><span class="prelude-val">Err</span>(SubjectError::ErrorApplyingPatch);
-                };
-                <span class="kw">if </span>!subject_schema.validate(<span class="kw-2">&amp;</span>properties) {
-                    <span class="kw">return </span><span class="prelude-val">Err</span>(SubjectError::SchemaValidationFailed);
-                }
-                <span class="prelude-val">Ok</span>(())
-            }
+    <span class="kw">pub fn </span>new(request: EventRequestType, signature: Signature) -&gt; <span class="self">Self </span>{
+        <span class="self">Self </span>{
+            request,
+            timestamp: TimeStamp::now(),
+            signature,
         }
     }
 
-    <span class="kw">pub fn </span>check_signatures(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;(), CryptoErrorEvent&gt; {
-        <span class="comment">// Checking request signature
-        </span><span class="kw">let </span><span class="prelude-val">Ok</span>(hash) = DigestIdentifier::from_serializable_borsh((<span class="self">self</span>.request.clone(), <span class="self">self</span>.timestamp.clone())) <span class="kw">else </span>{
-            <span class="kw">return </span><span class="prelude-val">Err</span>(CryptoErrorEvent::EventRequestHashingError);
-        };
-        <span class="comment">// println!(&quot;Primero {:?}, segundo {:?}&quot;, hash, self.signature.content.event_content_hash);
-        </span><span class="kw">if </span>hash != <span class="self">self</span>.signature.content.event_content_hash {
-            <span class="kw">return </span><span class="prelude-val">Err</span>(CryptoErrorEvent::EventRequestHashingConflict);
-        }
-        <span class="kw">match </span><span class="self">self
-            </span>.signature
-            .content
-            .signer
-            .verify(<span class="kw-2">&amp;</span>hash.derivative(), <span class="self">self</span>.signature.signature.clone())
-        {
-            <span class="prelude-val">Ok</span>(<span class="kw">_</span>) =&gt; (),
-            <span class="prelude-val">Err</span>(<span class="kw">_</span>) =&gt; <span class="kw">return </span><span class="prelude-val">Err</span>(CryptoErrorEvent::RequestSignatureInvalid),
-        };
-        <span class="kw">for </span>approval <span class="kw">in </span><span class="self">self</span>.approvals.iter() {
-            <span class="kw">if </span>hash != approval.content.event_request_hash {
-                <span class="kw">return </span><span class="prelude-val">Err</span>(CryptoErrorEvent::EventRequestHashingConflict);
-            }
-            <span class="kw">match </span>DigestIdentifier::from_serializable_borsh((
-                approval.content.event_request_hash.clone(),
-                approval.content.approval_type.clone(),
-                approval.content.expected_sn,
-            )) {
-                <span class="prelude-val">Ok</span>(hash) =&gt; {
-                    <span class="kw">match </span>approval
-                        .content
-                        .signer
-                        .verify(<span class="kw-2">&amp;</span>hash.derivative(), approval.signature.clone())
-                    {
-                        <span class="prelude-val">Ok</span>(<span class="kw">_</span>) =&gt; (),
-                        <span class="prelude-val">Err</span>(<span class="kw">_</span>) =&gt; <span class="kw">return </span><span class="prelude-val">Err</span>(CryptoErrorEvent::RequestSignatureInvalid),
-                    }
-                }
-                <span class="prelude-val">Err</span>(<span class="kw">_</span>) =&gt; <span class="kw">return </span><span class="prelude-val">Err</span>(CryptoErrorEvent::EventRequestHashingError),
-            }
-        }
+    <span class="kw">pub fn </span>check_signatures(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;(), SubjectError&gt; {
+        check_cryptography((<span class="kw-2">&amp;</span><span class="self">self</span>.request, <span class="kw-2">&amp;</span><span class="self">self</span>.timestamp), <span class="kw-2">&amp;</span><span class="self">self</span>.signature)
+            .map_err(|error| SubjectError::CryptoError(error.to_string()))<span class="question-mark">?</span>;
         <span class="prelude-val">Ok</span>(())
     }
-
-    <span class="kw">pub fn </span>create_subject_from_request(
-        <span class="self">self</span>,
-        governance_version: u64,
-        subject_schema: <span class="kw-2">&amp;</span>Value,
-        approved: bool,
-    ) -&gt; <span class="prelude-ty">Result</span>&lt;(Subject, Event), SubjectError&gt; {
-        <span class="kw">if let </span>EventRequestType::Create(create_req) = <span class="self">self</span>.request.clone() {
-            <span class="kw">let </span>mc = KeyPair::Ed25519(Ed25519KeyPair::new());
-            <span class="kw">match </span>DigestIdentifier::from_serializable_borsh((
-                <span class="self">self</span>.signature.content.event_content_hash.clone(),
-                mc.public_key_bytes(),
-            )) {
-                <span class="prelude-val">Err</span>(<span class="kw">_</span>) =&gt; <span class="prelude-val">Err</span>(SubjectError::SubjectSignatureFailed),
-                <span class="prelude-val">Ok</span>(subject_id) =&gt; {
-                    <span class="kw">let </span><span class="kw-2">mut </span>event_content = EventContent::new(
-                        subject_id,
-                        <span class="self">self</span>.clone(),
-                        <span class="number">0</span>,
-                        DigestIdentifier::default(),
-                        Metadata {
-                            namespace: create_req.namespace,
-                            governance_id: create_req.governance_id,
-                            governance_version,
-                            schema_id: create_req.schema_id,
-                            owner: <span class="self">self</span>.signature.content.signer,
-                        },
-                        approved,
-                    );
-                    <span class="kw">let </span>public_key =
-                        KeyIdentifier::new(mc.get_key_derivator(), <span class="kw-2">&amp;</span>mc.public_key_bytes());
-                    <span class="kw">let </span>subject =
-                        Subject::new(<span class="kw-2">&amp;</span>event_content, public_key, <span class="prelude-val">Some</span>(mc), subject_schema)<span class="question-mark">?</span>;
-                    event_content.state_hash = subject
-                        .get_future_subject_content_hash(event_content.clone(), subject_schema)<span class="question-mark">?</span>;
-                    <span class="kw">let </span>event = subject.get_signature_from_subject(event_content)<span class="question-mark">?</span>;
-                    <span class="prelude-val">Ok</span>((subject, event))
-                }
-            }
-        } <span class="kw">else </span>{
-            <span class="prelude-val">Err</span>(SubjectError::NotCreateEvent)
-        }
-    }
-
-    <span class="kw">pub fn </span>get_event_from_state_request(
-        <span class="self">self</span>,
-        subject: <span class="kw-2">&amp;</span>Subject,
-        prev_event_hash: DigestIdentifier,
-        governance_version: u64,
-        subject_schema: <span class="kw-2">&amp;</span>Value,
-        approved: bool,
-    ) -&gt; <span class="prelude-ty">Result</span>&lt;Event, SubjectError&gt; {
-        <span class="kw">match </span><span class="self">self</span>.request.clone() {
-            EventRequestType::Create(<span class="kw">_</span>) =&gt; {
-                <span class="macro">panic!</span>(<span class="string">&quot;Expected State Event&quot;</span>)
-            }
-            EventRequestType::State(state_req) =&gt; {
-                <span class="comment">// TODO: Check that the request invoker is you or it can be done by the governance
-                </span><span class="kw">if </span>subject.keys.is_none() {
-                    <span class="kw">return </span><span class="prelude-val">Err</span>(SubjectError::NotOwnerOfSubject);
-                }
-                <span class="kw">let </span>subject_data = subject.subject_data.as_ref().expect(<span class="string">&quot;Hay data&quot;</span>);
-                <span class="kw">let </span><span class="kw-2">mut </span>event_content = EventContent {
-                    subject_id: state_req.subject_id,
-                    event_request: <span class="self">self</span>,
-                    sn: subject_data.sn + <span class="number">1</span>,
-                    previous_hash: prev_event_hash,
-                    state_hash: DigestIdentifier::default(),
-                    metadata: Metadata {
-                        namespace: subject_data.namespace.clone(),
-                        governance_id: subject_data.governance_id.clone(),
-                        governance_version,
-                        schema_id: subject_data.schema_id.clone(),
-                        owner: subject_data.owner.clone(),
-                    },
-                    approved,
-                };
-                event_content.state_hash = subject
-                    .get_future_subject_content_hash(event_content.clone(), subject_schema)<span class="question-mark">?</span>;
-                <span class="prelude-val">Ok</span>(subject.get_signature_from_subject(event_content)<span class="question-mark">?</span>)
-            }
-        }
-    }
 }
-</code></pre></div>
-</section></main><div id="rustdoc-vars" data-root-path="../../../../" data-static-root-path="../../../../static.files/" data-current-crate="taple_core" data-themes="" data-resource-suffix="" data-rustdoc-version="1.68.2 (9eb3afe9e 2023-03-27)" data-search-js="search-98d53477a794af0b.js" data-settings-js="settings-c3c521c753752a1a.js" data-settings-css="settings-08ddfdda51b8ee2e.css" ></div></body></html>
+
+<span class="comment">// impl EventRequest {
+//     pub fn check_against_schema(
+//         &amp;self,
+//         schema: &amp;Value,
+//         subject: &amp;Subject,
+//     ) -&gt; Result&lt;(), SubjectError&gt; {
+//         let subject_schema =
+//             Schema::compile(&amp;schema).map_err(|_| SubjectError::SchemaDoesNotCompile)?;
+//         let payload = match &amp;self.request {
+//             EventRequestType::State(data) =&gt; &amp;data.payload,
+//             EventRequestType::Create(data) =&gt; &amp;data.payload,
+//         };
+//         match payload {
+//             RequestPayload::Json(props) =&gt; {
+//                 // Validate with schema
+//                 let Ok(properties) = serde_json::from_str(&amp;props) else {
+//                     return Err(SubjectError::ErrorParsingJsonString);
+//                 };
+//                 if !subject_schema.validate(&amp;properties) {
+//                     return Err(SubjectError::SchemaValidationFailed);
+//                 }
+//                 Ok(())
+//             }
+//             RequestPayload::JsonPatch(patch_string) =&gt; {
+//                 let Ok(patch_json) = serde_json::from_str(&amp;patch_string) else {
+//                     return Err(SubjectError::ErrorParsingJsonString);
+//                 };
+//                 let Some(subject_data) = &amp;subject.subject_data else {
+//                     return Err(SubjectError::InvalidUseOfJSONPATCH);
+//                 };
+//                 let Ok(mut properties) = serde_json::from_str(&amp;subject_data.properties) else {
+//                     return Err(SubjectError::ErrorParsingJsonString);
+//                 };
+//                 let Ok(()) = patch(&amp;mut properties, &amp;patch_json) else {
+//                     return Err(SubjectError::ErrorApplyingPatch);
+//                 };
+//                 if !subject_schema.validate(&amp;properties) {
+//                     return Err(SubjectError::SchemaValidationFailed);
+//                 }
+//                 Ok(())
+//             }
+//         }
+//     }
+
+//     pub fn check_signatures(&amp;self) -&gt; Result&lt;(), CryptoErrorEvent&gt; {
+//         // Checking request signature
+//         let Ok(hash) = DigestIdentifier::from_serializable_borsh((self.request.clone(), self.timestamp.clone())) else {
+//             return Err(CryptoErrorEvent::EventRequestHashingError);
+//         };
+//         // println!(&quot;Primero {:?}, segundo {:?}&quot;, hash, self.signature.content.event_content_hash);
+//         if hash != self.signature.content.event_content_hash {
+//             return Err(CryptoErrorEvent::EventRequestHashingConflict);
+//         }
+//         match self
+//             .signature
+//             .content
+//             .signer
+//             .verify(&amp;hash.derivative(), self.signature.signature.clone())
+//         {
+//             Ok(_) =&gt; (),
+//             Err(_) =&gt; return Err(CryptoErrorEvent::RequestSignatureInvalid),
+//         };
+//         for approval in self.approvals.iter() {
+//             if hash != approval.content.event_request_hash {
+//                 return Err(CryptoErrorEvent::EventRequestHashingConflict);
+//             }
+//             match DigestIdentifier::from_serializable_borsh((
+//                 approval.content.event_request_hash.clone(),
+//                 approval.content.approval_type.clone(),
+//                 approval.content.expected_sn,
+//             )) {
+//                 Ok(hash) =&gt; {
+//                     match approval
+//                         .content
+//                         .signer
+//                         .verify(&amp;hash.derivative(), approval.signature.clone())
+//                     {
+//                         Ok(_) =&gt; (),
+//                         Err(_) =&gt; return Err(CryptoErrorEvent::RequestSignatureInvalid),
+//                     }
+//                 }
+//                 Err(_) =&gt; return Err(CryptoErrorEvent::EventRequestHashingError),
+//             }
+//         }
+//         Ok(())
+//     }
+
+//     pub fn create_subject_from_request(
+//         self,
+//         governance_version: u64,
+//         subject_schema: &amp;Value,
+//         approved: bool,
+//     ) -&gt; Result&lt;(Subject, Event), SubjectError&gt; {
+//         if let EventRequestType::Create(create_req) = self.request.clone() {
+//             let mc = KeyPair::Ed25519(Ed25519KeyPair::new());
+//             match DigestIdentifier::from_serializable_borsh((
+//                 self.signature.content.event_content_hash.clone(),
+//                 mc.public_key_bytes(),
+//             )) {
+//                 Err(_) =&gt; Err(SubjectError::SubjectSignatureFailed),
+//                 Ok(subject_id) =&gt; {
+//                     let mut event_content = EventContent::new(
+//                         subject_id.clone(),
+//                         self.clone(),
+//                         0,
+//                         DigestIdentifier::default(),
+//                         Metadata {
+//                             subject_id: subject_id,
+//                             namespace: create_req.namespace,
+//                             governance_id: create_req.governance_id,
+//                             governance_version,
+//                             schema_id: create_req.schema_id,
+//                             owner: self.signature.content.signer,
+//                         },
+//                         approved,
+//                     );
+//                     let public_key =
+//                         KeyIdentifier::new(mc.get_key_derivator(), &amp;mc.public_key_bytes());
+//                     let subject =
+//                         Subject::new(&amp;event_content, public_key, Some(mc), subject_schema)?;
+//                     event_content.state_hash = subject
+//                         .get_future_subject_content_hash(event_content.clone(), subject_schema)?;
+//                     let event = subject.get_signature_from_subject(event_content)?;
+//                     Ok((subject, event))
+//                 }
+//             }
+//         } else {
+//             Err(SubjectError::NotCreateEvent)
+//         }
+//     }
+
+//     pub fn get_event_from_state_request(
+//         self,
+//         subject: &amp;Subject,
+//         prev_event_hash: DigestIdentifier,
+//         governance_version: u64,
+//         subject_schema: &amp;Value,
+//         approved: bool,
+//     ) -&gt; Result&lt;Event, SubjectError&gt; {
+//         match self.request.clone() {
+//             EventRequestType::Create(_) =&gt; {
+//                 panic!(&quot;Expected State Event&quot;)
+//             }
+//             EventRequestType::State(state_req) =&gt; {
+//                 // TODO: Check that the request invoker is you or it can be done by the governance
+//                 if subject.keys.is_none() {
+//                     return Err(SubjectError::NotOwnerOfSubject);
+//                 }
+//                 let subject_data = subject.subject_data.as_ref().expect(&quot;Hay data&quot;);
+//                 let mut event_content = EventContent {
+//                     subject_id: state_req.subject_id.clone(),
+//                     event_request: self,
+//                     sn: subject_data.sn + 1,
+//                     previous_hash: prev_event_hash,
+//                     state_hash: DigestIdentifier::default(),
+//                     metadata: Metadata {
+//                         subject_id: state_req.subject_id,
+//                         namespace: subject_data.namespace.clone(),
+//                         governance_id: subject_data.governance_id.clone(),
+//                         governance_version,
+//                         schema_id: subject_data.schema_id.clone(),
+//                         owner: subject_data.owner.clone(),
+//                     },
+//                     approved,
+//                 };
+//                 event_content.state_hash = subject
+//                     .get_future_subject_content_hash(event_content.clone(), subject_schema)?;
+//                 Ok(subject.get_signature_from_subject(event_content)?)
+//             }
+//         }
+//     }
+// }
+</span></code></pre></div>
+</section></main><div id="rustdoc-vars" data-root-path="../../../../" data-static-root-path="../../../../static.files/" data-current-crate="taple_core" data-themes="" data-resource-suffix="" data-rustdoc-version="1.69.0 (84c898d65 2023-04-16)" data-search-js="search-8a59a8356673ec1f.js" data-settings-js="settings-f0c5c39777a9a2f6.js" data-settings-css="settings-0bcba95ff279c1db.css" ></div></body></html>

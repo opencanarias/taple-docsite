@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `core/src/commons/models/event.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>event.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceSerif4-Regular-1f7d512b176f0f72.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceSerif4-Bold-124a1ca42af929b6.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../../static.files/rustdoc-93196c7a1c3542a8.css" id="mainThemeStyle"><link rel="stylesheet" id="themeStyle" href="../../../../static.files/light-4743e13df3dfe8c4.css"><link rel="stylesheet" disabled href="../../../../static.files/dark-0e1b889528bd466b.css"><link rel="stylesheet" disabled href="../../../../static.files/ayu-65289d5d067c7c66.css"><script id="default-settings" ></script><script src="../../../../static.files/storage-d43fa987303ecbbb.js"></script><script defer src="../../../../static.files/source-script-ea63cb6500f71309.js"></script><script defer src="../../../../source-files.js"></script><script defer src="../../../../static.files/main-3367e395607fafc1.js"></script><noscript><link rel="stylesheet" href="../../../../static.files/noscript-13285aec31fa243e.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../../../taple_core/index.html"><img class="rust-logo" src="../../../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../static.files/wheel-5ec35bf9ca753509.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `core/src/commons/models/event.rs`."><title>event.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../../static.files/rustdoc-c4dbdcde0fbd8430.css" id="mainThemeStyle"><link rel="stylesheet" id="themeStyle" href="../../../../static.files/light-db279b6232be9c13.css"><link rel="stylesheet" disabled href="../../../../static.files/dark-cf923f49f397b216.css"><link rel="stylesheet" disabled href="../../../../static.files/ayu-be46fdc453a55015.css"><script src="../../../../static.files/storage-3891ce972e3a2bf8.js"></script><script defer src="../../../../static.files/source-script-1b95b7cca98b26e5.js"></script><script defer src="../../../../source-files.js"></script><script defer src="../../../../static.files/main-98a684e84ae5b08b.js"></script><noscript><link rel="stylesheet" href="../../../../static.files/noscript-13285aec31fa243e.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../../../taple_core/index.html"><img class="rust-logo" src="../../../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -183,190 +183,462 @@
 <a href="#183" id="183">183</a>
 <a href="#184" id="184">184</a>
 <a href="#185" id="185">185</a>
-</pre><pre class="rust"><code><span class="kw">use </span>std::{collections::HashSet, str::FromStr};
+<a href="#186" id="186">186</a>
+<a href="#187" id="187">187</a>
+<a href="#188" id="188">188</a>
+<a href="#189" id="189">189</a>
+<a href="#190" id="190">190</a>
+<a href="#191" id="191">191</a>
+<a href="#192" id="192">192</a>
+<a href="#193" id="193">193</a>
+<a href="#194" id="194">194</a>
+<a href="#195" id="195">195</a>
+<a href="#196" id="196">196</a>
+<a href="#197" id="197">197</a>
+<a href="#198" id="198">198</a>
+<a href="#199" id="199">199</a>
+<a href="#200" id="200">200</a>
+<a href="#201" id="201">201</a>
+<a href="#202" id="202">202</a>
+<a href="#203" id="203">203</a>
+<a href="#204" id="204">204</a>
+<a href="#205" id="205">205</a>
+<a href="#206" id="206">206</a>
+<a href="#207" id="207">207</a>
+<a href="#208" id="208">208</a>
+<a href="#209" id="209">209</a>
+<a href="#210" id="210">210</a>
+<a href="#211" id="211">211</a>
+<a href="#212" id="212">212</a>
+<a href="#213" id="213">213</a>
+<a href="#214" id="214">214</a>
+<a href="#215" id="215">215</a>
+<a href="#216" id="216">216</a>
+<a href="#217" id="217">217</a>
+<a href="#218" id="218">218</a>
+<a href="#219" id="219">219</a>
+<a href="#220" id="220">220</a>
+<a href="#221" id="221">221</a>
+<a href="#222" id="222">222</a>
+<a href="#223" id="223">223</a>
+<a href="#224" id="224">224</a>
+<a href="#225" id="225">225</a>
+<a href="#226" id="226">226</a>
+<a href="#227" id="227">227</a>
+<a href="#228" id="228">228</a>
+<a href="#229" id="229">229</a>
+<a href="#230" id="230">230</a>
+<a href="#231" id="231">231</a>
+<a href="#232" id="232">232</a>
+<a href="#233" id="233">233</a>
+<a href="#234" id="234">234</a>
+<a href="#235" id="235">235</a>
+<a href="#236" id="236">236</a>
+<a href="#237" id="237">237</a>
+<a href="#238" id="238">238</a>
+<a href="#239" id="239">239</a>
+<a href="#240" id="240">240</a>
+<a href="#241" id="241">241</a>
+<a href="#242" id="242">242</a>
+<a href="#243" id="243">243</a>
+<a href="#244" id="244">244</a>
+<a href="#245" id="245">245</a>
+<a href="#246" id="246">246</a>
+<a href="#247" id="247">247</a>
+<a href="#248" id="248">248</a>
+<a href="#249" id="249">249</a>
+<a href="#250" id="250">250</a>
+<a href="#251" id="251">251</a>
+<a href="#252" id="252">252</a>
+<a href="#253" id="253">253</a>
+<a href="#254" id="254">254</a>
+<a href="#255" id="255">255</a>
+<a href="#256" id="256">256</a>
+<a href="#257" id="257">257</a>
+<a href="#258" id="258">258</a>
+<a href="#259" id="259">259</a>
+<a href="#260" id="260">260</a>
+<a href="#261" id="261">261</a>
+<a href="#262" id="262">262</a>
+<a href="#263" id="263">263</a>
+<a href="#264" id="264">264</a>
+<a href="#265" id="265">265</a>
+<a href="#266" id="266">266</a>
+<a href="#267" id="267">267</a>
+<a href="#268" id="268">268</a>
+<a href="#269" id="269">269</a>
+<a href="#270" id="270">270</a>
+<a href="#271" id="271">271</a>
+<a href="#272" id="272">272</a>
+<a href="#273" id="273">273</a>
+<a href="#274" id="274">274</a>
+<a href="#275" id="275">275</a>
+<a href="#276" id="276">276</a>
+<a href="#277" id="277">277</a>
+<a href="#278" id="278">278</a>
+<a href="#279" id="279">279</a>
+<a href="#280" id="280">280</a>
+<a href="#281" id="281">281</a>
+<a href="#282" id="282">282</a>
+<a href="#283" id="283">283</a>
+<a href="#284" id="284">284</a>
+<a href="#285" id="285">285</a>
+<a href="#286" id="286">286</a>
+<a href="#287" id="287">287</a>
+<a href="#288" id="288">288</a>
+<a href="#289" id="289">289</a>
+<a href="#290" id="290">290</a>
+<a href="#291" id="291">291</a>
+<a href="#292" id="292">292</a>
+<a href="#293" id="293">293</a>
+<a href="#294" id="294">294</a>
+<a href="#295" id="295">295</a>
+<a href="#296" id="296">296</a>
+<a href="#297" id="297">297</a>
+<a href="#298" id="298">298</a>
+<a href="#299" id="299">299</a>
+<a href="#300" id="300">300</a>
+<a href="#301" id="301">301</a>
+<a href="#302" id="302">302</a>
+<a href="#303" id="303">303</a>
+<a href="#304" id="304">304</a>
+<a href="#305" id="305">305</a>
+<a href="#306" id="306">306</a>
+<a href="#307" id="307">307</a>
+<a href="#308" id="308">308</a>
+<a href="#309" id="309">309</a>
+<a href="#310" id="310">310</a>
+<a href="#311" id="311">311</a>
+<a href="#312" id="312">312</a>
+<a href="#313" id="313">313</a>
+<a href="#314" id="314">314</a>
+<a href="#315" id="315">315</a>
+<a href="#316" id="316">316</a>
+<a href="#317" id="317">317</a>
+<a href="#318" id="318">318</a>
+<a href="#319" id="319">319</a>
+<a href="#320" id="320">320</a>
+<a href="#321" id="321">321</a>
+</pre><pre class="rust"><code><span class="comment">// use std::{collections::HashSet, str::FromStr};
 
-<span class="kw">use </span>borsh::{BorshDeserialize, BorshSerialize};
-<span class="kw">use </span>serde::{
-    de::{<span class="self">self</span>, SeqAccess, Visitor},
-    Deserialize, Serialize,
+// use borsh::{BorshDeserialize, BorshSerialize};
+// use serde::{
+//     de::{self, SeqAccess, Visitor},
+//     Deserialize, Serialize,
+// };
+// use utoipa::ToSchema;
+
+// use crate::commons::{
+//     errors::{CryptoErrorEvent, Error},
+//     identifier::{
+//         Derivable, DigestIdentifier, KeyIdentifier, SignatureIdentifier,
+//     },
+// };
+
+// use super::{
+//     event_content::{EventContent, Metadata},
+//     event_request::{EventRequest, EventRequestType, RequestPayload, StateRequest},
+//     signature::{Signature, SignatureContent}, timestamp::TimeStamp,
+// };
+
+// /// Event associated to a subject.
+// #[derive(Debug, Clone, Serialize, Eq, PartialEq, BorshSerialize, BorshDeserialize, ToSchema)]
+// pub struct Event {
+//     pub event_content: EventContent,
+//     pub signature: Signature,
+// }
+
+// impl Event {
+//     pub fn new(
+//         event_content: EventContent,
+//         signature: Signature,
+//     ) -&gt; Result&lt;Self, CryptoErrorEvent&gt; {
+//         let event = Self {
+//             event_content,
+//             signature,
+//         };
+//         event.check_signatures()?;
+//         Ok(event)
+//     }
+
+//     pub fn get_event_content_hash(&amp;self) -&gt; Result&lt;DigestIdentifier, Error&gt; {
+//         DigestIdentifier::from_serializable_borsh(self.event_content.clone())
+//     }
+
+//     pub fn check_signatures(&amp;self) -&gt; Result&lt;(), CryptoErrorEvent&gt; {
+//         self.event_content.event_request.check_signatures()?;
+//         match DigestIdentifier::from_serializable_borsh(self.event_content.clone()) {
+//             Ok(hash) =&gt; {
+//                 if hash != self.signature.content.event_content_hash {
+//                     return Err(CryptoErrorEvent::EventContentHashingConflict);
+//                 }
+//                 match &amp;self
+//                     .signature
+//                     .content
+//                     .signer
+//                     .verify(&amp;hash.derivative(), self.signature.signature.clone())
+//                 {
+//                     Ok(_) =&gt; (),
+//                     Err(_) =&gt; return Err(CryptoErrorEvent::RequestSignatureInvalid),
+//                 }
+//             }
+//             Err(_) =&gt; return Err(CryptoErrorEvent::EventContentHashingError),
+//         }
+//         Ok(())
+//     }
+// }
+
+// impl&lt;&#39;de&gt; Deserialize&lt;&#39;de&gt; for Event {
+//     fn deserialize&lt;D&gt;(deserializer: D) -&gt; Result&lt;Self, D::Error&gt;
+//     where
+//         D: serde::Deserializer&lt;&#39;de&gt;,
+//     {
+//         #[derive(Deserialize)]
+//         #[serde(field_identifier)]
+//         enum Field {
+//             #[serde(rename = &quot;event_content&quot;)]
+//             EventContent,
+//             #[serde(rename = &quot;signature&quot;)]
+//             Signature,
+//         }
+
+//         struct EventVisitor;
+//         impl&lt;&#39;de&gt; Visitor&lt;&#39;de&gt; for EventVisitor {
+//             type Value = Event;
+
+//             fn expecting(&amp;self, formatter: &amp;mut std::fmt::Formatter) -&gt; std::fmt::Result {
+//                 formatter.write_str(&quot;struct Event&quot;)
+//             }
+
+//             fn visit_seq&lt;V&gt;(self, mut seq: V) -&gt; Result&lt;Event, V::Error&gt;
+//             where
+//                 V: SeqAccess&lt;&#39;de&gt;,
+//             {
+//                 let event_content = seq
+//                     .next_element()?
+//                     .ok_or_else(|| de::Error::invalid_length(0, &amp;self))?;
+//                 let signature = seq
+//                     .next_element()?
+//                     .ok_or_else(|| de::Error::invalid_length(1, &amp;self))?;
+//                 match Event::new(event_content, signature) {
+//                     Ok(event) =&gt; Ok(event),
+//                     Err(_) =&gt; Err(de::Error::custom(&quot;Signatures of event are not valid&quot;)),
+//                 }
+//             }
+
+//             fn visit_map&lt;V&gt;(self, mut map: V) -&gt; Result&lt;Event, V::Error&gt;
+//             where
+//                 V: de::MapAccess&lt;&#39;de&gt;,
+//             {
+//                 let mut event_content = None;
+//                 let mut signature = None;
+//                 while let Some(key) = map.next_key()? {
+//                     match key {
+//                         Field::EventContent =&gt; {
+//                             if event_content.is_some() {
+//                                 return Err(de::Error::duplicate_field(&quot;event_content&quot;));
+//                             }
+//                             event_content = Some(map.next_value()?);
+//                         }
+//                         Field::Signature =&gt; {
+//                             if signature.is_some() {
+//                                 return Err(de::Error::duplicate_field(&quot;signature&quot;));
+//                             }
+//                             signature = Some(map.next_value()?);
+//                         }
+//                     }
+//                 }
+//                 let event_content =
+//                     event_content.ok_or_else(|| de::Error::missing_field(&quot;event_content&quot;))?;
+//                 let signature = signature.ok_or_else(|| de::Error::missing_field(&quot;signature&quot;))?;
+//                 match Event::new(event_content, signature) {
+//                     Ok(event) =&gt; Ok(event),
+//                     Err(_) =&gt; Err(de::Error::custom(&quot;Signatures of event are not valid&quot;)),
+//                 }
+//             }
+//         }
+
+//         const FIELDS: &amp;&#39;static [&amp;&#39;static str] = &amp;[&quot;event_content&quot;, &quot;signature&quot;];
+//         deserializer.deserialize_struct(&quot;Event&quot;, FIELDS, EventVisitor)
+//     }
+// }
+
+// impl Default for Event {
+//     fn default() -&gt; Self {
+//         Self {
+//             event_content:  EventContent {
+//                 subject_id: DigestIdentifier::from_str(&quot;Ju536BiUXBqbuNdJsOBwYWnbzrKjsYtVEauI6IsMh3tM&quot;).unwrap(),
+//                 event_request: EventRequest {
+//                     request: EventRequestType::State(StateRequest {
+//                         subject_id: DigestIdentifier::from_str(&quot;Ju536BiUXBqbuNdJsOBwYWnbzrKjsYtVEauI6IsMh3tM&quot;).unwrap(),
+//                         payload: RequestPayload::Json(&quot;{\&quot;localizacion\&quot;:\&quot;Argentina\&quot;,\&quot;temperatura\&quot;:-2}&quot;.to_owned()),
+//                     }),
+//                     timestamp: TimeStamp::now(),
+//                     signature: Signature {
+//                         content: SignatureContent {
+//                         signer: KeyIdentifier::from_str(&quot;ED8MpwKh3OjPEw_hQdqJixrXlKzpVzdvHf2DqrPvdz7Y&quot;).unwrap(),
+//                         event_content_hash: DigestIdentifier::from_str(&quot;Jnb4JtdYKZVyX1tFCCVXJ71X-badXlPnxYJ9xe5wzrCs&quot;).unwrap(),
+//                         timestamp: TimeStamp::now(),
+//                         },
+//                         signature: SignatureIdentifier::from_str(&quot;SErazBOSVMRgEc89jp5Xr3IT2T5D3Y_BhiyBV-Wq8HIujTjWDPPkHL6xoLYDWQu0MWnzVZ24O_dXmOEf9AxwxeDw&quot;).unwrap()
+//                     },
+//                     approvals: HashSet::new()
+//                 },
+//                 sn: 1,
+//                 previous_hash: DigestIdentifier::from_str(&quot;Js9yM-ALHzBPi0pLWKzVZ7Zx8XUI3L2Wk0Wawt4hHpac&quot;).unwrap(),
+//                 state_hash: DigestIdentifier::from_str(&quot;JHoBQ4IHh2QsnjvXBOs76T5Us9nwdMnNwiKn4rukMkNg&quot;).unwrap(), metadata: Metadata {
+//                     namespace: &quot;namespace1&quot;.to_owned(),
+//                     governance_id: DigestIdentifier::from_str(&quot;J3pDuDQICA7iSCGDKUfIr2rconDPQ11jCKJhLUrSPM_U&quot;).unwrap(),
+//                     governance_version: 0,
+//                     schema_id: &quot;Prueba&quot;.to_owned(),
+//                     owner: KeyIdentifier::from_str(&quot;ED8MpwKh3OjPEw_hQdqJixrXlKzpVzdvHf2DqrPvdz7Y&quot;).unwrap(),
+//                     subject_id: DigestIdentifier::from_str(&quot;J3pDuDQICA7iSCGDKUfIr2rconDPQ11jCKJhLUrSPM_U&quot;).unwrap(), }, approved: true
+//                 },
+//             signature: Signature {
+//                 content: SignatureContent {
+//                     signer: KeyIdentifier::from_str(&quot;E3jPA10tf8YGtyQJ5l0COJA-woXyBmlfGE-AbFVmZvr4&quot;).unwrap(),
+//                     event_content_hash: DigestIdentifier::from_str(&quot;JvWXIptlBC_3Ybx0cTY3X-mL922Q0Ot8Jnl3inmHmsAA&quot;).unwrap(),
+//                     timestamp: TimeStamp::now(),
+//                 },
+//                 signature: SignatureIdentifier::from_str(&quot;SEtLpVCrClCzaRZNTJ98dEOkvYi6azvBKMBgwHbkqZkDW7CSVNWjpJFg2jCROTrrJEXXrxVhqmZeBdsYEXuXkPAA&quot;).unwrap(),
+//             },
+//         }
+//     }
+// }
+</span><span class="doccomment">//! Contains the data structures related to event  to send to approvers, or to validators if approval is not required.
+</span><span class="kw">use </span>std::collections::HashSet;
+
+<span class="kw">use crate</span>::{
+    commons::{
+        crypto::{check_cryptography, KeyPair, Payload, DSA, KeyMaterial},
+        errors::SubjectError,
+    },
+    event_content::Metadata,
+    event_request::EventRequest,
+    identifier::{DigestIdentifier, KeyIdentifier, SignatureIdentifier, Derivable},
+    signature::{Signature, SignatureContent},
+    TimeStamp,
 };
+<span class="kw">use </span>borsh::{BorshDeserialize, BorshSerialize};
+<span class="kw">use </span>json_patch::{diff, Patch};
+<span class="kw">use </span>serde::{Deserialize, Serialize};
+<span class="kw">use </span>serde_json::{json, Value};
 <span class="kw">use </span>utoipa::ToSchema;
 
-<span class="kw">use </span><span class="kw">crate</span>::commons::{
-    errors::{CryptoErrorEvent, Error},
-    identifier::{
-        Derivable, DigestIdentifier, KeyIdentifier, SignatureIdentifier,
-    },
-};
-
 <span class="kw">use super</span>::{
-    event_content::{EventContent, Metadata},
-    event_request::{EventRequest, EventRequestType, RequestPayload, StateRequest},
-    signature::{Signature, SignatureContent}, timestamp::TimeStamp,
+    approval::Approval,
+    event_proposal::{EventProposal, Proposal},
 };
 
-<span class="doccomment">/// Event associated to a subject.
-</span><span class="attr">#[derive(Debug, Clone, Serialize, Eq, PartialEq, BorshSerialize, BorshDeserialize, ToSchema)]
+<span class="attr">#[derive(
+    Debug, Clone, Serialize, Deserialize, Eq, PartialEq, BorshSerialize, BorshDeserialize, ToSchema,
+)]
 </span><span class="kw">pub struct </span>Event {
-    <span class="kw">pub </span>event_content: EventContent,
+    <span class="kw">pub </span>content: EventContent,
     <span class="kw">pub </span>signature: Signature,
 }
 
-<span class="kw">impl </span>Event {
+<span class="attr">#[derive(
+    Debug, Clone, Serialize, Deserialize, Eq, PartialEq, BorshSerialize, BorshDeserialize, ToSchema,
+)]
+</span><span class="kw">pub struct </span>EventContent {
+    <span class="kw">pub </span>event_proposal: EventProposal,
+    <span class="kw">pub </span>approvals: HashSet&lt;Approval&gt;,
+    <span class="kw">pub </span>execution: bool,
+}
+
+<span class="kw">impl </span>EventContent {
     <span class="kw">pub fn </span>new(
-        event_content: EventContent,
-        signature: Signature,
-    ) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>, CryptoErrorEvent&gt; {
-        <span class="kw">let </span>event = <span class="self">Self </span>{
-            event_content,
-            signature,
-        };
-        event.check_signatures()<span class="question-mark">?</span>;
-        <span class="prelude-val">Ok</span>(event)
-    }
-
-    <span class="kw">pub fn </span>get_event_content_hash(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;DigestIdentifier, Error&gt; {
-        DigestIdentifier::from_serializable_borsh(<span class="self">self</span>.event_content.clone())
-    }
-
-    <span class="kw">pub fn </span>check_signatures(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;(), CryptoErrorEvent&gt; {
-        <span class="self">self</span>.event_content.event_request.check_signatures()<span class="question-mark">?</span>;
-        <span class="kw">match </span>DigestIdentifier::from_serializable_borsh(<span class="self">self</span>.event_content.clone()) {
-            <span class="prelude-val">Ok</span>(hash) =&gt; {
-                <span class="kw">if </span>hash != <span class="self">self</span>.signature.content.event_content_hash {
-                    <span class="kw">return </span><span class="prelude-val">Err</span>(CryptoErrorEvent::EventContentHashingConflict);
-                }
-                <span class="kw">match </span><span class="kw-2">&amp;</span><span class="self">self
-                    </span>.signature
-                    .content
-                    .signer
-                    .verify(<span class="kw-2">&amp;</span>hash.derivative(), <span class="self">self</span>.signature.signature.clone())
-                {
-                    <span class="prelude-val">Ok</span>(<span class="kw">_</span>) =&gt; (),
-                    <span class="prelude-val">Err</span>(<span class="kw">_</span>) =&gt; <span class="kw">return </span><span class="prelude-val">Err</span>(CryptoErrorEvent::RequestSignatureInvalid),
-                }
-            }
-            <span class="prelude-val">Err</span>(<span class="kw">_</span>) =&gt; <span class="kw">return </span><span class="prelude-val">Err</span>(CryptoErrorEvent::EventContentHashingError),
+        event_proposal: EventProposal,
+        approvals: HashSet&lt;Approval&gt;,
+        execution: bool,
+    ) -&gt; <span class="self">Self </span>{
+        <span class="self">Self </span>{
+            event_proposal,
+            approvals,
+            execution,
         }
+    }
+}
+
+<span class="kw">impl </span>Event {
+    <span class="kw">pub fn </span>from_genesis_request(
+        event_request: EventRequest,
+        subject_keys: KeyPair,
+        gov_version: u64,
+        init_state: <span class="kw-2">&amp;</span>Value,
+    ) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>, SubjectError&gt; {
+        <span class="kw">let </span>json_patch = serde_json::to_string(<span class="kw-2">&amp;</span>serde_json::to_value(diff(<span class="kw-2">&amp;</span><span class="macro">json!</span>({}), init_state)).map_err(|<span class="kw">_</span>| {
+            SubjectError::CryptoError(String::from(<span class="string">&quot;Error converting patch to value&quot;</span>))
+        })<span class="question-mark">?</span>).map_err(|<span class="kw">_</span>| {
+            SubjectError::CryptoError(String::from(<span class="string">&quot;Error converting patch to string&quot;</span>))
+        })<span class="question-mark">?</span>;
+        <span class="kw">let </span>proposal = Proposal {
+            event_request,
+            sn: <span class="number">0</span>,
+            hash_prev_event: DigestIdentifier::default(),
+            gov_version,
+            evaluation: <span class="prelude-val">None</span>,
+            json_patch,
+            evaluation_signatures: HashSet::new(),
+        };
+        <span class="kw">let </span>public_key = KeyIdentifier::new(
+            subject_keys.get_key_derivator(),
+            <span class="kw-2">&amp;</span>subject_keys.public_key_bytes(),
+        );
+        <span class="kw">let </span>proposal_hash = DigestIdentifier::from_serializable_borsh(<span class="kw-2">&amp;</span>proposal).map_err(|<span class="kw">_</span>| {
+            SubjectError::CryptoError(String::from(<span class="string">&quot;Error calculating the hash of the proposal&quot;</span>))
+        })<span class="question-mark">?</span>;
+        <span class="kw">let </span>subject_signature = subject_keys
+            .sign(Payload::Buffer(proposal_hash.derivative()))
+            .map_err(|<span class="kw">_</span>| {
+                SubjectError::CryptoError(String::from(<span class="string">&quot;Error signing the hash of the proposal&quot;</span>))
+            })<span class="question-mark">?</span>;
+        <span class="kw">let </span>subject_signature = Signature {
+            content: SignatureContent {
+                signer: public_key.clone(),
+                event_content_hash: proposal_hash.clone(),
+                timestamp: TimeStamp::now(),
+            },
+            signature: SignatureIdentifier::new(
+                public_key.to_signature_derivator(),
+                <span class="kw-2">&amp;</span>subject_signature,
+            ),
+        };
+        <span class="kw">let </span>event_proposal = EventProposal::new(proposal, subject_signature);
+        <span class="kw">let </span>content = EventContent {
+            event_proposal,
+            approvals: HashSet::new(),
+            execution: <span class="bool-val">true</span>,
+        };
+        <span class="kw">let </span>content_hash = DigestIdentifier::from_serializable_borsh(<span class="kw-2">&amp;</span>content).map_err(|<span class="kw">_</span>| {
+            SubjectError::CryptoError(String::from(<span class="string">&quot;Error calculating the hash of the proposal&quot;</span>))
+        })<span class="question-mark">?</span>;
+        <span class="kw">let </span>signature = subject_keys
+            .sign(Payload::Buffer(content_hash.derivative()))
+            .map_err(|<span class="kw">_</span>| {
+                SubjectError::CryptoError(String::from(<span class="string">&quot;Error signing the hash of the proposal&quot;</span>))
+            })<span class="question-mark">?</span>;
+        <span class="kw">let </span>subject_signature = Signature {
+            content: SignatureContent {
+                signer: public_key.clone(),
+                event_content_hash: content_hash,
+                timestamp: TimeStamp::now(),
+            },
+            signature: SignatureIdentifier::new(
+                public_key.to_signature_derivator(),
+                <span class="kw-2">&amp;</span>signature,
+            ),
+        };
+        <span class="prelude-val">Ok</span>(<span class="self">Self </span>{ content, signature: subject_signature })
+    }
+
+    <span class="kw">pub fn </span>check_signatures(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;(), SubjectError&gt; {
+        check_cryptography(<span class="kw-2">&amp;</span><span class="self">self</span>.content, <span class="kw-2">&amp;</span><span class="self">self</span>.signature)
+            .map_err(|error| SubjectError::CryptoError(error.to_string()))<span class="question-mark">?</span>;
+        <span class="self">self</span>.content.event_proposal.check_signatures()<span class="question-mark">?</span>;
         <span class="prelude-val">Ok</span>(())
     }
 }
-
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;de</span>&gt; Deserialize&lt;<span class="lifetime">&#39;de</span>&gt; <span class="kw">for </span>Event {
-    <span class="kw">fn </span>deserialize&lt;D&gt;(deserializer: D) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>, D::Error&gt;
-    <span class="kw">where
-        </span>D: serde::Deserializer&lt;<span class="lifetime">&#39;de</span>&gt;,
-    {
-        <span class="attr">#[derive(Deserialize)]
-        #[serde(field_identifier)]
-        </span><span class="kw">enum </span>Field {
-            <span class="attr">#[serde(rename = <span class="string">&quot;event_content&quot;</span>)]
-            </span>EventContent,
-            <span class="attr">#[serde(rename = <span class="string">&quot;signature&quot;</span>)]
-            </span>Signature,
-        }
-
-        <span class="kw">struct </span>EventVisitor;
-        <span class="kw">impl</span>&lt;<span class="lifetime">&#39;de</span>&gt; Visitor&lt;<span class="lifetime">&#39;de</span>&gt; <span class="kw">for </span>EventVisitor {
-            <span class="kw">type </span>Value = Event;
-
-            <span class="kw">fn </span>expecting(<span class="kw-2">&amp;</span><span class="self">self</span>, formatter: <span class="kw-2">&amp;mut </span>std::fmt::Formatter) -&gt; std::fmt::Result {
-                formatter.write_str(<span class="string">&quot;struct Event&quot;</span>)
-            }
-
-            <span class="kw">fn </span>visit_seq&lt;V&gt;(<span class="self">self</span>, <span class="kw-2">mut </span>seq: V) -&gt; <span class="prelude-ty">Result</span>&lt;Event, V::Error&gt;
-            <span class="kw">where
-                </span>V: SeqAccess&lt;<span class="lifetime">&#39;de</span>&gt;,
-            {
-                <span class="kw">let </span>event_content = seq
-                    .next_element()<span class="question-mark">?
-                    </span>.ok_or_else(|| de::Error::invalid_length(<span class="number">0</span>, <span class="kw-2">&amp;</span><span class="self">self</span>))<span class="question-mark">?</span>;
-                <span class="kw">let </span>signature = seq
-                    .next_element()<span class="question-mark">?
-                    </span>.ok_or_else(|| de::Error::invalid_length(<span class="number">1</span>, <span class="kw-2">&amp;</span><span class="self">self</span>))<span class="question-mark">?</span>;
-                <span class="kw">match </span>Event::new(event_content, signature) {
-                    <span class="prelude-val">Ok</span>(event) =&gt; <span class="prelude-val">Ok</span>(event),
-                    <span class="prelude-val">Err</span>(<span class="kw">_</span>) =&gt; <span class="prelude-val">Err</span>(de::Error::custom(<span class="string">&quot;Signatures of event are not valid&quot;</span>)),
-                }
-            }
-
-            <span class="kw">fn </span>visit_map&lt;V&gt;(<span class="self">self</span>, <span class="kw-2">mut </span>map: V) -&gt; <span class="prelude-ty">Result</span>&lt;Event, V::Error&gt;
-            <span class="kw">where
-                </span>V: de::MapAccess&lt;<span class="lifetime">&#39;de</span>&gt;,
-            {
-                <span class="kw">let </span><span class="kw-2">mut </span>event_content = <span class="prelude-val">None</span>;
-                <span class="kw">let </span><span class="kw-2">mut </span>signature = <span class="prelude-val">None</span>;
-                <span class="kw">while let </span><span class="prelude-val">Some</span>(key) = map.next_key()<span class="question-mark">? </span>{
-                    <span class="kw">match </span>key {
-                        Field::EventContent =&gt; {
-                            <span class="kw">if </span>event_content.is_some() {
-                                <span class="kw">return </span><span class="prelude-val">Err</span>(de::Error::duplicate_field(<span class="string">&quot;event_content&quot;</span>));
-                            }
-                            event_content = <span class="prelude-val">Some</span>(map.next_value()<span class="question-mark">?</span>);
-                        }
-                        Field::Signature =&gt; {
-                            <span class="kw">if </span>signature.is_some() {
-                                <span class="kw">return </span><span class="prelude-val">Err</span>(de::Error::duplicate_field(<span class="string">&quot;signature&quot;</span>));
-                            }
-                            signature = <span class="prelude-val">Some</span>(map.next_value()<span class="question-mark">?</span>);
-                        }
-                    }
-                }
-                <span class="kw">let </span>event_content =
-                    event_content.ok_or_else(|| de::Error::missing_field(<span class="string">&quot;event_content&quot;</span>))<span class="question-mark">?</span>;
-                <span class="kw">let </span>signature = signature.ok_or_else(|| de::Error::missing_field(<span class="string">&quot;signature&quot;</span>))<span class="question-mark">?</span>;
-                <span class="kw">match </span>Event::new(event_content, signature) {
-                    <span class="prelude-val">Ok</span>(event) =&gt; <span class="prelude-val">Ok</span>(event),
-                    <span class="prelude-val">Err</span>(<span class="kw">_</span>) =&gt; <span class="prelude-val">Err</span>(de::Error::custom(<span class="string">&quot;Signatures of event are not valid&quot;</span>)),
-                }
-            }
-        }
-
-        <span class="kw">const </span>FIELDS: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>[<span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str] = <span class="kw-2">&amp;</span>[<span class="string">&quot;event_content&quot;</span>, <span class="string">&quot;signature&quot;</span>];
-        deserializer.deserialize_struct(<span class="string">&quot;Event&quot;</span>, FIELDS, EventVisitor)
-    }
-}
-
-<span class="kw">impl </span>Default <span class="kw">for </span>Event {
-    <span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
-        <span class="self">Self </span>{
-            event_content:  EventContent { 
-                subject_id: DigestIdentifier::from_str(<span class="string">&quot;Ju536BiUXBqbuNdJsOBwYWnbzrKjsYtVEauI6IsMh3tM&quot;</span>).unwrap(), 
-                event_request: EventRequest { 
-                    request: EventRequestType::State(StateRequest {
-                        subject_id: DigestIdentifier::from_str(<span class="string">&quot;Ju536BiUXBqbuNdJsOBwYWnbzrKjsYtVEauI6IsMh3tM&quot;</span>).unwrap(),
-                        payload: RequestPayload::Json(<span class="string">&quot;{\&quot;localizacion\&quot;:\&quot;Argentina\&quot;,\&quot;temperatura\&quot;:-2}&quot;</span>.to_owned()),
-                    }), 
-                    timestamp: TimeStamp::now(), 
-                    signature: Signature { 
-                        content: SignatureContent {
-                        signer: KeyIdentifier::from_str(<span class="string">&quot;ED8MpwKh3OjPEw_hQdqJixrXlKzpVzdvHf2DqrPvdz7Y&quot;</span>).unwrap(),
-                        event_content_hash: DigestIdentifier::from_str(<span class="string">&quot;Jnb4JtdYKZVyX1tFCCVXJ71X-badXlPnxYJ9xe5wzrCs&quot;</span>).unwrap(),
-                        timestamp: TimeStamp::now(),
-                        }, 
-                        signature: SignatureIdentifier::from_str(<span class="string">&quot;SErazBOSVMRgEc89jp5Xr3IT2T5D3Y_BhiyBV-Wq8HIujTjWDPPkHL6xoLYDWQu0MWnzVZ24O_dXmOEf9AxwxeDw&quot;</span>).unwrap()
-                    }, 
-                    approvals: HashSet::new() 
-                }, 
-                sn: <span class="number">1</span>, 
-                previous_hash: DigestIdentifier::from_str(<span class="string">&quot;Js9yM-ALHzBPi0pLWKzVZ7Zx8XUI3L2Wk0Wawt4hHpac&quot;</span>).unwrap(),
-                state_hash: DigestIdentifier::from_str(<span class="string">&quot;JHoBQ4IHh2QsnjvXBOs76T5Us9nwdMnNwiKn4rukMkNg&quot;</span>).unwrap(), metadata: Metadata { 
-                    namespace: <span class="string">&quot;namespace1&quot;</span>.to_owned(), 
-                    governance_id: DigestIdentifier::from_str(<span class="string">&quot;J3pDuDQICA7iSCGDKUfIr2rconDPQ11jCKJhLUrSPM_U&quot;</span>).unwrap(), 
-                    governance_version: <span class="number">0</span>, 
-                    schema_id: <span class="string">&quot;Prueba&quot;</span>.to_owned(), 
-                    owner: KeyIdentifier::from_str(<span class="string">&quot;ED8MpwKh3OjPEw_hQdqJixrXlKzpVzdvHf2DqrPvdz7Y&quot;</span>).unwrap() }, approved: <span class="bool-val">true 
-                </span>},
-            signature: Signature {
-                content: SignatureContent {
-                    signer: KeyIdentifier::from_str(<span class="string">&quot;E3jPA10tf8YGtyQJ5l0COJA-woXyBmlfGE-AbFVmZvr4&quot;</span>).unwrap(),
-                    event_content_hash: DigestIdentifier::from_str(<span class="string">&quot;JvWXIptlBC_3Ybx0cTY3X-mL922Q0Ot8Jnl3inmHmsAA&quot;</span>).unwrap(),
-                    timestamp: TimeStamp::now(),
-                },
-                signature: SignatureIdentifier::from_str(<span class="string">&quot;SEtLpVCrClCzaRZNTJ98dEOkvYi6azvBKMBgwHbkqZkDW7CSVNWjpJFg2jCROTrrJEXXrxVhqmZeBdsYEXuXkPAA&quot;</span>).unwrap(),
-            },
-        }
-    }
-}
 </code></pre></div>
-</section></main><div id="rustdoc-vars" data-root-path="../../../../" data-static-root-path="../../../../static.files/" data-current-crate="taple_core" data-themes="" data-resource-suffix="" data-rustdoc-version="1.68.2 (9eb3afe9e 2023-03-27)" data-search-js="search-98d53477a794af0b.js" data-settings-js="settings-c3c521c753752a1a.js" data-settings-css="settings-08ddfdda51b8ee2e.css" ></div></body></html>
+</section></main><div id="rustdoc-vars" data-root-path="../../../../" data-static-root-path="../../../../static.files/" data-current-crate="taple_core" data-themes="" data-resource-suffix="" data-rustdoc-version="1.69.0 (84c898d65 2023-04-16)" data-search-js="search-8a59a8356673ec1f.js" data-settings-js="settings-f0c5c39777a9a2f6.js" data-settings-css="settings-0bcba95ff279c1db.css" ></div></body></html>

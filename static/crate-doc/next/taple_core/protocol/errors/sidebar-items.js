@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"enum":[["EventCreationError",""],["ProtocolErrors",""],["RequestManagerError",""],["ResponseError",""]]};
+window.SIDEBAR_ITEMS = {"enum":["EventCreationError","ProtocolErrors","ResponseError"]};

@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `core/src/governance/governance.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>governance.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-1f7d512b176f0f72.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Bold-124a1ca42af929b6.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-93196c7a1c3542a8.css" id="mainThemeStyle"><link rel="stylesheet" id="themeStyle" href="../../../static.files/light-4743e13df3dfe8c4.css"><link rel="stylesheet" disabled href="../../../static.files/dark-0e1b889528bd466b.css"><link rel="stylesheet" disabled href="../../../static.files/ayu-65289d5d067c7c66.css"><script id="default-settings" ></script><script src="../../../static.files/storage-d43fa987303ecbbb.js"></script><script defer src="../../../static.files/source-script-ea63cb6500f71309.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../static.files/main-3367e395607fafc1.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-13285aec31fa243e.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../../taple_core/index.html"><img class="rust-logo" src="../../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-5ec35bf9ca753509.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `core/src/governance/governance.rs`."><title>governance.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-c4dbdcde0fbd8430.css" id="mainThemeStyle"><link rel="stylesheet" id="themeStyle" href="../../../static.files/light-db279b6232be9c13.css"><link rel="stylesheet" disabled href="../../../static.files/dark-cf923f49f397b216.css"><link rel="stylesheet" disabled href="../../../static.files/ayu-be46fdc453a55015.css"><script src="../../../static.files/storage-3891ce972e3a2bf8.js"></script><script defer src="../../../static.files/source-script-1b95b7cca98b26e5.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../static.files/main-98a684e84ae5b08b.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-13285aec31fa243e.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../../taple_core/index.html"><img class="rust-logo" src="../../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -380,94 +380,29 @@
 <a href="#380" id="380">380</a>
 <a href="#381" id="381">381</a>
 <a href="#382" id="382">382</a>
-<a href="#383" id="383">383</a>
-<a href="#384" id="384">384</a>
-<a href="#385" id="385">385</a>
-<a href="#386" id="386">386</a>
-<a href="#387" id="387">387</a>
-<a href="#388" id="388">388</a>
-<a href="#389" id="389">389</a>
-<a href="#390" id="390">390</a>
-<a href="#391" id="391">391</a>
-<a href="#392" id="392">392</a>
-<a href="#393" id="393">393</a>
-<a href="#394" id="394">394</a>
-<a href="#395" id="395">395</a>
-<a href="#396" id="396">396</a>
-<a href="#397" id="397">397</a>
-<a href="#398" id="398">398</a>
-<a href="#399" id="399">399</a>
-<a href="#400" id="400">400</a>
-<a href="#401" id="401">401</a>
-<a href="#402" id="402">402</a>
-<a href="#403" id="403">403</a>
-<a href="#404" id="404">404</a>
-<a href="#405" id="405">405</a>
-<a href="#406" id="406">406</a>
-<a href="#407" id="407">407</a>
-<a href="#408" id="408">408</a>
-<a href="#409" id="409">409</a>
-<a href="#410" id="410">410</a>
-<a href="#411" id="411">411</a>
-<a href="#412" id="412">412</a>
-<a href="#413" id="413">413</a>
-<a href="#414" id="414">414</a>
-<a href="#415" id="415">415</a>
-<a href="#416" id="416">416</a>
-<a href="#417" id="417">417</a>
-<a href="#418" id="418">418</a>
-<a href="#419" id="419">419</a>
-<a href="#420" id="420">420</a>
-<a href="#421" id="421">421</a>
-<a href="#422" id="422">422</a>
-<a href="#423" id="423">423</a>
-<a href="#424" id="424">424</a>
-<a href="#425" id="425">425</a>
-<a href="#426" id="426">426</a>
-<a href="#427" id="427">427</a>
-<a href="#428" id="428">428</a>
-<a href="#429" id="429">429</a>
-<a href="#430" id="430">430</a>
-<a href="#431" id="431">431</a>
-<a href="#432" id="432">432</a>
-<a href="#433" id="433">433</a>
-<a href="#434" id="434">434</a>
-<a href="#435" id="435">435</a>
-<a href="#436" id="436">436</a>
-<a href="#437" id="437">437</a>
-<a href="#438" id="438">438</a>
-<a href="#439" id="439">439</a>
-<a href="#440" id="440">440</a>
-<a href="#441" id="441">441</a>
-<a href="#442" id="442">442</a>
-<a href="#443" id="443">443</a>
-<a href="#444" id="444">444</a>
-<a href="#445" id="445">445</a>
-<a href="#446" id="446">446</a>
-<a href="#447" id="447">447</a>
-<a href="#448" id="448">448</a>
 </pre><pre class="rust"><code><span class="kw">use </span>std::collections::HashSet;
 
 <span class="kw">use </span>async_trait::async_trait;
+<span class="kw">use </span>serde_json::Value;
 
 <span class="kw">use crate</span>::{
     commons::{
         channel::{ChannelData, MpscChannel, SenderEnd},
         identifier::{DigestIdentifier, KeyIdentifier},
-        models::{
-            approval_signature::ApprovalResponse, event::Event, event_content::Metadata,
-            event_request::EventRequest, notary::NotaryEventResponse,
+        models::event_content::Metadata,
+        schema_handler::{
+            get_governance_schema,
+            gov_models::{Contract, Invoke},
         },
-        schema_handler::get_governance_schema,
     },
-    evaluator::compiler::ContractType,
-    DatabaseManager, DB, signature::Signature,
+    DatabaseManager, DB,
 };
 
 <span class="kw">use super</span>::{
     error::{InternalError, RequestError},
     inner_governance::InnerGovernance,
-    GovernanceMessage, GovernanceResponse, RequestQuorum,
+    stage::ValidationStage,
+    GovernanceMessage, GovernanceResponse,
 };
 
 <span class="kw">pub struct </span>Governance&lt;D: DatabaseManager&gt; {
@@ -520,32 +455,6 @@
                 <span class="macro">panic!</span>(<span class="string">&quot;Expected AskData, but we got TellData&quot;</span>)
             };
             <span class="kw">match </span>message {
-                GovernanceMessage::CheckQuorum { signers, event } =&gt; {
-                    <span class="kw">let </span>to_send = <span class="self">self</span>.inner_governance.check_quorum(signers, event)<span class="question-mark">?</span>;
-                    <span class="prelude-val">Ok</span>(sender
-                        .send(GovernanceResponse::CheckQuorumResponse(to_send))
-                        .map_err(|<span class="kw">_</span>| InternalError::OneshotClosed)<span class="question-mark">?</span>)
-                }
-                GovernanceMessage::GetValidators { event } =&gt; {
-                    <span class="kw">let </span>to_send = <span class="self">self</span>.inner_governance.get_validators(event)<span class="question-mark">?</span>;
-                    <span class="prelude-val">Ok</span>(sender
-                        .send(GovernanceResponse::GetValidatorsResponse(to_send))
-                        .map_err(|<span class="kw">_</span>| InternalError::OneshotClosed)<span class="question-mark">?</span>)
-                }
-                GovernanceMessage::CheckPolicy { .. } =&gt; {
-                    <span class="kw">let </span>to_send = <span class="self">self</span>.inner_governance.check_policy()<span class="question-mark">?</span>;
-                    <span class="prelude-val">Ok</span>(sender
-                        .send(GovernanceResponse::CheckPolicyResponse(to_send.unwrap()))
-                        .unwrap())
-                }
-                GovernanceMessage::GetGovernanceVersion { governance_id } =&gt; {
-                    <span class="kw">let </span>version = <span class="self">self
-                        </span>.inner_governance
-                        .get_governance_version(governance_id)<span class="question-mark">?</span>;
-                    <span class="prelude-val">Ok</span>(sender
-                        .send(GovernanceResponse::GetGovernanceVersionResponse(version))
-                        .map_err(|<span class="kw">_</span>| InternalError::OneshotClosed)<span class="question-mark">?</span>)
-                }
                 GovernanceMessage::GetSchema {
                     governance_id,
                     schema_id,
@@ -555,45 +464,65 @@
                         .send(GovernanceResponse::GetSchema(to_send))
                         .map_err(|<span class="kw">_</span>| InternalError::OneshotClosed)<span class="question-mark">?</span>)
                 }
-                GovernanceMessage::IsGovernance(subject_id) =&gt; {
-                    <span class="kw">let </span>to_send = <span class="self">self</span>.inner_governance.is_governance(<span class="kw-2">&amp;</span>subject_id)<span class="question-mark">?</span>;
+                GovernanceMessage::GetSigners { metadata, stage } =&gt; {
+                    <span class="kw">let </span>to_send = <span class="self">self</span>.inner_governance.get_signers(metadata, stage)<span class="question-mark">?</span>;
                     <span class="prelude-val">Ok</span>(sender
-                        .send(GovernanceResponse::IsGovernanceResponse(to_send))
+                        .send(GovernanceResponse::GetSigners(to_send))
                         .map_err(|<span class="kw">_</span>| InternalError::OneshotClosed)<span class="question-mark">?</span>)
                 }
-                GovernanceMessage::CheckQuorumRequest {
-                    event_request,
-                    approvals,
+                GovernanceMessage::GetQuorum { metadata, stage } =&gt; {
+                    <span class="kw">let </span>to_send = <span class="self">self</span>.inner_governance.get_quorum(metadata, stage)<span class="question-mark">?</span>;
+                    <span class="prelude-val">Ok</span>(sender.send(GovernanceResponse::GetQuorum(to_send)).unwrap())
+                }
+                GovernanceMessage::GetGovernanceVersion { governance_id } =&gt; {
+                    <span class="kw">let </span>version = <span class="self">self
+                        </span>.inner_governance
+                        .get_governance_version(governance_id)<span class="question-mark">?</span>;
+                    <span class="prelude-val">Ok</span>(sender
+                        .send(GovernanceResponse::GetGovernanceVersion(version))
+                        .map_err(|<span class="kw">_</span>| InternalError::OneshotClosed)<span class="question-mark">?</span>)
+                }
+                GovernanceMessage::IsGovernance { subject_id } =&gt; {
+                    <span class="kw">let </span>to_send = <span class="self">self</span>.inner_governance.is_governance(<span class="kw-2">&amp;</span>subject_id)<span class="question-mark">?</span>;
+                    <span class="prelude-val">Ok</span>(sender
+                        .send(GovernanceResponse::IsGovernance(to_send))
+                        .map_err(|<span class="kw">_</span>| InternalError::OneshotClosed)<span class="question-mark">?</span>)
+                }
+                GovernanceMessage::GetInvokeInfo { fact, metadata } =&gt; {
+                    <span class="kw">let </span>to_send = <span class="self">self</span>.inner_governance.get_invoke_info(metadata, <span class="kw-2">&amp;</span>fact)<span class="question-mark">?</span>;
+                    <span class="prelude-val">Ok</span>(sender
+                        .send(GovernanceResponse::GetInvokeInfo(to_send))
+                        .map_err(|<span class="kw">_</span>| InternalError::OneshotClosed)<span class="question-mark">?</span>)
+                }
+                GovernanceMessage::GetContracts { governance_id } =&gt; {
+                    <span class="kw">let </span>to_send = <span class="self">self</span>.inner_governance.get_contracts(governance_id)<span class="question-mark">?</span>;
+                    <span class="prelude-val">Ok</span>(sender
+                        .send(GovernanceResponse::GetContracts(to_send))
+                        .map_err(|<span class="kw">_</span>| InternalError::OneshotClosed)<span class="question-mark">?</span>)
+                }
+                GovernanceMessage::GetInitState {
+                    governance_id,
+                    schema_id,
+                    governance_version,
+                } =&gt; {
+                    <span class="kw">let </span>to_send = <span class="self">self</span>.inner_governance.get_init_state(
+                        governance_id,
+                        schema_id,
+                        governance_version,
+                    )<span class="question-mark">?</span>;
+                    <span class="prelude-val">Ok</span>(sender
+                        .send(GovernanceResponse::GetInitState(to_send))
+                        .map_err(|<span class="kw">_</span>| InternalError::OneshotClosed)<span class="question-mark">?</span>)
+                }
+                GovernanceMessage::GetRolesOfInvokator {
+                    invokator,
+                    metadata,
                 } =&gt; {
                     <span class="kw">let </span>to_send = <span class="self">self
                         </span>.inner_governance
-                        .check_quorum_request(event_request, approvals)<span class="question-mark">?</span>;
+                        .get_roles_of_invokator(invokator, metadata)<span class="question-mark">?</span>;
                     <span class="prelude-val">Ok</span>(sender
-                        .send(GovernanceResponse::CheckQuorumRequestResponse(to_send))
-                        .map_err(|<span class="kw">_</span>| InternalError::OneshotClosed)<span class="question-mark">?</span>)
-                }
-                GovernanceMessage::GetValidatorsRequest { event_request } =&gt; {
-                    <span class="kw">let </span>to_send = <span class="self">self</span>.inner_governance.get_approvers(event_request)<span class="question-mark">?</span>;
-                    <span class="prelude-val">Ok</span>(sender
-                        .send(GovernanceResponse::GetValidatorsRequestResponse(to_send))
-                        .map_err(|<span class="kw">_</span>| InternalError::OneshotClosed)<span class="question-mark">?</span>)
-                }
-                GovernanceMessage::CheckInvokatorPermission {
-                    subject_id,
-                    invokator,
-                    additional_payload,
-                    metadata,
-                } =&gt; {
-                    <span class="kw">let </span>to_send = <span class="self">self</span>.inner_governance.check_invokation_permission(
-                        subject_id,
-                        invokator,
-                        additional_payload,
-                        metadata,
-                    )<span class="question-mark">?</span>;
-                    <span class="prelude-val">Ok</span>(sender
-                        .send(GovernanceResponse::CheckInvokatorPermissionResponse(
-                            to_send,
-                        ))
+                        .send(GovernanceResponse::GetRolesOfInvokator(to_send))
                         .map_err(|<span class="kw">_</span>| InternalError::OneshotClosed)<span class="question-mark">?</span>)
                 }
             }
@@ -607,70 +536,53 @@
 
 <span class="attr">#[async_trait]
 </span><span class="kw">pub trait </span>GovernanceInterface: Sync + Send {
-    <span class="kw">async fn </span>check_quorum(
+    <span class="kw">async fn </span>get_init_state(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        event: Event,
-        signers: <span class="kw-2">&amp;</span>HashSet&lt;KeyIdentifier&gt;,
-    ) -&gt; <span class="prelude-ty">Result</span>&lt;(bool, HashSet&lt;KeyIdentifier&gt;), RequestError&gt;;
-    <span class="kw">async fn </span>check_quorum_request(
-        <span class="kw-2">&amp;</span><span class="self">self</span>,
-        event_request: EventRequest,
-        approvals: HashSet&lt;ApprovalResponse&gt;,
-    ) -&gt; <span class="prelude-ty">Result</span>&lt;(RequestQuorum, HashSet&lt;KeyIdentifier&gt;), RequestError&gt;;
-    <span class="kw">async fn </span>check_policy(
-        <span class="kw-2">&amp;</span><span class="self">self</span>,
-        governance_id: <span class="kw-2">&amp;</span>DigestIdentifier,
+        governance_id: DigestIdentifier,
+        schema_id: String,
         governance_version: u64,
-        schema_id: <span class="kw-2">&amp;</span>String,
-        subject_namespace: <span class="kw-2">&amp;</span>String,
-        controller_namespace: <span class="kw-2">&amp;</span>String,
-    ) -&gt; <span class="prelude-ty">Result</span>&lt;bool, RequestError&gt;;
-    <span class="kw">async fn </span>get_validators(<span class="kw-2">&amp;</span><span class="self">self</span>, event: Event) -&gt; <span class="prelude-ty">Result</span>&lt;HashSet&lt;KeyIdentifier&gt;, RequestError&gt;;
-    <span class="kw">async fn </span>get_approvers(
-        <span class="kw-2">&amp;</span><span class="self">self</span>,
-        event_request: EventRequest,
-    ) -&gt; <span class="prelude-ty">Result</span>&lt;HashSet&lt;KeyIdentifier&gt;, RequestError&gt;;
-    <span class="kw">async fn </span>get_governance_version(
-        <span class="kw-2">&amp;</span><span class="self">self</span>,
-        governance_id: <span class="kw-2">&amp;</span>DigestIdentifier,
-    ) -&gt; <span class="prelude-ty">Result</span>&lt;u64, RequestError&gt;;
+    ) -&gt; <span class="prelude-ty">Result</span>&lt;Value, RequestError&gt;;
     <span class="kw">async fn </span>get_schema(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        governance_id: <span class="kw-2">&amp;</span>DigestIdentifier,
-        schema_id: <span class="kw-2">&amp;</span>String,
+        governance_id: DigestIdentifier,
+        schema_id: String,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;serde_json::Value, RequestError&gt;;
-    <span class="kw">async fn </span>is_governance(<span class="kw-2">&amp;</span><span class="self">self</span>, subject_id: <span class="kw-2">&amp;</span>DigestIdentifier) -&gt; <span class="prelude-ty">Result</span>&lt;bool, RequestError&gt;;
-    <span class="kw">async fn </span>check_invokation_permission(
+
+    <span class="kw">async fn </span>get_signers(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        subject_id: DigestIdentifier,
-        invokator: KeyIdentifier,
-        additional_payload: <span class="prelude-ty">Option</span>&lt;String&gt;,
-        metadata: <span class="prelude-ty">Option</span>&lt;Metadata&gt;,
-    ) -&gt; <span class="prelude-ty">Result</span>&lt;(bool, bool), RequestError&gt;;
+        metadata: Metadata,
+        stage: ValidationStage,
+    ) -&gt; <span class="prelude-ty">Result</span>&lt;HashSet&lt;KeyIdentifier&gt;, RequestError&gt;;
+
+    <span class="kw">async fn </span>get_quorum(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        metadata: Metadata,
+        stage: ValidationStage,
+    ) -&gt; <span class="prelude-ty">Result</span>&lt;u32, RequestError&gt;;
+
+    <span class="kw">async fn </span>get_invoke_info(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        metadata: Metadata,
+        fact: String,
+    ) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="prelude-ty">Option</span>&lt;Invoke&gt;, RequestError&gt;;
+
     <span class="kw">async fn </span>get_contracts(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         governance_id: DigestIdentifier,
-    ) -&gt; <span class="prelude-ty">Result</span>&lt;Vec&lt;(String, ContractType)&gt;, RequestError&gt;;
-    <span class="kw">async fn </span>check_if_witness(
+    ) -&gt; <span class="prelude-ty">Result</span>&lt;Vec&lt;Contract&gt;, RequestError&gt;;
+
+    <span class="kw">async fn </span>get_governance_version(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         governance_id: DigestIdentifier,
-        namespace: String,
-        schema_id: String,
-    ) -&gt; <span class="prelude-ty">Result</span>&lt;bool, RequestError&gt;;
-    <span class="kw">async fn </span>check_notary_signatures(
+    ) -&gt; <span class="prelude-ty">Result</span>&lt;u64, RequestError&gt;;
+
+    <span class="kw">async fn </span>is_governance(<span class="kw-2">&amp;</span><span class="self">self</span>, subject_id: DigestIdentifier) -&gt; <span class="prelude-ty">Result</span>&lt;bool, RequestError&gt;;
+
+    <span class="kw">async fn </span>get_roles_of_invokator(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        signatures: HashSet&lt;NotaryEventResponse&gt;,
-        data_hash: DigestIdentifier,
-        governance_id: DigestIdentifier,
-        namespace: String,
-    ) -&gt; <span class="prelude-ty">Result</span>&lt;(), RequestError&gt;;
-    <span class="kw">async fn </span>check_evaluator_signatures(
-        <span class="kw-2">&amp;</span><span class="self">self</span>,
-        signatures: HashSet&lt;Signature&gt;,
-        governance_id: DigestIdentifier,
-        governance_version: u64,
-        namespace: String,
-    )-&gt; <span class="prelude-ty">Result</span>&lt;(), RequestError&gt;;
+        invokator: KeyIdentifier,
+        metadata: Metadata,
+    ) -&gt; <span class="prelude-ty">Result</span>&lt;Vec&lt;String&gt;, RequestError&gt;;
 }
 
 <span class="attr">#[derive(Debug, Clone)]
@@ -686,16 +598,38 @@
 
 <span class="attr">#[async_trait]
 </span><span class="kw">impl </span>GovernanceInterface <span class="kw">for </span>GovernanceAPI {
+    <span class="kw">async fn </span>get_init_state(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        governance_id: DigestIdentifier,
+        schema_id: String,
+        governance_version: u64,
+    ) -&gt; <span class="prelude-ty">Result</span>&lt;Value, RequestError&gt; {
+        <span class="kw">let </span>response = <span class="self">self
+            </span>.sender
+            .ask(GovernanceMessage::GetInitState {
+                governance_id,
+                schema_id,
+                governance_version,
+            })
+            .<span class="kw">await
+            </span>.map_err(|<span class="kw">_</span>| RequestError::ChannelClosed)<span class="question-mark">?</span>;
+        <span class="kw">if let </span>GovernanceResponse::GetInitState(init_state) = response {
+            init_state
+        } <span class="kw">else </span>{
+            <span class="prelude-val">Err</span>(RequestError::UnexpectedResponse)
+        }
+    }
+
     <span class="kw">async fn </span>get_schema(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        governance_id: <span class="kw-2">&amp;</span>DigestIdentifier,
-        schema_id: <span class="kw-2">&amp;</span>String,
+        governance_id: DigestIdentifier,
+        schema_id: String,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;serde_json::Value, RequestError&gt; {
         <span class="kw">let </span>response = <span class="self">self
             </span>.sender
             .ask(GovernanceMessage::GetSchema {
                 governance_id: governance_id.clone(),
-                schema_id: schema_id.clone(),
+                schema_id,
             })
             .<span class="kw">await
             </span>.map_err(|<span class="kw">_</span>| RequestError::ChannelClosed)<span class="question-mark">?</span>;
@@ -706,153 +640,58 @@
         }
     }
 
-    <span class="kw">async fn </span>check_policy(
+    <span class="kw">async fn </span>get_signers(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        governance_id: <span class="kw-2">&amp;</span>DigestIdentifier,
-        governance_version: u64,
-        schema_id: <span class="kw-2">&amp;</span>String,
-        subject_namespace: <span class="kw-2">&amp;</span>String,
-        controller_namespace: <span class="kw-2">&amp;</span>String,
-    ) -&gt; <span class="prelude-ty">Result</span>&lt;bool, RequestError&gt; {
-        <span class="kw">let </span>response = <span class="self">self
-            </span>.sender
-            .ask(GovernanceMessage::CheckPolicy {
-                governance_id: governance_id.clone(),
-                governance_version,
-                schema_id: schema_id.clone(),
-                subject_namespace: subject_namespace.clone(),
-                controller_namespace: controller_namespace.clone(),
-            })
-            .<span class="kw">await
-            </span>.map_err(|<span class="kw">_</span>| RequestError::ChannelClosed)<span class="question-mark">?</span>;
-        <span class="kw">if let </span>GovernanceResponse::CheckPolicyResponse(result) = response {
-            <span class="prelude-val">Ok</span>(result)
-        } <span class="kw">else </span>{
-            <span class="prelude-val">Err</span>(RequestError::UnexpectedResponse)
-        }
-    }
-
-    <span class="kw">async fn </span>get_governance_version(
-        <span class="kw-2">&amp;</span><span class="self">self</span>,
-        governance_id: <span class="kw-2">&amp;</span>DigestIdentifier,
-    ) -&gt; <span class="prelude-ty">Result</span>&lt;u64, RequestError&gt; {
-        <span class="kw">let </span>response = <span class="self">self
-            </span>.sender
-            .ask(GovernanceMessage::GetGovernanceVersion {
-                governance_id: governance_id.clone(),
-            })
-            .<span class="kw">await
-            </span>.map_err(|<span class="kw">_</span>| RequestError::ChannelClosed)<span class="question-mark">?</span>;
-        <span class="kw">if let </span>GovernanceResponse::GetGovernanceVersionResponse(version) = response {
-            version
-        } <span class="kw">else </span>{
-            <span class="prelude-val">Err</span>(RequestError::UnexpectedResponse)
-        }
-    }
-
-    <span class="kw">async fn </span>get_validators(<span class="kw-2">&amp;</span><span class="self">self</span>, event: Event) -&gt; <span class="prelude-ty">Result</span>&lt;HashSet&lt;KeyIdentifier&gt;, RequestError&gt; {
-        <span class="kw">let </span>response = <span class="self">self
-            </span>.sender
-            .ask(GovernanceMessage::GetValidators { event })
-            .<span class="kw">await
-            </span>.expect(<span class="string">&quot;The mockup does not fail&quot;</span>);
-        <span class="kw">if let </span>GovernanceResponse::GetValidatorsResponse(validators) = response {
-            validators
-        } <span class="kw">else </span>{
-            <span class="prelude-val">Err</span>(RequestError::UnexpectedResponse)
-        }
-    }
-
-    <span class="kw">async fn </span>get_approvers(
-        <span class="kw-2">&amp;</span><span class="self">self</span>,
-        event_request: EventRequest,
+        metadata: Metadata,
+        stage: ValidationStage,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;HashSet&lt;KeyIdentifier&gt;, RequestError&gt; {
         <span class="kw">let </span>response = <span class="self">self
             </span>.sender
-            .ask(GovernanceMessage::GetValidatorsRequest { event_request })
-            .<span class="kw">await
-            </span>.expect(<span class="string">&quot;The mockup does not fail&quot;</span>);
-        <span class="kw">if let </span>GovernanceResponse::GetValidatorsRequestResponse(validators) = response {
-            validators
-        } <span class="kw">else </span>{
-            <span class="prelude-val">Err</span>(RequestError::UnexpectedResponse)
-        }
-    }
-
-    <span class="kw">async fn </span>check_quorum(
-        <span class="kw-2">&amp;</span><span class="self">self</span>,
-        event: Event,
-        signers: <span class="kw-2">&amp;</span>HashSet&lt;KeyIdentifier&gt;,
-    ) -&gt; <span class="prelude-ty">Result</span>&lt;(bool, HashSet&lt;KeyIdentifier&gt;), RequestError&gt; {
-        <span class="kw">let </span>response = <span class="self">self
-            </span>.sender
-            .ask(GovernanceMessage::CheckQuorum {
-                event,
-                signers: signers.clone(),
+            .ask(GovernanceMessage::GetSigners {
+                metadata: metadata.clone(),
+                stage,
             })
             .<span class="kw">await
             </span>.map_err(|<span class="kw">_</span>| RequestError::ChannelClosed)<span class="question-mark">?</span>;
-        <span class="kw">if let </span>GovernanceResponse::CheckQuorumResponse(result) = response {
-            result
+        <span class="kw">if let </span>GovernanceResponse::GetSigners(signers) = response {
+            signers
         } <span class="kw">else </span>{
             <span class="prelude-val">Err</span>(RequestError::UnexpectedResponse)
         }
     }
 
-    <span class="kw">async fn </span>check_quorum_request(
+    <span class="kw">async fn </span>get_quorum(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        event_request: EventRequest,
-        approvals: HashSet&lt;ApprovalResponse&gt;,
-    ) -&gt; <span class="prelude-ty">Result</span>&lt;(RequestQuorum, HashSet&lt;KeyIdentifier&gt;), RequestError&gt; {
+        metadata: Metadata,
+        stage: ValidationStage,
+    ) -&gt; <span class="prelude-ty">Result</span>&lt;u32, RequestError&gt; {
         <span class="kw">let </span>response = <span class="self">self
             </span>.sender
-            .ask(GovernanceMessage::CheckQuorumRequest {
-                event_request,
-                approvals,
+            .ask(GovernanceMessage::GetQuorum {
+                metadata: metadata.clone(),
+                stage,
             })
             .<span class="kw">await
             </span>.map_err(|<span class="kw">_</span>| RequestError::ChannelClosed)<span class="question-mark">?</span>;
-        <span class="kw">if let </span>GovernanceResponse::CheckQuorumRequestResponse(result) = response {
-            result
+        <span class="kw">if let </span>GovernanceResponse::GetQuorum(quorum) = response {
+            quorum
         } <span class="kw">else </span>{
             <span class="prelude-val">Err</span>(RequestError::UnexpectedResponse)
         }
     }
 
-    <span class="kw">async fn </span>is_governance(<span class="kw-2">&amp;</span><span class="self">self</span>, subject_id: <span class="kw-2">&amp;</span>DigestIdentifier) -&gt; <span class="prelude-ty">Result</span>&lt;bool, RequestError&gt; {
-        <span class="kw">let </span>response = <span class="self">self
-            </span>.sender
-            .ask(GovernanceMessage::IsGovernance(subject_id.clone()))
-            .<span class="kw">await
-            </span>.map_err(|<span class="kw">_</span>| RequestError::ChannelClosed)<span class="question-mark">?</span>;
-        <span class="kw">if let </span>GovernanceResponse::IsGovernanceResponse(is_governance) = response {
-            is_governance
-        } <span class="kw">else </span>{
-            <span class="prelude-val">Err</span>(RequestError::UnexpectedResponse)
-        }
-    }
-
-    <span class="kw">async fn </span>check_invokation_permission(
+    <span class="kw">async fn </span>get_invoke_info(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        subject_id: DigestIdentifier,
-        invokator: KeyIdentifier,
-        additional_payload: <span class="prelude-ty">Option</span>&lt;String&gt;,
-        metadata: <span class="prelude-ty">Option</span>&lt;Metadata&gt;,
-    ) -&gt; <span class="prelude-ty">Result</span>&lt;(bool, bool), RequestError&gt; {
+        metadata: Metadata,
+        fact: String,
+    ) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="prelude-ty">Option</span>&lt;Invoke&gt;, RequestError&gt; {
         <span class="kw">let </span>response = <span class="self">self
             </span>.sender
-            .ask(GovernanceMessage::CheckInvokatorPermission {
-                subject_id,
-                invokator,
-                additional_payload,
-                metadata,
-            })
+            .ask(GovernanceMessage::GetInvokeInfo { metadata, fact })
             .<span class="kw">await
             </span>.map_err(|<span class="kw">_</span>| RequestError::ChannelClosed)<span class="question-mark">?</span>;
-        <span class="kw">if let </span>GovernanceResponse::CheckInvokatorPermissionResponse(invokation_permission) =
-            response
-        {
-            invokation_permission
+        <span class="kw">if let </span>GovernanceResponse::GetInvokeInfo(invoke_info) = response {
+            invoke_info
         } <span class="kw">else </span>{
             <span class="prelude-val">Err</span>(RequestError::UnexpectedResponse)
         }
@@ -861,38 +700,67 @@
     <span class="kw">async fn </span>get_contracts(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         governance_id: DigestIdentifier,
-    ) -&gt; <span class="prelude-ty">Result</span>&lt;Vec&lt;(String, ContractType)&gt;, RequestError&gt; {
-        <span class="macro">todo!</span>()
+    ) -&gt; <span class="prelude-ty">Result</span>&lt;Vec&lt;Contract&gt;, RequestError&gt; {
+        <span class="kw">let </span>response = <span class="self">self
+            </span>.sender
+            .ask(GovernanceMessage::GetContracts { governance_id })
+            .<span class="kw">await
+            </span>.map_err(|<span class="kw">_</span>| RequestError::ChannelClosed)<span class="question-mark">?</span>;
+        <span class="kw">if let </span>GovernanceResponse::GetContracts(contracts) = response {
+            contracts
+        } <span class="kw">else </span>{
+            <span class="prelude-val">Err</span>(RequestError::UnexpectedResponse)
+        }
     }
 
-    <span class="kw">async fn </span>check_if_witness(
+    <span class="kw">async fn </span>get_governance_version(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         governance_id: DigestIdentifier,
-        namespace: String,
-        schema_id: String
-    ) -&gt; <span class="prelude-ty">Result</span>&lt;bool, RequestError&gt; {
-        <span class="macro">todo!</span>()
+    ) -&gt; <span class="prelude-ty">Result</span>&lt;u64, RequestError&gt; {
+        <span class="kw">let </span>response = <span class="self">self
+            </span>.sender
+            .ask(GovernanceMessage::GetGovernanceVersion { governance_id })
+            .<span class="kw">await
+            </span>.map_err(|<span class="kw">_</span>| RequestError::ChannelClosed)<span class="question-mark">?</span>;
+        <span class="kw">if let </span>GovernanceResponse::GetGovernanceVersion(version) = response {
+            version
+        } <span class="kw">else </span>{
+            <span class="prelude-val">Err</span>(RequestError::UnexpectedResponse)
+        }
     }
 
-    <span class="kw">async fn </span>check_notary_signatures(
-        <span class="kw-2">&amp;</span><span class="self">self</span>,
-        signatures: HashSet&lt;NotaryEventResponse&gt;,
-        data_hash: DigestIdentifier,
-        governance_id: DigestIdentifier,
-        namespace: String,
-    ) -&gt; <span class="prelude-ty">Result</span>&lt;(), RequestError&gt; {
-        <span class="macro">todo!</span>()
+    <span class="kw">async fn </span>is_governance(<span class="kw-2">&amp;</span><span class="self">self</span>, subject_id: DigestIdentifier) -&gt; <span class="prelude-ty">Result</span>&lt;bool, RequestError&gt; {
+        <span class="kw">let </span>response = <span class="self">self
+            </span>.sender
+            .ask(GovernanceMessage::IsGovernance { subject_id })
+            .<span class="kw">await
+            </span>.map_err(|<span class="kw">_</span>| RequestError::ChannelClosed)<span class="question-mark">?</span>;
+        <span class="kw">if let </span>GovernanceResponse::IsGovernance(result) = response {
+            result
+        } <span class="kw">else </span>{
+            <span class="prelude-val">Err</span>(RequestError::UnexpectedResponse)
+        }
     }
 
-    <span class="kw">async fn </span>check_evaluator_signatures(
+    <span class="kw">async fn </span>get_roles_of_invokator(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        signatures: HashSet&lt;Signature&gt;,
-        governance_id: DigestIdentifier,
-        governance_version: u64,
-        namespace: String,
-    )-&gt; <span class="prelude-ty">Result</span>&lt;(), RequestError&gt; {
-        <span class="macro">todo!</span>()
+        invokator: KeyIdentifier,
+        metadata: Metadata,
+    ) -&gt; <span class="prelude-ty">Result</span>&lt;Vec&lt;String&gt;, RequestError&gt; {
+        <span class="kw">let </span>response = <span class="self">self
+            </span>.sender
+            .ask(GovernanceMessage::GetRolesOfInvokator {
+                invokator,
+                metadata,
+            })
+            .<span class="kw">await
+            </span>.map_err(|<span class="kw">_</span>| RequestError::ChannelClosed)<span class="question-mark">?</span>;
+        <span class="kw">if let </span>GovernanceResponse::GetRolesOfInvokator(result) = response {
+            result
+        } <span class="kw">else </span>{
+            <span class="prelude-val">Err</span>(RequestError::UnexpectedResponse)
+        }
     }
 }
 </code></pre></div>
-</section></main><div id="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="taple_core" data-themes="" data-resource-suffix="" data-rustdoc-version="1.68.2 (9eb3afe9e 2023-03-27)" data-search-js="search-98d53477a794af0b.js" data-settings-js="settings-c3c521c753752a1a.js" data-settings-css="settings-08ddfdda51b8ee2e.css" ></div></body></html>
+</section></main><div id="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="taple_core" data-themes="" data-resource-suffix="" data-rustdoc-version="1.69.0 (84c898d65 2023-04-16)" data-search-js="search-8a59a8356673ec1f.js" data-settings-js="settings-f0c5c39777a9a2f6.js" data-settings-css="settings-0bcba95ff279c1db.css" ></div></body></html>

@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `core/src/commons/models/state.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>state.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceSerif4-Regular-1f7d512b176f0f72.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceSerif4-Bold-124a1ca42af929b6.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../../static.files/rustdoc-93196c7a1c3542a8.css" id="mainThemeStyle"><link rel="stylesheet" id="themeStyle" href="../../../../static.files/light-4743e13df3dfe8c4.css"><link rel="stylesheet" disabled href="../../../../static.files/dark-0e1b889528bd466b.css"><link rel="stylesheet" disabled href="../../../../static.files/ayu-65289d5d067c7c66.css"><script id="default-settings" ></script><script src="../../../../static.files/storage-d43fa987303ecbbb.js"></script><script defer src="../../../../static.files/source-script-ea63cb6500f71309.js"></script><script defer src="../../../../source-files.js"></script><script defer src="../../../../static.files/main-3367e395607fafc1.js"></script><noscript><link rel="stylesheet" href="../../../../static.files/noscript-13285aec31fa243e.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../../../taple_core/index.html"><img class="rust-logo" src="../../../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../static.files/wheel-5ec35bf9ca753509.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `core/src/commons/models/state.rs`."><title>state.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../../static.files/rustdoc-c4dbdcde0fbd8430.css" id="mainThemeStyle"><link rel="stylesheet" id="themeStyle" href="../../../../static.files/light-db279b6232be9c13.css"><link rel="stylesheet" disabled href="../../../../static.files/dark-cf923f49f397b216.css"><link rel="stylesheet" disabled href="../../../../static.files/ayu-be46fdc453a55015.css"><script src="../../../../static.files/storage-3891ce972e3a2bf8.js"></script><script defer src="../../../../static.files/source-script-1b95b7cca98b26e5.js"></script><script defer src="../../../../source-files.js"></script><script defer src="../../../../static.files/main-98a684e84ae5b08b.js"></script><noscript><link rel="stylesheet" href="../../../../static.files/noscript-13285aec31fa243e.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../../../taple_core/index.html"><img class="rust-logo" src="../../../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -526,58 +526,165 @@
 <a href="#526" id="526">526</a>
 <a href="#527" id="527">527</a>
 <a href="#528" id="528">528</a>
-</pre><pre class="rust"><code><span class="kw">use </span>std::{collections::HashSet, str::FromStr};
-
-<span class="kw">use </span><span class="kw">crate</span>::commons::{
-    crypto::{KeyMaterial, KeyPair, Payload, DSA},
-    errors::SubjectError,
-    identifier::{
-        derive::KeyDerivator, Derivable, DigestIdentifier, KeyIdentifier, SignatureIdentifier,
+<a href="#529" id="529">529</a>
+<a href="#530" id="530">530</a>
+<a href="#531" id="531">531</a>
+<a href="#532" id="532">532</a>
+<a href="#533" id="533">533</a>
+<a href="#534" id="534">534</a>
+<a href="#535" id="535">535</a>
+<a href="#536" id="536">536</a>
+<a href="#537" id="537">537</a>
+<a href="#538" id="538">538</a>
+<a href="#539" id="539">539</a>
+<a href="#540" id="540">540</a>
+<a href="#541" id="541">541</a>
+<a href="#542" id="542">542</a>
+<a href="#543" id="543">543</a>
+<a href="#544" id="544">544</a>
+<a href="#545" id="545">545</a>
+<a href="#546" id="546">546</a>
+<a href="#547" id="547">547</a>
+<a href="#548" id="548">548</a>
+<a href="#549" id="549">549</a>
+<a href="#550" id="550">550</a>
+<a href="#551" id="551">551</a>
+<a href="#552" id="552">552</a>
+<a href="#553" id="553">553</a>
+<a href="#554" id="554">554</a>
+<a href="#555" id="555">555</a>
+<a href="#556" id="556">556</a>
+<a href="#557" id="557">557</a>
+<a href="#558" id="558">558</a>
+<a href="#559" id="559">559</a>
+<a href="#560" id="560">560</a>
+<a href="#561" id="561">561</a>
+<a href="#562" id="562">562</a>
+<a href="#563" id="563">563</a>
+<a href="#564" id="564">564</a>
+<a href="#565" id="565">565</a>
+<a href="#566" id="566">566</a>
+<a href="#567" id="567">567</a>
+<a href="#568" id="568">568</a>
+<a href="#569" id="569">569</a>
+<a href="#570" id="570">570</a>
+<a href="#571" id="571">571</a>
+<a href="#572" id="572">572</a>
+<a href="#573" id="573">573</a>
+<a href="#574" id="574">574</a>
+<a href="#575" id="575">575</a>
+<a href="#576" id="576">576</a>
+<a href="#577" id="577">577</a>
+<a href="#578" id="578">578</a>
+<a href="#579" id="579">579</a>
+<a href="#580" id="580">580</a>
+<a href="#581" id="581">581</a>
+<a href="#582" id="582">582</a>
+<a href="#583" id="583">583</a>
+<a href="#584" id="584">584</a>
+<a href="#585" id="585">585</a>
+<a href="#586" id="586">586</a>
+<a href="#587" id="587">587</a>
+<a href="#588" id="588">588</a>
+<a href="#589" id="589">589</a>
+<a href="#590" id="590">590</a>
+<a href="#591" id="591">591</a>
+<a href="#592" id="592">592</a>
+<a href="#593" id="593">593</a>
+<a href="#594" id="594">594</a>
+<a href="#595" id="595">595</a>
+<a href="#596" id="596">596</a>
+<a href="#597" id="597">597</a>
+<a href="#598" id="598">598</a>
+<a href="#599" id="599">599</a>
+<a href="#600" id="600">600</a>
+<a href="#601" id="601">601</a>
+<a href="#602" id="602">602</a>
+<a href="#603" id="603">603</a>
+<a href="#604" id="604">604</a>
+<a href="#605" id="605">605</a>
+<a href="#606" id="606">606</a>
+<a href="#607" id="607">607</a>
+<a href="#608" id="608">608</a>
+<a href="#609" id="609">609</a>
+<a href="#610" id="610">610</a>
+<a href="#611" id="611">611</a>
+<a href="#612" id="612">612</a>
+<a href="#613" id="613">613</a>
+<a href="#614" id="614">614</a>
+<a href="#615" id="615">615</a>
+<a href="#616" id="616">616</a>
+<a href="#617" id="617">617</a>
+<a href="#618" id="618">618</a>
+<a href="#619" id="619">619</a>
+<a href="#620" id="620">620</a>
+<a href="#621" id="621">621</a>
+<a href="#622" id="622">622</a>
+<a href="#623" id="623">623</a>
+<a href="#624" id="624">624</a>
+<a href="#625" id="625">625</a>
+<a href="#626" id="626">626</a>
+<a href="#627" id="627">627</a>
+<a href="#628" id="628">628</a>
+<a href="#629" id="629">629</a>
+<a href="#630" id="630">630</a>
+<a href="#631" id="631">631</a>
+<a href="#632" id="632">632</a>
+<a href="#633" id="633">633</a>
+<a href="#634" id="634">634</a>
+<a href="#635" id="635">635</a>
+<a href="#636" id="636">636</a>
+<a href="#637" id="637">637</a>
+<a href="#638" id="638">638</a>
+<a href="#639" id="639">639</a>
+<a href="#640" id="640">640</a>
+<a href="#641" id="641">641</a>
+</pre><pre class="rust"><code><span class="kw">use crate</span>::{
+    commons::{
+        crypto::{Ed25519KeyPair, KeyGenerator, KeyMaterial, KeyPair, Payload, DSA},
+        errors::SubjectError,
+        identifier::{
+            derive::KeyDerivator, Derivable, DigestIdentifier, KeyIdentifier, SignatureIdentifier,
+        },
+        schema_handler::{get_governance_schema, Schema},
     },
-    schema_handler::{get_governance_schema, Schema},
+    event_request::EventRequest,
 };
-<span class="kw">use </span>time::OffsetDateTime;
-<span class="kw">use </span>json_patch::patch;
+<span class="kw">use </span>json_patch::{patch, Patch};
 <span class="kw">use </span>serde::{Deserialize, Serialize};
 <span class="kw">use </span>serde_json::Value;
 <span class="kw">use </span>utoipa::ToSchema;
 
-<span class="kw">use super</span>::{
-    event::Event,
-    event_content::EventContent,
-    event_request::{EventRequestType, RequestPayload},
-    signature::{Signature, SignatureContent}, timestamp::TimeStamp,
-};
-<span class="kw">use </span>borsh::{BorshDeserialize, BorshSerialize};
+<span class="kw">use super</span>::{event::Event, event_request::EventRequestType};
 
-<span class="attr">#[derive(Debug, Clone, PartialEq, Deserialize, Serialize, BorshDeserialize, BorshSerialize)]
-</span><span class="kw">pub struct </span>LedgerState {
-    <span class="kw">pub </span>head_sn: <span class="prelude-ty">Option</span>&lt;u64&gt;,
-    <span class="kw">pub </span>head_candidate_sn: <span class="prelude-ty">Option</span>&lt;u64&gt;,
-    <span class="kw">pub </span>negociating_next: bool,
-}
-
-<span class="kw">impl </span>Default <span class="kw">for </span>LedgerState {
-    <span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
-        <span class="self">Self </span>{
-            head_sn: <span class="prelude-val">None</span>,
-            head_candidate_sn: <span class="prelude-val">None</span>,
-            negociating_next: <span class="bool-val">false</span>,
-        }
-    }
-}
-
-<span class="attr">#[derive(Debug, Deserialize, Serialize, Clone)]
+<span class="attr">#[derive(Debug, Deserialize, Serialize, Clone, ToSchema)]
 </span><span class="kw">pub struct </span>Subject {
-    <span class="kw">pub </span>subject_data: <span class="prelude-ty">Option</span>&lt;SubjectData&gt;,
     <span class="kw">pub </span>keys: <span class="prelude-ty">Option</span>&lt;KeyPair&gt;,
-    <span class="kw">pub </span>ledger_state: LedgerState,
+    <span class="doccomment">/// Subject identifier
+    </span><span class="attr">#[schema(value_type = String)]
+    </span><span class="kw">pub </span>subject_id: DigestIdentifier,
+    <span class="doccomment">/// Governance identifier
+    </span><span class="attr">#[schema(value_type = String)]
+    </span><span class="kw">pub </span>governance_id: DigestIdentifier,
+    <span class="doccomment">/// Current sequence number of the subject
+    </span><span class="kw">pub </span>sn: u64,
+    <span class="doccomment">/// Public key of the subject
+    </span><span class="attr">#[schema(value_type = String)]
+    </span><span class="kw">pub </span>public_key: KeyIdentifier,
+    <span class="kw">pub </span>namespace: String,
+    <span class="doccomment">/// Identifier of the schema used by the subject and defined in associated governance
+    </span><span class="kw">pub </span>schema_id: String,
+    <span class="doccomment">/// Subject owner identifier
+    </span><span class="attr">#[schema(value_type = String)]
+    </span><span class="kw">pub </span>owner: KeyIdentifier,
+    <span class="doccomment">/// Subject creator identifier
+    </span><span class="attr">#[schema(value_type = String)]
+    </span><span class="kw">pub </span>creator: KeyIdentifier,
+    <span class="doccomment">/// Current status of the subject
+    </span><span class="kw">pub </span>properties: String,
 }
 
-<span class="doccomment">/// TAPLE protocol subject data structure
-</span><span class="attr">#[derive(
-    Debug, Clone, Eq, PartialEq, Deserialize, Serialize, BorshDeserialize, BorshSerialize, ToSchema,
-)]
+<span class="attr">#[derive(Debug, Deserialize, Serialize, Clone, ToSchema)]
 </span><span class="kw">pub struct </span>SubjectData {
     <span class="doccomment">/// Subject identifier
     </span><span class="attr">#[schema(value_type = String)]
@@ -596,463 +703,582 @@
     <span class="doccomment">/// Subject owner identifier
     </span><span class="attr">#[schema(value_type = String)]
     </span><span class="kw">pub </span>owner: KeyIdentifier,
+    <span class="doccomment">/// Subject creator identifier
+    </span><span class="attr">#[schema(value_type = String)]
+    </span><span class="kw">pub </span>creator: KeyIdentifier,
     <span class="doccomment">/// Current status of the subject
     </span><span class="kw">pub </span>properties: String,
 }
 
-<span class="kw">impl </span>Subject {
-    <span class="kw">pub fn </span>new(
-        event_content: <span class="kw-2">&amp;</span>EventContent,
-        public_key: KeyIdentifier,
-        keys: <span class="prelude-ty">Option</span>&lt;KeyPair&gt;,
-        subject_schema: <span class="kw-2">&amp;</span>Value,
-    ) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>, SubjectError&gt; {
-        <span class="kw">if </span>event_content.sn != <span class="number">0 </span>{
-            <span class="prelude-val">Err</span>(SubjectError::SnNot0)
-        } <span class="kw">else if let </span>EventRequestType::Create(ev_req) = <span class="kw-2">&amp;</span>event_content.event_request.request {
-            <span class="prelude-val">Ok</span>(<span class="self">Self </span>{
-                subject_data: <span class="prelude-val">Some</span>(SubjectData {
-                    subject_id: event_content.subject_id.clone(),
-                    governance_id: ev_req.governance_id.clone(),
-                    sn: <span class="number">0</span>,
-                    public_key,
-                    namespace: ev_req.namespace.clone(),
-                    schema_id: ev_req.schema_id.clone(),
-                    owner: event_content.event_request.signature.content.signer.clone(),
-                    properties: <span class="kw">if let </span>RequestPayload::Json(props) = ev_req.payload.clone() {
-                        <span class="comment">// Validate with schema
-                        </span><span class="kw">let </span>properties: Value = serde_json::from_str(<span class="kw-2">&amp;</span>props).unwrap();
-                        <span class="comment">// The schemas defined for a governance subject must be checked recursively to determine
-                        // if they are correct. The check is performed during compilation.
-                        </span><span class="kw">let </span>gov_schema = get_governance_schema();
-                        <span class="kw">let </span>schema_compiled = Schema::compile(subject_schema).expect(<span class="string">&quot;It Compiles&quot;</span>);
-                        <span class="kw">if </span>!schema_compiled.validate(<span class="kw-2">&amp;</span>properties) {
-                            <span class="kw">return </span><span class="prelude-val">Err</span>(SubjectError::SchemaValidationFailed);
-                        }
-                        <span class="kw">let </span><span class="kw-2">mut </span>member_ids: HashSet&lt;String&gt; = HashSet::new();
-                        <span class="kw">let </span><span class="kw-2">mut </span>schema_ids: HashSet&lt;String&gt; = HashSet::new();
-                        schema_ids.insert(String::from(<span class="string">&quot;governance&quot;</span>));
-                        <span class="kw">if </span><span class="kw-2">&amp;</span>gov_schema == subject_schema {
-                            <span class="comment">// It is governance: checking subschemas
-                            // Properties validation
-                            </span><span class="kw">let </span>schemas = properties
-                                .get(<span class="string">&quot;schemas&quot;</span>)
-                                .unwrap()
-                                .as_array()
-                                .unwrap()
-                                .to_owned();
-                            <span class="kw">for </span>schema <span class="kw">in </span>schemas.into_iter() {
-                                <span class="kw">if let </span><span class="prelude-val">Err</span>(<span class="kw">_</span>) = Schema::compile(<span class="kw-2">&amp;</span>schema) {
-                                    <span class="kw">return </span><span class="prelude-val">Err</span>(SubjectError::SchemaValidationFailed);
-                                }
-                                <span class="kw">let </span>schema_id = schema
-                                    .get(<span class="string">&quot;id&quot;</span>)
-                                    .expect(<span class="string">&quot;Se ha validado que tiene id&quot;</span>)
-                                    .as_str()
-                                    .expect(<span class="string">&quot;Hay id y es str&quot;</span>)
-                                    .to_owned();
-                                <span class="kw">let </span><span class="bool-val">true </span>= schema_ids.insert(schema_id) <span class="kw">else </span>{
-                                    <span class="kw">return </span><span class="prelude-val">Err</span>(SubjectError::DuplicatedSchemaOrMember);
-                                };
-                            }
-                            <span class="kw">let </span>members = properties
-                                .get(<span class="string">&quot;members&quot;</span>)
-                                .unwrap()
-                                .as_array()
-                                .unwrap()
-                                .to_owned();
-                            <span class="kw">for </span>member <span class="kw">in </span>members.into_iter() {
-                                <span class="kw">let </span>member_id = member
-                                    .get(<span class="string">&quot;key&quot;</span>)
-                                    .expect(<span class="string">&quot;Se ha validado que tiene key&quot;</span>)
-                                    .as_str()
-                                    .expect(<span class="string">&quot;Hay id y es str&quot;</span>)
-                                    .to_owned();
-                                <span class="comment">// Check if the member ID is valid
-                                </span><span class="kw">let </span><span class="prelude-val">Ok</span>(<span class="kw">_</span>) = KeyIdentifier::from_str(<span class="kw-2">&amp;</span>member_id) <span class="kw">else </span>{
-                                    <span class="kw">return </span><span class="prelude-val">Err</span>(SubjectError::InvalidMemberIdentifier(member_id.to_owned()))
-                                };
-                                <span class="kw">let </span><span class="bool-val">true </span>= member_ids.insert(member_id) <span class="kw">else </span>{
-                                    <span class="kw">return </span><span class="prelude-val">Err</span>(SubjectError::DuplicatedSchemaOrMember);
-                                };
-                            }
-                            <span class="comment">// Validate Policies
-                            </span><span class="kw">let </span>policies = properties
-                                .get(<span class="string">&quot;policies&quot;</span>)
-                                .unwrap()
-                                .as_array()
-                                .unwrap()
-                                .to_owned();
-                            <span class="kw">for </span>policie <span class="kw">in </span>policies.into_iter() {
-                                <span class="comment">// Validating policy id
-                                </span><span class="kw">let </span>policie_id = policie
-                                    .get(<span class="string">&quot;id&quot;</span>)
-                                    .expect(<span class="string">&quot;Se ha validado que tiene id&quot;</span>)
-                                    .as_str()
-                                    .expect(<span class="string">&quot;Hay id y es str&quot;</span>)
-                                    .to_owned();
-                                <span class="kw">let </span><span class="bool-val">true </span>= schema_ids.remove(<span class="kw-2">&amp;</span>policie_id) <span class="kw">else </span>{
-                                    <span class="kw">return </span><span class="prelude-val">Err</span>(SubjectError::InvalidPoliciesId);
-                                };
-                                <span class="comment">// Validating validation
-                                </span><span class="kw">let </span>validators = policie
-                                    .get(<span class="string">&quot;validation&quot;</span>)
-                                    .unwrap()
-                                    .get(<span class="string">&quot;validators&quot;</span>)
-                                    .unwrap()
-                                    .as_array()
-                                    .unwrap()
-                                    .to_owned();
-                                <span class="kw">let </span><span class="kw-2">mut </span>validator_set = HashSet::new();
-                                <span class="kw">for </span>validator <span class="kw">in </span>validators.into_iter() {
-                                    <span class="kw">let </span>validator = validator.as_str().expect(<span class="string">&quot;Has to be&quot;</span>);
-                                    validator_set.insert(String::from(validator));
-                                    <span class="kw">let </span><span class="bool-val">true </span>= member_ids.contains(validator) <span class="kw">else </span>{
-                                        <span class="kw">return </span><span class="prelude-val">Err</span>(SubjectError::InvalidMemberInPolicies);
-                                    };
-                                }
-                                <span class="kw">let </span>approvers = policie
-                                    .get(<span class="string">&quot;approval&quot;</span>)
-                                    .unwrap()
-                                    .get(<span class="string">&quot;approvers&quot;</span>)
-                                    .unwrap()
-                                    .as_array()
-                                    .unwrap()
-                                    .to_owned();
-                                <span class="kw">let </span><span class="kw-2">mut </span>approver_set = HashSet::new();
-                                <span class="kw">for </span>approver <span class="kw">in </span>approvers.into_iter() {
-                                    <span class="kw">let </span>approver = approver.as_str().expect(<span class="string">&quot;Has to be&quot;</span>);
-                                    approver_set.insert(String::from(approver));
-                                    <span class="kw">let </span><span class="bool-val">true </span>= member_ids.contains(approver) <span class="kw">else </span>{
-                                        <span class="kw">return </span><span class="prelude-val">Err</span>(SubjectError::InvalidMemberInPolicies);
-                                    };
-                                }
-                                <span class="comment">// All approvers must be validators
-                                </span><span class="kw">if </span>!approver_set.is_subset(<span class="kw-2">&amp;</span>validator_set) {
-                                    <span class="kw">return </span><span class="prelude-val">Err</span>(SubjectError::ApproversAreNotValidators);
-                                }
-                                <span class="kw">let </span>invokers = policie
-                                    .get(<span class="string">&quot;invokation&quot;</span>)
-                                    .unwrap()
-                                    .get(<span class="string">&quot;set&quot;</span>)
-                                    .unwrap()
-                                    .get(<span class="string">&quot;invokers&quot;</span>)
-                                    .unwrap()
-                                    .as_array()
-                                    .unwrap()
-                                    .to_owned();
-                                <span class="kw">for </span>invoker <span class="kw">in </span>invokers.into_iter() {
-                                    <span class="kw">let </span>invoker = invoker.as_str().expect(<span class="string">&quot;Has to be&quot;</span>);
-                                    <span class="kw">let </span><span class="bool-val">true </span>= member_ids.contains(invoker) <span class="kw">else </span>{
-                                        <span class="kw">return </span><span class="prelude-val">Err</span>(SubjectError::InvalidMemberInPolicies);
-                                    };
-                                }
-                            }
-                            <span class="kw">if </span>!schema_ids.is_empty() {
-                                <span class="kw">return </span><span class="prelude-val">Err</span>(SubjectError::PoliciesMissing);
-                            }
-                        }
-                        props
-                    } <span class="kw">else </span>{
-                        <span class="kw">return </span><span class="prelude-val">Err</span>(SubjectError::InvalidPayload(String::from(
-                            <span class="string">&quot;Payload different from Json in Genesis Event&quot;</span>,
-                        )));
-                    },
-                }),
-                keys,
-                ledger_state: LedgerState {
-                    head_sn: <span class="prelude-val">Some</span>(<span class="number">0</span>),
-                    head_candidate_sn: <span class="prelude-val">None</span>,
-                    negociating_next: <span class="bool-val">false</span>,
-                },
-            })
-        } <span class="kw">else </span>{
-            <span class="prelude-val">Err</span>(SubjectError::NotCreateEvent)
-        }
-    }
-
-    <span class="kw">pub fn </span>new_empty(ledger_state: LedgerState) -&gt; <span class="self">Self </span>{
+<span class="kw">impl </span>From&lt;Subject&gt; <span class="kw">for </span>SubjectData {
+    <span class="kw">fn </span>from(subject: Subject) -&gt; <span class="self">Self </span>{
         <span class="self">Self </span>{
-            subject_data: <span class="prelude-val">None</span>,
-            keys: <span class="prelude-val">None</span>,
-            ledger_state,
+            subject_id: subject.subject_id,
+            governance_id: subject.governance_id,
+            sn: subject.sn,
+            public_key: subject.public_key,
+            namespace: subject.namespace,
+            schema_id: subject.schema_id,
+            owner: subject.owner,
+            creator: subject.creator,
+            properties: subject.properties,
         }
     }
+}
 
-    <span class="kw">pub fn </span>apply(<span class="kw-2">&amp;mut </span><span class="self">self</span>, event_content: <span class="kw-2">&amp;</span>EventContent) -&gt; <span class="prelude-ty">Result</span>&lt;(), SubjectError&gt; {
-        <span class="kw">match </span><span class="self">self</span>.ledger_state.head_sn {
-            <span class="prelude-val">Some</span>(<span class="number">0</span>) =&gt; (),
-            <span class="prelude-val">Some</span>(head_sn) =&gt; {
-                <span class="kw">if </span>event_content.sn != head_sn + <span class="number">1 </span>{
-                    <span class="kw">return </span><span class="prelude-val">Err</span>(SubjectError::EventSourcingNotInOrder(
-                        head_sn,
-                        event_content.sn,
-                    ));
-                }
-            }
-            <span class="prelude-val">None </span>=&gt; <span class="kw">return </span><span class="prelude-val">Err</span>(SubjectError::ApplyInEmptySubject),
-        }
-        <span class="kw">let </span><span class="kw-2">mut </span>subject_data = {
-            <span class="kw">match </span><span class="self">self</span>.subject_data.clone() {
-                <span class="prelude-val">Some</span>(sd) =&gt; sd,
-                <span class="prelude-val">None </span>=&gt; <span class="kw">return </span><span class="prelude-val">Err</span>(SubjectError::SubjectHasNoData),
-            }
+<span class="kw">impl </span>Subject {
+    <span class="kw">pub fn </span>from_genesis_request(
+        event_request: EventRequest,
+        init_state: String,
+    ) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>, SubjectError&gt; {
+        <span class="kw">let </span>EventRequestType::Create(create_request) = event_request.request.clone() <span class="kw">else </span>{
+            <span class="kw">return </span><span class="prelude-val">Err</span>(SubjectError::NotCreateEvent)
         };
-        subject_data.properties = <span class="kw">match </span><span class="kw-2">&amp;</span>event_content.event_request.request {
-            EventRequestType::Create(<span class="kw">_</span>) =&gt; {
-                <span class="comment">// It should never be create, because it creates the subject, it does not make an event sourcing, in that case it is looked at in the new
-                </span><span class="macro">unreachable!</span>(<span class="string">&quot;Haciendo apply en create event&quot;</span>);
-            }
-            EventRequestType::State(req) =&gt; <span class="kw">match </span><span class="kw-2">&amp;</span>req.payload {
-                RequestPayload::Json(props) =&gt; {
-                    <span class="kw">if </span>event_content.approved {
-                        props.clone()
-                    } <span class="kw">else </span>{
-                        subject_data.properties
-                    }
-                }
-                RequestPayload::JsonPatch(patch_string) =&gt; {
-                    <span class="kw">if </span>event_content.approved {
-                        <span class="kw">let </span><span class="prelude-val">Ok</span>(patch_json) = serde_json::from_str(<span class="kw-2">&amp;</span>patch_string) <span class="kw">else </span>{
-                        <span class="kw">return </span><span class="prelude-val">Err</span>(SubjectError::ErrorParsingJsonString);
-                    };
-                        <span class="kw">let </span><span class="prelude-val">Ok</span>(<span class="kw-2">mut </span>properties) =
-                        serde_json::from_str(<span class="kw-2">&amp;</span>subject_data.properties) <span class="kw">else </span>{
-                            <span class="kw">return </span><span class="prelude-val">Err</span>(SubjectError::ErrorParsingJsonString);
-                        };
-                        <span class="kw">let </span><span class="prelude-val">Ok</span>(()) = patch(<span class="kw-2">&amp;mut </span>properties, <span class="kw-2">&amp;</span>patch_json) <span class="kw">else </span>{
-                        <span class="kw">return </span><span class="prelude-val">Err</span>(SubjectError::ErrorApplyingPatch);
-                    };
-                        <span class="kw">let </span><span class="prelude-val">Ok</span>(result) = serde_json::to_string(<span class="kw-2">&amp;</span>properties) <span class="kw">else </span>{
-                        <span class="kw">return </span><span class="prelude-val">Err</span>(SubjectError::ErrorParsingJsonString);
-                    };
-                        result
-                    } <span class="kw">else </span>{
-                        subject_data.properties
-                    }
-                }
-            },
+        <span class="comment">// TODO: Pasar que tipo de esquema criptográfico se quiere usar por parametros
+        </span><span class="kw">let </span>keys = KeyPair::Ed25519(Ed25519KeyPair::new());
+        <span class="kw">let </span>subject_id = <span class="kw">match </span>DigestIdentifier::from_serializable_borsh((
+            <span class="kw-2">&amp;</span>event_request.signature.content.event_content_hash,
+            <span class="kw-2">&amp;</span>keys.public_key_bytes(),
+        )) {
+            <span class="prelude-val">Ok</span>(subject_id) =&gt; subject_id,
+            <span class="prelude-val">Err</span>(<span class="kw">_</span>) =&gt; <span class="kw">return </span><span class="prelude-val">Err</span>(SubjectError::ErrorCreatingSubjectId),
         };
-        subject_data.sn = event_content.sn;
-        <span class="comment">// Compare hash of event status with the hash resulting from subjectData if you are not just getting the hash
-        </span><span class="kw">match </span>DigestIdentifier::from_serializable_borsh(subject_data.clone()) {
-            <span class="prelude-val">Ok</span>(hash) =&gt; {
-                <span class="kw">if </span>hash != event_content.state_hash {
-                    <span class="kw">return </span><span class="prelude-val">Err</span>(SubjectError::EventSourcingHashNotEqual);
-                }
-            }
-            <span class="prelude-val">Err</span>(<span class="kw">_</span>) =&gt; <span class="kw">return </span><span class="prelude-val">Err</span>(SubjectError::EventContentSerializationFailed),
+        <span class="kw">let </span>public_key = KeyIdentifier::new(keys.get_key_derivator(), <span class="kw-2">&amp;</span>keys.public_key_bytes());
+        <span class="prelude-val">Ok</span>(Subject {
+            keys: <span class="prelude-val">Some</span>(keys),
+            subject_id,
+            governance_id: create_request.governance_id.clone(),
+            sn: <span class="number">0</span>,
+            public_key,
+            namespace: create_request.namespace.clone(),
+            schema_id: create_request.schema_id.clone(),
+            owner: event_request.signature.content.signer.clone(),
+            creator: event_request.signature.content.signer.clone(),
+            properties: init_state,
+        })
+    }
+
+    <span class="kw">pub fn </span>from_genesis_event(event: Event, init_state: String) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>, SubjectError&gt; {
+        <span class="kw">let </span>EventRequestType::Create(create_request) = event.content.event_proposal.proposal.event_request.request.clone() <span class="kw">else </span>{
+            <span class="kw">return </span><span class="prelude-val">Err</span>(SubjectError::NotCreateEvent)
         };
-        <span class="self">self</span>.subject_data = <span class="prelude-val">Some</span>(subject_data);
-        <span class="self">self</span>.ledger_state.negociating_next = <span class="bool-val">false</span>;
-        <span class="self">self</span>.ledger_state.head_sn = <span class="prelude-val">Some</span>(event_content.sn);
-        <span class="kw">if </span><span class="self">self</span>.ledger_state.head_candidate_sn.is_some()
-            &amp;&amp; <span class="self">self</span>.ledger_state.head_candidate_sn.unwrap() == event_content.sn
-        {
-            <span class="self">self</span>.ledger_state.head_candidate_sn = <span class="prelude-val">None</span>;
-        }
+        <span class="kw">let </span>subject_id = <span class="kw">match </span>DigestIdentifier::from_serializable_borsh((
+            <span class="kw-2">&amp;</span>event
+                .content
+                .event_proposal
+                .proposal
+                .event_request
+                .signature
+                .content
+                .event_content_hash,
+            <span class="kw-2">&amp;</span>event.signature.content.signer,
+        )) {
+            <span class="prelude-val">Ok</span>(subject_id) =&gt; subject_id,
+            <span class="prelude-val">Err</span>(<span class="kw">_</span>) =&gt; <span class="kw">return </span><span class="prelude-val">Err</span>(SubjectError::ErrorCreatingSubjectId),
+        };
+        <span class="prelude-val">Ok</span>(Subject {
+            keys: <span class="prelude-val">None</span>,
+            subject_id,
+            governance_id: create_request.governance_id.clone(),
+            sn: <span class="number">0</span>,
+            public_key: event.signature.content.signer,
+            namespace: create_request.namespace.clone(),
+            schema_id: create_request.schema_id.clone(),
+            owner: event
+                .content
+                .event_proposal
+                .proposal
+                .event_request
+                .signature
+                .content
+                .signer
+                .clone(),
+            creator: event
+                .content
+                .event_proposal
+                .proposal
+                .event_request
+                .signature
+                .content
+                .signer
+                .clone(),
+            properties: init_state,
+        })
+    }
+
+    <span class="kw">pub fn </span>update_subject(<span class="kw-2">&amp;mut </span><span class="self">self</span>, json_patch: <span class="kw-2">&amp;</span>str, new_sn: u64) -&gt; <span class="prelude-ty">Result</span>&lt;(), SubjectError&gt; {
+        <span class="kw">let </span>prev_properties = <span class="self">self</span>.properties.as_str();
+        <span class="kw">let </span><span class="prelude-val">Ok</span>(patch_json) = serde_json::from_str::&lt;Patch&gt;(json_patch) <span class="kw">else </span>{
+                    <span class="kw">return </span><span class="prelude-val">Err</span>(SubjectError::ErrorParsingJsonString(json_patch.to_owned()));
+                };
+        <span class="kw">let </span><span class="prelude-val">Ok</span>(<span class="kw-2">mut </span>state) = serde_json::from_str::&lt;Value&gt;(prev_properties) <span class="kw">else </span>{
+                    <span class="kw">return </span><span class="prelude-val">Err</span>(SubjectError::ErrorParsingJsonString(prev_properties.to_owned()));
+                };
+        <span class="kw">let </span><span class="prelude-val">Ok</span>(()) = patch(<span class="kw-2">&amp;mut </span>state, <span class="kw-2">&amp;</span>patch_json) <span class="kw">else </span>{
+                    <span class="kw">return </span><span class="prelude-val">Err</span>(SubjectError::ErrorApplyingPatch(json_patch.to_owned()));
+                };
+        <span class="kw">let </span>state = serde_json::to_string(<span class="kw-2">&amp;</span>state).map_err(|<span class="kw">_</span>| {
+            SubjectError::ErrorParsingJsonString(<span class="string">&quot;New State after patch&quot;</span>.to_owned())
+        })<span class="question-mark">?</span>;
+        <span class="self">self</span>.sn = new_sn;
+        <span class="self">self</span>.properties = state;
         <span class="prelude-val">Ok</span>(())
     }
-
-    <span class="kw">pub fn </span>get_sn(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; u64 {
-        <span class="self">self</span>.subject_data.as_ref().expect(<span class="string">&quot;Hay subject&quot;</span>).sn
-    }
-
-    <span class="kw">pub fn </span>get_signature_from_subject(
-        <span class="kw-2">&amp;</span><span class="self">self</span>,
-        event_content: EventContent,
-    ) -&gt; <span class="prelude-ty">Result</span>&lt;Event, SubjectError&gt; {
-        <span class="kw">if </span><span class="self">self</span>.keys.is_none() {
-            <span class="kw">return </span><span class="prelude-val">Err</span>(SubjectError::NotOwnerOfSubject);
-        }
-        <span class="kw">match </span>DigestIdentifier::from_serializable_borsh(event_content.clone()) {
-            <span class="prelude-val">Err</span>(<span class="kw">_</span>) =&gt; <span class="prelude-val">Err</span>(SubjectError::EventContentSerializationFailed),
-            <span class="prelude-val">Ok</span>(event_content_hash) =&gt; {
-                <span class="kw">let </span>signature = <span class="kw">match </span><span class="self">self
-                    </span>.keys
-                    .as_ref()
-                    .unwrap()
-                    .sign(Payload::Buffer(event_content_hash.derivative()))
-                {
-                    <span class="prelude-val">Ok</span>(sig) =&gt; sig,
-                    <span class="prelude-val">Err</span>(<span class="kw">_</span>) =&gt; <span class="kw">return </span><span class="prelude-val">Err</span>(SubjectError::SubjectSignatureFailed),
-                };
-                <span class="kw">let </span>signature = SignatureIdentifier::new(
-                    <span class="self">self</span>.subject_data
-                        .as_ref()
-                        .expect(<span class="string">&quot;Hay Subject Data&quot;</span>)
-                        .public_key
-                        .to_signature_derivator(),
-                    <span class="kw-2">&amp;</span>signature,
-                );
-                <span class="kw">let </span>signer = KeyIdentifier::new(
-                    KeyDerivator::Ed25519,
-                    <span class="kw-2">&amp;</span><span class="self">self</span>.keys.as_ref().unwrap().public_key_bytes(),
-                );
-                <span class="kw">let </span>att_signature = Signature {
-                    content: SignatureContent {
-                        signer: signer.clone(),
-                        event_content_hash,
-                        timestamp: TimeStamp::now(),
-                    },
-                    signature: signature,
-                };
-                <span class="kw">match </span>Event::new(event_content, att_signature) {
-                    <span class="prelude-val">Ok</span>(event) =&gt; <span class="prelude-val">Ok</span>(event),
-                    <span class="prelude-val">Err</span>(e) =&gt; <span class="prelude-val">Err</span>(SubjectError::CryptoError(e)),
-                }
-            }
-        }
-    }
-
-    <span class="kw">pub fn </span>get_future_subject_content_hash(
-        <span class="kw-2">&amp;</span><span class="self">self</span>,
-        event_content: EventContent,
-        subject_schema: <span class="kw-2">&amp;</span>Value,
-    ) -&gt; <span class="prelude-ty">Result</span>&lt;DigestIdentifier, SubjectError&gt; {
-        <span class="kw">let </span>subject = <span class="self">self</span>.clone();
-        <span class="kw">let </span>sd = subject.fake_apply(event_content, subject_schema)<span class="question-mark">?</span>;
-        <span class="kw">match </span>DigestIdentifier::from_serializable_borsh(sd) {
-            <span class="prelude-val">Ok</span>(hash) =&gt; <span class="prelude-val">Ok</span>(hash),
-            <span class="prelude-val">Err</span>(<span class="kw">_</span>) =&gt; <span class="prelude-val">Err</span>(SubjectError::EventContentSerializationFailed),
-        }
-    }
-
-    <span class="kw">pub fn </span>fake_apply(
-        <span class="self">self</span>,
-        event_content: EventContent,
-        subject_schema: <span class="kw-2">&amp;</span>Value,
-    ) -&gt; <span class="prelude-ty">Result</span>&lt;SubjectData, SubjectError&gt; {
-        <span class="kw">match </span><span class="self">self</span>.ledger_state.head_sn {
-            <span class="prelude-val">Some</span>(<span class="number">0</span>) =&gt; (),
-            <span class="prelude-val">Some</span>(head_sn) =&gt; {
-                <span class="kw">if </span>event_content.sn != head_sn + <span class="number">1 </span>{
-                    <span class="kw">return </span><span class="prelude-val">Err</span>(SubjectError::EventSourcingNotInOrder(
-                        head_sn,
-                        event_content.sn,
-                    ));
-                }
-            }
-            <span class="prelude-val">None </span>=&gt; <span class="kw">return </span><span class="prelude-val">Err</span>(SubjectError::ApplyInEmptySubject),
-        }
-        <span class="kw">let </span><span class="kw-2">mut </span>subject_data = {
-            <span class="kw">match </span><span class="self">self</span>.subject_data.clone() {
-                <span class="prelude-val">Some</span>(sd) =&gt; sd,
-                <span class="prelude-val">None </span>=&gt; <span class="kw">return </span><span class="prelude-val">Err</span>(SubjectError::SubjectHasNoData),
-            }
-        };
-        subject_data.properties = <span class="kw">match </span>event_content.event_request.request {
-            EventRequestType::Create(req) =&gt; {
-                <span class="kw">match </span>req.payload {
-                    RequestPayload::Json(props) =&gt; {
-                        <span class="comment">// Validate with schema
-                        </span><span class="kw">let </span><span class="prelude-val">Ok</span>(properties) =
-                        serde_json::from_str(<span class="kw-2">&amp;</span>props) <span class="kw">else </span>{
-                            <span class="kw">return </span><span class="prelude-val">Err</span>(SubjectError::ErrorParsingJsonString);
-                        };
-                        <span class="kw">let </span><span class="prelude-val">Ok</span>(subject_schema) = Schema::compile(subject_schema) <span class="kw">else </span>{
-                            <span class="kw">return </span><span class="prelude-val">Err</span>(SubjectError::SchemaDoesNotCompile);
-                        };
-                        <span class="kw">if </span>!subject_schema.validate(<span class="kw-2">&amp;</span>properties) {
-                            <span class="kw">return </span><span class="prelude-val">Err</span>(SubjectError::SchemaValidationFailed);
-                        }
-                        <span class="kw">if </span>event_content.approved {
-                            props
-                        } <span class="kw">else </span>{
-                            subject_data.properties
-                        }
-                    }
-                    RequestPayload::JsonPatch(patch_string) =&gt; {
-                        <span class="kw">let </span><span class="prelude-val">Ok</span>(patch_json) = serde_json::from_str(<span class="kw-2">&amp;</span>patch_string) <span class="kw">else </span>{
-                            <span class="kw">return </span><span class="prelude-val">Err</span>(SubjectError::ErrorParsingJsonString);
-                        };
-                        <span class="kw">let </span><span class="prelude-val">Ok</span>(subject_schema) = Schema::compile(subject_schema) <span class="kw">else </span>{
-                            <span class="kw">return </span><span class="prelude-val">Err</span>(SubjectError::SchemaDoesNotCompile);
-                        };
-                        <span class="kw">let </span><span class="prelude-val">Ok</span>(<span class="kw-2">mut </span>properties) =
-                        serde_json::from_str(<span class="kw-2">&amp;</span>subject_data.properties) <span class="kw">else </span>{
-                            <span class="kw">return </span><span class="prelude-val">Err</span>(SubjectError::ErrorParsingJsonString);
-                        };
-                        <span class="kw">let </span><span class="prelude-val">Ok</span>(()) = patch(<span class="kw-2">&amp;mut </span>properties, <span class="kw-2">&amp;</span>patch_json) <span class="kw">else </span>{
-                            <span class="kw">return </span><span class="prelude-val">Err</span>(SubjectError::ErrorApplyingPatch);
-                        };
-                        <span class="kw">if </span>!subject_schema.validate(<span class="kw-2">&amp;</span>properties) {
-                            <span class="kw">return </span><span class="prelude-val">Err</span>(SubjectError::SchemaValidationFailed);
-                        }
-                        <span class="kw">let </span><span class="prelude-val">Ok</span>(result) = serde_json::to_string(<span class="kw-2">&amp;</span>properties) <span class="kw">else </span>{
-                            <span class="kw">return </span><span class="prelude-val">Err</span>(SubjectError::ErrorParsingJsonString);
-                        };
-                        <span class="kw">if </span>event_content.approved {
-                            result
-                        } <span class="kw">else </span>{
-                            subject_data.properties
-                        }
-                    }
-                }
-            }
-            EventRequestType::State(req) =&gt; {
-                <span class="kw">match </span>req.payload {
-                    RequestPayload::Json(props) =&gt; {
-                        <span class="comment">// Validate with schema
-                        </span><span class="kw">let </span><span class="prelude-val">Ok</span>(properties) =
-                        serde_json::from_str(<span class="kw-2">&amp;</span>props) <span class="kw">else </span>{
-                            <span class="kw">return </span><span class="prelude-val">Err</span>(SubjectError::ErrorParsingJsonString);
-                        };
-                        <span class="kw">let </span><span class="prelude-val">Ok</span>(subject_schema) = Schema::compile(subject_schema) <span class="kw">else </span>{
-                            <span class="kw">return </span><span class="prelude-val">Err</span>(SubjectError::SchemaDoesNotCompile);
-                        };
-                        <span class="kw">if </span>!subject_schema.validate(<span class="kw-2">&amp;</span>properties) {
-                            <span class="kw">return </span><span class="prelude-val">Err</span>(SubjectError::SchemaValidationFailed);
-                        }
-                        <span class="kw">if </span>event_content.approved {
-                            props
-                        } <span class="kw">else </span>{
-                            subject_data.properties
-                        }
-                    }
-                    RequestPayload::JsonPatch(patch_string) =&gt; {
-                        <span class="kw">let </span><span class="prelude-val">Ok</span>(patch_json) = serde_json::from_str(<span class="kw-2">&amp;</span>patch_string) <span class="kw">else </span>{
-                            <span class="kw">return </span><span class="prelude-val">Err</span>(SubjectError::ErrorParsingJsonString);
-                        };
-                        <span class="kw">let </span><span class="prelude-val">Ok</span>(subject_schema) = Schema::compile(subject_schema) <span class="kw">else </span>{
-                            <span class="kw">return </span><span class="prelude-val">Err</span>(SubjectError::SchemaDoesNotCompile);
-                        };
-                        <span class="kw">let </span><span class="prelude-val">Ok</span>(<span class="kw-2">mut </span>properties) =
-                        serde_json::from_str(<span class="kw-2">&amp;</span>subject_data.properties) <span class="kw">else </span>{
-                            <span class="kw">return </span><span class="prelude-val">Err</span>(SubjectError::ErrorParsingJsonString);
-                        };
-                        <span class="kw">let </span><span class="prelude-val">Ok</span>(()) = patch(<span class="kw-2">&amp;mut </span>properties, <span class="kw-2">&amp;</span>patch_json) <span class="kw">else </span>{
-                            <span class="kw">return </span><span class="prelude-val">Err</span>(SubjectError::ErrorApplyingPatch);
-                        };
-                        <span class="kw">if </span>!subject_schema.validate(<span class="kw-2">&amp;</span>properties) {
-                            <span class="kw">return </span><span class="prelude-val">Err</span>(SubjectError::SchemaValidationFailed);
-                        }
-                        <span class="kw">let </span><span class="prelude-val">Ok</span>(result) = serde_json::to_string(<span class="kw-2">&amp;</span>properties) <span class="kw">else </span>{
-                            <span class="kw">return </span><span class="prelude-val">Err</span>(SubjectError::ErrorParsingJsonString);
-                        };
-                        <span class="kw">if </span>event_content.approved {
-                            result
-                        } <span class="kw">else </span>{
-                            subject_data.properties
-                        }
-                    }
-                }
-            }
-        };
-        subject_data.sn = event_content.sn;
-        <span class="prelude-val">Ok</span>(subject_data)
-    }
 }
 
-<span class="kw">impl </span>PartialEq <span class="kw">for </span>Subject {
-    <span class="kw">fn </span>eq(<span class="kw-2">&amp;</span><span class="self">self</span>, other: <span class="kw-2">&amp;</span><span class="self">Self</span>) -&gt; bool {
-        <span class="self">self</span>.subject_data == other.subject_data
-            &amp;&amp; (<span class="self">self</span>.keys.is_none()
-                || (<span class="self">self</span>.keys.is_some()
-                    &amp;&amp; <span class="self">self</span>.keys.as_ref().unwrap().public_key_bytes()
-                        == other.keys.as_ref().unwrap().public_key_bytes()))
-            &amp;&amp; <span class="self">self</span>.ledger_state == other.ledger_state
-    }
-}
-</code></pre></div>
-</section></main><div id="rustdoc-vars" data-root-path="../../../../" data-static-root-path="../../../../static.files/" data-current-crate="taple_core" data-themes="" data-resource-suffix="" data-rustdoc-version="1.68.2 (9eb3afe9e 2023-03-27)" data-search-js="search-98d53477a794af0b.js" data-settings-js="settings-c3c521c753752a1a.js" data-settings-css="settings-08ddfdda51b8ee2e.css" ></div></body></html>
+<span class="comment">// impl Subject {
+//     pub fn new(
+//         event_content: &amp;EventContent,
+//         public_key: KeyIdentifier,
+//         keys: Option&lt;KeyPair&gt;,
+//         subject_schema: &amp;Value,
+//     ) -&gt; Result&lt;Self, SubjectError&gt; {
+//         if event_content.sn != 0 {
+//             Err(SubjectError::SnNot0)
+//         } else if let EventRequestType::Create(ev_req) = &amp;event_content.event_request.request {
+//             Ok(Self {
+//                 subject_data: Some(SubjectData {
+//                     subject_id: event_content.subject_id.clone(),
+//                     governance_id: ev_req.governance_id.clone(),
+//                     sn: 0,
+//                     public_key,
+//                     namespace: ev_req.namespace.clone(),
+//                     schema_id: ev_req.schema_id.clone(),
+//                     owner: event_content.event_request.signature.content.signer.clone(),
+//                     properties: if let RequestPayload::Json(props) = ev_req.payload.clone() {
+//                         // Validate with schema
+//                         let properties: Value = serde_json::from_str(&amp;props).unwrap();
+//                         // The schemas defined for a governance subject must be checked recursively to determine
+//                         // if they are correct. The check is performed during compilation.
+//                         let gov_schema = get_governance_schema();
+//                         let schema_compiled = Schema::compile(subject_schema).expect(&quot;It Compiles&quot;);
+//                         if !schema_compiled.validate(&amp;properties) {
+//                             return Err(SubjectError::SchemaValidationFailed);
+//                         }
+//                         let mut member_ids: HashSet&lt;String&gt; = HashSet::new();
+//                         let mut schema_ids: HashSet&lt;String&gt; = HashSet::new();
+//                         schema_ids.insert(String::from(&quot;governance&quot;));
+//                         if &amp;gov_schema == subject_schema {
+//                             // It is governance: checking subschemas
+//                             // Properties validation
+//                             let schemas = properties
+//                                 .get(&quot;schemas&quot;)
+//                                 .unwrap()
+//                                 .as_array()
+//                                 .unwrap()
+//                                 .to_owned();
+//                             for schema in schemas.into_iter() {
+//                                 if let Err(_) = Schema::compile(&amp;schema) {
+//                                     return Err(SubjectError::SchemaValidationFailed);
+//                                 }
+//                                 let schema_id = schema
+//                                     .get(&quot;id&quot;)
+//                                     .expect(&quot;Se ha validado que tiene id&quot;)
+//                                     .as_str()
+//                                     .expect(&quot;Hay id y es str&quot;)
+//                                     .to_owned();
+//                                 let true = schema_ids.insert(schema_id) else {
+//                                     return Err(SubjectError::DuplicatedSchemaOrMember);
+//                                 };
+//                             }
+//                             let members = properties
+//                                 .get(&quot;members&quot;)
+//                                 .unwrap()
+//                                 .as_array()
+//                                 .unwrap()
+//                                 .to_owned();
+//                             for member in members.into_iter() {
+//                                 let member_id = member
+//                                     .get(&quot;key&quot;)
+//                                     .expect(&quot;Se ha validado que tiene key&quot;)
+//                                     .as_str()
+//                                     .expect(&quot;Hay id y es str&quot;)
+//                                     .to_owned();
+//                                 // Check if the member ID is valid
+//                                 let Ok(_) = KeyIdentifier::from_str(&amp;member_id) else {
+//                                     return Err(SubjectError::InvalidMemberIdentifier(member_id.to_owned()))
+//                                 };
+//                                 let true = member_ids.insert(member_id) else {
+//                                     return Err(SubjectError::DuplicatedSchemaOrMember);
+//                                 };
+//                             }
+//                             // Validate Policies
+//                             let policies = properties
+//                                 .get(&quot;policies&quot;)
+//                                 .unwrap()
+//                                 .as_array()
+//                                 .unwrap()
+//                                 .to_owned();
+//                             for policie in policies.into_iter() {
+//                                 // Validating policy id
+//                                 let policie_id = policie
+//                                     .get(&quot;id&quot;)
+//                                     .expect(&quot;Se ha validado que tiene id&quot;)
+//                                     .as_str()
+//                                     .expect(&quot;Hay id y es str&quot;)
+//                                     .to_owned();
+//                                 let true = schema_ids.remove(&amp;policie_id) else {
+//                                     return Err(SubjectError::InvalidPoliciesId);
+//                                 };
+//                                 // Validating validation
+//                                 let validators = policie
+//                                     .get(&quot;validation&quot;)
+//                                     .unwrap()
+//                                     .get(&quot;validators&quot;)
+//                                     .unwrap()
+//                                     .as_array()
+//                                     .unwrap()
+//                                     .to_owned();
+//                                 let mut validator_set = HashSet::new();
+//                                 for validator in validators.into_iter() {
+//                                     let validator = validator.as_str().expect(&quot;Has to be&quot;);
+//                                     validator_set.insert(String::from(validator));
+//                                     let true = member_ids.contains(validator) else {
+//                                         return Err(SubjectError::InvalidMemberInPolicies);
+//                                     };
+//                                 }
+//                                 let approvers = policie
+//                                     .get(&quot;approval&quot;)
+//                                     .unwrap()
+//                                     .get(&quot;approvers&quot;)
+//                                     .unwrap()
+//                                     .as_array()
+//                                     .unwrap()
+//                                     .to_owned();
+//                                 let mut approver_set = HashSet::new();
+//                                 for approver in approvers.into_iter() {
+//                                     let approver = approver.as_str().expect(&quot;Has to be&quot;);
+//                                     approver_set.insert(String::from(approver));
+//                                     let true = member_ids.contains(approver) else {
+//                                         return Err(SubjectError::InvalidMemberInPolicies);
+//                                     };
+//                                 }
+//                                 // All approvers must be validators
+//                                 if !approver_set.is_subset(&amp;validator_set) {
+//                                     return Err(SubjectError::ApproversAreNotValidators);
+//                                 }
+//                                 let invokers = policie
+//                                     .get(&quot;invokation&quot;)
+//                                     .unwrap()
+//                                     .get(&quot;set&quot;)
+//                                     .unwrap()
+//                                     .get(&quot;invokers&quot;)
+//                                     .unwrap()
+//                                     .as_array()
+//                                     .unwrap()
+//                                     .to_owned();
+//                                 for invoker in invokers.into_iter() {
+//                                     let invoker = invoker.as_str().expect(&quot;Has to be&quot;);
+//                                     let true = member_ids.contains(invoker) else {
+//                                         return Err(SubjectError::InvalidMemberInPolicies);
+//                                     };
+//                                 }
+//                             }
+//                             if !schema_ids.is_empty() {
+//                                 return Err(SubjectError::PoliciesMissing);
+//                             }
+//                         }
+//                         props
+//                     } else {
+//                         return Err(SubjectError::InvalidPayload(String::from(
+//                             &quot;Payload different from Json in Genesis Event&quot;,
+//                         )));
+//                     },
+//                 }),
+//                 keys,
+//                 ledger_state: LedgerState {
+//                     head_sn: Some(0),
+//                     head_candidate_sn: None,
+//                     negociating_next: false,
+//                 },
+//             })
+//         } else {
+//             Err(SubjectError::NotCreateEvent)
+//         }
+//     }
+
+//     pub fn new_empty(ledger_state: LedgerState) -&gt; Self {
+//         Self {
+//             subject_data: None,
+//             keys: None,
+//             ledger_state,
+//         }
+//     }
+
+//     pub fn apply(&amp;mut self, event_content: &amp;EventContent) -&gt; Result&lt;(), SubjectError&gt; {
+//         match self.ledger_state.head_sn {
+//             Some(0) =&gt; (),
+//             Some(head_sn) =&gt; {
+//                 if event_content.sn != head_sn + 1 {
+//                     return Err(SubjectError::EventSourcingNotInOrder(
+//                         head_sn,
+//                         event_content.sn,
+//                     ));
+//                 }
+//             }
+//             None =&gt; return Err(SubjectError::ApplyInEmptySubject),
+//         }
+//         let mut subject_data = {
+//             match self.subject_data.clone() {
+//                 Some(sd) =&gt; sd,
+//                 None =&gt; return Err(SubjectError::SubjectHasNoData),
+//             }
+//         };
+//         subject_data.properties = match &amp;event_content.event_request.request {
+//             EventRequestType::Create(_) =&gt; {
+//                 // It should never be create, because it creates the subject, it does not make an event sourcing, in that case it is looked at in the new
+//                 unreachable!(&quot;Haciendo apply en create event&quot;);
+//             }
+//             EventRequestType::State(req) =&gt; match &amp;req.payload {
+//                 RequestPayload::Json(props) =&gt; {
+//                     if event_content.approved {
+//                         props.clone()
+//                     } else {
+//                         subject_data.properties
+//                     }
+//                 }
+//                 RequestPayload::JsonPatch(patch_string) =&gt; {
+//                     if event_content.approved {
+//                         let Ok(patch_json) = serde_json::from_str(&amp;patch_string) else {
+//                         return Err(SubjectError::ErrorParsingJsonString);
+//                     };
+//                         let Ok(mut properties) =
+//                         serde_json::from_str(&amp;subject_data.properties) else {
+//                             return Err(SubjectError::ErrorParsingJsonString);
+//                         };
+//                         let Ok(()) = patch(&amp;mut properties, &amp;patch_json) else {
+//                         return Err(SubjectError::ErrorApplyingPatch);
+//                     };
+//                         let Ok(result) = serde_json::to_string(&amp;properties) else {
+//                         return Err(SubjectError::ErrorParsingJsonString);
+//                     };
+//                         result
+//                     } else {
+//                         subject_data.properties
+//                     }
+//                 }
+//             },
+//         };
+//         subject_data.sn = event_content.sn;
+//         // Compare hash of event status with the hash resulting from subjectData if you are not just getting the hash
+//         match DigestIdentifier::from_serializable_borsh(subject_data.clone()) {
+//             Ok(hash) =&gt; {
+//                 if hash != event_content.state_hash {
+//                     return Err(SubjectError::EventSourcingHashNotEqual);
+//                 }
+//             }
+//             Err(_) =&gt; return Err(SubjectError::EventContentSerializationFailed),
+//         };
+//         self.subject_data = Some(subject_data);
+//         self.ledger_state.negociating_next = false;
+//         self.ledger_state.head_sn = Some(event_content.sn);
+//         if self.ledger_state.head_candidate_sn.is_some()
+//             &amp;&amp; self.ledger_state.head_candidate_sn.unwrap() == event_content.sn
+//         {
+//             self.ledger_state.head_candidate_sn = None;
+//         }
+//         Ok(())
+//     }
+
+//     pub fn get_sn(&amp;self) -&gt; u64 {
+//         self.subject_data.as_ref().expect(&quot;Hay subject&quot;).sn
+//     }
+
+//     pub fn get_signature_from_subject(
+//         &amp;self,
+//         event_content: EventContent,
+//     ) -&gt; Result&lt;Event, SubjectError&gt; {
+//         if self.keys.is_none() {
+//             return Err(SubjectError::NotOwnerOfSubject);
+//         }
+//         match DigestIdentifier::from_serializable_borsh(event_content.clone()) {
+//             Err(_) =&gt; Err(SubjectError::EventContentSerializationFailed),
+//             Ok(event_content_hash) =&gt; {
+//                 let signature = match self
+//                     .keys
+//                     .as_ref()
+//                     .unwrap()
+//                     .sign(Payload::Buffer(event_content_hash.derivative()))
+//                 {
+//                     Ok(sig) =&gt; sig,
+//                     Err(_) =&gt; return Err(SubjectError::SubjectSignatureFailed),
+//                 };
+//                 let signature = SignatureIdentifier::new(
+//                     self.subject_data
+//                         .as_ref()
+//                         .expect(&quot;Hay Subject Data&quot;)
+//                         .public_key
+//                         .to_signature_derivator(),
+//                     &amp;signature,
+//                 );
+//                 let signer = KeyIdentifier::new(
+//                     KeyDerivator::Ed25519,
+//                     &amp;self.keys.as_ref().unwrap().public_key_bytes(),
+//                 );
+//                 let att_signature = Signature {
+//                     content: SignatureContent {
+//                         signer: signer.clone(),
+//                         event_content_hash,
+//                         timestamp: TimeStamp::now(),
+//                     },
+//                     signature: signature,
+//                 };
+//                 match Event::new(event_content, att_signature) {
+//                     Ok(event) =&gt; Ok(event),
+//                     Err(e) =&gt; Err(SubjectError::CryptoError(e)),
+//                 }
+//             }
+//         }
+//     }
+
+//     pub fn get_future_subject_content_hash(
+//         &amp;self,
+//         event_content: EventContent,
+//         subject_schema: &amp;Value,
+//     ) -&gt; Result&lt;DigestIdentifier, SubjectError&gt; {
+//         let subject = self.clone();
+//         let sd = subject.fake_apply(event_content, subject_schema)?;
+//         match DigestIdentifier::from_serializable_borsh(sd) {
+//             Ok(hash) =&gt; Ok(hash),
+//             Err(_) =&gt; Err(SubjectError::EventContentSerializationFailed),
+//         }
+//     }
+
+//     pub fn fake_apply(
+//         self,
+//         event_content: EventContent,
+//         subject_schema: &amp;Value,
+//     ) -&gt; Result&lt;SubjectData, SubjectError&gt; {
+//         match self.ledger_state.head_sn {
+//             Some(0) =&gt; (),
+//             Some(head_sn) =&gt; {
+//                 if event_content.sn != head_sn + 1 {
+//                     return Err(SubjectError::EventSourcingNotInOrder(
+//                         head_sn,
+//                         event_content.sn,
+//                     ));
+//                 }
+//             }
+//             None =&gt; return Err(SubjectError::ApplyInEmptySubject),
+//         }
+//         let mut subject_data = {
+//             match self.subject_data.clone() {
+//                 Some(sd) =&gt; sd,
+//                 None =&gt; return Err(SubjectError::SubjectHasNoData),
+//             }
+//         };
+//         subject_data.properties = match event_content.event_request.request {
+//             EventRequestType::Create(req) =&gt; {
+//                 match req.payload {
+//                     RequestPayload::Json(props) =&gt; {
+//                         // Validate with schema
+//                         let Ok(properties) =
+//                         serde_json::from_str(&amp;props) else {
+//                             return Err(SubjectError::ErrorParsingJsonString);
+//                         };
+//                         let Ok(subject_schema) = Schema::compile(subject_schema) else {
+//                             return Err(SubjectError::SchemaDoesNotCompile);
+//                         };
+//                         if !subject_schema.validate(&amp;properties) {
+//                             return Err(SubjectError::SchemaValidationFailed);
+//                         }
+//                         if event_content.approved {
+//                             props
+//                         } else {
+//                             subject_data.properties
+//                         }
+//                     }
+//                     RequestPayload::JsonPatch(patch_string) =&gt; {
+//                         let Ok(patch_json) = serde_json::from_str(&amp;patch_string) else {
+//                             return Err(SubjectError::ErrorParsingJsonString);
+//                         };
+//                         let Ok(subject_schema) = Schema::compile(subject_schema) else {
+//                             return Err(SubjectError::SchemaDoesNotCompile);
+//                         };
+//                         let Ok(mut properties) =
+//                         serde_json::from_str(&amp;subject_data.properties) else {
+//                             return Err(SubjectError::ErrorParsingJsonString);
+//                         };
+//                         let Ok(()) = patch(&amp;mut properties, &amp;patch_json) else {
+//                             return Err(SubjectError::ErrorApplyingPatch);
+//                         };
+//                         if !subject_schema.validate(&amp;properties) {
+//                             return Err(SubjectError::SchemaValidationFailed);
+//                         }
+//                         let Ok(result) = serde_json::to_string(&amp;properties) else {
+//                             return Err(SubjectError::ErrorParsingJsonString);
+//                         };
+//                         if event_content.approved {
+//                             result
+//                         } else {
+//                             subject_data.properties
+//                         }
+//                     }
+//                 }
+//             }
+//             EventRequestType::State(req) =&gt; {
+//                 match req.payload {
+//                     RequestPayload::Json(props) =&gt; {
+//                         // Validate with schema
+//                         let Ok(properties) =
+//                         serde_json::from_str(&amp;props) else {
+//                             return Err(SubjectError::ErrorParsingJsonString);
+//                         };
+//                         let Ok(subject_schema) = Schema::compile(subject_schema) else {
+//                             return Err(SubjectError::SchemaDoesNotCompile);
+//                         };
+//                         if !subject_schema.validate(&amp;properties) {
+//                             return Err(SubjectError::SchemaValidationFailed);
+//                         }
+//                         if event_content.approved {
+//                             props
+//                         } else {
+//                             subject_data.properties
+//                         }
+//                     }
+//                     RequestPayload::JsonPatch(patch_string) =&gt; {
+//                         let Ok(patch_json) = serde_json::from_str(&amp;patch_string) else {
+//                             return Err(SubjectError::ErrorParsingJsonString);
+//                         };
+//                         let Ok(subject_schema) = Schema::compile(subject_schema) else {
+//                             return Err(SubjectError::SchemaDoesNotCompile);
+//                         };
+//                         let Ok(mut properties) =
+//                         serde_json::from_str(&amp;subject_data.properties) else {
+//                             return Err(SubjectError::ErrorParsingJsonString);
+//                         };
+//                         let Ok(()) = patch(&amp;mut properties, &amp;patch_json) else {
+//                             return Err(SubjectError::ErrorApplyingPatch);
+//                         };
+//                         if !subject_schema.validate(&amp;properties) {
+//                             return Err(SubjectError::SchemaValidationFailed);
+//                         }
+//                         let Ok(result) = serde_json::to_string(&amp;properties) else {
+//                             return Err(SubjectError::ErrorParsingJsonString);
+//                         };
+//                         if event_content.approved {
+//                             result
+//                         } else {
+//                             subject_data.properties
+//                         }
+//                     }
+//                 }
+//             }
+//         };
+//         subject_data.sn = event_content.sn;
+//         Ok(subject_data)
+//     }
+// }
+
+// impl PartialEq for Subject {
+//     fn eq(&amp;self, other: &amp;Self) -&gt; bool {
+//         self.subject_data == other.subject_data
+//             &amp;&amp; (self.keys.is_none()
+//                 || (self.keys.is_some()
+//                     &amp;&amp; self.keys.as_ref().unwrap().public_key_bytes()
+//                         == other.keys.as_ref().unwrap().public_key_bytes()))
+//             &amp;&amp; self.ledger_state == other.ledger_state
+//     }
+// }
+</span></code></pre></div>
+</section></main><div id="rustdoc-vars" data-root-path="../../../../" data-static-root-path="../../../../static.files/" data-current-crate="taple_core" data-themes="" data-resource-suffix="" data-rustdoc-version="1.69.0 (84c898d65 2023-04-16)" data-search-js="search-8a59a8356673ec1f.js" data-settings-js="settings-f0c5c39777a9a2f6.js" data-settings-css="settings-0bcba95ff279c1db.css" ></div></body></html>

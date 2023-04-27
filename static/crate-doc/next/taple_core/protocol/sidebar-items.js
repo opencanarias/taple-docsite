@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"mod":[["command_head_manager",""],["errors",""],["protocol_message_manager",""],["request_manager",""]]};
+window.SIDEBAR_ITEMS = {"mod":["errors","protocol_message_manager"]};

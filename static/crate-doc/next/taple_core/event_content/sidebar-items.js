@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"struct":[["EventContent","Content of a TAPLE event"],["Metadata","Metadata of a TAPLE Event"]]};
+window.SIDEBAR_ITEMS = {"struct":["EventContent","Metadata"]};

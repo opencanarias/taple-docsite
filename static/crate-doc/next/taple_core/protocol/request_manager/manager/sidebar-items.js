@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"struct":[["RequestManager",""],["RequestManagerAPI",""]],"trait":[["RequestManagerInterface",""]]};
