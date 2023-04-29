@@ -30,6 +30,7 @@
 <a href="#30" id="30">30</a>
 <a href="#31" id="31">31</a>
 <a href="#32" id="32">32</a>
+<a href="#33" id="33">33</a>
 </pre><pre class="rust"><code><span class="kw">use </span>serde::{Deserialize, Serialize};
 
 <span class="kw">use crate</span>::{
@@ -42,6 +43,7 @@
 <span class="kw">pub mod </span>compiler;
 <span class="kw">mod </span>errors;
 <span class="kw">mod </span>manager;
+<span class="kw">pub use </span>manager::{EvaluatorAPI, EvaluatorManager};
 <span class="kw">mod </span>runner;
 
 <span class="attr">#[derive(Clone, Debug, Serialize, Deserialize)]

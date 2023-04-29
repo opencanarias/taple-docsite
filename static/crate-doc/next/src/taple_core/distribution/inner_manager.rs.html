@@ -293,6 +293,23 @@
 <a href="#293" id="293">293</a>
 <a href="#294" id="294">294</a>
 <a href="#295" id="295">295</a>
+<a href="#296" id="296">296</a>
+<a href="#297" id="297">297</a>
+<a href="#298" id="298">298</a>
+<a href="#299" id="299">299</a>
+<a href="#300" id="300">300</a>
+<a href="#301" id="301">301</a>
+<a href="#302" id="302">302</a>
+<a href="#303" id="303">303</a>
+<a href="#304" id="304">304</a>
+<a href="#305" id="305">305</a>
+<a href="#306" id="306">306</a>
+<a href="#307" id="307">307</a>
+<a href="#308" id="308">308</a>
+<a href="#309" id="309">309</a>
+<a href="#310" id="310">310</a>
+<a href="#311" id="311">311</a>
+<a href="#312" id="312">312</a>
 </pre><pre class="rust"><code><span class="kw">use </span>std::collections::HashSet;
 
 <span class="kw">use </span><span class="kw">crate</span>::commons::channel::SenderEnd;
@@ -387,6 +404,21 @@
         <span class="prelude-val">Ok</span>(<span class="prelude-val">Ok</span>(()))
     }
 
+    <span class="kw">async fn </span>cancel_signature_request(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        subject_id: <span class="kw-2">&amp;</span>DigestIdentifier,
+    ) -&gt; <span class="prelude-ty">Result</span>&lt;(), DistributionManagerError&gt; {
+        <span class="kw">let </span>subject_id_str = subject_id.to_str();
+        <span class="self">self</span>.messenger_channel
+            .tell(MessageTaskCommand::Cancel(<span class="macro">format!</span>(
+                <span class="string">&quot;WITNESS/{}&quot;</span>,
+                subject_id_str
+            )))
+            .<span class="kw">await
+            </span>.map_err(|<span class="kw">_</span>| DistributionManagerError::MessageChannelNotAvailable)<span class="question-mark">?</span>;
+        <span class="prelude-val">Ok</span>(())
+    }
+
     <span class="kw">async fn </span>send_signature_request(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         subject_id: <span class="kw-2">&amp;</span>DigestIdentifier,
@@ -457,7 +489,6 @@
                     <span class="comment">// No veo necesario un mensaje para el caso de MSG.SN = SN + 1
                     </span><span class="kw">let </span>request = request_lce(
                         msg.subject_id.clone(),
-                        <span class="self">self</span>.signature_manager.get_own_identifier(),
                     );
                     <span class="self">self</span>.messenger_channel
                         .tell(MessageTaskCommand::Request(
@@ -474,7 +505,6 @@
                 <span class="comment">// El sujeto no tiene firmas de testificación.
                 </span><span class="kw">let </span>request = request_lce(
                     msg.subject_id.clone(),
-                    <span class="self">self</span>.signature_manager.get_own_identifier(),
                 );
                 <span class="self">self</span>.messenger_channel
                     .tell(MessageTaskCommand::Request(
@@ -559,13 +589,17 @@
                 <span class="self">self</span>.db
                     .set_witness_signatures(<span class="kw-2">&amp;</span>msg.subject_id, msg.sn, current_signatures)
                     .map_err(|error| DistributionManagerError::DatabaseError(error.to_string()))<span class="question-mark">?</span>;
-                <span class="self">self</span>.send_signature_request(
-                    <span class="kw-2">&amp;</span>subject.subject_id,
-                    msg.sn,
-                    targets,
-                    <span class="kw-2">&amp;</span>remaining_signatures,
-                )
-                .<span class="kw">await</span><span class="question-mark">?</span>;
+                <span class="kw">if </span>remaining_signatures.len() == <span class="number">0 </span>{
+                    <span class="self">self</span>.cancel_signature_request(<span class="kw-2">&amp;</span>subject.subject_id).<span class="kw">await</span><span class="question-mark">?</span>;
+                } <span class="kw">else </span>{
+                    <span class="self">self</span>.send_signature_request(
+                        <span class="kw-2">&amp;</span>subject.subject_id,
+                        msg.sn,
+                        targets,
+                        <span class="kw-2">&amp;</span>remaining_signatures,
+                    )
+                    .<span class="kw">await</span><span class="question-mark">?</span>;
+                }
                 <span class="prelude-val">Ok</span>(<span class="prelude-val">Ok</span>(()))
             }
             <span class="prelude-val">Err</span>(DbError::EntryNotFound) =&gt; {

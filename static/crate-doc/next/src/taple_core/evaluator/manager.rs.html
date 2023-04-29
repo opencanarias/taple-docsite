@@ -837,13 +837,11 @@
 <a href="#837" id="837">837</a>
 <a href="#838" id="838">838</a>
 <a href="#839" id="839">839</a>
-<a href="#840" id="840">840</a>
 </pre><pre class="rust"><code><span class="kw">use </span>std::sync::Arc;
 
 <span class="kw">use </span>wasmtime::Engine;
 
 <span class="kw">use </span><span class="kw">super</span>::compiler::manager::TapleCompiler;
-<span class="kw">use </span><span class="kw">super</span>::compiler::{CompilerMessages, CompilerResponses};
 <span class="kw">use </span><span class="kw">super</span>::errors::EvaluatorError;
 <span class="kw">use super</span>::{EvaluatorMessage, EvaluatorResponse};
 <span class="kw">use </span><span class="kw">crate</span>::commons::self_signature_manager::{SelfSignatureInterface, SelfSignatureManager};
@@ -851,7 +849,7 @@
 <span class="kw">use </span><span class="kw">crate</span>::evaluator::errors::ExecutorErrorResponses;
 <span class="kw">use </span><span class="kw">crate</span>::evaluator::runner::manager::TapleRunner;
 <span class="kw">use </span><span class="kw">crate</span>::event_request::{EventRequestType};
-<span class="kw">use </span><span class="kw">crate</span>::governance::GovernanceInterface;
+<span class="kw">use </span><span class="kw">crate</span>::governance::{GovernanceInterface, GovernanceUpdatedMessage};
 <span class="kw">use </span><span class="kw">crate</span>::message::{MessageConfig, MessageTaskCommand};
 <span class="kw">use </span><span class="kw">crate</span>::protocol::protocol_message_manager::TapleMessages;
 <span class="kw">use </span><span class="kw">crate</span>::utils::message::event::create_evaluator_response;
@@ -889,7 +887,7 @@
         input_channel: MpscChannel&lt;EvaluatorMessage, EvaluatorResponse&gt;,
         database: Arc&lt;D&gt;,
         signature_manager: SelfSignatureManager,
-        compiler_channel: MpscChannel&lt;CompilerMessages, CompilerResponses&gt;,
+        compiler_channel: tokio::sync::broadcast::Receiver&lt;GovernanceUpdatedMessage&gt;,
         shutdown_sender: tokio::sync::broadcast::Sender&lt;()&gt;,
         shutdown_receiver: tokio::sync::broadcast::Receiver&lt;()&gt;,
         gov_api: G,

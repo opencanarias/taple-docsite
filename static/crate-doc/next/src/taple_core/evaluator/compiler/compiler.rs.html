@@ -224,11 +224,10 @@
 <a href="#224" id="224">224</a>
 <a href="#225" id="225">225</a>
 <a href="#226" id="226">226</a>
-<a href="#227" id="227">227</a>
 </pre><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::database::Error <span class="kw">as </span>DbError;
 <span class="kw">use </span><span class="kw">crate</span>::evaluator::errors::CompilerError;
 <span class="kw">use </span><span class="kw">crate</span>::governance::GovernanceInterface;
-<span class="kw">use </span><span class="kw">crate</span>::identifier::{Derivable, DigestIdentifier};
+<span class="kw">use </span><span class="kw">crate</span>::identifier::{DigestIdentifier, Derivable};
 <span class="kw">use crate</span>::{database::DB, evaluator::errors::CompilerErrorResponses, DatabaseManager};
 <span class="kw">use </span>async_std::fs;
 <span class="kw">use </span>std::collections::HashSet;
@@ -236,8 +235,6 @@
 <span class="kw">use </span>std::process::Command;
 <span class="kw">use </span>wasm_gc::garbage_collect_file;
 <span class="kw">use </span>wasmtime::{Engine, ExternType};
-
-<span class="kw">use </span><span class="kw">super</span>::NewGovVersion;
 
 <span class="kw">pub struct </span>Compiler&lt;D: DatabaseManager, G: GovernanceInterface&gt; {
     database: DB&lt;D&gt;,
@@ -287,19 +284,20 @@
 
     <span class="kw">pub async fn </span>update_contracts(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        compile_info: NewGovVersion,
+        governance_id: DigestIdentifier,
+        governance_version: u64,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;(), CompilerErrorResponses&gt; {
         <span class="comment">// TODO: Pillar contrato de base de datos, comprobar si el hash cambia y compilar, si no cambia no compilar
         // Read the contract from database
         </span><span class="kw">let </span>contracts = <span class="self">self
             </span>.gov_api
-            .get_contracts(compile_info.governance_id.clone())
+            .get_contracts(governance_id.clone())
             .<span class="kw">await
             </span>.map_err(CompilerErrorResponses::GovernanceError)<span class="question-mark">?</span>;
         <span class="kw">for </span>contract_info <span class="kw">in </span>contracts {
             <span class="kw">let </span>contract_data = <span class="kw">match </span><span class="self">self
                 </span>.database
-                .get_contract(<span class="kw-2">&amp;</span>compile_info.governance_id, <span class="kw-2">&amp;</span>contract_info.name)
+                .get_contract(<span class="kw-2">&amp;</span>governance_id, <span class="kw-2">&amp;</span>contract_info.name)
             {
                 <span class="prelude-val">Ok</span>((contract, hash, contract_gov_version)) =&gt; {
                     <span class="prelude-val">Some</span>((contract, hash, contract_gov_version))
@@ -314,17 +312,17 @@
                 DigestIdentifier::from_serializable_borsh(<span class="kw-2">&amp;</span>contract_info.content)
                     .map_err(|<span class="kw">_</span>| CompilerErrorResponses::BorshSerializeContractError)<span class="question-mark">?</span>;
             <span class="kw">if let </span><span class="prelude-val">Some</span>(contract_data) = contract_data {
-                <span class="kw">if </span>compile_info.governance_version == contract_data.<span class="number">2 </span>{
+                <span class="kw">if </span>governance_version == contract_data.<span class="number">2 </span>{
                     <span class="kw">continue</span>;
                 }
                 <span class="kw">if </span>contract_data.<span class="number">1 </span>== new_contract_hash {
                     <span class="self">self</span>.database
                         .put_contract(
-                            <span class="kw-2">&amp;</span>compile_info.governance_id,
+                            <span class="kw-2">&amp;</span>governance_id,
                             <span class="kw-2">&amp;</span>contract_info.name,
                             contract_data.<span class="number">0</span>,
                             new_contract_hash,
-                            compile_info.governance_version,
+                            governance_version,
                         )
                         .map_err(|error| {
                             CompilerErrorResponses::DatabaseError(error.to_string())
@@ -334,20 +332,20 @@
             }
             <span class="self">self</span>.compile(
                 contract_info.content,
-                <span class="kw-2">&amp;</span>compile_info.governance_id.to_str(),
+                <span class="kw-2">&amp;</span>governance_id.to_str(),
                 <span class="kw-2">&amp;</span>contract_info.name,
             )
             .<span class="kw">await</span><span class="question-mark">?</span>;
             <span class="kw">let </span>compiled_contract = <span class="self">self
-                </span>.add_contract(<span class="kw-2">&amp;</span>compile_info.governance_id.to_str(), <span class="kw-2">&amp;</span>contract_info.name)
+                </span>.add_contract(<span class="kw-2">&amp;</span>governance_id.to_str(), <span class="kw-2">&amp;</span>contract_info.name)
                 .<span class="kw">await</span><span class="question-mark">?</span>;
             <span class="self">self</span>.database
                 .put_contract(
-                    <span class="kw-2">&amp;</span>compile_info.governance_id,
+                    <span class="kw-2">&amp;</span>governance_id,
                     <span class="kw-2">&amp;</span>contract_info.name,
                     compiled_contract,
                     new_contract_hash,
-                    compile_info.governance_version,
+                    governance_version,
                 )
                 .map_err(|error| CompilerErrorResponses::DatabaseError(error.to_string()))<span class="question-mark">?</span>;
         }

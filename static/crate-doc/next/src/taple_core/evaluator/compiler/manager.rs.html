@@ -105,33 +105,22 @@
 <a href="#105" id="105">105</a>
 <a href="#106" id="106">106</a>
 <a href="#107" id="107">107</a>
-<a href="#108" id="108">108</a>
-<a href="#109" id="109">109</a>
-<a href="#110" id="110">110</a>
-<a href="#111" id="111">111</a>
-<a href="#112" id="112">112</a>
-<a href="#113" id="113">113</a>
-<a href="#114" id="114">114</a>
-<a href="#115" id="115">115</a>
-<a href="#116" id="116">116</a>
-<a href="#117" id="117">117</a>
 </pre><pre class="rust"><code><span class="kw">use </span>wasmtime::Engine;
 
 <span class="kw">use crate</span>::{
-    commons::channel::{ChannelData, MpscChannel},
     database::DB,
-    evaluator::{errors::{CompilerError}, EvaluatorResponse},
-    governance::{GovernanceInterface},
+    evaluator::errors::CompilerError,
+    governance::{GovernanceInterface, GovernanceUpdatedMessage},
     DatabaseManager,
 };
 
-<span class="kw">use super</span>::{compiler::Compiler, CompilerMessages, CompilerResponses};
+<span class="kw">use </span><span class="kw">super</span>::compiler::Compiler;
 
 <span class="kw">pub struct </span>TapleCompiler&lt;D: DatabaseManager, G: GovernanceInterface&gt; {
-    input_channel: MpscChannel&lt;CompilerMessages, CompilerResponses&gt;,
+    input_channel: tokio::sync::broadcast::Receiver&lt;GovernanceUpdatedMessage&gt;,
     inner_compiler: Compiler&lt;D, G&gt;,
     shutdown_receiver: tokio::sync::broadcast::Receiver&lt;()&gt;,
-    shutdown_sender: tokio::sync::broadcast::Sender&lt;()&gt;
+    shutdown_sender: tokio::sync::broadcast::Sender&lt;()&gt;,
 }
 
 <span class="attr">#[derive(Clone, Debug)]
@@ -142,19 +131,19 @@
 
 <span class="kw">impl</span>&lt;D: DatabaseManager, G: GovernanceInterface + Send&gt; TapleCompiler&lt;D, G&gt; {
     <span class="kw">pub fn </span>new(
-        input_channel: MpscChannel&lt;CompilerMessages, CompilerResponses&gt;,
+        input_channel: tokio::sync::broadcast::Receiver&lt;GovernanceUpdatedMessage&gt;,
         database: DB&lt;D&gt;,
         gov_api: G,
         contracts_path: String,
         engine: Engine,
         shutdown_receiver: tokio::sync::broadcast::Receiver&lt;()&gt;,
-        shutdown_sender: tokio::sync::broadcast::Sender&lt;()&gt;
+        shutdown_sender: tokio::sync::broadcast::Sender&lt;()&gt;,
     ) -&gt; <span class="self">Self </span>{
         <span class="self">Self </span>{
             input_channel,
             inner_compiler: Compiler::&lt;D, G&gt;::new(database, gov_api, engine, contracts_path),
             shutdown_receiver,
-            shutdown_sender
+            shutdown_sender,
         }
     }
 
@@ -167,9 +156,9 @@
         }
         <span class="kw">loop </span>{
             <span class="macro">tokio::select! </span>{
-                command = <span class="self">self</span>.input_channel.receive() =&gt; {
+                command = <span class="self">self</span>.input_channel.recv() =&gt; {
                     <span class="kw">match </span>command {
-                        <span class="prelude-val">Some</span>(command) =&gt; {
+                        <span class="prelude-val">Ok</span>(command) =&gt; {
                             <span class="kw">let </span>result = <span class="self">self</span>.process_command(command).<span class="kw">await</span>;
                             <span class="kw">if </span>result.is_err() {
                                 <span class="kw">match </span>result.unwrap_err() {
@@ -194,7 +183,7 @@
                                 <span class="kw">return</span>;
                             }
                         }
-                        <span class="prelude-val">None </span>=&gt; {
+                        <span class="prelude-val">Err</span>(<span class="kw">_</span>) =&gt; {
                             <span class="kw">return</span>;
                         }
                     }
@@ -208,26 +197,17 @@
 
     <span class="kw">async fn </span>process_command(
         <span class="kw-2">&amp;mut </span><span class="self">self</span>,
-        command: ChannelData&lt;CompilerMessages, CompilerResponses&gt;,
+        command: GovernanceUpdatedMessage,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;CompilerCodes, CompilerError&gt; {
-        <span class="kw">let </span>(sender, data) = <span class="kw">match </span>command {
-            ChannelData::AskData(data) =&gt; {
-                <span class="kw">let </span>(sender, data) = data.get();
-                (<span class="prelude-val">Some</span>(sender), data)
-            }
-            ChannelData::TellData(data) =&gt; {
-                <span class="kw">let </span>data = data.get();
-                (<span class="prelude-val">None</span>, data)
-            }
-        };
-
-        <span class="kw">let </span>response = <span class="kw">match </span>data {
-            CompilerMessages::NewGovVersion(data) =&gt; {
-                CompilerResponses::CompileContract(<span class="self">self</span>.inner_compiler.update_contracts(data).<span class="kw">await</span>)
-            }
-        };
-        <span class="kw">let </span><span class="prelude-val">Ok</span>(<span class="kw">_</span>) = sender.unwrap().send(response) <span class="kw">else </span>{
-            <span class="kw">return </span><span class="prelude-val">Err</span>(CompilerError::ChannelNotAvailable)
+        <span class="kw">let </span>response = <span class="kw">match </span>command {
+            GovernanceUpdatedMessage::GovernanceUpdated {
+                governance_id,
+                governance_version,
+            } =&gt; {
+                <span class="self">self</span>.inner_compiler
+                    .update_contracts(governance_id, governance_version)
+                    .<span class="kw">await
+            </span>}
         };
         <span class="prelude-val">Ok</span>(CompilerCodes::Ok)
     }

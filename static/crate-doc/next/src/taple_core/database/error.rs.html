@@ -19,7 +19,7 @@
 </pre><pre class="rust"><code><span class="doccomment">//! Possible errors of a TAPLE Database
 </span><span class="kw">use </span>thiserror::Error;
 
-<span class="attr">#[derive(Error, Debug)]
+<span class="attr">#[derive(Error, Debug, Clone)]
 </span><span class="kw">pub enum </span>Error {
   <span class="attr">#[error(<span class="string">&quot;Entry Not Found&quot;</span>)]
   </span>EntryNotFound,
@@ -32,7 +32,7 @@
   <span class="attr">#[error(<span class="string">&quot;Conversion to Digest Identifier failed&quot;</span>)]
   </span>NoDigestIdentifier,
   <span class="attr">#[error(<span class="string">&quot;An error withing the database custom implementation&quot;</span>)]
-  </span>CustomError(Box&lt;<span class="kw">dyn </span>std::error::Error + Send + Sync + <span class="lifetime">&#39;static</span>&gt;)
+  </span>CustomError(String),
 }
 </code></pre></div>
 </section></main><div id="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="taple_core" data-themes="" data-resource-suffix="" data-rustdoc-version="1.69.0 (84c898d65 2023-04-16)" data-search-js="search-8a59a8356673ec1f.js" data-settings-js="settings-f0c5c39777a9a2f6.js" data-settings-css="settings-0bcba95ff279c1db.css" ></div></body></html>

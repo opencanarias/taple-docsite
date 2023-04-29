@@ -535,542 +535,654 @@
 <a href="#535" id="535">535</a>
 <a href="#536" id="536">536</a>
 <a href="#537" id="537">537</a>
-</pre><pre class="rust"><code><span class="comment">// use std::sync::Arc;
+<a href="#538" id="538">538</a>
+<a href="#539" id="539">539</a>
+<a href="#540" id="540">540</a>
+<a href="#541" id="541">541</a>
+<a href="#542" id="542">542</a>
+<a href="#543" id="543">543</a>
+<a href="#544" id="544">544</a>
+<a href="#545" id="545">545</a>
+<a href="#546" id="546">546</a>
+<a href="#547" id="547">547</a>
+<a href="#548" id="548">548</a>
+<a href="#549" id="549">549</a>
+<a href="#550" id="550">550</a>
+<a href="#551" id="551">551</a>
+<a href="#552" id="552">552</a>
+<a href="#553" id="553">553</a>
+<a href="#554" id="554">554</a>
+<a href="#555" id="555">555</a>
+<a href="#556" id="556">556</a>
+<a href="#557" id="557">557</a>
+<a href="#558" id="558">558</a>
+<a href="#559" id="559">559</a>
+<a href="#560" id="560">560</a>
+<a href="#561" id="561">561</a>
+<a href="#562" id="562">562</a>
+<a href="#563" id="563">563</a>
+<a href="#564" id="564">564</a>
+<a href="#565" id="565">565</a>
+<a href="#566" id="566">566</a>
+<a href="#567" id="567">567</a>
+<a href="#568" id="568">568</a>
+<a href="#569" id="569">569</a>
+<a href="#570" id="570">570</a>
+<a href="#571" id="571">571</a>
+<a href="#572" id="572">572</a>
+<a href="#573" id="573">573</a>
+<a href="#574" id="574">574</a>
+<a href="#575" id="575">575</a>
+<a href="#576" id="576">576</a>
+<a href="#577" id="577">577</a>
+<a href="#578" id="578">578</a>
+<a href="#579" id="579">579</a>
+<a href="#580" id="580">580</a>
+<a href="#581" id="581">581</a>
+<a href="#582" id="582">582</a>
+<a href="#583" id="583">583</a>
+<a href="#584" id="584">584</a>
+<a href="#585" id="585">585</a>
+<a href="#586" id="586">586</a>
+<a href="#587" id="587">587</a>
+<a href="#588" id="588">588</a>
+<a href="#589" id="589">589</a>
+<a href="#590" id="590">590</a>
+<a href="#591" id="591">591</a>
+<a href="#592" id="592">592</a>
+<a href="#593" id="593">593</a>
+</pre><pre class="rust"><code><span class="kw">use </span>std::sync::Arc;
 
-// use crate::commons::channel::MpscChannel;
-// use crate::commons::config::NetworkSettings;
-// use crate::commons::config::{DatabaseSettings, NodeSettings, TapleSettings};
-// use crate::commons::crypto::{
-//     Ed25519KeyPair, KeyGenerator, KeyMaterial, KeyPair, Secp256k1KeyPair,
-// };
-// use crate::commons::identifier::derive::KeyDerivator;
-// use crate::commons::identifier::{Derivable, KeyIdentifier};
-// use crate::commons::models::event_request::RequestPayload;
-// use crate::commons::models::notification::Notification;
-// use crate::database::{DatabaseManager, DB};
-// use crate::governance::{governance::Governance, GovernanceMessage, GovernanceResponse};
-// use crate::ledger::errors::LedgerManagerError;
-// use crate::ledger::ledger_manager::{CommandManagerMessage, CommandManagerResponse, LedgerManager};
-// use crate::message::{
-//     Message, MessageReceiver, MessageSender, MessageTaskCommand, MessageTaskManager, NetworkEvent,
-// };
-// use crate::network::network::{NetworkProcessor, SendMode};
-// use crate::protocol::command_head_manager::{
-//     manager::CommandManager, CommandManagerResponses, Commands,
-// };
-// use crate::protocol::protocol_message_manager::manager::ProtocolMessageManager;
-// use crate::protocol::protocol_message_manager::ProtocolManagerMessages;
-// use crate::protocol::request_manager::manager::RequestManager;
-// use crate::protocol::request_manager::{RequestManagerMessage, RequestManagerResponse};
-// use futures::future::BoxFuture;
-// use futures::FutureExt;
-// use libp2p::{Multiaddr, PeerId};
-// use tokio::sync::broadcast::error::{RecvError, TryRecvError};
+<span class="kw">use </span><span class="kw">crate</span>::approval::manager::{ApprovalAPI, ApprovalManager};
+<span class="kw">use </span><span class="kw">crate</span>::approval::{ApprovalMessages, ApprovalResponses};
+<span class="kw">use </span><span class="kw">crate</span>::commons::channel::MpscChannel;
+<span class="kw">use </span><span class="kw">crate</span>::commons::config::NetworkSettings;
+<span class="kw">use </span><span class="kw">crate</span>::commons::config::{DatabaseSettings, NodeSettings, TapleSettings};
+<span class="kw">use </span><span class="kw">crate</span>::commons::crypto::{
+    Ed25519KeyPair, KeyGenerator, KeyMaterial, KeyPair, Secp256k1KeyPair,
+};
+<span class="kw">use </span><span class="kw">crate</span>::commons::identifier::derive::KeyDerivator;
+<span class="kw">use </span><span class="kw">crate</span>::commons::identifier::{Derivable, KeyIdentifier};
+<span class="kw">use </span><span class="kw">crate</span>::commons::models::notification::Notification;
+<span class="kw">use </span><span class="kw">crate</span>::commons::self_signature_manager::{SelfSignatureInterface, SelfSignatureManager};
+<span class="kw">use </span><span class="kw">crate</span>::database::{DatabaseManager, DB};
+<span class="kw">use </span><span class="kw">crate</span>::distribution::error::DistributionErrorResponses;
+<span class="kw">use </span><span class="kw">crate</span>::distribution::manager::DistributionManager;
+<span class="kw">use </span><span class="kw">crate</span>::distribution::DistributionMessagesNew;
+<span class="kw">use </span><span class="kw">crate</span>::evaluator::{EvaluatorManager, EvaluatorMessage, EvaluatorResponse};
+<span class="kw">use </span><span class="kw">crate</span>::event::manager::{EventAPI, EventManager};
+<span class="kw">use </span><span class="kw">crate</span>::event::{EventCommand, EventResponse};
+<span class="kw">use </span><span class="kw">crate</span>::governance::GovernanceAPI;
+<span class="kw">use </span><span class="kw">crate</span>::governance::{governance::Governance, GovernanceMessage, GovernanceResponse};
+<span class="kw">use </span><span class="kw">crate</span>::ledger::{manager::EventManager <span class="kw">as </span>LedgerManager, LedgerCommand, LedgerResponse};
+<span class="kw">use </span><span class="kw">crate</span>::message::{
+    Message, MessageReceiver, MessageSender, MessageTaskCommand, MessageTaskManager, NetworkEvent,
+};
+<span class="kw">use </span><span class="kw">crate</span>::network::network::{NetworkProcessor, SendMode};
+<span class="kw">use </span><span class="kw">crate</span>::notary::manager::NotaryManager;
+<span class="kw">use </span><span class="kw">crate</span>::notary::{NotaryCommand, NotaryResponse};
+<span class="kw">use </span><span class="kw">crate</span>::protocol::protocol_message_manager::{ProtocolManager, TapleMessages};
+<span class="kw">use </span>futures::future::BoxFuture;
+<span class="kw">use </span>futures::FutureExt;
+<span class="kw">use </span>libp2p::{Multiaddr, PeerId};
+<span class="kw">use </span>tokio::sync::broadcast::error::{RecvError, TryRecvError};
 
-// use crate::api::{APICommands, APIResponses, NodeAPI, API};
-// use crate::error::Error;
+<span class="kw">use </span><span class="kw">crate</span>::api::{APICommands, ApiResponses, NodeAPI, API};
+<span class="kw">use </span><span class="kw">crate</span>::error::Error;
 
-// const BUFFER_SIZE: usize = 1000;
+<span class="kw">const </span>BUFFER_SIZE: usize = <span class="number">1000</span>;
 
-// /// Object that allows receiving [notifications](Notification) of the
-// /// different events of relevance that a node performs and/or detects.
-// ///
-// /// These objects can only be obtained through a node that has already been initialized.
-// /// In case of multiple nodes, the same handler cannot be used to obtain
-// /// notifications from each of them. Instead, one must be instantiated for each node in the
-// /// application and they will only be able to receive notifications from that point on,
-// /// the previous ones being unrecoverable.
-// pub struct NotificationHandler {
-//     notification_receiver: tokio::sync::broadcast::Receiver&lt;Notification&gt;,
-// }
+<span class="doccomment">/// Object that allows receiving [notifications](Notification) of the
+/// different events of relevance that a node performs and/or detects.
+///
+/// These objects can only be obtained through a node that has already been initialized.
+/// In case of multiple nodes, the same handler cannot be used to obtain
+/// notifications from each of them. Instead, one must be instantiated for each node in the
+/// application and they will only be able to receive notifications from that point on,
+/// the previous ones being unrecoverable.
+</span><span class="kw">pub struct </span>NotificationHandler {
+    notification_receiver: tokio::sync::broadcast::Receiver&lt;Notification&gt;,
+}
 
-// impl NotificationHandler {
-//     /// It forces the object to wait until the arrival of a new notification.
-//     /// It is important to note that handlers have an internal queue for storing messages.
-//     /// This queue starts acting from the moment the object is created, allowing the object
-//     /// to retrieve notifications from that moment until the current one. In this case,
-//     /// the method returns instantly with the oldest notification.
-//     ///
-//     /// An `Error` will only be obtained if it is not possible to receive more notifications
-//     /// due to a node stop and if there are no messages queued. In such a situation,
-//     /// the handler becomes useless and its release from memory is recommended.
-//     pub fn receive&lt;&#39;a&gt;(&amp;&#39;a mut self) -&gt; BoxFuture&lt;&#39;a, Result&lt;Notification, Error&gt;&gt; {
-//         async move {
-//             loop {
-//                 match self.notification_receiver.recv().await {
-//                     Ok(value) =&gt; break Ok(value),
-//                     Err(RecvError::Lagged(_)) =&gt; continue,
-//                     Err(RecvError::Closed) =&gt; break Err(Error::CantReceiveNotification),
-//                 }
-//             }
-//         }
-//         .boxed()
-//     }
+<span class="kw">impl </span>NotificationHandler {
+    <span class="doccomment">/// It forces the object to wait until the arrival of a new notification.
+    /// It is important to note that handlers have an internal queue for storing messages.
+    /// This queue starts acting from the moment the object is created, allowing the object
+    /// to retrieve notifications from that moment until the current one. In this case,
+    /// the method returns instantly with the oldest notification.
+    ///
+    /// An `Error` will only be obtained if it is not possible to receive more notifications
+    /// due to a node stop and if there are no messages queued. In such a situation,
+    /// the handler becomes useless and its release from memory is recommended.
+    </span><span class="kw">pub fn </span>receive&lt;<span class="lifetime">&#39;a</span>&gt;(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span><span class="self">self</span>) -&gt; BoxFuture&lt;<span class="lifetime">&#39;a</span>, <span class="prelude-ty">Result</span>&lt;Notification, Error&gt;&gt; {
+        <span class="kw">async move </span>{
+            <span class="kw">loop </span>{
+                <span class="kw">match </span><span class="self">self</span>.notification_receiver.recv().<span class="kw">await </span>{
+                    <span class="prelude-val">Ok</span>(value) =&gt; <span class="kw">break </span><span class="prelude-val">Ok</span>(value),
+                    <span class="prelude-val">Err</span>(RecvError::Lagged(<span class="kw">_</span>)) =&gt; <span class="kw">continue</span>,
+                    <span class="prelude-val">Err</span>(RecvError::Closed) =&gt; <span class="kw">break </span><span class="prelude-val">Err</span>(Error::CantReceiveNotification),
+                }
+            }
+        }
+        .boxed()
+    }
 
-//     /// The handler tries to get a notification. If there is none, it returns instead of waiting.
-//     /// Because of this, this method can be used to determine if the notification queue is empty,
-//     /// since it will report such a possibility with an error.
-//     ///
-//     /// # Possible results
-//     /// • A notification will be obtained only if it exists in the object&#39;s queue. &lt;br /&gt;
-//     /// • [Error::CantReceiveNotification] will be obtained if it is not possible to receive more notifications. &lt;br /&gt;
-//     /// • [Error::NoNewNotification] will be obtained if there is no message queued and it is still possible to
-//     /// continue receiving messages.
-//     pub fn try_rec(&amp;mut self) -&gt; Result&lt;Notification, Error&gt; {
-//         loop {
-//             match self.notification_receiver.try_recv() {
-//                 Ok(value) =&gt; break Ok(value),
-//                 Err(TryRecvError::Lagged(_)) =&gt; continue,
-//                 Err(TryRecvError::Closed) =&gt; break Err(Error::CantReceiveNotification),
-//                 Err(TryRecvError::Empty) =&gt; break Err(Error::NoNewNotification),
-//             }
-//         }
-//     }
-// }
+    <span class="doccomment">/// The handler tries to get a notification. If there is none, it returns instead of waiting.
+    /// Because of this, this method can be used to determine if the notification queue is empty,
+    /// since it will report such a possibility with an error.
+    ///
+    /// # Possible results
+    /// • A notification will be obtained only if it exists in the object&#39;s queue. &lt;br /&gt;
+    /// • [Error::CantReceiveNotification] will be obtained if it is not possible to receive more notifications. &lt;br /&gt;
+    /// • [Error::NoNewNotification] will be obtained if there is no message queued and it is still possible to
+    /// continue receiving messages.
+    </span><span class="kw">pub fn </span>try_rec(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;Notification, Error&gt; {
+        <span class="kw">loop </span>{
+            <span class="kw">match </span><span class="self">self</span>.notification_receiver.try_recv() {
+                <span class="prelude-val">Ok</span>(value) =&gt; <span class="kw">break </span><span class="prelude-val">Ok</span>(value),
+                <span class="prelude-val">Err</span>(TryRecvError::Lagged(<span class="kw">_</span>)) =&gt; <span class="kw">continue</span>,
+                <span class="prelude-val">Err</span>(TryRecvError::Closed) =&gt; <span class="kw">break </span><span class="prelude-val">Err</span>(Error::CantReceiveNotification),
+                <span class="prelude-val">Err</span>(TryRecvError::Empty) =&gt; <span class="kw">break </span><span class="prelude-val">Err</span>(Error::NoNewNotification),
+            }
+        }
+    }
+}
 
-// /// Structure representing a node of a TAPLE network.
-// ///
-// /// A node must be instantiated using the [`Taple::new`] method, which requires a set
-// /// of [configuration](Settings) parameters in order to be properly initialized.
-// ///
-// #[derive(Debug)]
-// pub struct Taple&lt;D: DatabaseManager&gt; {
-//     api: NodeAPI,
-//     peer_id: Option&lt;PeerId&gt;,
-//     controller_id: Option&lt;String&gt;,
-//     public_key: Option&lt;Vec&lt;u8&gt;&gt;,
-//     api_input: Option&lt;MpscChannel&lt;APICommands, APIResponses&gt;&gt;,
-//     notification_sender: tokio::sync::broadcast::Sender&lt;Notification&gt;,
-//     settings: TapleSettings,
-//     database: Option&lt;D&gt;,
-// }
+<span class="doccomment">/// Structure representing a node of a TAPLE network.
+///
+/// A node must be instantiated using the [`Taple::new`] method, which requires a set
+/// of [configuration](Settings) parameters in order to be properly initialized.
+///
+</span><span class="attr">#[derive(Debug)]
+</span><span class="kw">pub struct </span>Taple&lt;D: DatabaseManager&gt; {
+    api: NodeAPI,
+    peer_id: <span class="prelude-ty">Option</span>&lt;PeerId&gt;,
+    controller_id: <span class="prelude-ty">Option</span>&lt;String&gt;,
+    public_key: <span class="prelude-ty">Option</span>&lt;Vec&lt;u8&gt;&gt;,
+    api_input: <span class="prelude-ty">Option</span>&lt;MpscChannel&lt;APICommands, ApiResponses&gt;&gt;,
+    notification_sender: tokio::sync::broadcast::Sender&lt;Notification&gt;,
+    settings: TapleSettings,
+    database: <span class="prelude-ty">Option</span>&lt;D&gt;,
+}
 
-// impl&lt;D: DatabaseManager + &#39;static&gt; Taple&lt;D&gt; {
-//     /// Returns the [PeerId] of the node is available.
-//     /// This ID is the identifier of the node at the network level.
-//     /// **None** can only be get if the node has not been started yet.
-//     pub fn peer_id(&amp;self) -&gt; Option&lt;PeerId&gt; {
-//         self.peer_id.clone()
-//     }
+<span class="kw">impl</span>&lt;D: DatabaseManager + <span class="lifetime">&#39;static</span>&gt; Taple&lt;D&gt; {
+    <span class="doccomment">/// Returns the [PeerId] of the node is available.
+    /// This ID is the identifier of the node at the network level.
+    /// **None** can only be get if the node has not been started yet.
+    </span><span class="kw">pub fn </span>peer_id(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;PeerId&gt; {
+        <span class="self">self</span>.peer_id.clone()
+    }
 
-//     /// Returns the public key (bytes format) of the node is available.
-//     /// **None** can only be get if the node has not been started yet.
-//     pub fn public_key(&amp;self) -&gt; Option&lt;Vec&lt;u8&gt;&gt; {
-//         self.public_key.clone()
-//     }
+    <span class="doccomment">/// Returns the public key (bytes format) of the node is available.
+    /// **None** can only be get if the node has not been started yet.
+    </span><span class="kw">pub fn </span>public_key(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;Vec&lt;u8&gt;&gt; {
+        <span class="self">self</span>.public_key.clone()
+    }
 
-//     /// Returns the controller ID of the node is available.
-//     /// This ID is the identifier of the node at the protocol level.
-//     /// **None** can only be get if the node has not been started yet.
-//     pub fn controller_id(&amp;self) -&gt; Option&lt;String&gt; {
-//         self.controller_id.clone()
-//     }
+    <span class="doccomment">/// Returns the controller ID of the node is available.
+    /// This ID is the identifier of the node at the protocol level.
+    /// **None** can only be get if the node has not been started yet.
+    </span><span class="kw">pub fn </span>controller_id(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;String&gt; {
+        <span class="self">self</span>.controller_id.clone()
+    }
 
-//     /// This methods allows to get the [API](NodeAPI) of the node. The API can be get
-//     /// as many time as desired. The API is the only method to interact with a node at the user level.
-//     pub fn get_api(&amp;self) -&gt; NodeAPI {
-//         self.api.clone()
-//     }
+    <span class="doccomment">/// This methods allows to get the [API](NodeAPI) of the node. The API can be get
+    /// as many time as desired. The API is the only method to interact with a node at the user level.
+    </span><span class="kw">pub fn </span>get_api(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; NodeAPI {
+        <span class="self">self</span>.api.clone()
+    }
 
-//     /// This method allows to get an instance of [NotificationHandler].
-//     /// This component is used by the node to report any important events
-//     /// that have occurred, for example the creation of new **subjects**.
-//     /// The component behaves similar to a channel receiver; users only have to call
-//     /// the [NotificationHandler::receive] method to start receiving notifications.
-//     pub fn get_notification_handler(&amp;self) -&gt; NotificationHandler {
-//         NotificationHandler {
-//             notification_receiver: self.notification_sender.subscribe(),
-//         }
-//     }
+    <span class="doccomment">/// This method allows to get an instance of [NotificationHandler].
+    /// This component is used by the node to report any important events
+    /// that have occurred, for example the creation of new **subjects**.
+    /// The component behaves similar to a channel receiver; users only have to call
+    /// the [NotificationHandler::receive] method to start receiving notifications.
+    </span><span class="kw">pub fn </span>get_notification_handler(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; NotificationHandler {
+        NotificationHandler {
+            notification_receiver: <span class="self">self</span>.notification_sender.subscribe(),
+        }
+    }
 
-//     /// This method allows the creation of cryptographic material through a
-//     /// given public key.
-//     fn generate_mc(&amp;mut self, stored_public_key: Option&lt;String&gt;) -&gt; Result&lt;KeyPair, Error&gt; {
-//         let kp = Self::create_key_pair(
-//             &amp;self.settings.node.key_derivator,
-//             self.settings.node.seed.clone(),
-//             self.settings.node.secret_key.clone(),
-//         )?;
-//         let public_key = kp.public_key_bytes();
-//         let key_identifier = KeyIdentifier::new(kp.get_key_derivator(), &amp;public_key).to_str();
-//         if let Some(key) = stored_public_key {
-//             if (key_identifier != key) &amp;&amp; !self.settings.node.dev_mode {
-//                 log::error!(&quot;Invalid MC specified. There is a previous defined MC in the system&quot;);
-//                 return Err(Error::InvalidKeyPairSpecified(key_identifier));
-//             }
-//         }
-//         self.controller_id = Some(key_identifier);
-//         self.public_key = Some(public_key);
-//         Ok(kp)
-//     }
+    <span class="doccomment">/// This method allows the creation of cryptographic material through a
+    /// given public key.
+    </span><span class="kw">fn </span>generate_mc(<span class="kw-2">&amp;mut </span><span class="self">self</span>, stored_public_key: <span class="prelude-ty">Option</span>&lt;String&gt;) -&gt; <span class="prelude-ty">Result</span>&lt;KeyPair, Error&gt; {
+        <span class="kw">let </span>kp = <span class="self">Self</span>::create_key_pair(
+            <span class="kw-2">&amp;</span><span class="self">self</span>.settings.node.key_derivator,
+            <span class="self">self</span>.settings.node.seed.clone(),
+            <span class="self">self</span>.settings.node.secret_key.clone(),
+        )<span class="question-mark">?</span>;
+        <span class="kw">let </span>public_key = kp.public_key_bytes();
+        <span class="kw">let </span>key_identifier = KeyIdentifier::new(kp.get_key_derivator(), <span class="kw-2">&amp;</span>public_key).to_str();
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(key) = stored_public_key {
+            <span class="kw">if </span>(key_identifier != key) &amp;&amp; !<span class="self">self</span>.settings.node.dev_mode {
+                <span class="macro">log::error!</span>(<span class="string">&quot;Invalid MC specified. There is a previous defined MC in the system&quot;</span>);
+                <span class="kw">return </span><span class="prelude-val">Err</span>(Error::InvalidKeyPairSpecified(key_identifier));
+            }
+        }
+        <span class="self">self</span>.controller_id = <span class="prelude-val">Some</span>(key_identifier);
+        <span class="self">self</span>.public_key = <span class="prelude-val">Some</span>(public_key);
+        <span class="prelude-val">Ok</span>(kp)
+    }
 
-//     /// Main and unique method to create an instance of a TAPLE node.
-//     pub fn new(settings: TapleSettings, database: D) -&gt; Self {
-//         check_dev_settings(&amp;settings);
-//         let (api_input, api_sender) = MpscChannel::new(BUFFER_SIZE);
-//         let (sender, _) = tokio::sync::broadcast::channel(BUFFER_SIZE);
-//         let api = NodeAPI { sender: api_sender };
-//         Self {
-//             api,
-//             peer_id: None,
-//             public_key: None,
-//             controller_id: None,
-//             api_input: Some(api_input),
-//             notification_sender: sender,
-//             settings,
-//             database: Some(database),
-//         }
-//     }
+    <span class="doccomment">/// Main and unique method to create an instance of a TAPLE node.
+    </span><span class="kw">pub fn </span>new(settings: TapleSettings, database: D) -&gt; <span class="self">Self </span>{
+        check_dev_settings(<span class="kw-2">&amp;</span>settings);
+        <span class="kw">let </span>(api_input, api_sender) = MpscChannel::new(BUFFER_SIZE);
+        <span class="kw">let </span>(sender, <span class="kw">_</span>) = tokio::sync::broadcast::channel(BUFFER_SIZE);
+        <span class="kw">let </span>api = NodeAPI { sender: api_sender };
+        <span class="self">Self </span>{
+            api,
+            peer_id: <span class="prelude-val">None</span>,
+            public_key: <span class="prelude-val">None</span>,
+            controller_id: <span class="prelude-val">None</span>,
+            api_input: <span class="prelude-val">Some</span>(api_input),
+            notification_sender: sender,
+            settings,
+            database: <span class="prelude-val">Some</span>(database),
+        }
+    }
 
-//     /// Instance a default settings to start a new Taple Node
-//     pub fn get_default_settings() -&gt; TapleSettings {
-//         TapleSettings {
-//             network: NetworkSettings {
-//                 p2p_port: 50000u32,
-//                 addr: &quot;/ip4/0.0.0.0/tcp&quot;.into(),
-//                 known_nodes: Vec::&lt;String&gt;::new(),
-//             },
-//             node: NodeSettings {
-//                 key_derivator: KeyDerivator::Ed25519,
-//                 secret_key: Option::&lt;String&gt;::None,
-//                 seed: None,
-//                 digest_derivator:
-//                     crate::commons::identifier::derive::digest::DigestDerivator::Blake3_256,
-//                 replication_factor: 0.25f64,
-//                 timeout: 3000u32,
-//                 passvotation: 0,
-//                 dev_mode: false,
-//                 smartcontracts_directory: &quot;../../../contracts&quot;.into(),
-//                 req_res: false,
-//             },
-//             database: DatabaseSettings { path: &quot;&quot;.into() },
-//         }
-//     }
+    <span class="doccomment">/// Instance a default settings to start a new Taple Node
+    </span><span class="kw">pub fn </span>get_default_settings() -&gt; TapleSettings {
+        TapleSettings {
+            network: NetworkSettings {
+                p2p_port: <span class="number">50000u32</span>,
+                addr: <span class="string">&quot;/ip4/0.0.0.0/tcp&quot;</span>.into(),
+                known_nodes: Vec::&lt;String&gt;::new(),
+            },
+            node: NodeSettings {
+                key_derivator: KeyDerivator::Ed25519,
+                secret_key: <span class="prelude-ty">Option</span>::&lt;String&gt;::None,
+                seed: <span class="prelude-val">None</span>,
+                digest_derivator:
+                    <span class="kw">crate</span>::commons::identifier::derive::digest::DigestDerivator::Blake3_256,
+                replication_factor: <span class="number">0.25f64</span>,
+                timeout: <span class="number">3000u32</span>,
+                passvotation: <span class="number">0</span>,
+                dev_mode: <span class="bool-val">false</span>,
+                smartcontracts_directory: <span class="string">&quot;../../../contracts&quot;</span>.into(),
+                req_res: <span class="bool-val">false</span>,
+            },
+            database: DatabaseSettings { path: <span class="string">&quot;&quot;</span>.into() },
+        }
+    }
 
-//     // Instance a default governance settings
-//     pub fn get_default_governance(&amp;self) -&gt; RequestPayload {
-//         RequestPayload::Json(
-//             serde_json::to_string(&amp;serde_json::json!({
-//                                 &quot;members&quot;: [
-//                                     {
-//                                         &quot;id&quot;: &quot;Company&quot;,
-//                                         &quot;tags&quot;: {},
-//                                         &quot;description&quot;: &quot;Basic Usage&quot;,
-//                                         &quot;key&quot;: self.controller_id().unwrap()
-//                                     },
-//                                 ],
-//                                 &quot;schemas&quot;: [],
-//                                 &quot;policies&quot;: [
-//                                     {
-//                                         &quot;id&quot;: &quot;governance&quot;,
-//                                         &quot;validation&quot;: {
-//                                             &quot;quorum&quot;: 0.5,
-//                                             &quot;validators&quot;: [
-//                                                 self.controller_id().unwrap()
-//                                             ]
-//                                         },
-//                                         &quot;approval&quot;: {
-//                                             &quot;quorum&quot;: 0.5,
-//                                             &quot;approvers&quot;: [
-//             ]
-//                                         },
-//                                         &quot;invokation&quot;: {
-//                                             &quot;owner&quot;: {
-//                                                 &quot;allowance&quot;: true,
-//                                                 &quot;approvalRequired&quot;: false
-//                                             },
-//                                             &quot;set&quot;: {
-//                                                 &quot;allowance&quot;: false,
-//                                                 &quot;approvalRequired&quot;: false,
-//                                                 &quot;invokers&quot;: []
-//                                             },
-//                                             &quot;all&quot;: {
-//                                                 &quot;allowance&quot;: false,
-//                                                 &quot;approvalRequired&quot;: false,
-//                                             },
-//                                             &quot;external&quot;: {
-//                                                 &quot;allowance&quot;: false,
-//                                                 &quot;approvalRequired&quot;: false
-//                                             }
-//                                         }
-//                                     }
-//                                 ]
-//                         }))
-//             .unwrap(),
-//         )
-//     }
+    <span class="comment">// // Instance a default governance settings
+    // pub fn get_default_governance(&amp;self) -&gt; RequestPayload {
+    //     RequestPayload::Json(
+    //         serde_json::to_string(&amp;serde_json::json!({
+    //                             &quot;members&quot;: [
+    //                                 {
+    //                                     &quot;id&quot;: &quot;Company&quot;,
+    //                                     &quot;tags&quot;: {},
+    //                                     &quot;description&quot;: &quot;Basic Usage&quot;,
+    //                                     &quot;key&quot;: self.controller_id().unwrap()
+    //                                 },
+    //                             ],
+    //                             &quot;schemas&quot;: [],
+    //                             &quot;policies&quot;: [
+    //                                 {
+    //                                     &quot;id&quot;: &quot;governance&quot;,
+    //                                     &quot;validation&quot;: {
+    //                                         &quot;quorum&quot;: 0.5,
+    //                                         &quot;validators&quot;: [
+    //                                             self.controller_id().unwrap()
+    //                                         ]
+    //                                     },
+    //                                     &quot;approval&quot;: {
+    //                                         &quot;quorum&quot;: 0.5,
+    //                                         &quot;approvers&quot;: [
+    //         ]
+    //                                     },
+    //                                     &quot;invokation&quot;: {
+    //                                         &quot;owner&quot;: {
+    //                                             &quot;allowance&quot;: true,
+    //                                             &quot;approvalRequired&quot;: false
+    //                                         },
+    //                                         &quot;set&quot;: {
+    //                                             &quot;allowance&quot;: false,
+    //                                             &quot;approvalRequired&quot;: false,
+    //                                             &quot;invokers&quot;: []
+    //                                         },
+    //                                         &quot;all&quot;: {
+    //                                             &quot;allowance&quot;: false,
+    //                                             &quot;approvalRequired&quot;: false,
+    //                                         },
+    //                                         &quot;external&quot;: {
+    //                                             &quot;allowance&quot;: false,
+    //                                             &quot;approvalRequired&quot;: false
+    //                                         }
+    //                                     }
+    //                                 }
+    //                             ]
+    //                     }))
+    //         .unwrap(),
+    //     )
+    // }
 
-//     /// This method initializes a TAPLE node, generating each of its internal components
-//     /// and allowing subsequent interaction with the node. Each of the aforementioned
-//     /// components is executed in its own Tokyo task, allowing the method to return the
-//     /// control flow once its execution is finished.
-//     /// # Possible results
-//     /// If the process is successful, the method will return `Ok(())`.
-//     /// An error will be returned only if it has not been possible to generate the necessary data
-//     /// for the initialization of the components, mainly due to problems in the initial [configuration](Settings).
-//     /// # Panics
-//     /// This method panics if it has not been possible to generate the network layer.
-//     pub async fn start(&amp;mut self) -&gt; Result&lt;(), Error&gt; {
-//         // Create channels
-//         // Channels for network
-//         let (sender_network, receiver_network): (
-//             tokio::sync::mpsc::Sender&lt;NetworkEvent&gt;,
-//             tokio::sync::mpsc::Receiver&lt;NetworkEvent&gt;,
-//         ) = tokio::sync::mpsc::channel(BUFFER_SIZE);
-//         let (request_receiver, request_sender) =
-//             MpscChannel::&lt;RequestManagerMessage, RequestManagerResponse&gt;::new(BUFFER_SIZE);
-//         // Receiver and sender of commands
-//         let (command_receiver, command_sender) =
-//             MpscChannel::&lt;Commands, CommandManagerResponses&gt;::new(BUFFER_SIZE);
-//         // Receiver and sender of governance messages
-//         let (governance_receiver, governance_sender) =
-//             MpscChannel::&lt;GovernanceMessage, GovernanceResponse&gt;::new(BUFFER_SIZE);
-//         // Receiver and sender of ledger message
-//         let (ledger_receiver, ledger_sender) = MpscChannel::&lt;
-//             CommandManagerMessage,
-//             Result&lt;CommandManagerResponse, LedgerManagerError&gt;,
-//         &gt;::new(BUFFER_SIZE);
-//         // Receiver and sender of taskManager requests
-//         let (task_receiver, task_sender) =
-//             MpscChannel::&lt;MessageTaskCommand&lt;ProtocolManagerMessages&gt;, ()&gt;::new(BUFFER_SIZE);
-//         // Receiver and sender of protocol messages
-//         let (messages_sender, message_receiver): (
-//             tokio::sync::mpsc::Sender&lt;Message&lt;ProtocolManagerMessages&gt;&gt;,
-//             tokio::sync::mpsc::Receiver&lt;Message&lt;ProtocolManagerMessages&gt;&gt;,
-//         ) = tokio::sync::mpsc::channel(BUFFER_SIZE);
-//         // Shutdown channel
-//         let (bsx, _brx) = tokio::sync::broadcast::channel::&lt;()&gt;(10);
-//         // Creation Watch Channel
-//         let (wath_sender, watch_receiver): (
-//             tokio::sync::watch::Sender&lt;TapleSettings&gt;,
-//             tokio::sync::watch::Receiver&lt;TapleSettings&gt;,
-//         ) = tokio::sync::watch::channel(self.settings.clone());
-//         // Creation BBDD
-//         // let tempdir;
-//         // let path = if self.settings.database.path.is_empty() {
-//         //     tempdir = tempdirf().unwrap();
-//         //     tempdir.path().clone()
-//         // } else {
-//         //     std::path::Path::new(&amp;self.settings.database.path)
-//         // };
-//         let db = self.database.take().unwrap();
-//         let db = Arc::new(db);
+    </span><span class="doccomment">/// This method initializes a TAPLE node, generating each of its internal components
+    /// and allowing subsequent interaction with the node. Each of the aforementioned
+    /// components is executed in its own Tokyo task, allowing the method to return the
+    /// control flow once its execution is finished.
+    /// # Possible results
+    /// If the process is successful, the method will return `Ok(())`.
+    /// An error will be returned only if it has not been possible to generate the necessary data
+    /// for the initialization of the components, mainly due to problems in the initial [configuration](Settings).
+    /// # Panics
+    /// This method panics if it has not been possible to generate the network layer.
+    </span><span class="kw">pub async fn </span>start(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;(), Error&gt; {
+        <span class="comment">// Create channels
+        // Channels for network
+        </span><span class="kw">let </span>(sender_network, receiver_network): (
+            tokio::sync::mpsc::Sender&lt;NetworkEvent&gt;,
+            tokio::sync::mpsc::Receiver&lt;NetworkEvent&gt;,
+        ) = tokio::sync::mpsc::channel(BUFFER_SIZE);
+        <span class="kw">let </span>(event_receiver, event_sender) =
+            MpscChannel::&lt;EventCommand, EventResponse&gt;::new(BUFFER_SIZE);
+        <span class="comment">// Receiver and sender of commands
+        </span><span class="kw">let </span>(ledger_receiver, ledger_sender) =
+            MpscChannel::&lt;LedgerCommand, LedgerResponse&gt;::new(BUFFER_SIZE);
+        <span class="comment">// Receiver and sender of governance messages
+        </span><span class="kw">let </span>(governance_receiver, governance_sender) =
+            MpscChannel::&lt;GovernanceMessage, GovernanceResponse&gt;::new(BUFFER_SIZE);
+        <span class="comment">// Governance notification channel
+        </span><span class="kw">let </span>(governance_update_sx, governance_update_rx) =
+            tokio::sync::broadcast::channel(BUFFER_SIZE);
+        <span class="comment">// Receiver and sender of ledger message
+        // Receiver and sender of taskManager requests
+        </span><span class="kw">let </span>(task_receiver, task_sender) =
+            MpscChannel::&lt;MessageTaskCommand&lt;TapleMessages&gt;, ()&gt;::new(BUFFER_SIZE);
+        <span class="comment">// Receiver and sender of protocol messages
+        </span><span class="kw">let </span>(protocol_receiver, protocol_sender) =
+            MpscChannel::&lt;Message&lt;TapleMessages&gt;, ()&gt;::new(BUFFER_SIZE);
+        <span class="comment">// Receiver and sender of distribution messages
+        </span><span class="kw">let </span>(distribution_receiver, distribution_sender) = MpscChannel::&lt;
+            DistributionMessagesNew,
+            <span class="prelude-ty">Result</span>&lt;(), DistributionErrorResponses&gt;,
+        &gt;::new(BUFFER_SIZE);
+        <span class="comment">// Receiver and sender of approval messages
+        </span><span class="kw">let </span>(approval_receiver, approval_sender) =
+            MpscChannel::&lt;ApprovalMessages, ApprovalResponses&gt;::new(BUFFER_SIZE);
+        <span class="comment">// Receiver and sender of evaluation messages
+        </span><span class="kw">let </span>(evaluation_receiver, evaluation_sender) =
+            MpscChannel::&lt;EvaluatorMessage, EvaluatorResponse&gt;::new(BUFFER_SIZE);
+        <span class="comment">// Receiver and sender of validation messages
+        </span><span class="kw">let </span>(validation_receiver, validation_sender) =
+            MpscChannel::&lt;NotaryCommand, NotaryResponse&gt;::new(BUFFER_SIZE);
+        <span class="comment">// Shutdown channel
+        </span><span class="kw">let </span>(bsx, _brx) = tokio::sync::broadcast::channel::&lt;()&gt;(<span class="number">10</span>);
+        <span class="comment">// Creation Watch Channel
+        </span><span class="kw">let </span>(wath_sender, watch_receiver): (
+            tokio::sync::watch::Sender&lt;TapleSettings&gt;,
+            tokio::sync::watch::Receiver&lt;TapleSettings&gt;,
+        ) = tokio::sync::watch::channel(<span class="self">self</span>.settings.clone());
+        <span class="comment">// Creation BBDD
+        </span><span class="kw">let </span>db = <span class="self">self</span>.database.take().unwrap();
+        <span class="kw">let </span>db = Arc::new(db);
+        <span class="kw">let </span>db_access = DB::new(db.clone());
+        <span class="comment">// Creation of cryptographic material
+        </span><span class="kw">let </span>stored_public_key = db_access.get_controller_id().ok();
+        <span class="kw">let </span>kp = <span class="self">self</span>.generate_mc(stored_public_key)<span class="question-mark">?</span>;
+        <span class="comment">// Store controller_id in database
+        </span>db_access
+            .set_controller_id(<span class="self">self</span>.controller_id().unwrap())
+            .map_err(|e| Error::DatabaseError(e.to_string()))<span class="question-mark">?</span>;
+        <span class="kw">let </span>public_key = kp.public_key_bytes();
+        <span class="kw">let </span>key_identifier = KeyIdentifier::new(kp.get_key_derivator(), <span class="kw-2">&amp;</span>public_key);
+        <span class="comment">// Creation Network
+        </span><span class="kw">let </span>network_manager = NetworkProcessor::new(
+            <span class="prelude-val">Some</span>(<span class="macro">format!</span>(
+                <span class="string">&quot;{}/{}&quot;</span>,
+                <span class="self">self</span>.settings.network.addr.clone(),
+                <span class="self">self</span>.settings.network.p2p_port.clone()
+            )),
+            network_access_points(<span class="kw-2">&amp;</span><span class="self">self</span>.settings.network.known_nodes)<span class="question-mark">?</span>, <span class="comment">// TODO: Provide Bootraps nodes per configuration
+            </span>sender_network,
+            kp.clone(),
+            bsx.subscribe(),
+            <span class="kw">if </span><span class="self">self</span>.settings.node.req_res {
+                SendMode::RequestResponse
+            } <span class="kw">else </span>{
+                SendMode::Tell
+            },
+        )
+        .<span class="kw">await
+        </span>.expect(<span class="string">&quot;Error en creación de la capa de red&quot;</span>);
+        <span class="self">self</span>.peer_id = <span class="prelude-val">Some</span>(network_manager.local_peer_id().to_owned());
+        <span class="comment">// Creation NetworkReceiver
+        </span><span class="kw">let </span>network_receiver =
+            MessageReceiver::new(receiver_network, protocol_sender, bsx.subscribe());
+        <span class="comment">// Creation NetworkSender
+        </span><span class="kw">let </span>network_sender = MessageSender::new(network_manager.client(), key_identifier.clone());
+        <span class="comment">// Creation Signature Manager
+        </span><span class="kw">let </span>signature_manager = SelfSignatureManager::new(kp.clone(), <span class="kw-2">&amp;</span><span class="self">self</span>.settings);
+        <span class="comment">// Creation TaskManager
+        </span><span class="kw">let </span><span class="kw-2">mut </span>task_manager = MessageTaskManager::new(
+            network_sender.clone(),
+            task_receiver,
+            bsx.clone(),
+            bsx.subscribe(),
+        );
+        <span class="comment">// Creation ProtocolManager
+        </span><span class="kw">let </span>protocol_manager = ProtocolManager::new(
+            protocol_receiver,
+            distribution_sender.clone(),
+            evaluation_sender.clone(),
+            validation_sender.clone(),
+            event_sender.clone(),
+            approval_sender.clone(),
+            bsx.clone(),
+        );
+        <span class="comment">// Creation Governance
+        </span><span class="kw">let </span><span class="kw-2">mut </span>governance_manager = Governance::new(
+            governance_receiver,
+            bsx.clone(),
+            bsx.subscribe(),
+            DB::new(db.clone()),
+            governance_update_sx.clone(),
+        );
+        <span class="comment">// Creation EventManager
+        </span><span class="kw">let </span>event_manager = EventManager::new(
+            event_receiver,
+            governance_update_rx,
+            GovernanceAPI::new(governance_sender.clone()),
+            DB::new(db.clone()),
+            bsx.clone(),
+            bsx.subscribe(),
+            task_sender.clone(),
+            <span class="self">self</span>.notification_sender.clone(),
+            ledger_sender,
+            signature_manager.get_own_identifier(),
+            signature_manager.clone(),
+        );
+        <span class="comment">// Creation LedgerManager
+        </span><span class="kw">let </span>ledger_manager = LedgerManager::new(
+            ledger_receiver,
+            bsx.clone(),
+            bsx.subscribe(),
+            <span class="self">self</span>.notification_sender.clone(),
+            GovernanceAPI::new(governance_sender.clone()),
+            DB::new(db.clone()),
+            task_sender.clone(),
+            distribution_sender,
+            key_identifier.clone(),
+        );
+        <span class="comment">// Creation API module
+        </span><span class="kw">let </span>api = API::new(
+            <span class="self">self</span>.api_input.take().unwrap(),
+            EventAPI::new(event_sender),
+            ApprovalAPI::new(approval_sender),
+            wath_sender,
+            <span class="self">self</span>.settings.clone(),
+            kp.clone(),
+            bsx.clone(),
+            bsx.subscribe(),
+            DB::new(db.clone()),
+        );
+        <span class="comment">// Creation EvaluatorManager
+        </span><span class="kw">let </span>evaluator_manager = EvaluatorManager::new(
+            evaluation_receiver,
+            db.clone(),
+            signature_manager.clone(),
+            governance_update_sx.subscribe(),
+            bsx.clone(),
+            bsx.subscribe(),
+            GovernanceAPI::new(governance_sender.clone()),
+            <span class="self">self</span>.settings.node.smartcontracts_directory.clone(),
+            task_sender.clone(),
+        );
+        <span class="comment">// Creation ApprovalManager
+        </span><span class="kw">let </span>approval_manager = ApprovalManager::new(
+            GovernanceAPI::new(governance_sender.clone()),
+            approval_receiver,
+            bsx.clone(),
+            bsx.subscribe(),
+            task_sender.clone(),
+            governance_update_sx.subscribe(),
+            signature_manager.clone(),
+            <span class="self">self</span>.notification_sender.clone(),
+            <span class="self">self</span>.settings.clone(),
+            DB::new(db.clone()),
+        );
+        <span class="comment">// Creation DistributionManager
+        </span><span class="kw">let </span>distribution_manager = DistributionManager::new(
+            distribution_receiver,
+            bsx.clone(),
+            bsx.subscribe(),
+            task_sender,
+            GovernanceAPI::new(governance_sender.clone()),
+            signature_manager.clone(),
+            <span class="self">self</span>.settings.clone(),
+            DB::new(db.clone()),
+        );
+        <span class="kw">let </span>validation_manager = NotaryManager::new(
+            validation_receiver,
+            GovernanceAPI::new(governance_sender),
+            DB::new(db.clone()),
+            signature_manager,
+            bsx.clone(),
+            bsx.subscribe(),
+        );
+        <span class="comment">// Module initialization
+        </span>tokio::spawn(<span class="kw">async move </span>{
+            governance_manager.start().<span class="kw">await</span>;
+        });
+        tokio::spawn(<span class="kw">async move </span>{
+            ledger_manager.start().<span class="kw">await</span>;
+        });
+        tokio::spawn(<span class="kw">async move </span>{
+            event_manager.start().<span class="kw">await</span>;
+        });
+        tokio::spawn(<span class="kw">async move </span>{
+            task_manager.start().<span class="kw">await</span>;
+        });
+        tokio::spawn(<span class="kw">async move </span>{
+            protocol_manager.start().<span class="kw">await</span>;
+        });
+        tokio::spawn(<span class="kw">async move </span>{
+            network_receiver.run().<span class="kw">await</span>;
+        });
+        tokio::spawn(<span class="kw">async move </span>{
+            evaluator_manager.start().<span class="kw">await</span>;
+        });
+        tokio::spawn(<span class="kw">async move </span>{
+            validation_manager.start().<span class="kw">await</span>;
+        });
+        tokio::spawn(<span class="kw">async move </span>{
+            distribution_manager.start().<span class="kw">await</span>;
+        });
+        tokio::spawn(<span class="kw">async move </span>{
+            approval_manager.start().<span class="kw">await</span>;
+        });
+        tokio::spawn(network_manager.run());
+        <span class="comment">// API Initialization
+        </span>tokio::spawn(<span class="kw">async move </span>{
+            api.start().<span class="kw">await</span>;
+        });
+        <span class="prelude-val">Ok</span>(())
+    }
 
-//         let db_access = DB::new(db.clone());
-//         // Creation of cryptographic material
-//         let stored_public_key = db_access.get_controller_id().ok();
-//         let kp = self.generate_mc(stored_public_key)?;
-//         // Store controller_id in database
-//         db_access
-//             .set_controller_id(self.controller_id().unwrap())
-//             .map_err(|e| Error::DatabaseError(e.to_string()))?;
-//         let public_key = kp.public_key_bytes();
-//         let key_identifier = KeyIdentifier::new(kp.get_key_derivator(), &amp;public_key);
-//         // Creation Network
-//         let network_manager = NetworkProcessor::new(
-//             Some(format!(
-//                 &quot;{}/{}&quot;,
-//                 self.settings.network.addr.clone(),
-//                 self.settings.network.p2p_port.clone()
-//             )),
-//             network_access_points(&amp;self.settings.network.known_nodes)?, // TODO: Provide Bootraps nodes per configuration
-//             sender_network,
-//             kp.clone(),
-//             bsx.subscribe(),
-//             if self.settings.node.req_res {
-//                 SendMode::RequestResponse
-//             } else {
-//                 SendMode::Tell
-//             },
-//         )
-//         .await
-//         .expect(&quot;Error en creación de la capa de red&quot;);
-//         self.peer_id = Some(network_manager.local_peer_id().to_owned());
-//         // Creation NetworkReceiver
-//         let network_receiver =
-//             MessageReceiver::new(receiver_network, messages_sender, bsx.subscribe());
-//         // Creation NetworkSender
-//         let network_sender = MessageSender::new(network_manager.client(), key_identifier.clone());
-//         // Creation TaskManager
-//         let mut task_manager = MessageTaskManager::new(
-//             network_sender.clone(),
-//             task_receiver,
-//             bsx.clone(),
-//             bsx.subscribe(),
-//         );
-//         // Creation ProtocolManager
-//         let mut protocol_manager = ProtocolMessageManager::new(
-//             request_sender.clone(),
-//             command_sender.clone(),
-//             message_receiver,
-//             task_sender.clone(), // TODO: Switching to a channel with MessageTaskManager
-//             bsx.clone(),
-//             bsx.subscribe(),
-//         );
-//         // Creation CommandManager
-//         let mut command_manager = CommandManager::new(
-//             ledger_sender,
-//             command_receiver,
-//             task_sender.clone(),
-//             governance_sender.clone(),
-//             kp.clone(),
-//             &amp;self.settings.clone(),
-//             watch_receiver.clone(),
-//             bsx.clone(),
-//             bsx.subscribe(),
-//             self.notification_sender.clone(),
-//         );
-//         // Creation LedgerManager
-//         let ledger_manager = LedgerManager::new(
-//             ledger_receiver,
-//             governance_sender.clone(),
-//             DB::new(db.clone()),
-//             key_identifier.clone(),
-//             bsx.subscribe(),
-//         );
-//         let mut governance = Governance::new(
-//             // TODO: Obtain from configuration
-//             governance_receiver,
-//             bsx.clone(),
-//             bsx.subscribe(),
-//             DB::new(db.clone()),
-//         );
-//         // Creation API module
-//         let api = API::new(
-//             self.api_input.take().unwrap(),
-//             command_sender.clone(),
-//             request_sender,
-//             wath_sender,
-//             self.settings.clone(),
-//             kp.clone(),
-//             bsx.clone(),
-//             bsx.subscribe(),
-//             DB::new(db.clone()),
-//         );
-//         // Creation RequestManager
-//         let mut request_manager = RequestManager::new(
-//             request_receiver,
-//             bsx.clone(),
-//             bsx.subscribe(),
-//             task_sender.clone(),
-//             command_sender,
-//             self.notification_sender.clone(),
-//             governance_sender,
-//             DB::new(db.clone()),
-//             kp,
-//             &amp;self.settings,
-//         );
-//         // Module initialization
-//         tokio::spawn(async move {
-//             governance.start().await;
-//         });
-//         tokio::spawn(async move {
-//             ledger_manager.start().await;
-//         });
-//         tokio::spawn(async move {
-//             task_manager.start().await;
-//         });
-//         tokio::spawn(async move {
-//             protocol_manager.start().await;
-//         });
-//         tokio::spawn(async move {
-//             command_manager.start().await;
-//         });
-//         tokio::spawn(async move {
-//             network_receiver.run().await;
-//         });
-//         tokio::spawn(async move {
-//             request_manager.start().await;
-//         });
-//         tokio::spawn(network_manager.run());
-//         // API Initialization
-//         tokio::spawn(async move {
-//             api.start().await;
-//         });
-//         Ok(())
-//     }
+    <span class="kw">fn </span>create_key_pair(
+        derivator: <span class="kw-2">&amp;</span>KeyDerivator,
+        seed: <span class="prelude-ty">Option</span>&lt;String&gt;,
+        current_key: <span class="prelude-ty">Option</span>&lt;String&gt;,
+    ) -&gt; <span class="prelude-ty">Result</span>&lt;KeyPair, Error&gt; {
+        <span class="kw">let </span><span class="kw-2">mut </span>counter: u32 = <span class="number">0</span>;
+        <span class="kw">if </span>seed.is_some() {
+            counter += <span class="number">1
+        </span>};
+        <span class="kw">if </span>current_key.is_some() {
+            counter += <span class="number">2
+        </span>};
+        <span class="kw">if </span>counter == <span class="number">2 </span>{
+            <span class="kw">let </span>str_key = current_key.unwrap();
+            <span class="kw">match </span>derivator {
+                KeyDerivator::Ed25519 =&gt; <span class="prelude-val">Ok</span>(KeyPair::Ed25519(Ed25519KeyPair::from_secret_key(
+                    <span class="kw-2">&amp;</span>hex::decode(str_key).map_err(|<span class="kw">_</span>| Error::InvalidHexString)<span class="question-mark">?</span>,
+                ))),
+                KeyDerivator::Secp256k1 =&gt; {
+                    <span class="prelude-val">Ok</span>(KeyPair::Secp256k1(Secp256k1KeyPair::from_secret_key(
+                        <span class="kw-2">&amp;</span>hex::decode(str_key).map_err(|<span class="kw">_</span>| Error::InvalidHexString)<span class="question-mark">?</span>,
+                    )))
+                }
+            }
+        } <span class="kw">else if </span>counter == <span class="number">1 </span>{
+            <span class="kw">match </span>derivator {
+                KeyDerivator::Ed25519 =&gt; <span class="prelude-val">Ok</span>(KeyPair::Ed25519(
+                    <span class="kw">crate</span>::commons::crypto::Ed25519KeyPair::from_seed(seed.unwrap().as_bytes()),
+                )),
+                KeyDerivator::Secp256k1 =&gt; <span class="prelude-val">Ok</span>(KeyPair::Secp256k1(
+                    <span class="kw">crate</span>::commons::crypto::Secp256k1KeyPair::from_seed(seed.unwrap().as_bytes()),
+                )),
+            }
+        } <span class="kw">else if </span>counter == <span class="number">3 </span>{
+            <span class="prelude-val">Err</span>(Error::PkConflict)
+        } <span class="kw">else </span>{
+            <span class="prelude-val">Err</span>(Error::NoMCAvailable)
+        }
+    }
+}
 
-//     fn create_key_pair(
-//         derivator: &amp;KeyDerivator,
-//         seed: Option&lt;String&gt;,
-//         current_key: Option&lt;String&gt;,
-//     ) -&gt; Result&lt;KeyPair, Error&gt; {
-//         let mut counter: u32 = 0;
-//         if seed.is_some() {
-//             counter += 1
-//         };
-//         if current_key.is_some() {
-//             counter += 2
-//         };
-//         if counter == 2 {
-//             let str_key = current_key.unwrap();
-//             match derivator {
-//                 KeyDerivator::Ed25519 =&gt; Ok(KeyPair::Ed25519(Ed25519KeyPair::from_secret_key(
-//                     &amp;hex::decode(str_key).map_err(|_| Error::InvalidHexString)?,
-//                 ))),
-//                 KeyDerivator::Secp256k1 =&gt; {
-//                     Ok(KeyPair::Secp256k1(Secp256k1KeyPair::from_secret_key(
-//                         &amp;hex::decode(str_key).map_err(|_| Error::InvalidHexString)?,
-//                     )))
-//                 }
-//             }
-//         } else if counter == 1 {
-//             match derivator {
-//                 KeyDerivator::Ed25519 =&gt; Ok(KeyPair::Ed25519(
-//                     crate::commons::crypto::Ed25519KeyPair::from_seed(seed.unwrap().as_bytes()),
-//                 )),
-//                 KeyDerivator::Secp256k1 =&gt; Ok(KeyPair::Secp256k1(
-//                     crate::commons::crypto::Secp256k1KeyPair::from_seed(seed.unwrap().as_bytes()),
-//                 )),
-//             }
-//         } else if counter == 3 {
-//             Err(Error::PkConflict)
-//         } else {
-//             Err(Error::NoMCAvailable)
-//         }
-//     }
-// }
+<span class="kw">fn </span>check_dev_settings(settings: <span class="kw-2">&amp;</span>TapleSettings) {
+    <span class="kw">if </span>!settings.node.dev_mode {
+        <span class="kw">if </span>settings.node.passvotation == <span class="number">1 </span>|| settings.node.passvotation == <span class="number">2 </span>{
+            <span class="macro">log::error!</span>(<span class="string">&quot;Invalid Settings for normal mode, try in dev mode&quot;</span>);
+            <span class="macro">panic!</span>(<span class="string">&quot;Invalid Settings for normal mode, try in dev mode&quot;</span>)
+        }
+    }
+}
 
-// fn check_dev_settings(settings: &amp;TapleSettings) {
-//     if !settings.node.dev_mode {
-//         if settings.node.passvotation == 1 || settings.node.passvotation == 2 {
-//             log::error!(&quot;Invalid Settings for normal mode, try in dev mode&quot;);
-//             panic!(&quot;Invalid Settings for normal mode, try in dev mode&quot;)
-//         }
-//     }
-// }
+<span class="kw">fn </span>network_access_points(points: <span class="kw-2">&amp;</span>[String]) -&gt; <span class="prelude-ty">Result</span>&lt;Vec&lt;(PeerId, Multiaddr)&gt;, Error&gt; {
+    <span class="kw">let </span><span class="kw-2">mut </span>access_points: Vec&lt;(PeerId, Multiaddr)&gt; = Vec::new();
+    <span class="kw">for </span>point <span class="kw">in </span>points {
+        <span class="kw">let </span>data: Vec&lt;<span class="kw-2">&amp;</span>str&gt; = point.split(<span class="string">&quot;/p2p/&quot;</span>).collect();
+        <span class="kw">if </span>data.len() != <span class="number">2 </span>{
+            <span class="kw">return </span><span class="prelude-val">Err</span>(Error::AcessPointError(point.to_string()));
+        }
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(value) = multiaddr(point) {
+            <span class="kw">if let </span><span class="prelude-val">Ok</span>(id) = data[<span class="number">1</span>].parse::&lt;PeerId&gt;() {
+                access_points.push((id, value));
+            } <span class="kw">else </span>{
+                <span class="kw">return </span><span class="prelude-val">Err</span>(Error::AcessPointError(<span class="macro">format!</span>(
+                    <span class="string">&quot;Invalid PeerId conversion: {}&quot;</span>,
+                    point
+                )));
+            }
+        } <span class="kw">else </span>{
+            <span class="kw">return </span><span class="prelude-val">Err</span>(Error::AcessPointError(<span class="macro">format!</span>(
+                <span class="string">&quot;Invalid MultiAddress conversion: {}&quot;</span>,
+                point
+            )));
+        }
+    }
+    <span class="prelude-val">Ok</span>(access_points)
+}
 
-// fn network_access_points(points: &amp;[String]) -&gt; Result&lt;Vec&lt;(PeerId, Multiaddr)&gt;, Error&gt; {
-//     let mut access_points: Vec&lt;(PeerId, Multiaddr)&gt; = Vec::new();
-//     for point in points {
-//         let data: Vec&lt;&amp;str&gt; = point.split(&quot;/p2p/&quot;).collect();
-//         if data.len() != 2 {
-//             return Err(Error::AcessPointError(point.to_string()));
-//         }
-//         if let Some(value) = multiaddr(point) {
-//             if let Ok(id) = data[1].parse::&lt;PeerId&gt;() {
-//                 access_points.push((id, value));
-//             } else {
-//                 return Err(Error::AcessPointError(format!(
-//                     &quot;Invalid PeerId conversion: {}&quot;,
-//                     point
-//                 )));
-//             }
-//         } else {
-//             return Err(Error::AcessPointError(format!(
-//                 &quot;Invalid MultiAddress conversion: {}&quot;,
-//                 point
-//             )));
-//         }
-//     }
-//     Ok(access_points)
-// }
-
-// fn multiaddr(addr: &amp;str) -&gt; Option&lt;Multiaddr&gt; {
-//     match addr.parse::&lt;Multiaddr&gt;() {
-//         Ok(a) =&gt; Some(a),
-//         Err(_) =&gt; None,
-//     }
-// }
-</span></code></pre></div>
+<span class="kw">fn </span>multiaddr(addr: <span class="kw-2">&amp;</span>str) -&gt; <span class="prelude-ty">Option</span>&lt;Multiaddr&gt; {
+    <span class="kw">match </span>addr.parse::&lt;Multiaddr&gt;() {
+        <span class="prelude-val">Ok</span>(a) =&gt; <span class="prelude-val">Some</span>(a),
+        <span class="prelude-val">Err</span>(<span class="kw">_</span>) =&gt; <span class="prelude-val">None</span>,
+    }
+}
+</code></pre></div>
 </section></main><div id="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="taple_core" data-themes="" data-resource-suffix="" data-rustdoc-version="1.69.0 (84c898d65 2023-04-16)" data-search-js="search-8a59a8356673ec1f.js" data-settings-js="settings-f0c5c39777a9a2f6.js" data-settings-css="settings-0bcba95ff279c1db.css" ></div></body></html>

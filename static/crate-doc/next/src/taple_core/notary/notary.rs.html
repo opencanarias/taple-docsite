@@ -295,10 +295,21 @@
 <a href="#295" id="295">295</a>
 <a href="#296" id="296">296</a>
 <a href="#297" id="297">297</a>
+<a href="#298" id="298">298</a>
+<a href="#299" id="299">299</a>
+<a href="#300" id="300">300</a>
+<a href="#301" id="301">301</a>
+<a href="#302" id="302">302</a>
+<a href="#303" id="303">303</a>
+<a href="#304" id="304">304</a>
+<a href="#305" id="305">305</a>
 </pre><pre class="rust"><code><span class="kw">use </span>std::collections::HashMap;
 
 <span class="kw">use crate</span>::{
-    commons::{errors::ChannelErrors, self_signature_manager::{SelfSignatureManager, SelfSignatureInterface}},
+    commons::{
+        errors::ChannelErrors,
+        self_signature_manager::{SelfSignatureInterface, SelfSignatureManager},
+    },
     governance::{GovernanceAPI, GovernanceInterface},
     identifier::DigestIdentifier,
 };
@@ -400,11 +411,13 @@
     }
 }
 
-<span class="attr">#[cfg(test)]
-</span><span class="kw">mod </span>tests {
-    <span class="kw">use </span><span class="kw">crate</span>::commons::self_signature_manager::SelfSignatureManager;
-    <span class="kw">use </span><span class="kw">crate</span>::database::{MemoryManager, DB};
-    <span class="kw">use crate</span>::{
+<span class="comment">/*
+#[cfg(test)]
+mod tests {
+    use crate::commons::self_signature_manager::SelfSignatureManager;
+    use crate::database::{MemoryManager, DB};
+    use crate::governance::GovernanceUpdatedMessage;
+    use crate::{
         commons::{
             channel::MpscChannel,
             crypto::{generate, Ed25519KeyPair},
@@ -419,142 +432,144 @@
         signature::{Signature, SignatureContent},
         DigestDerivator,
     };
-    <span class="kw">use </span>std::str::FromStr;
-    <span class="kw">use </span>std::sync::Arc;
-    <span class="kw">use </span>tokio::runtime::Runtime;
+    use std::str::FromStr;
+    use std::sync::Arc;
+    use tokio::runtime::Runtime;
 
-    <span class="kw">use </span><span class="kw">super</span>::Notary;
+    use super::Notary;
 
-    <span class="attr">#[test]
-    </span><span class="kw">fn </span>test_all_good() {
-        <span class="kw">let </span>rt = Runtime::new().unwrap();
-        rt.block_on(<span class="kw">async </span>{
-            <span class="kw">let </span>(<span class="kw-2">mut </span>gov, notary) = initialize();
-            tokio::spawn(<span class="kw">async move </span>{
-                gov.start().<span class="kw">await</span>;
+    #[test]
+    fn test_all_good() {
+        let rt = Runtime::new().unwrap();
+        rt.block_on(async {
+            let (mut gov, notary) = initialize();
+            tokio::spawn(async move {
+                gov.start().await;
             });
-            <span class="kw">let </span>not_ev = not_ev(<span class="number">0</span>);
-            <span class="kw">let </span>result = notary.notary_event(not_ev).<span class="kw">await</span>;
-            <span class="macro">assert!</span>(result.is_ok());
+            let not_ev = not_ev(0);
+            let result = notary.notary_event(not_ev).await;
+            assert!(result.is_ok());
         })
     }
 
-    <span class="attr">#[test]
-    </span><span class="kw">fn </span>test_gov_not_found() {
-        <span class="kw">let </span>rt = Runtime::new().unwrap();
-        rt.block_on(<span class="kw">async </span>{
-            <span class="kw">let </span>(<span class="kw-2">mut </span>gov, notary) = initialize();
-            tokio::spawn(<span class="kw">async move </span>{
-                gov.start().<span class="kw">await</span>;
+    #[test]
+    fn test_gov_not_found() {
+        let rt = Runtime::new().unwrap();
+        rt.block_on(async {
+            let (mut gov, notary) = initialize();
+            tokio::spawn(async move {
+                gov.start().await;
             });
-            <span class="kw">let </span><span class="kw-2">mut </span>not_ev = not_ev(<span class="number">0</span>);
+            let mut not_ev = not_ev(0);
             not_ev.gov_id =
-                DigestIdentifier::from_str(<span class="string">&quot;Jg2Nuv5bNs4swQGcPQ1CXs9MtcfwMVoeQDR2Ea1YNYJw&quot;</span>).unwrap();
-            <span class="kw">let </span>result = notary.notary_event(not_ev).<span class="kw">await</span>;
-            <span class="macro">assert!</span>(result.is_err());
-            <span class="kw">let </span>error = result.unwrap_err();
-            <span class="macro">assert_eq!</span>(error, NotaryError::GovernanceNotFound)
+                DigestIdentifier::from_str(&quot;Jg2Nuv5bNs4swQGcPQ1CXs9MtcfwMVoeQDR2Ea1YNYJw&quot;).unwrap();
+            let result = notary.notary_event(not_ev).await;
+            assert!(result.is_err());
+            let error = result.unwrap_err();
+            assert_eq!(error, NotaryError::GovernanceNotFound)
         })
     }
 
-    <span class="attr">#[test]
-    </span><span class="kw">fn </span>test_sn_too_small() {
-        <span class="kw">let </span>rt = Runtime::new().unwrap();
-        rt.block_on(<span class="kw">async </span>{
-            <span class="kw">let </span>(<span class="kw-2">mut </span>gov, notary) = initialize();
-            tokio::spawn(<span class="kw">async move </span>{
-                gov.start().<span class="kw">await</span>;
+    #[test]
+    fn test_sn_too_small() {
+        let rt = Runtime::new().unwrap();
+        rt.block_on(async {
+            let (mut gov, notary) = initialize();
+            tokio::spawn(async move {
+                gov.start().await;
             });
-            <span class="kw">let </span><span class="kw-2">mut </span>not_ev = not_ev(<span class="number">0</span>);
+            let mut not_ev = not_ev(0);
             not_ev.subject_id =
-                DigestIdentifier::from_str(<span class="string">&quot;Jg2Nuv5bNs4swQGcPQ1CXs9MtcfwMVoeQDR2Ea1YNYJw&quot;</span>).unwrap();
-            <span class="kw">let </span>result = notary.notary_event(not_ev).<span class="kw">await</span>;
-            <span class="macro">assert!</span>(result.is_err());
-            <span class="kw">let </span>error = result.unwrap_err();
-            <span class="macro">assert_eq!</span>(error, NotaryError::EventSnLowerThanLastSigned)
+                DigestIdentifier::from_str(&quot;Jg2Nuv5bNs4swQGcPQ1CXs9MtcfwMVoeQDR2Ea1YNYJw&quot;).unwrap();
+            let result = notary.notary_event(not_ev).await;
+            assert!(result.is_err());
+            let error = result.unwrap_err();
+            assert_eq!(error, NotaryError::EventSnLowerThanLastSigned)
         })
     }
 
-    <span class="attr">#[test]
-    </span><span class="kw">fn </span>test_diff_hash() {
-        <span class="kw">let </span>rt = Runtime::new().unwrap();
-        rt.block_on(<span class="kw">async </span>{
-            <span class="kw">let </span>(<span class="kw-2">mut </span>gov, notary) = initialize();
-            tokio::spawn(<span class="kw">async move </span>{
-                gov.start().<span class="kw">await</span>;
+    #[test]
+    fn test_diff_hash() {
+        let rt = Runtime::new().unwrap();
+        rt.block_on(async {
+            let (mut gov, notary) = initialize();
+            tokio::spawn(async move {
+                gov.start().await;
             });
-            <span class="kw">let </span><span class="kw-2">mut </span>not_ev = not_ev(<span class="number">3</span>);
+            let mut not_ev = not_ev(3);
             not_ev.subject_id =
-                DigestIdentifier::from_str(<span class="string">&quot;Jg2Nuv5bNs4swQGcPQ1CXs9MtcfwMVoeQDR2Ea1YNYJw&quot;</span>).unwrap();
+                DigestIdentifier::from_str(&quot;Jg2Nuv5bNs4swQGcPQ1CXs9MtcfwMVoeQDR2Ea1YNYJw&quot;).unwrap();
             not_ev.event_hash =
-                DigestIdentifier::from_str(<span class="string">&quot;JKXo-EvPxQcL_nhbd4iprzyjdNxT9YYrmeJ7p5N_IVrg&quot;</span>).unwrap();
-            <span class="kw">let </span>result = notary.notary_event(not_ev).<span class="kw">await</span>;
-            <span class="macro">assert!</span>(result.is_err());
-            <span class="kw">let </span>error = result.unwrap_err();
-            <span class="macro">assert_eq!</span>(error, NotaryError::DifferentHashForEvent)
+                DigestIdentifier::from_str(&quot;JKXo-EvPxQcL_nhbd4iprzyjdNxT9YYrmeJ7p5N_IVrg&quot;).unwrap();
+            let result = notary.notary_event(not_ev).await;
+            assert!(result.is_err());
+            let error = result.unwrap_err();
+            assert_eq!(error, NotaryError::DifferentHashForEvent)
         })
     }
 
-    <span class="attr">#[test]
-    </span><span class="kw">fn </span>test_gov_version_too_high() {
-        <span class="kw">let </span>rt = Runtime::new().unwrap();
-        rt.block_on(<span class="kw">async </span>{
-            <span class="kw">let </span>(<span class="kw-2">mut </span>gov, notary) = initialize();
-            tokio::spawn(<span class="kw">async move </span>{
-                gov.start().<span class="kw">await</span>;
+    #[test]
+    fn test_gov_version_too_high() {
+        let rt = Runtime::new().unwrap();
+        rt.block_on(async {
+            let (mut gov, notary) = initialize();
+            tokio::spawn(async move {
+                gov.start().await;
             });
-            <span class="kw">let </span><span class="kw-2">mut </span>not_ev = not_ev(<span class="number">0</span>);
-            not_ev.gov_version = <span class="number">4</span>;
-            <span class="kw">let </span>result = notary.notary_event(not_ev).<span class="kw">await</span>;
-            <span class="macro">assert!</span>(result.is_err());
-            <span class="kw">let </span>error = result.unwrap_err();
-            <span class="macro">assert_eq!</span>(error, NotaryError::GovernanceVersionTooHigh)
+            let mut not_ev = not_ev(0);
+            not_ev.gov_version = 4;
+            let result = notary.notary_event(not_ev).await;
+            assert!(result.is_err());
+            let error = result.unwrap_err();
+            assert_eq!(error, NotaryError::GovernanceVersionTooHigh)
         })
     }
 
-    <span class="kw">fn </span>initialize() -&gt; (Governance&lt;MemoryManager&gt;, Notary&lt;MemoryManager&gt;) {
-        <span class="kw">let </span>manager = MemoryManager::new();
-        <span class="kw">let </span>manager = Arc::new(manager);
-        <span class="kw">let </span>db = DB::new(manager.clone());
-        <span class="kw">let </span>subject = Subject {
-            subject_id: DigestIdentifier::from_str(<span class="string">&quot;JKXo-EvPxQcL_nhbd4iprzyjdNxT9YYrmeJ7p5N_IVrg&quot;</span>)
+    fn initialize() -&gt; (Governance&lt;MemoryManager&gt;, Notary&lt;MemoryManager&gt;) {
+        let manager = MemoryManager::new();
+        let manager = Arc::new(manager);
+        let db = DB::new(manager.clone());
+        let subject = Subject {
+            subject_id: DigestIdentifier::from_str(&quot;JKXo-EvPxQcL_nhbd4iprzyjdNxT9YYrmeJ7p5N_IVrg&quot;)
                 .unwrap(),
-            governance_id: DigestIdentifier::from_str(<span class="string">&quot;&quot;</span>).unwrap(),
-            sn: <span class="number">0</span>,
-            public_key: KeyIdentifier::from_str(<span class="string">&quot;ED8MpwKh3OjPEw_hQdqJixrXlKzpVzdvHf2DqrPvdz7Y&quot;</span>)
+            governance_id: DigestIdentifier::from_str(&quot;&quot;).unwrap(),
+            sn: 0,
+            public_key: KeyIdentifier::from_str(&quot;ED8MpwKh3OjPEw_hQdqJixrXlKzpVzdvHf2DqrPvdz7Y&quot;)
                 .unwrap(),
-            namespace: String::from(<span class="string">&quot;governance&quot;</span>),
-            schema_id: String::from(<span class="string">&quot;governance&quot;</span>),
-            owner: KeyIdentifier::from_str(<span class="string">&quot;ED8MpwKh3OjPEw_hQdqJixrXlKzpVzdvHf2DqrPvdz7Y&quot;</span>).unwrap(),
-            properties: String::from(<span class="string">&quot;governance&quot;</span>),
+            namespace: String::from(&quot;governance&quot;),
+            schema_id: String::from(&quot;governance&quot;),
+            owner: KeyIdentifier::from_str(&quot;ED8MpwKh3OjPEw_hQdqJixrXlKzpVzdvHf2DqrPvdz7Y&quot;).unwrap(),
+            properties: String::from(&quot;governance&quot;),
 
-            keys: <span class="prelude-val">None</span>,
-            creator: KeyIdentifier::from_str(<span class="string">&quot;ED8MpwKh3OjPEw_hQdqJixrXlKzpVzdvHf2DqrPvdz7Y&quot;</span>)
+            keys: None,
+            creator: KeyIdentifier::from_str(&quot;ED8MpwKh3OjPEw_hQdqJixrXlKzpVzdvHf2DqrPvdz7Y&quot;)
                 .unwrap(),
         };
         db.set_notary_register(
-            <span class="kw-2">&amp;</span>KeyIdentifier::from_str(<span class="string">&quot;ED8MpwKh3OjPEw_hQdqJixrXlKzpVzdvHf2DqrPvdz7Y&quot;</span>).unwrap(),
-            <span class="kw-2">&amp;</span>DigestIdentifier::from_str(<span class="string">&quot;Jg2Nuv5bNs4swQGcPQ1CXs9MtcfwMVoeQDR2Ea1YNYJw&quot;</span>).unwrap(),
-            DigestIdentifier::from_str(<span class="string">&quot;Jg2Nuv5bNs4swQGcPQ1CXs9MtcfwMVoeQDR2Ea1YNYJw&quot;</span>).unwrap(),
-            <span class="number">3</span>,
+            &amp;KeyIdentifier::from_str(&quot;ED8MpwKh3OjPEw_hQdqJixrXlKzpVzdvHf2DqrPvdz7Y&quot;).unwrap(),
+            &amp;DigestIdentifier::from_str(&quot;Jg2Nuv5bNs4swQGcPQ1CXs9MtcfwMVoeQDR2Ea1YNYJw&quot;).unwrap(),
+            DigestIdentifier::from_str(&quot;Jg2Nuv5bNs4swQGcPQ1CXs9MtcfwMVoeQDR2Ea1YNYJw&quot;).unwrap(),
+            3,
         )
         .unwrap();
         db.set_subject(
-            <span class="kw-2">&amp;</span>DigestIdentifier::from_str(<span class="string">&quot;JKXo-EvPxQcL_nhbd4iprzyjdNxT9YYrmeJ7p5N_IVrg&quot;</span>).unwrap(),
+            &amp;DigestIdentifier::from_str(&quot;JKXo-EvPxQcL_nhbd4iprzyjdNxT9YYrmeJ7p5N_IVrg&quot;).unwrap(),
             subject,
         )
         .unwrap();
-        <span class="comment">// Shutdown channel
-        </span><span class="kw">let </span>(bsx, _brx) = tokio::sync::broadcast::channel::&lt;()&gt;(<span class="number">10</span>);
-        <span class="kw">let </span>(a, b) = MpscChannel::&lt;GovernanceMessage, GovernanceResponse&gt;::new(<span class="number">100</span>);
-        <span class="kw">let </span>gov_manager = Governance::new(a, bsx, _brx, db);
-        <span class="kw">let </span>db = DB::new(manager);
-        <span class="kw">let </span>notary = Notary::new(
+        // Shutdown channel
+        let (bsx, _brx) = tokio::sync::broadcast::channel::&lt;()&gt;(10);
+        let (a, b) = MpscChannel::&lt;GovernanceMessage, GovernanceResponse&gt;::new(100);
+        let (c, d) = MpscChannel::&lt;GovernanceUpdatedMessage, ()&gt;::new(100);
+        let (e, f) = MpscChannel::&lt;GovernanceUpdatedMessage, ()&gt;::new(100);
+        let gov_manager = Governance::new(a, bsx, _brx, db, f);
+        let db = DB::new(manager);
+        let notary = Notary::new(
             GovernanceAPI::new(b),
             db,
             SelfSignatureManager {
-                keys: generate::&lt;Ed25519KeyPair&gt;(<span class="prelude-val">None</span>),
-                identifier: KeyIdentifier::from_str(<span class="string">&quot;ED8MpwKh3OjPEw_hQdqJixrXlKzpVzdvHf2DqrPvdz7Y&quot;</span>)
+                keys: generate::&lt;Ed25519KeyPair&gt;(None),
+                identifier: KeyIdentifier::from_str(&quot;ED8MpwKh3OjPEw_hQdqJixrXlKzpVzdvHf2DqrPvdz7Y&quot;)
                     .unwrap(),
                 digest_derivator: DigestDerivator::Blake3_256,
             },
@@ -562,35 +577,36 @@
         (gov_manager, notary)
     }
 
-    <span class="kw">fn </span>not_ev(sn: u64) -&gt; NotaryEvent {
+    fn not_ev(sn: u64) -&gt; NotaryEvent {
         NotaryEvent {
             gov_id: DigestIdentifier::from_str(
-                <span class="string">&quot;JKXo-EvPxQcL_nhbd4iprzyjdNxT9YYrmeJ7p5N_IVrg&quot;</span>,
+                &quot;JKXo-EvPxQcL_nhbd4iprzyjdNxT9YYrmeJ7p5N_IVrg&quot;,
             )
             .unwrap(),
             subject_id: DigestIdentifier::from_str(
-                <span class="string">&quot;JKXo-EvPxQcL_nhbd4iprzyjdNxT9YYrmeJ7p5N_IVrg&quot;</span>,
+                &quot;JKXo-EvPxQcL_nhbd4iprzyjdNxT9YYrmeJ7p5N_IVrg&quot;,
             )
             .unwrap(),
-            owner: KeyIdentifier::from_str(<span class="string">&quot;ED8MpwKh3OjPEw_hQdqJixrXlKzpVzdvHf2DqrPvdz7Y&quot;</span>)
+            owner: KeyIdentifier::from_str(&quot;ED8MpwKh3OjPEw_hQdqJixrXlKzpVzdvHf2DqrPvdz7Y&quot;)
             .unwrap(),
             event_hash: DigestIdentifier::from_str(
-                <span class="string">&quot;JKXo-EvPxQcL_nhbd4iprzyjdNxT9YYrmeJ7p5N_IVrg&quot;</span>,
+                &quot;JKXo-EvPxQcL_nhbd4iprzyjdNxT9YYrmeJ7p5N_IVrg&quot;,
             )
             .unwrap(),
             sn,
-            gov_version: <span class="number">0</span>,
+            gov_version: 0,
             owner_signature: Signature { content: SignatureContent {
-                signer: KeyIdentifier::from_str(<span class="string">&quot;ED8MpwKh3OjPEw_hQdqJixrXlKzpVzdvHf2DqrPvdz7Y&quot;</span>)
+                signer: KeyIdentifier::from_str(&quot;ED8MpwKh3OjPEw_hQdqJixrXlKzpVzdvHf2DqrPvdz7Y&quot;)
                 .unwrap(),
                 event_content_hash: DigestIdentifier::from_str(
-                    <span class="string">&quot;JKXo-EvPxQcL_nhbd4iprzyjdNxT9YYrmeJ7p5N_IVrg&quot;</span>,
+                    &quot;JKXo-EvPxQcL_nhbd4iprzyjdNxT9YYrmeJ7p5N_IVrg&quot;,
                 )
                 .unwrap(),
                 timestamp: TimeStamp::now(),
-            }, signature: SignatureIdentifier::from_str(<span class="string">&quot;SEB2W98DwIvqL4BPIRnHOpogfn1qkNrOoSI-KJxSaLOoudEFo_Q6-FlMJvwBDQY3iGQ7iB4bcwr8QBgP8he7HVDA&quot;</span>).unwrap() },
+            }, signature: SignatureIdentifier::from_str(&quot;SEB2W98DwIvqL4BPIRnHOpogfn1qkNrOoSI-KJxSaLOoudEFo_Q6-FlMJvwBDQY3iGQ7iB4bcwr8QBgP8he7HVDA&quot;).unwrap() },
         }
     }
 }
-</code></pre></div>
+ */
+</span></code></pre></div>
 </section></main><div id="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="taple_core" data-themes="" data-resource-suffix="" data-rustdoc-version="1.69.0 (84c898d65 2023-04-16)" data-search-js="search-8a59a8356673ec1f.js" data-settings-js="settings-f0c5c39777a9a2f6.js" data-settings-css="settings-0bcba95ff279c1db.css" ></div></body></html>

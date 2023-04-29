@@ -110,17 +110,36 @@
 <a href="#110" id="110">110</a>
 <a href="#111" id="111">111</a>
 <a href="#112" id="112">112</a>
+<a href="#113" id="113">113</a>
+<a href="#114" id="114">114</a>
+<a href="#115" id="115">115</a>
+<a href="#116" id="116">116</a>
+<a href="#117" id="117">117</a>
+<a href="#118" id="118">118</a>
+<a href="#119" id="119">119</a>
+<a href="#120" id="120">120</a>
+<a href="#121" id="121">121</a>
+<a href="#122" id="122">122</a>
+<a href="#123" id="123">123</a>
+<a href="#124" id="124">124</a>
+<a href="#125" id="125">125</a>
+<a href="#126" id="126">126</a>
+<a href="#127" id="127">127</a>
+<a href="#128" id="128">128</a>
+<a href="#129" id="129">129</a>
+<a href="#130" id="130">130</a>
+<a href="#131" id="131">131</a>
+<a href="#132" id="132">132</a>
 </pre><pre class="rust"><code><span class="kw">use </span>serde::{Deserialize, Serialize};
 
 <span class="kw">use crate</span>::{
-    approval::{error::ApprovalErrorResponse, ApprovalMessages},
+    approval::{error::ApprovalErrorResponse, ApprovalMessages, ApprovalResponses},
     commons::channel::{ChannelData, MpscChannel, SenderEnd},
     distribution::{error::DistributionErrorResponses, DistributionMessagesNew, LedgerMessages},
     evaluator::{EvaluatorMessage, EvaluatorResponse},
     event::{EventCommand, EventResponse},
     message::{Message, TaskCommandContent},
     notary::{NotaryCommand, NotaryResponse},
-    Event,
 };
 
 <span class="kw">mod </span>error;
@@ -144,12 +163,33 @@
     evaluation_sx: SenderEnd&lt;EvaluatorMessage, EvaluatorResponse&gt;,
     validation_sx: SenderEnd&lt;NotaryCommand, NotaryResponse&gt;,
     event_sx: SenderEnd&lt;EventCommand, EventResponse&gt;,
-    approval_sx: SenderEnd&lt;ApprovalMessages, <span class="prelude-ty">Result</span>&lt;(), ApprovalErrorResponse&gt;&gt;,
+    approval_sx: SenderEnd&lt;ApprovalMessages, ApprovalResponses&gt;,
     shutdown_sender: tokio::sync::broadcast::Sender&lt;()&gt;,
     shutdown_receiver: tokio::sync::broadcast::Receiver&lt;()&gt;,
 }
 
 <span class="kw">impl </span>ProtocolManager {
+    <span class="kw">pub fn </span>new(
+        input: MpscChannel&lt;Message&lt;TapleMessages&gt;, ()&gt;,
+        distribution_sx: SenderEnd&lt;DistributionMessagesNew, <span class="prelude-ty">Result</span>&lt;(), DistributionErrorResponses&gt;&gt;,
+        evaluation_sx: SenderEnd&lt;EvaluatorMessage, EvaluatorResponse&gt;,
+        validation_sx: SenderEnd&lt;NotaryCommand, NotaryResponse&gt;,
+        event_sx: SenderEnd&lt;EventCommand, EventResponse&gt;,
+        approval_sx: SenderEnd&lt;ApprovalMessages, ApprovalResponses&gt;,
+        shutdown_sender: tokio::sync::broadcast::Sender&lt;()&gt;,
+    ) -&gt; <span class="self">Self </span>{
+        <span class="self">Self </span>{
+            input,
+            distribution_sx,
+            evaluation_sx,
+            validation_sx,
+            event_sx,
+            approval_sx,
+            shutdown_receiver: shutdown_sender.subscribe(),
+            shutdown_sender,
+        }
+    }
+
     <span class="kw">pub async fn </span>start(<span class="kw-2">mut </span><span class="self">self</span>) {
         <span class="kw">loop </span>{
             <span class="macro">tokio::select! </span>{

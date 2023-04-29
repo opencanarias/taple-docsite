@@ -236,6 +236,33 @@
 <a href="#236" id="236">236</a>
 <a href="#237" id="237">237</a>
 <a href="#238" id="238">238</a>
+<a href="#239" id="239">239</a>
+<a href="#240" id="240">240</a>
+<a href="#241" id="241">241</a>
+<a href="#242" id="242">242</a>
+<a href="#243" id="243">243</a>
+<a href="#244" id="244">244</a>
+<a href="#245" id="245">245</a>
+<a href="#246" id="246">246</a>
+<a href="#247" id="247">247</a>
+<a href="#248" id="248">248</a>
+<a href="#249" id="249">249</a>
+<a href="#250" id="250">250</a>
+<a href="#251" id="251">251</a>
+<a href="#252" id="252">252</a>
+<a href="#253" id="253">253</a>
+<a href="#254" id="254">254</a>
+<a href="#255" id="255">255</a>
+<a href="#256" id="256">256</a>
+<a href="#257" id="257">257</a>
+<a href="#258" id="258">258</a>
+<a href="#259" id="259">259</a>
+<a href="#260" id="260">260</a>
+<a href="#261" id="261">261</a>
+<a href="#262" id="262">262</a>
+<a href="#263" id="263">263</a>
+<a href="#264" id="264">264</a>
+<a href="#265" id="265">265</a>
 </pre><pre class="rust"><code><span class="kw">use </span>async_trait::async_trait;
 
 <span class="kw">use crate</span>::{
@@ -245,7 +272,7 @@
         self_signature_manager::SelfSignatureManager,
     },
     database::DB,
-    governance::GovernanceAPI,
+    governance::{GovernanceAPI, GovernanceUpdatedMessage},
     identifier::DigestIdentifier,
     message::{MessageConfig, MessageTaskCommand},
     protocol::protocol_message_manager::TapleMessages,
@@ -259,16 +286,25 @@
     ApprovalMessages, ApprovalPetitionData, ApprovalResponses, EmitVote,
 };
 
-<span class="kw">struct </span>ApprovalManager&lt;D: DatabaseManager&gt; {
+<span class="kw">pub struct </span>ApprovalManager&lt;D: DatabaseManager&gt; {
     input_channel: MpscChannel&lt;ApprovalMessages, ApprovalResponses&gt;,
     shutdown_sender: tokio::sync::broadcast::Sender&lt;()&gt;,
     shutdown_receiver: tokio::sync::broadcast::Receiver&lt;()&gt;,
+    governance_update_channel: tokio::sync::broadcast::Receiver&lt;GovernanceUpdatedMessage&gt;,
     messenger_channel: SenderEnd&lt;MessageTaskCommand&lt;TapleMessages&gt;, ()&gt;,
     inner_manager: InnerApprovalManager&lt;GovernanceAPI, D, RequestNotifier&gt;,
 }
 
 <span class="kw">pub struct </span>ApprovalAPI {
     input_channel: SenderEnd&lt;ApprovalMessages, ApprovalResponses&gt;,
+}
+
+<span class="kw">impl </span>ApprovalAPI {
+    <span class="kw">pub fn </span>new(input_channel: SenderEnd&lt;ApprovalMessages, ApprovalResponses&gt;) -&gt; <span class="self">Self </span>{
+        <span class="self">Self </span>{
+            input_channel
+        }
+    }
 }
 
 <span class="attr">#[async_trait]
@@ -347,6 +383,7 @@
         shutdown_sender: tokio::sync::broadcast::Sender&lt;()&gt;,
         shutdown_receiver: tokio::sync::broadcast::Receiver&lt;()&gt;,
         messenger_channel: SenderEnd&lt;MessageTaskCommand&lt;TapleMessages&gt;, ()&gt;,
+        governance_update_channel: tokio::sync::broadcast::Receiver&lt;GovernanceUpdatedMessage&gt;,
         signature_manager: SelfSignatureManager,
         notification_sender: tokio::sync::broadcast::Sender&lt;Notification&gt;,
         settings: TapleSettings,
@@ -358,6 +395,7 @@
             shutdown_sender,
             shutdown_receiver,
             messenger_channel,
+            governance_update_channel,
             inner_manager: InnerApprovalManager::new(
                 gov_api,
                 database,
@@ -381,11 +419,27 @@
                         }
                         <span class="prelude-val">None </span>=&gt; {
                             <span class="self">self</span>.shutdown_sender.send(()).expect(<span class="string">&quot;Channel Closed&quot;</span>);
+                            <span class="kw">break</span>;
                         },
                     }
                 },
                 <span class="kw">_ </span>= <span class="self">self</span>.shutdown_receiver.recv() =&gt; {
                     <span class="kw">break</span>;
+                },
+                update = <span class="self">self</span>.governance_update_channel.recv() =&gt; {
+                    <span class="kw">match </span>update {
+                        <span class="prelude-val">Ok</span>(data) =&gt; {
+                            <span class="kw">match </span>data {
+                                GovernanceUpdatedMessage::GovernanceUpdated { governance_id, governance_version } =&gt; {
+                                    <span class="self">self</span>.inner_manager.new_governance_version(<span class="kw-2">&amp;</span>governance_id, governance_version);
+                                }
+                            }
+                        },
+                        <span class="prelude-val">Err</span>(<span class="kw">_</span>) =&gt; {
+                            <span class="self">self</span>.shutdown_sender.send(()).expect(<span class="string">&quot;Channel Closed&quot;</span>);
+                            <span class="kw">break</span>;
+                        }
+                    }
                 }
             }
         }

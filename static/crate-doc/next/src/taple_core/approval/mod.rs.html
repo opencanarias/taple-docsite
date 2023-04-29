@@ -59,6 +59,7 @@
 <a href="#59" id="59">59</a>
 <a href="#60" id="60">60</a>
 <a href="#61" id="61">61</a>
+<a href="#62" id="62">62</a>
 </pre><pre class="rust"><code><span class="kw">use </span>serde::{Deserialize, Serialize};
 
 <span class="kw">use crate</span>::{
@@ -82,7 +83,8 @@
     GetSingleRequest(DigestIdentifier),
 }
 
-<span class="kw">pub enum </span>ApprovalResponses {
+<span class="attr">#[derive(Clone, Debug)]
+</span><span class="kw">pub enum </span>ApprovalResponses {
     RequestApproval(<span class="prelude-ty">Result</span>&lt;(), ApprovalErrorResponse&gt;),
     EmitVote(<span class="prelude-ty">Result</span>&lt;(), ApprovalErrorResponse&gt;),
     GetAllRequest(Vec&lt;ApprovalPetitionData&gt;),

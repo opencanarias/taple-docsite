@@ -56,12 +56,16 @@
 <a href="#56" id="56">56</a>
 <a href="#57" id="57">57</a>
 <a href="#58" id="58">58</a>
+<a href="#59" id="59">59</a>
+<a href="#60" id="60">60</a>
 </pre><pre class="rust"><code><span class="kw">use </span>futures::StreamExt;
 <span class="kw">use </span>rmp_serde::Deserializer;
 <span class="kw">use </span>serde::{de::DeserializeOwned, Deserialize, Serialize};
 <span class="kw">use </span>std::io::Cursor;
 <span class="kw">use </span>tokio::sync::mpsc::{<span class="self">self</span>};
 <span class="kw">use </span>tokio_stream::wrappers::ReceiverStream;
+
+<span class="kw">use </span><span class="kw">crate</span>::commons::channel::SenderEnd;
 
 <span class="kw">use super</span>::{Message, TaskCommandContent};
 
@@ -75,14 +79,14 @@
     </span>T: TaskCommandContent + Serialize + DeserializeOwned,
 {
     receiver: ReceiverStream&lt;NetworkEvent&gt;,
-    sender: mpsc::Sender&lt;Message&lt;T&gt;&gt;,
+    sender: SenderEnd&lt;Message&lt;T&gt;, ()&gt;,
     shutdown_receiver: tokio::sync::broadcast::Receiver&lt;()&gt;,
 }
 
 <span class="kw">impl</span>&lt;T: TaskCommandContent + Serialize + DeserializeOwned + <span class="lifetime">&#39;static</span>&gt; MessageReceiver&lt;T&gt; {
     <span class="kw">pub fn </span>new(
         receiver: mpsc::Receiver&lt;NetworkEvent&gt;,
-        sender: mpsc::Sender&lt;Message&lt;T&gt;&gt;,
+        sender: SenderEnd&lt;Message&lt;T&gt;, ()&gt;,
         shutdown_receiver: tokio::sync::broadcast::Receiver&lt;()&gt;,
     ) -&gt; <span class="self">Self </span>{
         <span class="kw">let </span>receiver = ReceiverStream::new(receiver);
@@ -103,7 +107,7 @@
                         </span><span class="kw">let </span>cur = Cursor::new(message);
                         <span class="kw">let </span><span class="kw-2">mut </span>de = Deserializer::new(cur);
                         <span class="kw">let </span>message: Message&lt;T&gt; = Deserialize::deserialize(<span class="kw-2">&amp;mut </span>de).expect(<span class="string">&quot;Fallo de deserialización&quot;</span>);
-                        <span class="self">self</span>.sender.send(message).<span class="kw">await</span>.expect(<span class="string">&quot;Channel Error&quot;</span>);
+                        <span class="self">self</span>.sender.tell(message).<span class="kw">await</span>.expect(<span class="string">&quot;Channel Error&quot;</span>);
                     },
                     <span class="prelude-val">None </span>=&gt; {}
                 },

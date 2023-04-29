@@ -951,6 +951,11 @@
 <a href="#951" id="951">951</a>
 <a href="#952" id="952">952</a>
 <a href="#953" id="953">953</a>
+<a href="#954" id="954">954</a>
+<a href="#955" id="955">955</a>
+<a href="#956" id="956">956</a>
+<a href="#957" id="957">957</a>
+<a href="#958" id="958">958</a>
 </pre><pre class="rust"><code><span class="kw">use </span>std::collections::{HashMap, HashSet};
 
 <span class="kw">use </span>json_patch::{patch, Patch};
@@ -983,7 +988,7 @@
         approval::create_approval_request, evaluator::create_evaluator_request,
         validation::create_validator_request,
     },
-    Event, Notification, TimeStamp,
+    Event, EventRequestType, Notification, TimeStamp,
 };
 <span class="kw">use </span>std::hash::Hash;
 
@@ -1177,6 +1182,11 @@
                 <span class="kw">for </span>subject_id <span class="kw">in </span>subjects_affected.iter() {
                     <span class="kw">match </span><span class="self">self</span>.database.get_request(subject_id) {
                         <span class="prelude-val">Ok</span>(event_request) =&gt; {
+                            <span class="kw">let </span>EventRequestType::State(state_request) = <span class="kw-2">&amp;</span>event_request.request <span class="kw">else </span>{
+                                <span class="kw">return </span><span class="prelude-val">Err</span>(EventError::GenesisInGovUpdate)
+                            };
+                            <span class="kw">let </span>subject_id = state_request.subject_id.clone();
+                            <span class="self">self</span>.subjects_completing_event.remove(<span class="kw-2">&amp;</span>subject_id);
                             <span class="self">self</span>.new_event(event_request).<span class="kw">await</span><span class="question-mark">?</span>;
                         }
                         <span class="prelude-val">Err</span>(error) =&gt; <span class="kw">match </span>error {
