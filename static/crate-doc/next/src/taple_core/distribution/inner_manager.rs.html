@@ -310,6 +310,7 @@
 <a href="#310" id="310">310</a>
 <a href="#311" id="311">311</a>
 <a href="#312" id="312">312</a>
+<a href="#313" id="313">313</a>
 </pre><pre class="rust"><code><span class="kw">use </span>std::collections::HashSet;
 
 <span class="kw">use </span><span class="kw">crate</span>::commons::channel::SenderEnd;
@@ -381,7 +382,7 @@
             .del_witness_signatures(<span class="kw-2">&amp;</span>msg.subject_id)
             .map_err(|<span class="kw">_</span>| DistributionManagerError::SignGenerarionFailed)<span class="question-mark">?</span>;
         <span class="self">self</span>.db
-            .set_signatures(<span class="kw-2">&amp;</span>msg.subject_id, msg.sn, HashSet::from_iter(<span class="macro">vec!</span>[signature]))
+            .set_witness_signatures(<span class="kw-2">&amp;</span>msg.subject_id, msg.sn, HashSet::from_iter(<span class="macro">vec!</span>[signature]))
             .map_err(|error| DistributionManagerError::DatabaseError(error.to_string()))<span class="question-mark">?</span>;
         <span class="kw">let </span>subject = <span class="self">self
             </span>.db
@@ -396,11 +397,10 @@
         </span><span class="kw">let </span>metadata = build_metadata(<span class="kw-2">&amp;</span>subject, governance_version);
         <span class="kw">let </span><span class="kw-2">mut </span>targets = <span class="self">self</span>.get_targets(metadata).<span class="kw">await</span><span class="question-mark">?</span>;
         targets.remove(<span class="kw-2">&amp;</span><span class="self">self</span>.signature_manager.get_own_identifier());
-        <span class="self">self</span>.send_signature_request(<span class="kw-2">&amp;</span>subject.subject_id, msg.sn, targets.clone(), <span class="kw-2">&amp;</span>targets)
-            .<span class="kw">await</span><span class="question-mark">?</span>;
-        <span class="self">self</span>.db
-            .del_witness_signatures(<span class="kw-2">&amp;</span>msg.subject_id)
-            .map_err(|error| DistributionManagerError::DatabaseError(error.to_string()))<span class="question-mark">?</span>;
+        <span class="kw">if </span>!targets.is_empty() {
+            <span class="self">self</span>.send_signature_request(<span class="kw-2">&amp;</span>subject.subject_id, msg.sn, targets.clone(), <span class="kw-2">&amp;</span>targets)
+                .<span class="kw">await</span><span class="question-mark">?</span>;
+        }
         <span class="prelude-val">Ok</span>(<span class="prelude-val">Ok</span>(()))
     }
 
@@ -488,6 +488,7 @@
                 } <span class="kw">else if </span>msg.sn &gt; sn {
                     <span class="comment">// No veo necesario un mensaje para el caso de MSG.SN = SN + 1
                     </span><span class="kw">let </span>request = request_lce(
+                        <span class="self">self</span>.signature_manager.get_own_identifier(),
                         msg.subject_id.clone(),
                     );
                     <span class="self">self</span>.messenger_channel
@@ -504,6 +505,7 @@
             <span class="prelude-val">Err</span>(DbError::EntryNotFound) =&gt; {
                 <span class="comment">// El sujeto no tiene firmas de testificación.
                 </span><span class="kw">let </span>request = request_lce(
+                    <span class="self">self</span>.signature_manager.get_own_identifier(),
                     msg.subject_id.clone(),
                 );
                 <span class="self">self</span>.messenger_channel

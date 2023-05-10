@@ -224,6 +224,9 @@
 <a href="#224" id="224">224</a>
 <a href="#225" id="225">225</a>
 <a href="#226" id="226">226</a>
+<a href="#227" id="227">227</a>
+<a href="#228" id="228">228</a>
+<a href="#229" id="229">229</a>
 </pre><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::database::Error <span class="kw">as </span>DbError;
 <span class="kw">use </span><span class="kw">crate</span>::evaluator::errors::CompilerError;
 <span class="kw">use </span><span class="kw">crate</span>::governance::GovernanceInterface;
@@ -261,7 +264,6 @@
         // Si no existe, lo compila y lo guarda
         </span><span class="kw">match </span><span class="self">self</span>.database.get_governance_contract() {
             <span class="prelude-val">Ok</span>(<span class="kw">_</span>) =&gt; <span class="kw">return </span><span class="prelude-val">Ok</span>(()),
-            <span class="prelude-val">Err</span>(error) =&gt; <span class="kw">return </span><span class="prelude-val">Err</span>(CompilerError::DatabaseError(error.to_string())),
             <span class="prelude-val">Err</span>(DbError::EntryNotFound) =&gt; {
                 <span class="self">self</span>.compile(
                     <span class="kw">super</span>::gov_contract::get_gov_contract(),
@@ -269,7 +271,7 @@
                     <span class="string">&quot;governance&quot;</span>,
                 )
                 .<span class="kw">await
-                </span>.map_err(|e| CompilerError::InitError(e.to_string()));
+                </span>.map_err(|e| CompilerError::InitError(e.to_string()))<span class="question-mark">?</span>;
                 <span class="kw">let </span>compiled_contract = <span class="self">self
                     </span>.add_contract(<span class="string">&quot;taple&quot;</span>, <span class="string">&quot;governance&quot;</span>)
                     .<span class="kw">await
@@ -277,7 +279,8 @@
                 <span class="self">self</span>.database
                     .put_governance_contract(compiled_contract)
                     .map_err(|error| CompilerError::DatabaseError(error.to_string()))<span class="question-mark">?</span>;
-            }
+            },
+            <span class="prelude-val">Err</span>(error) =&gt; <span class="kw">return </span><span class="prelude-val">Err</span>(CompilerError::DatabaseError(error.to_string())),
         }
         <span class="prelude-val">Ok</span>(())
     }
@@ -294,6 +297,7 @@
             .get_contracts(governance_id.clone())
             .<span class="kw">await
             </span>.map_err(CompilerErrorResponses::GovernanceError)<span class="question-mark">?</span>;
+        <span class="macro">log::info!</span>(<span class="string">&quot;UPDATE CONTRACTS - CONTRACTS ARRAY LENGTH: {}&quot;</span>, contracts.len());
         <span class="kw">for </span>contract_info <span class="kw">in </span>contracts {
             <span class="kw">let </span>contract_data = <span class="kw">match </span><span class="self">self
                 </span>.database
@@ -375,6 +379,7 @@
             .output()
             <span class="comment">// No muestra stdout. Genera proceso hijo y espera
             </span>.map_err(|<span class="kw">_</span>| CompilerErrorResponses::CargoExecError)<span class="question-mark">?</span>;
+        <span class="macro">println!</span>(<span class="string">&quot;status {:?}&quot;</span>, status);
         <span class="kw">if </span>!status.status.success() {
             <span class="kw">return </span><span class="prelude-val">Err</span>(CompilerErrorResponses::CargoExecError);
         }
@@ -446,6 +451,7 @@
             <span class="string">&quot;write_byte&quot;</span>.to_owned(),
             <span class="string">&quot;pointer_len&quot;</span>.to_owned(),
             <span class="string">&quot;read_byte&quot;</span>.to_owned(),
+            <span class="string">&quot;cout&quot;</span>.to_owned(),
         ]
         .into_iter(),
     )

@@ -736,14 +736,14 @@
         };
         <span class="comment">// TODO: Pasar que tipo de esquema criptográfico se quiere usar por parametros
         </span><span class="kw">let </span>keys = KeyPair::Ed25519(Ed25519KeyPair::new());
+        <span class="kw">let </span>public_key = KeyIdentifier::new(keys.get_key_derivator(), <span class="kw-2">&amp;</span>keys.public_key_bytes());
         <span class="kw">let </span>subject_id = <span class="kw">match </span>DigestIdentifier::from_serializable_borsh((
             <span class="kw-2">&amp;</span>event_request.signature.content.event_content_hash,
-            <span class="kw-2">&amp;</span>keys.public_key_bytes(),
+            <span class="kw-2">&amp;</span>public_key.public_key,
         )) {
             <span class="prelude-val">Ok</span>(subject_id) =&gt; subject_id,
             <span class="prelude-val">Err</span>(<span class="kw">_</span>) =&gt; <span class="kw">return </span><span class="prelude-val">Err</span>(SubjectError::ErrorCreatingSubjectId),
         };
-        <span class="kw">let </span>public_key = KeyIdentifier::new(keys.get_key_derivator(), <span class="kw-2">&amp;</span>keys.public_key_bytes());
         <span class="prelude-val">Ok</span>(Subject {
             keys: <span class="prelude-val">Some</span>(keys),
             subject_id,
@@ -771,7 +771,7 @@
                 .signature
                 .content
                 .event_content_hash,
-            <span class="kw-2">&amp;</span>event.signature.content.signer,
+            <span class="kw-2">&amp;</span>event.signature.content.signer.public_key,
         )) {
             <span class="prelude-val">Ok</span>(subject_id) =&gt; subject_id,
             <span class="prelude-val">Err</span>(<span class="kw">_</span>) =&gt; <span class="kw">return </span><span class="prelude-val">Err</span>(SubjectError::ErrorCreatingSubjectId),

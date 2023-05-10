@@ -303,15 +303,44 @@
 <a href="#303" id="303">303</a>
 <a href="#304" id="304">304</a>
 <a href="#305" id="305">305</a>
+<a href="#306" id="306">306</a>
+<a href="#307" id="307">307</a>
+<a href="#308" id="308">308</a>
+<a href="#309" id="309">309</a>
+<a href="#310" id="310">310</a>
+<a href="#311" id="311">311</a>
+<a href="#312" id="312">312</a>
+<a href="#313" id="313">313</a>
+<a href="#314" id="314">314</a>
+<a href="#315" id="315">315</a>
+<a href="#316" id="316">316</a>
+<a href="#317" id="317">317</a>
+<a href="#318" id="318">318</a>
+<a href="#319" id="319">319</a>
+<a href="#320" id="320">320</a>
+<a href="#321" id="321">321</a>
+<a href="#322" id="322">322</a>
+<a href="#323" id="323">323</a>
+<a href="#324" id="324">324</a>
+<a href="#325" id="325">325</a>
+<a href="#326" id="326">326</a>
+<a href="#327" id="327">327</a>
+<a href="#328" id="328">328</a>
+<a href="#329" id="329">329</a>
+<a href="#330" id="330">330</a>
 </pre><pre class="rust"><code><span class="kw">use </span>std::collections::HashMap;
 
 <span class="kw">use crate</span>::{
     commons::{
+        channel::SenderEnd,
         errors::ChannelErrors,
         self_signature_manager::{SelfSignatureInterface, SelfSignatureManager},
     },
+    event::EventCommand,
     governance::{GovernanceAPI, GovernanceInterface},
     identifier::DigestIdentifier,
+    message::{MessageConfig, MessageTaskCommand},
+    protocol::protocol_message_manager::TapleMessages,
 };
 
 <span class="kw">use super</span>::{errors::NotaryError, NotaryEvent, NotaryEventResponse};
@@ -322,6 +351,7 @@
     database: DB&lt;D&gt;,
     cache_gov_ver: HashMap&lt;DigestIdentifier, u32&gt;,
     signature_manager: SelfSignatureManager,
+    message_channel: SenderEnd&lt;MessageTaskCommand&lt;TapleMessages&gt;, ()&gt;,
 }
 
 <span class="kw">impl</span>&lt;D: DatabaseManager&gt; Notary&lt;D&gt; {
@@ -329,12 +359,14 @@
         gov_api: GovernanceAPI,
         database: DB&lt;D&gt;,
         signature_manager: SelfSignatureManager,
+        message_channel: SenderEnd&lt;MessageTaskCommand&lt;TapleMessages&gt;, ()&gt;,
     ) -&gt; <span class="self">Self </span>{
         <span class="self">Self </span>{
             gov_api,
             database,
             cache_gov_ver: HashMap::new(),
             signature_manager,
+            message_channel,
         }
     }
 
@@ -391,20 +423,38 @@
             )
             .map_err(|<span class="kw">_</span>| NotaryError::DatabaseError)<span class="question-mark">?</span>;
         <span class="comment">// Now we sign and send
-        </span><span class="kw">let </span>hash = DigestIdentifier::from_serializable_borsh((
-            notary_event.gov_id,
-            notary_event.subject_id,
-            notary_event.owner,
-            notary_event.event_hash,
-            notary_event.sn,
-            notary_event.gov_version,
-        ))
-        .map_err(|<span class="kw">_</span>| NotaryError::SerializingError)<span class="question-mark">?</span>;
-        <span class="kw">let </span>notary_signature = <span class="self">self
+        // let hash = DigestIdentifier::from_serializable_borsh((
+        //     &amp;notary_event.gov_id,
+        //     &amp;notary_event.subject_id,
+        //     &amp;notary_event.owner,
+        //     &amp;notary_event.event_hash,
+        //     &amp;notary_event.sn,
+        //     &amp;notary_event.gov_version,
+        // ))
+        // .map_err(|_| NotaryError::SerializingError)?;
+        </span><span class="kw">let </span>notary_signature = <span class="self">self
             </span>.signature_manager
-            .sign(<span class="kw-2">&amp;</span>(hash, actual_gov_version))
+            .sign(<span class="kw-2">&amp;</span>(
+                <span class="kw-2">&amp;</span>notary_event.gov_id,
+                <span class="kw-2">&amp;</span>notary_event.subject_id,
+                <span class="kw-2">&amp;</span>notary_event.owner,
+                <span class="kw-2">&amp;</span>notary_event.event_hash,
+                <span class="kw-2">&amp;</span>notary_event.sn,
+                <span class="kw-2">&amp;</span>notary_event.gov_version,
+            ))
             .map_err(NotaryError::ProtocolErrors)<span class="question-mark">?</span>;
-        <span class="prelude-val">Ok</span>(NotaryEventResponse {
+        <span class="self">self</span>.message_channel
+            .tell(MessageTaskCommand::Request(
+                <span class="prelude-val">None</span>,
+                TapleMessages::EventMessage(EventCommand::ValidatorResponse {
+                    event_hash: notary_event.event_hash.clone(),
+                    signature: notary_signature.clone(),
+                }),
+                <span class="macro">vec!</span>[notary_event.owner],
+                MessageConfig::direct_response(),
+            ))
+            .<span class="kw">await</span><span class="question-mark">?</span>; <span class="comment">// TODO borrar clone
+        </span><span class="prelude-val">Ok</span>(NotaryEventResponse {
             notary_signature,
             gov_version_notary: actual_gov_version,
         })

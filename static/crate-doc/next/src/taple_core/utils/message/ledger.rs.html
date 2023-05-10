@@ -17,24 +17,38 @@
 <a href="#17" id="17">17</a>
 <a href="#18" id="18">18</a>
 <a href="#19" id="19">19</a>
+<a href="#20" id="20">20</a>
+<a href="#21" id="21">21</a>
+<a href="#22" id="22">22</a>
+<a href="#23" id="23">23</a>
+<a href="#24" id="24">24</a>
+<a href="#25" id="25">25</a>
+<a href="#26" id="26">26</a>
 </pre><pre class="rust"><code><span class="kw">use crate</span>::{
     distribution::{EventRequested, LceRequested, LedgerMessages},
     identifier::{DigestIdentifier, KeyIdentifier},
+    ledger::LedgerCommand,
 };
 
 <span class="kw">use </span><span class="kw">super</span>::approval::TapleMessages;
 
-<span class="kw">pub fn </span>request_lce(subject_id: DigestIdentifier) -&gt; TapleMessages {
-    TapleMessages::LedgerMessages(LedgerMessages::LceRequested(LceRequested {
+<span class="kw">pub fn </span>request_lce(who_asked: KeyIdentifier, subject_id: DigestIdentifier) -&gt; TapleMessages {
+    TapleMessages::LedgerMessages(LedgerCommand::GetLCE {
+        who_asked,
         subject_id,
-    }))
+    })
 }
 
-<span class="kw">pub fn </span>request_event(subject_id: DigestIdentifier, sn: u64) -&gt; TapleMessages {
-    TapleMessages::LedgerMessages(LedgerMessages::EventRequested(EventRequested {
+<span class="kw">pub fn </span>request_event(
+    who_asked: KeyIdentifier,
+    subject_id: DigestIdentifier,
+    sn: u64,
+) -&gt; TapleMessages {
+    TapleMessages::LedgerMessages(LedgerCommand::GetEvent {
+        who_asked,
         subject_id,
         sn,
-    }))
+    })
 }
 </code></pre></div>
 </section></main><div id="rustdoc-vars" data-root-path="../../../../" data-static-root-path="../../../../static.files/" data-current-crate="taple_core" data-themes="" data-resource-suffix="" data-rustdoc-version="1.69.0 (84c898d65 2023-04-16)" data-search-js="search-8a59a8356673ec1f.js" data-settings-js="settings-f0c5c39777a9a2f6.js" data-settings-css="settings-0bcba95ff279c1db.css" ></div></body></html>

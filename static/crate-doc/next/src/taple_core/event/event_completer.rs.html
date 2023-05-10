@@ -956,6 +956,18 @@
 <a href="#956" id="956">956</a>
 <a href="#957" id="957">957</a>
 <a href="#958" id="958">958</a>
+<a href="#959" id="959">959</a>
+<a href="#960" id="960">960</a>
+<a href="#961" id="961">961</a>
+<a href="#962" id="962">962</a>
+<a href="#963" id="963">963</a>
+<a href="#964" id="964">964</a>
+<a href="#965" id="965">965</a>
+<a href="#966" id="966">966</a>
+<a href="#967" id="967">967</a>
+<a href="#968" id="968">968</a>
+<a href="#969" id="969">969</a>
+<a href="#970" id="970">970</a>
 </pre><pre class="rust"><code><span class="kw">use </span>std::collections::{HashMap, HashSet};
 
 <span class="kw">use </span>json_patch::{patch, Patch};
@@ -1094,7 +1106,7 @@
                 <span class="prelude-val">Ok</span>(last_event) =&gt; {
                     <span class="kw">let </span>gov_version = <span class="self">self
                         </span>.gov_api
-                        .get_governance_version(subject.subject_id.clone())
+                        .get_governance_version(subject.governance_id.clone())
                         .<span class="kw">await</span><span class="question-mark">?</span>;
                     <span class="kw">let </span>metadata = Metadata {
                         namespace: subject.namespace.clone(),
@@ -1302,7 +1314,7 @@
                 </span>namespace: metadata.namespace.clone(),
                 governance_version,
             },
-            sn: subject.sn,
+            sn: subject.sn + <span class="number">1</span>,
             <span class="comment">// self.actual_sn.get(&amp;subject_id).unwrap().to_owned() + 1, // Must be Some, filled in init function
         </span>};
         <span class="kw">let </span>(signers, quorum_size) = <span class="self">self</span>.get_signers_and_quorum(metadata, stage.clone()).<span class="kw">await</span><span class="question-mark">?</span>;
@@ -1319,6 +1331,10 @@
                     <span class="string">&quot;Error calculating the hash of the event pre-evaluation&quot;</span>,
                 ))
             })<span class="question-mark">?</span>;
+        <span class="kw">let </span>er_hash = event_request.signature.content.event_content_hash.clone();
+        <span class="self">self</span>.database
+            .set_request(<span class="kw-2">&amp;</span>subject.subject_id, event_request)
+            .map_err(|error| EventError::DatabaseError(error.to_string()))<span class="question-mark">?</span>;
         <span class="self">self</span>.event_pre_evaluations
             .insert(event_preevaluation_hash, event_preevaluation);
         <span class="comment">// if let Some(sn) = self.actual_sn.get_mut(&amp;subject_id) {
@@ -1333,7 +1349,7 @@
             .entry(subject.governance_id)
             .or_insert_with(HashSet::new)
             .insert(subject_id);
-        <span class="prelude-val">Ok</span>(event_request.signature.content.event_content_hash)
+        <span class="prelude-val">Ok</span>(er_hash)
     }
 
     <span class="kw">pub async fn </span>evaluator_signatures(
@@ -1433,16 +1449,13 @@
                 })
                 .map(|signature| signature.signature.clone())
                 .collect();
-            <span class="kw">let </span>hash_prev_event = <span class="kw">if </span>subject.sn == <span class="number">0 </span>{
-                DigestIdentifier::default()
-            } <span class="kw">else </span>{
-                <span class="self">self</span>.database
-                    .get_event(<span class="kw-2">&amp;</span>subject.subject_id, subject.sn - <span class="number">1</span>)
-                    .map_err(|e| EventError::DatabaseError(e.to_string()))<span class="question-mark">?
-                    </span>.signature
-                    .content
-                    .event_content_hash
-            };
+            <span class="kw">let </span>hash_prev_event = <span class="self">self
+                </span>.database
+                .get_event(<span class="kw-2">&amp;</span>subject.subject_id, subject.sn)
+                .map_err(|e| EventError::DatabaseError(e.to_string()))<span class="question-mark">?
+                </span>.signature
+                .content
+                .event_content_hash;
             <span class="kw">let </span>proposal = Proposal::new(
                 preevaluation_event.event_request.clone(),
                 preevaluation_event.sn,
@@ -1504,7 +1517,7 @@
                 };
                 <span class="kw">let </span>gov_version = <span class="self">self
                     </span>.gov_api
-                    .get_governance_version(subject.subject_id.clone())
+                    .get_governance_version(subject.governance_id.clone())
                     .<span class="kw">await</span><span class="question-mark">?</span>;
                 <span class="kw">let </span>event = <span class="kw-2">&amp;</span><span class="self">self</span>.create_event_prevalidated(
                     event_proposal,
@@ -1651,7 +1664,7 @@
 
             <span class="kw">let </span>gov_version = <span class="self">self
                 </span>.gov_api
-                .get_governance_version(subject.subject_id.clone())
+                .get_governance_version(subject.governance_id.clone())
                 .<span class="kw">await</span><span class="question-mark">?</span>;
             <span class="kw">let </span>event =
                 <span class="kw-2">&amp;</span><span class="self">self</span>.create_event_prevalidated(event_proposal, approvals, <span class="kw-2">&amp;</span>subject, execution)<span class="question-mark">?</span>;
@@ -1674,12 +1687,13 @@
         }
     }
 
-    <span class="kw">pub async fn </span>validation_signatures(<span class="kw-2">&amp;mut </span><span class="self">self</span>, signature: Signature) -&gt; <span class="prelude-ty">Result</span>&lt;(), EventError&gt; {
+    <span class="kw">pub async fn </span>validation_signatures(
+        <span class="kw-2">&amp;mut </span><span class="self">self</span>,
+        event_hash: DigestIdentifier,
+        signature: Signature,
+    ) -&gt; <span class="prelude-ty">Result</span>&lt;(), EventError&gt; {
         <span class="comment">// Mirar en que estado está el evento, si está en notarización o no
-        </span><span class="kw">let </span>event = <span class="kw">match </span><span class="self">self
-            </span>.events_to_validate
-            .get(<span class="kw-2">&amp;</span>signature.content.event_content_hash)
-        {
+        </span><span class="kw">let </span>event = <span class="kw">match </span><span class="self">self</span>.events_to_validate.get(<span class="kw-2">&amp;</span>event_hash) {
             <span class="prelude-val">Some</span>(event) =&gt; event,
             <span class="prelude-val">None </span>=&gt; {
                 <span class="kw">return </span><span class="prelude-val">Err</span>(EventError::CryptoError(String::from(
@@ -1705,17 +1719,27 @@
                 <span class="string">&quot;The signer is not in the list of approvers&quot;</span>,
             )));
         }
-        <span class="comment">// Comprobar que todo es correcto criptográficamente
-        </span><span class="kw">let </span>event_hash = check_cryptography(<span class="kw-2">&amp;</span>event.content, <span class="kw-2">&amp;</span>signature)
-            .map_err(|error| EventError::CryptoError(error.to_string()))<span class="question-mark">?</span>;
         <span class="comment">// Obtener sujeto para saber si lo tenemos y los metadatos del mismo
-        </span><span class="kw">let </span>_subject = <span class="self">self
+        </span><span class="kw">let </span>subject = <span class="self">self
             </span>.database
             .get_subject(<span class="kw-2">&amp;</span>subject_id)
             .map_err(|error| <span class="kw">match </span>error {
                 <span class="kw">crate</span>::DbError::EntryNotFound =&gt; EventError::SubjectNotFound(subject_id.to_str()),
                 <span class="kw">_ </span>=&gt; EventError::DatabaseError(error.to_string()),
             })<span class="question-mark">?</span>;
+        <span class="comment">// Comprobar que todo es correcto criptográficamente
+        </span><span class="kw">let </span>event_hash = check_cryptography(
+            (
+                <span class="kw-2">&amp;</span>subject.governance_id,
+                <span class="kw-2">&amp;</span>subject.subject_id,
+                <span class="kw-2">&amp;</span>subject.owner,
+                <span class="kw-2">&amp;</span>event.signature.content.event_content_hash,
+                <span class="kw-2">&amp;</span>event.content.event_proposal.proposal.sn,
+                <span class="kw-2">&amp;</span>event.content.event_proposal.proposal.gov_version,
+            ),
+            <span class="kw-2">&amp;</span>signature,
+        )
+        .map_err(|error| EventError::CryptoError(error.to_string()))<span class="question-mark">?</span>;
         <span class="comment">// Guardar validación
         </span><span class="kw">let </span>validation_set = <span class="kw">match </span><span class="self">self</span>.event_validations.get_mut(<span class="kw-2">&amp;</span>event_hash) {
             <span class="prelude-val">Some</span>(validation_set) =&gt; {

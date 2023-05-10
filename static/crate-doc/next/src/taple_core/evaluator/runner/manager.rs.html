@@ -115,7 +115,44 @@
 <a href="#115" id="115">115</a>
 <a href="#116" id="116">116</a>
 <a href="#117" id="117">117</a>
+<a href="#118" id="118">118</a>
+<a href="#119" id="119">119</a>
+<a href="#120" id="120">120</a>
+<a href="#121" id="121">121</a>
+<a href="#122" id="122">122</a>
+<a href="#123" id="123">123</a>
+<a href="#124" id="124">124</a>
+<a href="#125" id="125">125</a>
+<a href="#126" id="126">126</a>
+<a href="#127" id="127">127</a>
+<a href="#128" id="128">128</a>
+<a href="#129" id="129">129</a>
+<a href="#130" id="130">130</a>
+<a href="#131" id="131">131</a>
+<a href="#132" id="132">132</a>
+<a href="#133" id="133">133</a>
+<a href="#134" id="134">134</a>
+<a href="#135" id="135">135</a>
+<a href="#136" id="136">136</a>
+<a href="#137" id="137">137</a>
+<a href="#138" id="138">138</a>
+<a href="#139" id="139">139</a>
+<a href="#140" id="140">140</a>
+<a href="#141" id="141">141</a>
+<a href="#142" id="142">142</a>
+<a href="#143" id="143">143</a>
+<a href="#144" id="144">144</a>
+<a href="#145" id="145">145</a>
+<a href="#146" id="146">146</a>
+<a href="#147" id="147">147</a>
+<a href="#148" id="148">148</a>
+<a href="#149" id="149">149</a>
+<a href="#150" id="150">150</a>
+<a href="#151" id="151">151</a>
+<a href="#152" id="152">152</a>
+<a href="#153" id="153">153</a>
 </pre><pre class="rust"><code><span class="kw">use </span>json_patch::diff;
+<span class="kw">use </span>serde_json::Value;
 <span class="kw">use </span>wasmtime::Engine;
 
 <span class="kw">use crate</span>::{
@@ -156,32 +193,62 @@
         state_data: <span class="kw-2">&amp;</span>StateRequest,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;ExecuteContractResponse, ExecutorErrorResponses&gt; {
         <span class="kw">let </span>context_hash = <span class="self">Self</span>::generate_context_hash(execute_contract)<span class="question-mark">?</span>;
-        <span class="kw">let </span>(contract, governance_version) = <span class="kw">match </span><span class="self">self</span>.database.get_contract(
-            <span class="kw-2">&amp;</span>execute_contract.context.governance_id,
-            <span class="kw-2">&amp;</span>execute_contract.context.schema_id,
-        ) {
-            <span class="prelude-val">Ok</span>((contract, <span class="kw">_</span>, governance_version)) =&gt; (contract, governance_version),
-            <span class="prelude-val">Err</span>(DbError::EntryNotFound) =&gt; {
-                <span class="kw">let </span>governance_version = <span class="kw">match </span><span class="self">self
-                    </span>.database
-                    .get_subject(<span class="kw-2">&amp;</span>execute_contract.context.governance_id)
-                {
-                    <span class="prelude-val">Ok</span>(governance) =&gt; governance.sn,
-                    <span class="prelude-val">Err</span>(DbError::EntryNotFound) =&gt; <span class="number">0</span>,
-                    <span class="prelude-val">Err</span>(error) =&gt; {
-                        <span class="kw">return </span><span class="prelude-val">Err</span>(ExecutorErrorResponses::DatabaseError(error.to_string()))
-                    }
-                };
-                <span class="kw">return </span><span class="prelude-val">Ok</span>(ExecuteContractResponse {
-                    json_patch: String::from(<span class="string">&quot;&quot;</span>),
-                    hash_new_state: DigestIdentifier::default(),
-                    governance_version,
-                    context_hash,
-                    success: Acceptance::Ko,
-                    approval_required: <span class="bool-val">false</span>,
-                });
+        <span class="kw">let </span>(contract, governance_version) = <span class="kw">if </span>execute_contract.context.schema_id == <span class="string">&quot;governance&quot;
+            </span>&amp;&amp; execute_contract.context.governance_id.digest.is_empty()
+        {
+            <span class="kw">match </span><span class="self">self</span>.database.get_governance_contract() {
+                <span class="comment">// TODO: Gestionar versión gobernanza
+                </span><span class="prelude-val">Ok</span>(contract) =&gt; (contract, execute_contract.context.governance_version),
+                <span class="prelude-val">Err</span>(DbError::EntryNotFound) =&gt; {
+                    <span class="kw">let </span>governance_version = <span class="kw">match </span><span class="self">self
+                        </span>.database
+                        .get_subject(<span class="kw-2">&amp;</span>execute_contract.context.governance_id)
+                    {
+                        <span class="prelude-val">Ok</span>(governance) =&gt; governance.sn,
+                        <span class="prelude-val">Err</span>(DbError::EntryNotFound) =&gt; <span class="number">0</span>,
+                        <span class="prelude-val">Err</span>(error) =&gt; {
+                            <span class="kw">return </span><span class="prelude-val">Err</span>(ExecutorErrorResponses::DatabaseError(error.to_string()))
+                        }
+                    };
+                    <span class="kw">return </span><span class="prelude-val">Ok</span>(ExecuteContractResponse {
+                        json_patch: String::from(<span class="string">&quot;&quot;</span>),
+                        hash_new_state: DigestIdentifier::default(),
+                        governance_version,
+                        context_hash,
+                        success: Acceptance::Ko,
+                        approval_required: <span class="bool-val">false</span>,
+                    });
+                }
+                <span class="prelude-val">Err</span>(error) =&gt; <span class="kw">return </span><span class="prelude-val">Err</span>(ExecutorErrorResponses::DatabaseError(error.to_string())),
             }
-            <span class="prelude-val">Err</span>(error) =&gt; <span class="kw">return </span><span class="prelude-val">Err</span>(ExecutorErrorResponses::DatabaseError(error.to_string())),
+        } <span class="kw">else </span>{
+            <span class="kw">match </span><span class="self">self</span>.database.get_contract(
+                <span class="kw-2">&amp;</span>execute_contract.context.governance_id,
+                <span class="kw-2">&amp;</span>execute_contract.context.schema_id,
+            ) {
+                <span class="prelude-val">Ok</span>((contract, <span class="kw">_</span>, governance_version)) =&gt; (contract, governance_version),
+                <span class="prelude-val">Err</span>(DbError::EntryNotFound) =&gt; {
+                    <span class="kw">let </span>governance_version = <span class="kw">match </span><span class="self">self
+                        </span>.database
+                        .get_subject(<span class="kw-2">&amp;</span>execute_contract.context.governance_id)
+                    {
+                        <span class="prelude-val">Ok</span>(governance) =&gt; governance.sn,
+                        <span class="prelude-val">Err</span>(DbError::EntryNotFound) =&gt; <span class="number">0</span>,
+                        <span class="prelude-val">Err</span>(error) =&gt; {
+                            <span class="kw">return </span><span class="prelude-val">Err</span>(ExecutorErrorResponses::DatabaseError(error.to_string()))
+                        }
+                    };
+                    <span class="kw">return </span><span class="prelude-val">Ok</span>(ExecuteContractResponse {
+                        json_patch: String::from(<span class="string">&quot;&quot;</span>),
+                        hash_new_state: DigestIdentifier::default(),
+                        governance_version,
+                        context_hash,
+                        success: Acceptance::Ko,
+                        approval_required: <span class="bool-val">false</span>,
+                    });
+                }
+                <span class="prelude-val">Err</span>(error) =&gt; <span class="kw">return </span><span class="prelude-val">Err</span>(ExecutorErrorResponses::DatabaseError(error.to_string())),
+            }
         };
         <span class="kw">let </span>previous_state = execute_contract.context.actual_state.clone();
         <span class="kw">let </span>contract_result = <span class="self">self
@@ -193,13 +260,18 @@
                 <span class="kw-2">&amp;</span>execute_contract.context,
                 governance_version,
                 contract,
-                <span class="kw-2">&amp;</span>state_data.subject_id
+                <span class="kw-2">&amp;</span>state_data.subject_id,
             )
             .<span class="kw">await</span><span class="question-mark">?</span>;
         <span class="kw">let </span>(patch, hash) = <span class="kw">match </span>contract_result.success {
             Acceptance::Ok =&gt; (
                 generate_json_patch(<span class="kw-2">&amp;</span>previous_state, <span class="kw-2">&amp;</span>contract_result.final_state)<span class="question-mark">?</span>,
-                generera_state_hash(<span class="kw-2">&amp;</span>contract_result.final_state)<span class="question-mark">?</span>,
+                DigestIdentifier::from_serializable_borsh(
+                    serde_json::from_str::&lt;Value&gt;(<span class="kw-2">&amp;</span>contract_result.final_state)
+                        .unwrap()
+                        .to_string(),
+                )
+                .map_err(|<span class="kw">_</span>| ExecutorErrorResponses::StateHashGenerationFailed)<span class="question-mark">?</span>,
             ),
             Acceptance::Ko =&gt; (String::from(<span class="string">&quot;&quot;</span>), DigestIdentifier::default()),
             Acceptance::Error =&gt; <span class="macro">unreachable!</span>(),
@@ -219,9 +291,9 @@
     prev_state: <span class="kw-2">&amp;</span>str,
     new_state: <span class="kw-2">&amp;</span>str,
 ) -&gt; <span class="prelude-ty">Result</span>&lt;String, ExecutorErrorResponses&gt; {
-    <span class="kw">let </span>prev_state = serde_json::to_value(prev_state)
+    <span class="kw">let </span>prev_state: Value = serde_json::from_str(prev_state)
         .map_err(|<span class="kw">_</span>| ExecutorErrorResponses::StateJSONDeserializationFailed)<span class="question-mark">?</span>;
-    <span class="kw">let </span>new_state = serde_json::to_value(new_state)
+    <span class="kw">let </span>new_state: Value = serde_json::from_str(new_state)
         .map_err(|<span class="kw">_</span>| ExecutorErrorResponses::StateJSONDeserializationFailed)<span class="question-mark">?</span>;
     <span class="kw">let </span>patch = diff(<span class="kw-2">&amp;</span>prev_state, <span class="kw-2">&amp;</span>new_state);
     <span class="prelude-val">Ok</span>(serde_json::to_string(<span class="kw-2">&amp;</span>patch)

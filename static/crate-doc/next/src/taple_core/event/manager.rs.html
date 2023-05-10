@@ -252,6 +252,9 @@
 <a href="#252" id="252">252</a>
 <a href="#253" id="253">253</a>
 <a href="#254" id="254">254</a>
+<a href="#255" id="255">255</a>
+<a href="#256" id="256">256</a>
+<a href="#257" id="257">257</a>
 </pre><pre class="rust"><code><span class="kw">use </span>async_trait::async_trait;
 
 <span class="kw">use super</span>::{errors::EventError, event_completer::EventCompleter, EventCommand, EventResponse};
@@ -341,7 +344,6 @@
         <span class="kw">match </span><span class="self">self</span>.event_completer.init().<span class="kw">await </span>{
             <span class="prelude-val">Ok</span>(<span class="kw">_</span>) =&gt; {}
             <span class="prelude-val">Err</span>(error) =&gt; {
-                <span class="macro">log::error!</span>(<span class="string">&quot;Problemas con Init de Event Manager: {:?}&quot;</span>, error);
                 <span class="self">self</span>.shutdown_sender.send(()).expect(<span class="string">&quot;Channel Closed&quot;</span>);
                 <span class="kw">return</span>;
             }
@@ -450,7 +452,9 @@
                                 <span class="self">self</span>.shutdown_sender.send(()).expect(<span class="string">&quot;Channel Closed&quot;</span>);
                                 <span class="kw">return </span><span class="prelude-val">Err</span>(EventError::ChannelClosed);
                             }
-                            <span class="kw">_ </span>=&gt; {}
+                            <span class="kw">_ </span>=&gt; {
+                                <span class="macro">log::error!</span>(<span class="string">&quot;{:?}&quot;</span>, error);
+                            }
                         },
                         <span class="kw">_ </span>=&gt; {}
                     }
@@ -477,8 +481,8 @@
                     }
                     EventResponse::NoResponse
                 }
-                EventCommand::ValidatorResponse { signature } =&gt; {
-                    <span class="kw">match </span><span class="self">self</span>.event_completer.validation_signatures(signature).<span class="kw">await </span>{
+                EventCommand::ValidatorResponse { event_hash, signature } =&gt; {
+                    <span class="kw">match </span><span class="self">self</span>.event_completer.validation_signatures(event_hash, signature).<span class="kw">await </span>{
                         <span class="prelude-val">Err</span>(error) =&gt; <span class="kw">match </span>error {
                             EventError::ChannelClosed =&gt; {
                                 <span class="macro">log::error!</span>(<span class="string">&quot;Channel Closed&quot;</span>);
@@ -492,7 +496,9 @@
                                 <span class="self">self</span>.shutdown_sender.send(()).expect(<span class="string">&quot;Channel Closed&quot;</span>);
                                 <span class="kw">return </span><span class="prelude-val">Err</span>(EventError::ChannelClosed);
                             }
-                            <span class="kw">_ </span>=&gt; {}
+                            <span class="kw">_ </span>=&gt; {
+                                <span class="macro">log::error!</span>(<span class="string">&quot;VALIDATION ERROR: {:?}&quot;</span>, error);
+                            }
                         },
                         <span class="kw">_ </span>=&gt; {}
                     }

@@ -261,8 +261,6 @@
 <a href="#261" id="261">261</a>
 <a href="#262" id="262">262</a>
 <a href="#263" id="263">263</a>
-<a href="#264" id="264">264</a>
-<a href="#265" id="265">265</a>
 </pre><pre class="rust"><code><span class="kw">use </span>async_trait::async_trait;
 
 <span class="kw">use crate</span>::{
@@ -301,9 +299,7 @@
 
 <span class="kw">impl </span>ApprovalAPI {
     <span class="kw">pub fn </span>new(input_channel: SenderEnd&lt;ApprovalMessages, ApprovalResponses&gt;) -&gt; <span class="self">Self </span>{
-        <span class="self">Self </span>{
-            input_channel
-        }
+        <span class="self">Self </span>{ input_channel }
     }
 }
 

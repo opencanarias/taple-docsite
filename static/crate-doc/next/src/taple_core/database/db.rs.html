@@ -757,7 +757,7 @@
 
     </span><span class="kw">pub fn </span>get_all_subjects(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Vec&lt;Subject&gt; {
         <span class="kw">let </span><span class="kw-2">mut </span>result = Vec::new();
-        <span class="kw">for </span>(<span class="kw">_</span>, subject) <span class="kw">in </span><span class="self">self</span>.subject_db.iter() {
+        <span class="kw">for </span>(a, subject) <span class="kw">in </span><span class="self">self</span>.subject_db.iter() {
             result.push(subject);
         }
         result

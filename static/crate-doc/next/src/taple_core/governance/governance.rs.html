@@ -414,6 +414,24 @@
 <a href="#414" id="414">414</a>
 <a href="#415" id="415">415</a>
 <a href="#416" id="416">416</a>
+<a href="#417" id="417">417</a>
+<a href="#418" id="418">418</a>
+<a href="#419" id="419">419</a>
+<a href="#420" id="420">420</a>
+<a href="#421" id="421">421</a>
+<a href="#422" id="422">422</a>
+<a href="#423" id="423">423</a>
+<a href="#424" id="424">424</a>
+<a href="#425" id="425">425</a>
+<a href="#426" id="426">426</a>
+<a href="#427" id="427">427</a>
+<a href="#428" id="428">428</a>
+<a href="#429" id="429">429</a>
+<a href="#430" id="430">430</a>
+<a href="#431" id="431">431</a>
+<a href="#432" id="432">432</a>
+<a href="#433" id="433">433</a>
+<a href="#434" id="434">434</a>
 </pre><pre class="rust"><code><span class="kw">use </span>std::collections::HashSet;
 
 <span class="kw">use </span>async_trait::async_trait;
@@ -461,7 +479,7 @@
             inner_governance: InnerGovernance::new(
                 repo_access,
                 get_governance_schema(),
-                update_channel
+                update_channel,
             ),
         }
     }
@@ -488,90 +506,108 @@
         input: <span class="prelude-ty">Option</span>&lt;ChannelData&lt;GovernanceMessage, GovernanceResponse&gt;&gt;,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;(), InternalError&gt; {
         <span class="kw">if let </span><span class="prelude-val">Some</span>(data) = input {
-            <span class="kw">let </span>(sender, message) = <span class="kw">if let </span>ChannelData::AskData(data) = data {
-                data.get()
-            } <span class="kw">else </span>{
-                <span class="macro">panic!</span>(<span class="string">&quot;Expected AskData, but we got TellData&quot;</span>)
+            <span class="kw">let </span>(sender, data) = <span class="kw">match </span>data {
+                ChannelData::AskData(data) =&gt; {
+                    <span class="kw">let </span>(sender, data) = data.get();
+                    (<span class="prelude-val">Some</span>(sender), data)
+                }
+                ChannelData::TellData(data) =&gt; {
+                    <span class="kw">let </span>data = data.get();
+                    (<span class="prelude-val">None</span>, data)
+                }
             };
-            <span class="kw">match </span>message {
-                GovernanceMessage::GetSchema {
-                    governance_id,
-                    schema_id,
-                } =&gt; {
-                    <span class="kw">let </span>to_send = <span class="self">self</span>.inner_governance.get_schema(governance_id, schema_id)<span class="question-mark">?</span>;
-                    <span class="prelude-val">Ok</span>(sender
-                        .send(GovernanceResponse::GetSchema(to_send))
-                        .map_err(|<span class="kw">_</span>| InternalError::OneshotClosed)<span class="question-mark">?</span>)
-                }
-                GovernanceMessage::GetSigners { metadata, stage } =&gt; {
-                    <span class="kw">let </span>to_send = <span class="self">self</span>.inner_governance.get_signers(metadata, stage)<span class="question-mark">?</span>;
-                    <span class="prelude-val">Ok</span>(sender
-                        .send(GovernanceResponse::GetSigners(to_send))
-                        .map_err(|<span class="kw">_</span>| InternalError::OneshotClosed)<span class="question-mark">?</span>)
-                }
-                GovernanceMessage::GetQuorum { metadata, stage } =&gt; {
-                    <span class="kw">let </span>to_send = <span class="self">self</span>.inner_governance.get_quorum(metadata, stage)<span class="question-mark">?</span>;
-                    <span class="prelude-val">Ok</span>(sender.send(GovernanceResponse::GetQuorum(to_send)).unwrap())
-                }
-                GovernanceMessage::GetGovernanceVersion { governance_id } =&gt; {
-                    <span class="kw">let </span>version = <span class="self">self
-                        </span>.inner_governance
-                        .get_governance_version(governance_id)<span class="question-mark">?</span>;
-                    <span class="prelude-val">Ok</span>(sender
-                        .send(GovernanceResponse::GetGovernanceVersion(version))
-                        .map_err(|<span class="kw">_</span>| InternalError::OneshotClosed)<span class="question-mark">?</span>)
-                }
-                GovernanceMessage::IsGovernance { subject_id } =&gt; {
-                    <span class="kw">let </span>to_send = <span class="self">self</span>.inner_governance.is_governance(<span class="kw-2">&amp;</span>subject_id)<span class="question-mark">?</span>;
-                    <span class="prelude-val">Ok</span>(sender
-                        .send(GovernanceResponse::IsGovernance(to_send))
-                        .map_err(|<span class="kw">_</span>| InternalError::OneshotClosed)<span class="question-mark">?</span>)
-                }
-                GovernanceMessage::GetInvokeInfo { fact, metadata } =&gt; {
-                    <span class="kw">let </span>to_send = <span class="self">self</span>.inner_governance.get_invoke_info(metadata, <span class="kw-2">&amp;</span>fact)<span class="question-mark">?</span>;
-                    <span class="prelude-val">Ok</span>(sender
-                        .send(GovernanceResponse::GetInvokeInfo(to_send))
-                        .map_err(|<span class="kw">_</span>| InternalError::OneshotClosed)<span class="question-mark">?</span>)
-                }
-                GovernanceMessage::GetContracts { governance_id } =&gt; {
-                    <span class="kw">let </span>to_send = <span class="self">self</span>.inner_governance.get_contracts(governance_id)<span class="question-mark">?</span>;
-                    <span class="prelude-val">Ok</span>(sender
-                        .send(GovernanceResponse::GetContracts(to_send))
-                        .map_err(|<span class="kw">_</span>| InternalError::OneshotClosed)<span class="question-mark">?</span>)
-                }
-                GovernanceMessage::GetInitState {
-                    governance_id,
-                    schema_id,
-                    governance_version,
-                } =&gt; {
-                    <span class="kw">let </span>to_send = <span class="self">self</span>.inner_governance.get_init_state(
+            <span class="kw">if let </span><span class="prelude-val">Some</span>(sender) = sender {
+                <span class="kw">match </span>data {
+                    GovernanceMessage::GetSchema {
+                        governance_id,
+                        schema_id,
+                    } =&gt; {
+                        <span class="kw">let </span>to_send = <span class="self">self</span>.inner_governance.get_schema(governance_id, schema_id)<span class="question-mark">?</span>;
+                        <span class="prelude-val">Ok</span>(sender
+                            .send(GovernanceResponse::GetSchema(to_send))
+                            .map_err(|<span class="kw">_</span>| InternalError::OneshotClosed)<span class="question-mark">?</span>)
+                    }
+                    GovernanceMessage::GetSigners { metadata, stage } =&gt; {
+                        <span class="kw">let </span>to_send = <span class="self">self</span>.inner_governance.get_signers(metadata, stage)<span class="question-mark">?</span>;
+                        <span class="prelude-val">Ok</span>(sender
+                            .send(GovernanceResponse::GetSigners(to_send))
+                            .map_err(|<span class="kw">_</span>| InternalError::OneshotClosed)<span class="question-mark">?</span>)
+                    }
+                    GovernanceMessage::GetQuorum { metadata, stage } =&gt; {
+                        <span class="kw">let </span>to_send = <span class="self">self</span>.inner_governance.get_quorum(metadata, stage)<span class="question-mark">?</span>;
+                        <span class="prelude-val">Ok</span>(sender.send(GovernanceResponse::GetQuorum(to_send)).unwrap())
+                    }
+                    GovernanceMessage::GetGovernanceVersion { governance_id } =&gt; {
+                        <span class="kw">let </span>version = <span class="self">self
+                            </span>.inner_governance
+                            .get_governance_version(governance_id)<span class="question-mark">?</span>;
+                        <span class="prelude-val">Ok</span>(sender
+                            .send(GovernanceResponse::GetGovernanceVersion(version))
+                            .map_err(|<span class="kw">_</span>| InternalError::OneshotClosed)<span class="question-mark">?</span>)
+                    }
+                    GovernanceMessage::IsGovernance { subject_id } =&gt; {
+                        <span class="kw">let </span>to_send = <span class="self">self</span>.inner_governance.is_governance(<span class="kw-2">&amp;</span>subject_id)<span class="question-mark">?</span>;
+                        <span class="prelude-val">Ok</span>(sender
+                            .send(GovernanceResponse::IsGovernance(to_send))
+                            .map_err(|<span class="kw">_</span>| InternalError::OneshotClosed)<span class="question-mark">?</span>)
+                    }
+                    GovernanceMessage::GetInvokeInfo { fact, metadata } =&gt; {
+                        <span class="kw">let </span>to_send = <span class="self">self</span>.inner_governance.get_invoke_info(metadata, <span class="kw-2">&amp;</span>fact)<span class="question-mark">?</span>;
+                        <span class="prelude-val">Ok</span>(sender
+                            .send(GovernanceResponse::GetInvokeInfo(to_send))
+                            .map_err(|<span class="kw">_</span>| InternalError::OneshotClosed)<span class="question-mark">?</span>)
+                    }
+                    GovernanceMessage::GetContracts { governance_id } =&gt; {
+                        <span class="kw">let </span>to_send = <span class="self">self</span>.inner_governance.get_contracts(governance_id)<span class="question-mark">?</span>;
+                        <span class="prelude-val">Ok</span>(sender
+                            .send(GovernanceResponse::GetContracts(to_send))
+                            .map_err(|<span class="kw">_</span>| InternalError::OneshotClosed)<span class="question-mark">?</span>)
+                    }
+                    GovernanceMessage::GetInitState {
                         governance_id,
                         schema_id,
                         governance_version,
-                    )<span class="question-mark">?</span>;
-                    <span class="prelude-val">Ok</span>(sender
-                        .send(GovernanceResponse::GetInitState(to_send))
-                        .map_err(|<span class="kw">_</span>| InternalError::OneshotClosed)<span class="question-mark">?</span>)
+                    } =&gt; {
+                        <span class="kw">let </span>to_send = <span class="self">self</span>.inner_governance.get_init_state(
+                            governance_id,
+                            schema_id,
+                            governance_version,
+                        )<span class="question-mark">?</span>;
+                        <span class="prelude-val">Ok</span>(sender
+                            .send(GovernanceResponse::GetInitState(to_send))
+                            .map_err(|<span class="kw">_</span>| InternalError::OneshotClosed)<span class="question-mark">?</span>)
+                    }
+                    GovernanceMessage::GetRolesOfInvokator {
+                        invokator,
+                        metadata,
+                    } =&gt; {
+                        <span class="kw">let </span>to_send = <span class="self">self
+                            </span>.inner_governance
+                            .get_roles_of_invokator(invokator, metadata)<span class="question-mark">?</span>;
+                        <span class="prelude-val">Ok</span>(sender
+                            .send(GovernanceResponse::GetRolesOfInvokator(to_send))
+                            .map_err(|<span class="kw">_</span>| InternalError::OneshotClosed)<span class="question-mark">?</span>)
+                    }
+                    <span class="kw">_ </span>=&gt; <span class="macro">unreachable!</span>(),
                 }
-                GovernanceMessage::GetRolesOfInvokator {
-                    invokator,
-                    metadata,
-                } =&gt; {
-                    <span class="kw">let </span>to_send = <span class="self">self
-                        </span>.inner_governance
-                        .get_roles_of_invokator(invokator, metadata)<span class="question-mark">?</span>;
-                    <span class="prelude-val">Ok</span>(sender
-                        .send(GovernanceResponse::GetRolesOfInvokator(to_send))
-                        .map_err(|<span class="kw">_</span>| InternalError::OneshotClosed)<span class="question-mark">?</span>)
-                }
-                GovernanceMessage::GovernanceUpdated {
-                    governance_id,
-                    governance_version,
-                } =&gt; {
-                    <span class="self">self</span>.inner_governance
-                        .governance_updated(governance_id, governance_version)
-                        .<span class="kw">await</span><span class="question-mark">?</span>;
-                    <span class="prelude-val">Ok</span>(())
+            } <span class="kw">else </span>{
+                <span class="kw">match </span>data {
+                    GovernanceMessage::GovernanceUpdated {
+                        governance_id,
+                        governance_version,
+                    } =&gt; {
+                        <span class="kw">let </span>result = <span class="self">self
+                            </span>.inner_governance
+                            .governance_updated(governance_id, governance_version)
+                            .<span class="kw">await</span><span class="question-mark">?</span>;
+                        <span class="comment">// TODO: Revisar si hace falta tratar errores aquí
+                        </span><span class="kw">match </span>result {
+                            <span class="prelude-val">Ok</span>(<span class="kw">_</span>) =&gt; {}
+                            <span class="prelude-val">Err</span>(<span class="kw">_</span>) =&gt; {}
+                        }
+                        <span class="prelude-val">Ok</span>(())
+                    }
+                    <span class="kw">_ </span>=&gt; <span class="macro">unreachable!</span>(),
                 }
             }
         } <span class="kw">else </span>{

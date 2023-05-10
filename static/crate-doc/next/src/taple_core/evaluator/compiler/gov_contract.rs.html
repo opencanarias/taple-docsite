@@ -229,67 +229,67 @@
   
   #[derive(Clone)]
   pub enum Who {
-      Who(String), // TODO: QUIZÁS DEBERÍA SER UNA STRUCT ANÓNIMA CON STRING, YA QUE EN EL SCHEMA SE PONE COMO OBJECT
+      Id { id: String }, // TODO: QUIZÁS DEBERÍA SER UNA STRUCT ANÓNIMA CON STRING, YA QUE EN EL SCHEMA SE PONE COMO OBJECT
       Members,
       All,
       External,
   }
   
   impl Serialize for Who {
-      fn serialize&lt;S&gt;(&amp;self, serializer: S) -&gt; Result&lt;S::Ok, S::Error&gt;
-      where
-          S: serde::Serializer,
-      {
-          match self {
-              Who::Who(s) =&gt; serializer.serialize_str(&amp;s),
-              Who::Members =&gt; serializer.serialize_str(&quot;Members&quot;),
-              Who::All =&gt; serializer.serialize_str(&quot;All&quot;),
-              Who::External =&gt; serializer.serialize_str(&quot;External&quot;),
-          }
-      }
-  }
+    fn serialize&lt;S&gt;(&amp;self, serializer: S) -&gt; Result&lt;S::Ok, S::Error&gt;
+    where
+        S: serde::Serializer,
+    {
+        match self {
+            Who::Id{ id } =&gt; serializer.serialize_str(&amp;id),
+            Who::Members =&gt; serializer.serialize_str(&quot;Members&quot;),
+            Who::All =&gt; serializer.serialize_str(&quot;All&quot;),
+            Who::External =&gt; serializer.serialize_str(&quot;External&quot;),
+        }
+    }
+}
   
-  impl&lt;&#39;de&gt; Deserialize&lt;&#39;de&gt; for Who {
-      fn deserialize&lt;D&gt;(deserializer: D) -&gt; Result&lt;Self, D::Error&gt;
-      where
-          D: serde::Deserializer&lt;&#39;de&gt;,
-      {
-          struct SchemaEnumVisitor;
-          impl&lt;&#39;de&gt; serde::de::Visitor&lt;&#39;de&gt; for SchemaEnumVisitor {
-              fn expecting(&amp;self, formatter: &amp;mut std::fmt::Formatter) -&gt; std::fmt::Result {
-                  formatter.write_str(&quot;Who&quot;)
-              }
-              type Value = Who;
-              fn visit_string&lt;E&gt;(self, v: String) -&gt; Result&lt;Self::Value, E&gt;
-              where
-                  E: serde::de::Error,
-              {
-                  match v.as_str() {
-                      &quot;Members&quot; =&gt; Ok(Who::Members),
-                      &quot;All&quot; =&gt; Ok(Who::All),
-                      &quot;External&quot; =&gt; Ok(Who::External),
-                      &amp;_ =&gt; Ok(Self::Value::Who(v)),
-                  }
-              }
-              fn visit_borrowed_str&lt;E&gt;(self, v: &amp;&#39;de str) -&gt; Result&lt;Self::Value, E&gt;
-              where
-                  E: serde::de::Error,
-              {
-                  match v {
-                      &quot;Members&quot; =&gt; Ok(Who::Members),
-                      &quot;All&quot; =&gt; Ok(Who::All),
-                      &quot;External&quot; =&gt; Ok(Who::External),
-                      &amp;_ =&gt; Ok(Self::Value::Who(v.to_string())),
-                  }
-              }
-          }
-          deserializer.deserialize_str(SchemaEnumVisitor {})
-      }
-  }
+impl&lt;&#39;de&gt; Deserialize&lt;&#39;de&gt; for Who {
+    fn deserialize&lt;D&gt;(deserializer: D) -&gt; Result&lt;Self, D::Error&gt;
+    where
+        D: serde::Deserializer&lt;&#39;de&gt;,
+    {
+        struct WhoVisitor;
+        impl&lt;&#39;de&gt; serde::de::Visitor&lt;&#39;de&gt; for WhoVisitor {
+            fn expecting(&amp;self, formatter: &amp;mut std::fmt::Formatter) -&gt; std::fmt::Result {
+                formatter.write_str(&quot;Who&quot;)
+            }
+            type Value = Who;
+            fn visit_string&lt;E&gt;(self, v: String) -&gt; Result&lt;Self::Value, E&gt;
+            where
+                E: serde::de::Error,
+            {
+                match v.as_str() {
+                    &quot;Members&quot; =&gt; Ok(Who::Members),
+                    &quot;All&quot; =&gt; Ok(Who::All),
+                    &quot;External&quot; =&gt; Ok(Who::External),
+                    &amp;_ =&gt; Ok(Self::Value::Id{ id: v }),
+                }
+            }
+            fn visit_borrowed_str&lt;E&gt;(self, v: &amp;&#39;de str) -&gt; Result&lt;Self::Value, E&gt;
+            where
+                E: serde::de::Error,
+            {
+                match v {
+                    &quot;Members&quot; =&gt; Ok(Who::Members),
+                    &quot;All&quot; =&gt; Ok(Who::All),
+                    &quot;External&quot; =&gt; Ok(Who::External),
+                    &amp;_ =&gt; Ok(Self::Value::Id { id: v.to_string() }),
+                }
+            }
+        }
+        deserializer.deserialize_str(WhoVisitor {})
+    }
+}
   
   #[derive(Clone)]
   pub enum SchemaEnum {
-      Schema(String), // TODO: QUIZÁS DEBERÍA SER UNA STRUCT ANÓNIMA CON STRING, YA QUE EN EL SCHEMA SE PONE COMO OBJECT
+      Id { id: String }, // TODO: QUIZÁS DEBERÍA SER UNA STRUCT ANÓNIMA CON STRING, YA QUE EN EL SCHEMA SE PONE COMO OBJECT
       AllSchemas,
   }
   
@@ -299,8 +299,8 @@
           S: serde::Serializer,
       {
           match self {
-              SchemaEnum::Schema(s) =&gt; serializer.serialize_str(&amp;s),
-              SchemaEnum::AllSchemas =&gt; serializer.serialize_str(&quot;All_Schemas&quot;),
+              SchemaEnum::Id{ id } =&gt; serializer.serialize_str(&amp;id),
+              SchemaEnum::AllSchemas =&gt; serializer.serialize_str(&quot;all_schemas&quot;),
           }
       }
   }
@@ -321,8 +321,8 @@
                   E: serde::de::Error,
               {
                   match v.as_str() {
-                      &quot;All_Schemas&quot; =&gt; Ok(Self::Value::AllSchemas),
-                      &amp;_ =&gt; Ok(Self::Value::Schema(v)),
+                      &quot;all_schemas&quot; =&gt; Ok(Self::Value::AllSchemas),
+                      &amp;_ =&gt; Ok(Self::Value::Id{id: v}),
                   }
               }
               fn visit_borrowed_str&lt;E&gt;(self, v: &amp;&#39;de str) -&gt; Result&lt;Self::Value, E&gt;
@@ -330,8 +330,8 @@
                   E: serde::de::Error,
               {
                   match v {
-                      &quot;All_Schemas&quot; =&gt; Ok(Self::Value::AllSchemas),
-                      &amp;_ =&gt; Ok(Self::Value::Schema(v.to_string())),
+                      &quot;all_schemas&quot; =&gt; Ok(Self::Value::AllSchemas),
+                      &amp;_ =&gt; Ok(Self::Value::Id{id: v.to_string()}),
                   }
               }
           }
@@ -398,7 +398,7 @@
       id: String,
       state_schema: serde_json::Value, // TODO: QUIZÁS STRING
       // #[serde(rename = &quot;Initial-Value&quot;)]
-      // Initial_Value:
+      initial_value: serde_json::Value,
       contract: Contract,
       facts: Vec&lt;Fact&gt;,
   }

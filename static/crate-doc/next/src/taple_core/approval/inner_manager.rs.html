@@ -951,9 +951,7 @@
         */
 
         </span><span class="kw">let </span>id = <span class="kw-2">&amp;</span>approval_request
-            .proposal
-            .event_request
-            .signature
+            .subject_signature
             .content
             .event_content_hash;
 
@@ -1026,24 +1024,26 @@
         }
 
         <span class="comment">// Verificamos la firma
-        </span><span class="kw">let </span>hash = event_proposal_hash_gen(<span class="kw-2">&amp;</span>approval_request)<span class="question-mark">?</span>;
-        <span class="kw">if let </span><span class="prelude-val">Err</span>(_error) = approval_request.subject_signature.content.signer.verify(
-            <span class="kw-2">&amp;</span>hash.derivative(),
-            <span class="kw-2">&amp;</span>approval_request.subject_signature.signature,
-        ) {
+        // let hash = event_proposal_hash_gen(&amp;approval_request)?;
+        // if let Err(_error) = approval_request.subject_signature.content.signer.verify(
+        //     &amp;hash.derivative(),
+        //     &amp;approval_request.subject_signature.signature,
+        // ) {
+        //     return Ok(Err(ApprovalErrorResponse::InvalidSubjectSignature));
+        // }
+
+        </span><span class="kw">let </span><span class="prelude-val">Ok</span>(()) = approval_request.check_signatures() <span class="kw">else </span>{
             <span class="kw">return </span><span class="prelude-val">Ok</span>(<span class="prelude-val">Err</span>(ApprovalErrorResponse::InvalidSubjectSignature));
         }
+        ;
+        <span class="comment">// if self
+        //     .check_event_request_signatures(&amp;approval_request.proposal.event_request)?
+        //     .is_err()
+        // {
+        //     return Ok(Err(ApprovalErrorResponse::InvalidInvokator));
+        // }
 
-        <span class="comment">// Verificamos que el invocador es váĺido
-        </span>;
-        <span class="kw">if </span><span class="self">self
-            </span>.check_event_request_signatures(<span class="kw-2">&amp;</span>approval_request.proposal.event_request)<span class="question-mark">?
-            </span>.is_err()
-        {
-            <span class="kw">return </span><span class="prelude-val">Ok</span>(<span class="prelude-val">Err</span>(ApprovalErrorResponse::InvalidInvokator));
-        }
-
-        <span class="comment">// if !self
+        // if !self
         //     .governance
         //     .has_invokator_permission(
         //         &amp;subject_data.governance_id,
@@ -1210,7 +1210,7 @@
 <span class="kw">fn </span>event_proposal_hash_gen(
     approval_request: <span class="kw-2">&amp;</span>EventProposal,
 ) -&gt; <span class="prelude-ty">Result</span>&lt;DigestIdentifier, ApprovalManagerError&gt; {
-    <span class="prelude-val">Ok</span>(DigestIdentifier::from_serializable_borsh(<span class="kw-2">&amp;</span>approval_request)
+    <span class="prelude-val">Ok</span>(DigestIdentifier::from_serializable_borsh(approval_request)
         .map_err(|<span class="kw">_</span>| ApprovalManagerError::HashGenerationFailed)<span class="question-mark">?</span>)
 }
 

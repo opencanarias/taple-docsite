@@ -591,6 +591,8 @@
 <a href="#591" id="591">591</a>
 <a href="#592" id="592">592</a>
 <a href="#593" id="593">593</a>
+<a href="#594" id="594">594</a>
+<a href="#595" id="595">595</a>
 </pre><pre class="rust"><code><span class="kw">use </span>std::sync::Arc;
 
 <span class="kw">use </span><span class="kw">crate</span>::approval::manager::{ApprovalAPI, ApprovalManager};
@@ -971,6 +973,7 @@
             validation_sender.clone(),
             event_sender.clone(),
             approval_sender.clone(),
+            ledger_sender.clone(),
             bsx.clone(),
         );
         <span class="comment">// Creation Governance
@@ -1049,7 +1052,7 @@
             distribution_receiver,
             bsx.clone(),
             bsx.subscribe(),
-            task_sender,
+            task_sender.clone(),
             GovernanceAPI::new(governance_sender.clone()),
             signature_manager.clone(),
             <span class="self">self</span>.settings.clone(),
@@ -1062,6 +1065,7 @@
             signature_manager,
             bsx.clone(),
             bsx.subscribe(),
+            task_sender,
         );
         <span class="comment">// Module initialization
         </span>tokio::spawn(<span class="kw">async move </span>{
