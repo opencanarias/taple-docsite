@@ -837,6 +837,17 @@
 <a href="#837" id="837">837</a>
 <a href="#838" id="838">838</a>
 <a href="#839" id="839">839</a>
+<a href="#840" id="840">840</a>
+<a href="#841" id="841">841</a>
+<a href="#842" id="842">842</a>
+<a href="#843" id="843">843</a>
+<a href="#844" id="844">844</a>
+<a href="#845" id="845">845</a>
+<a href="#846" id="846">846</a>
+<a href="#847" id="847">847</a>
+<a href="#848" id="848">848</a>
+<a href="#849" id="849">849</a>
+<a href="#850" id="850">850</a>
 </pre><pre class="rust"><code><span class="kw">use </span>std::sync::Arc;
 
 <span class="kw">use </span>wasmtime::Engine;
@@ -989,6 +1000,17 @@
                                 <span class="macro">vec!</span>[data.context.owner],
                                 MessageConfig::direct_response(),
                             )).<span class="kw">await</span>.map_err(|<span class="kw">_</span>| EvaluatorError::ChannelNotAvailable)<span class="question-mark">?</span>;
+                            EvaluatorResponse::AskForEvaluation(<span class="prelude-val">Ok</span>(()))
+                        }
+                        <span class="prelude-val">Err</span>(ExecutorErrorResponses::OurGovIsHigher) =&gt; {
+                            <span class="comment">// Mandar mensaje de actualización pendiente
+                            </span><span class="self">self</span>.messenger_channel.tell(MessageTaskCommand::Request(<span class="prelude-val">None</span>, TapleMessages::EventMessage(<span class="kw">crate</span>::event::EventCommand::HigherGovernanceExpected { governance_id: data.context.governance_id, who_asked: <span class="self">self</span>.signature_manager.get_own_identifier() }), <span class="macro">vec!</span>[data.context.owner], MessageConfig::direct_response())).<span class="kw">await</span>.map_err(|<span class="kw">_</span>| EvaluatorError::ChannelNotAvailable)<span class="question-mark">?</span>;
+                            EvaluatorResponse::AskForEvaluation(<span class="prelude-val">Ok</span>(()))
+                        }
+                        <span class="prelude-val">Err</span>(ExecutorErrorResponses::OurGovIsLower) =&gt; {
+                            <span class="comment">// No podemos evaluar porque nos la van a rechazar
+                            // Pedir LCE al que nos mando la petición
+                            </span><span class="self">self</span>.messenger_channel.tell(MessageTaskCommand::Request(<span class="prelude-val">None</span>, TapleMessages::LedgerMessages(<span class="kw">crate</span>::ledger::LedgerCommand::GetLCE { who_asked: <span class="self">self</span>.signature_manager.get_own_identifier(), subject_id: data.context.governance_id }), <span class="macro">vec!</span>[data.context.owner], MessageConfig::direct_response())).<span class="kw">await</span>.map_err(|<span class="kw">_</span>| EvaluatorError::ChannelNotAvailable)<span class="question-mark">?</span>;
                             EvaluatorResponse::AskForEvaluation(<span class="prelude-val">Ok</span>(()))
                         }
                         <span class="prelude-val">Err</span>(ExecutorErrorResponses::DatabaseError(error)) =&gt; {

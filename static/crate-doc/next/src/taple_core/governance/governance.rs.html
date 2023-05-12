@@ -432,6 +432,24 @@
 <a href="#432" id="432">432</a>
 <a href="#433" id="433">433</a>
 <a href="#434" id="434">434</a>
+<a href="#435" id="435">435</a>
+<a href="#436" id="436">436</a>
+<a href="#437" id="437">437</a>
+<a href="#438" id="438">438</a>
+<a href="#439" id="439">439</a>
+<a href="#440" id="440">440</a>
+<a href="#441" id="441">441</a>
+<a href="#442" id="442">442</a>
+<a href="#443" id="443">443</a>
+<a href="#444" id="444">444</a>
+<a href="#445" id="445">445</a>
+<a href="#446" id="446">446</a>
+<a href="#447" id="447">447</a>
+<a href="#448" id="448">448</a>
+<a href="#449" id="449">449</a>
+<a href="#450" id="450">450</a>
+<a href="#451" id="451">451</a>
+<a href="#452" id="452">452</a>
 </pre><pre class="rust"><code><span class="kw">use </span>std::collections::HashSet;
 
 <span class="kw">use </span>async_trait::async_trait;
@@ -521,8 +539,13 @@
                     GovernanceMessage::GetSchema {
                         governance_id,
                         schema_id,
+                        governance_version,
                     } =&gt; {
-                        <span class="kw">let </span>to_send = <span class="self">self</span>.inner_governance.get_schema(governance_id, schema_id)<span class="question-mark">?</span>;
+                        <span class="kw">let </span>to_send = <span class="self">self</span>.inner_governance.get_schema(
+                            governance_id,
+                            schema_id,
+                            governance_version,
+                        )<span class="question-mark">?</span>;
                         <span class="prelude-val">Ok</span>(sender
                             .send(GovernanceResponse::GetSchema(to_send))
                             .map_err(|<span class="kw">_</span>| InternalError::OneshotClosed)<span class="question-mark">?</span>)
@@ -557,8 +580,13 @@
                             .send(GovernanceResponse::GetInvokeInfo(to_send))
                             .map_err(|<span class="kw">_</span>| InternalError::OneshotClosed)<span class="question-mark">?</span>)
                     }
-                    GovernanceMessage::GetContracts { governance_id } =&gt; {
-                        <span class="kw">let </span>to_send = <span class="self">self</span>.inner_governance.get_contracts(governance_id)<span class="question-mark">?</span>;
+                    GovernanceMessage::GetContracts {
+                        governance_id,
+                        governance_version,
+                    } =&gt; {
+                        <span class="kw">let </span>to_send = <span class="self">self
+                            </span>.inner_governance
+                            .get_contracts(governance_id, governance_version)<span class="question-mark">?</span>;
                         <span class="prelude-val">Ok</span>(sender
                             .send(GovernanceResponse::GetContracts(to_send))
                             .map_err(|<span class="kw">_</span>| InternalError::OneshotClosed)<span class="question-mark">?</span>)
@@ -630,6 +658,7 @@
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         governance_id: DigestIdentifier,
         schema_id: String,
+        governance_version: u64,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;serde_json::Value, RequestError&gt;;
 
     <span class="kw">async fn </span>get_signers(
@@ -653,6 +682,7 @@
     <span class="kw">async fn </span>get_contracts(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         governance_id: DigestIdentifier,
+        governance_version: u64,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;Vec&lt;Contract&gt;, RequestError&gt;;
 
     <span class="kw">async fn </span>get_governance_version(
@@ -714,12 +744,14 @@
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         governance_id: DigestIdentifier,
         schema_id: String,
+        governance_version: u64,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;serde_json::Value, RequestError&gt; {
         <span class="kw">let </span>response = <span class="self">self
             </span>.sender
             .ask(GovernanceMessage::GetSchema {
                 governance_id: governance_id.clone(),
                 schema_id,
+                governance_version,
             })
             .<span class="kw">await
             </span>.map_err(|<span class="kw">_</span>| RequestError::ChannelClosed)<span class="question-mark">?</span>;
@@ -790,10 +822,14 @@
     <span class="kw">async fn </span>get_contracts(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         governance_id: DigestIdentifier,
+        governance_version: u64,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;Vec&lt;Contract&gt;, RequestError&gt; {
         <span class="kw">let </span>response = <span class="self">self
             </span>.sender
-            .ask(GovernanceMessage::GetContracts { governance_id })
+            .ask(GovernanceMessage::GetContracts {
+                governance_id,
+                governance_version,
+            })
             .<span class="kw">await
             </span>.map_err(|<span class="kw">_</span>| RequestError::ChannelClosed)<span class="question-mark">?</span>;
         <span class="kw">if let </span>GovernanceResponse::GetContracts(contracts) = response {

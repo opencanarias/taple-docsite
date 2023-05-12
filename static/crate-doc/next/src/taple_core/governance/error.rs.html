@@ -49,12 +49,22 @@
 <a href="#49" id="49">49</a>
 <a href="#50" id="50">50</a>
 <a href="#51" id="51">51</a>
-</pre><pre class="rust"><code><span class="kw">use </span>thiserror::Error;
-
-<span class="kw">use </span><span class="kw">crate</span>::database::Error <span class="kw">as </span>DbError;
+<a href="#52" id="52">52</a>
+<a href="#53" id="53">53</a>
+<a href="#54" id="54">54</a>
+<a href="#55" id="55">55</a>
+<a href="#56" id="56">56</a>
+<a href="#57" id="57">57</a>
+<a href="#58" id="58">58</a>
+</pre><pre class="rust"><code><span class="kw">use crate</span>::{commons::errors::SubjectError, database::Error <span class="kw">as </span>DbError};
+<span class="kw">use </span>thiserror::Error;
 
 <span class="attr">#[derive(Error, Debug, Clone, PartialEq)]
 </span><span class="kw">pub enum </span>RequestError {
+    <span class="attr">#[error(<span class="string">&quot;Database Error&quot;</span>)]
+    </span>DatabaseError(<span class="attr">#[from] </span>DbError),
+    <span class="attr">#[error(<span class="string">&quot;Subject Error&quot;</span>)]
+    </span>SubjectError(<span class="attr">#[from] </span>SubjectError),
     <span class="attr">#[error(<span class="string">&quot;Governance requested not found&quot;</span>)]
     </span>GovernanceNotFound(String),
     <span class="attr">#[error(<span class="string">&quot;Subject requested not found&quot;</span>)]
@@ -63,12 +73,16 @@
     </span>SchemaNotFound(String),
     <span class="attr">#[error(<span class="string">&quot;JSON Schema compile error&quot;</span>)]
     </span>JSONCompileError,
+    <span class="attr">#[error(<span class="string">&quot;Error Parsing Json String&quot;</span>)]
+    </span>ErrorParsingJsonString(String),
     <span class="attr">#[error(<span class="string">&quot;Invalid KeyIdentifier {0}&quot;</span>)]
     </span>InvalidKeyIdentifier(String),
     <span class="attr">#[error(<span class="string">&quot;Unexpected response&quot;</span>)]
     </span>UnexpectedResponse,
     <span class="attr">#[error(<span class="string">&quot;Channel Closed&quot;</span>)]
     </span>ChannelClosed,
+    <span class="attr">#[error(<span class="string">&quot;Governance version too high: {0}, {1}&quot;</span>)]
+    </span>GovernanceVersionTooHigh(String, u64),
     <span class="attr">#[error(<span class="string">&quot;Invalid Request Type&quot;</span>)]
     </span>InvalidRequestType,
     <span class="attr">#[error(<span class="string">&quot;Schema Not Found in policies&quot;</span>)]
@@ -76,7 +90,7 @@
     <span class="attr">#[error(<span class="string">&quot;The specified governance ID is of a subject&quot;</span>)]
     </span>InvalidGovernanceID,
     <span class="attr">#[error(<span class="string">&quot;Unexpect Payload&quot;</span>)]
-    </span>UnexpectedPayloadType
+    </span>UnexpectedPayloadType,
 }
 
 <span class="attr">#[derive(Error, Debug)]
@@ -95,10 +109,10 @@
     <span class="attr">#[error(<span class="string">&quot;Database error: {}&quot;</span>, source)]
     </span>DatabaseError {
         <span class="attr">#[from]
-        </span>source: DbError
+        </span>source: DbError,
     },
     <span class="attr">#[error(<span class="string">&quot;Base 64 decode error&quot;</span>)]
-    </span>Base64DecodingError
+    </span>Base64DecodingError,
 }
 </code></pre></div>
 </section></main><div id="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="taple_core" data-themes="" data-resource-suffix="" data-rustdoc-version="1.69.0 (84c898d65 2023-04-16)" data-search-js="search-8a59a8356673ec1f.js" data-settings-js="settings-f0c5c39777a9a2f6.js" data-settings-css="settings-0bcba95ff279c1db.css" ></div></body></html>

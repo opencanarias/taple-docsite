@@ -61,67 +61,100 @@
 <a href="#61" id="61">61</a>
 <a href="#62" id="62">62</a>
 <a href="#63" id="63">63</a>
+<a href="#64" id="64">64</a>
+<a href="#65" id="65">65</a>
+<a href="#66" id="66">66</a>
+<a href="#67" id="67">67</a>
+<a href="#68" id="68">68</a>
+<a href="#69" id="69">69</a>
+<a href="#70" id="70">70</a>
+<a href="#71" id="71">71</a>
+<a href="#72" id="72">72</a>
+<a href="#73" id="73">73</a>
+<a href="#74" id="74">74</a>
+<a href="#75" id="75">75</a>
+<a href="#76" id="76">76</a>
+<a href="#77" id="77">77</a>
+<a href="#78" id="78">78</a>
+<a href="#79" id="79">79</a>
 </pre><pre class="rust"><code><span class="kw">use </span>thiserror::Error;
+
+<span class="kw">use crate</span>::{DigestIdentifier, KeyIdentifier};
 
 <span class="attr">#[derive(Error, Debug, Clone)]
 </span><span class="kw">pub enum </span>ApprovalManagerError {
-  <span class="attr">#[error(<span class="string">&quot;Ask not allowed for this module&quot;</span>)]
-  </span>AskNoAllowed,
-  <span class="attr">#[error(<span class="string">&quot;Governance channel failed&quot;</span>)]
-  </span>GovernanceChannelFailed,
-  <span class="attr">#[error(<span class="string">&quot;Unexpected error&quot;</span>)]
-  </span>UnexpectedError,
-  <span class="attr">#[error(<span class="string">&quot;Database error&quot;</span>)]
-  </span>DatabaseError,
-  <span class="attr">#[error(<span class="string">&quot;Hash generation failed&quot;</span>)]
-  </span>HashGenerationFailed,
-  <span class="attr">#[error(<span class="string">&quot;Sign process failed&quot;</span>)]
-  </span>SignProcessFailed
+    <span class="attr">#[error(<span class="string">&quot;Ask not allowed for this module&quot;</span>)]
+    </span>AskNoAllowed,
+    <span class="attr">#[error(<span class="string">&quot;Governance channel failed&quot;</span>)]
+    </span>GovernanceChannelFailed,
+    <span class="attr">#[error(<span class="string">&quot;Message channel failed&quot;</span>)]
+    </span>MessageChannelFailed,
+    <span class="attr">#[error(<span class="string">&quot;Unexpected error&quot;</span>)]
+    </span>UnexpectedError,
+    <span class="attr">#[error(<span class="string">&quot;Database error&quot;</span>)]
+    </span>DatabaseError,
+    <span class="attr">#[error(<span class="string">&quot;Hash generation failed&quot;</span>)]
+    </span>HashGenerationFailed,
+    <span class="attr">#[error(<span class="string">&quot;Sign process failed&quot;</span>)]
+    </span>SignProcessFailed,
 }
 
 <span class="attr">#[derive(Error, Debug, Clone)]
 </span><span class="kw">pub enum </span>ApprovalErrorResponse {
-  <span class="attr">#[error(<span class="string">&quot;API Channel not available&quot;</span>)]
-  </span>APIChannelNotAvailable,
-  <span class="attr">#[error(<span class="string">&quot;Request already known&quot;</span>)]
-  </span>RequestAlreadyKnown,
-  <span class="attr">#[error(<span class="string">&quot;No Fact event&quot;</span>)]
-  </span>NoFactEvent,
-  <span class="attr">#[error(<span class="string">&quot;Previous Event detected&quot;</span>)]
-  </span>PreviousEventDetected,
-  <span class="attr">#[error(<span class="string">&quot;Governance not found&quot;</span>)]
-  </span>GovernanceNotFound,
-  <span class="attr">#[error(<span class="string">&quot;Invalid governance ID&quot;</span>)]
-  </span>InvalidGovernanceID,
-  <span class="attr">#[error(<span class="string">&quot;Invalid Governance version&quot;</span>)]
-  </span>InvalidGovernanceVersion,
-  <span class="attr">#[error(<span class="string">&quot;Subject not found&quot;</span>)]
-  </span>SubjectNotFound,
-  <span class="attr">#[error(<span class="string">&quot;No correlation between governances id&quot;</span>)]
-  </span>GovernanceNoCorrelation,
-  <span class="attr">#[error(<span class="string">&quot;Subject not synchronized&quot;</span>)]
-  </span>SubjectNotSynchronized,
-  <span class="attr">#[error(<span class="string">&quot;Signature is not from suject&quot;</span>)]
-  </span>SignatureSignerIsNotSubject,
-  <span class="attr">#[error(<span class="string">&quot;Invalid Subject signature&quot;</span>)]
-  </span>InvalidSubjectSignature,
-  <span class="attr">#[error(<span class="string">&quot;Node is not an approver&quot;</span>)]
-  </span>NodeIsNotApprover,
-  <span class="attr">#[error(<span class="string">&quot;Invalid evaluator detected&quot;</span>)]
-  </span>InvalidEvaluator,
-  <span class="attr">#[error(<span class="string">&quot;Invalid Evaluator signature detected&quot;</span>)]
-  </span>InvalidEvaluatorSignature,
-  <span class="attr">#[error(<span class="string">&quot;Invalid invokator signature&quot;</span>)]
-  </span>InvalidInvokator,
-  <span class="attr">#[error(<span class="string">&quot;Incokator has no permission&quot;</span>)]
-  </span>InvalidInvokatorPermission,
-  <span class="attr">#[error(<span class="string">&quot;No Evaluator Quroum reached&quot;</span>)]
-  </span>NoQuorumReached,
-  <span class="attr">#[error(<span class="string">&quot;Approval request not found&quot;</span>)]
-  </span>ApprovalRequestNotFound,
-  <span class="attr">#[error(<span class="string">&quot;No hash correlation&quot;</span>)]
-  </span>NoHashCorrelation,
-  <span class="attr">#[error(<span class="string">&quot;Invalid acceptance&quot;</span>)]
-  </span>InvalidAcceptance
-}</code></pre></div>
+    <span class="attr">#[error(<span class="string">&quot;API Channel not available&quot;</span>)]
+    </span>APIChannelNotAvailable,
+    <span class="attr">#[error(<span class="string">&quot;Request already known&quot;</span>)]
+    </span>RequestAlreadyKnown,
+    <span class="attr">#[error(<span class="string">&quot;No Fact event&quot;</span>)]
+    </span>NoFactEvent,
+    <span class="attr">#[error(<span class="string">&quot;Previous Event detected&quot;</span>)]
+    </span>PreviousEventDetected,
+    <span class="attr">#[error(<span class="string">&quot;Governance not found&quot;</span>)]
+    </span>GovernanceNotFound,
+    <span class="attr">#[error(<span class="string">&quot;Invalid governance ID&quot;</span>)]
+    </span>InvalidGovernanceID,
+    <span class="attr">#[error(<span class="string">&quot;Invalid Governance version&quot;</span>)]
+    </span>InvalidGovernanceVersion,
+    <span class="attr">#[error(<span class="string">&quot;Governance version is lower&quot;</span>)]
+    </span>OurGovIsLower {
+        our_id: KeyIdentifier,
+        sender: KeyIdentifier,
+        gov_id: DigestIdentifier,
+    },
+    <span class="attr">#[error(<span class="string">&quot;Governance version is higher&quot;</span>)]
+    </span>OurGovIsHigher {
+        our_id: KeyIdentifier,
+        sender: KeyIdentifier,
+        gov_id: DigestIdentifier,
+    },
+    <span class="attr">#[error(<span class="string">&quot;Subject not found&quot;</span>)]
+    </span>SubjectNotFound,
+    <span class="attr">#[error(<span class="string">&quot;No correlation between governances id&quot;</span>)]
+    </span>GovernanceNoCorrelation,
+    <span class="attr">#[error(<span class="string">&quot;Subject not synchronized&quot;</span>)]
+    </span>SubjectNotSynchronized,
+    <span class="attr">#[error(<span class="string">&quot;Signature is not from suject&quot;</span>)]
+    </span>SignatureSignerIsNotSubject,
+    <span class="attr">#[error(<span class="string">&quot;Invalid Subject signature&quot;</span>)]
+    </span>InvalidSubjectSignature,
+    <span class="attr">#[error(<span class="string">&quot;Node is not an approver&quot;</span>)]
+    </span>NodeIsNotApprover,
+    <span class="attr">#[error(<span class="string">&quot;Invalid evaluator detected&quot;</span>)]
+    </span>InvalidEvaluator,
+    <span class="attr">#[error(<span class="string">&quot;Invalid Evaluator signature detected&quot;</span>)]
+    </span>InvalidEvaluatorSignature,
+    <span class="attr">#[error(<span class="string">&quot;Invalid invokator signature&quot;</span>)]
+    </span>InvalidInvokator,
+    <span class="attr">#[error(<span class="string">&quot;Incokator has no permission&quot;</span>)]
+    </span>InvalidInvokatorPermission,
+    <span class="attr">#[error(<span class="string">&quot;No Evaluator Quroum reached&quot;</span>)]
+    </span>NoQuorumReached,
+    <span class="attr">#[error(<span class="string">&quot;Approval request not found&quot;</span>)]
+    </span>ApprovalRequestNotFound,
+    <span class="attr">#[error(<span class="string">&quot;No hash correlation&quot;</span>)]
+    </span>NoHashCorrelation,
+    <span class="attr">#[error(<span class="string">&quot;Invalid acceptance&quot;</span>)]
+    </span>InvalidAcceptance,
+}
+</code></pre></div>
 </section></main><div id="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="taple_core" data-themes="" data-resource-suffix="" data-rustdoc-version="1.69.0 (84c898d65 2023-04-16)" data-search-js="search-8a59a8356673ec1f.js" data-settings-js="settings-f0c5c39777a9a2f6.js" data-settings-css="settings-0bcba95ff279c1db.css" ></div></body></html>

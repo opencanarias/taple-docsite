@@ -155,9 +155,8 @@
     GetSchema {
         governance_id: DigestIdentifier,
         schema_id: String,
-        <span class="comment">// TODO: Consider the version. The Event Sourcing of the events must be taken into account.
-        // governance_version: u64,
-    </span>},
+        governance_version: u64,
+    },
     GetSigners {
         metadata: Metadata,
         stage: ValidationStage,
@@ -172,6 +171,7 @@
     },
     GetContracts {
         governance_id: DigestIdentifier,
+        governance_version: u64,
     },
     GetGovernanceVersion {
         governance_id: DigestIdentifier,

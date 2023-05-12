@@ -1064,6 +1064,85 @@
 <a href="#1064" id="1064">1064</a>
 <a href="#1065" id="1065">1065</a>
 <a href="#1066" id="1066">1066</a>
+<a href="#1067" id="1067">1067</a>
+<a href="#1068" id="1068">1068</a>
+<a href="#1069" id="1069">1069</a>
+<a href="#1070" id="1070">1070</a>
+<a href="#1071" id="1071">1071</a>
+<a href="#1072" id="1072">1072</a>
+<a href="#1073" id="1073">1073</a>
+<a href="#1074" id="1074">1074</a>
+<a href="#1075" id="1075">1075</a>
+<a href="#1076" id="1076">1076</a>
+<a href="#1077" id="1077">1077</a>
+<a href="#1078" id="1078">1078</a>
+<a href="#1079" id="1079">1079</a>
+<a href="#1080" id="1080">1080</a>
+<a href="#1081" id="1081">1081</a>
+<a href="#1082" id="1082">1082</a>
+<a href="#1083" id="1083">1083</a>
+<a href="#1084" id="1084">1084</a>
+<a href="#1085" id="1085">1085</a>
+<a href="#1086" id="1086">1086</a>
+<a href="#1087" id="1087">1087</a>
+<a href="#1088" id="1088">1088</a>
+<a href="#1089" id="1089">1089</a>
+<a href="#1090" id="1090">1090</a>
+<a href="#1091" id="1091">1091</a>
+<a href="#1092" id="1092">1092</a>
+<a href="#1093" id="1093">1093</a>
+<a href="#1094" id="1094">1094</a>
+<a href="#1095" id="1095">1095</a>
+<a href="#1096" id="1096">1096</a>
+<a href="#1097" id="1097">1097</a>
+<a href="#1098" id="1098">1098</a>
+<a href="#1099" id="1099">1099</a>
+<a href="#1100" id="1100">1100</a>
+<a href="#1101" id="1101">1101</a>
+<a href="#1102" id="1102">1102</a>
+<a href="#1103" id="1103">1103</a>
+<a href="#1104" id="1104">1104</a>
+<a href="#1105" id="1105">1105</a>
+<a href="#1106" id="1106">1106</a>
+<a href="#1107" id="1107">1107</a>
+<a href="#1108" id="1108">1108</a>
+<a href="#1109" id="1109">1109</a>
+<a href="#1110" id="1110">1110</a>
+<a href="#1111" id="1111">1111</a>
+<a href="#1112" id="1112">1112</a>
+<a href="#1113" id="1113">1113</a>
+<a href="#1114" id="1114">1114</a>
+<a href="#1115" id="1115">1115</a>
+<a href="#1116" id="1116">1116</a>
+<a href="#1117" id="1117">1117</a>
+<a href="#1118" id="1118">1118</a>
+<a href="#1119" id="1119">1119</a>
+<a href="#1120" id="1120">1120</a>
+<a href="#1121" id="1121">1121</a>
+<a href="#1122" id="1122">1122</a>
+<a href="#1123" id="1123">1123</a>
+<a href="#1124" id="1124">1124</a>
+<a href="#1125" id="1125">1125</a>
+<a href="#1126" id="1126">1126</a>
+<a href="#1127" id="1127">1127</a>
+<a href="#1128" id="1128">1128</a>
+<a href="#1129" id="1129">1129</a>
+<a href="#1130" id="1130">1130</a>
+<a href="#1131" id="1131">1131</a>
+<a href="#1132" id="1132">1132</a>
+<a href="#1133" id="1133">1133</a>
+<a href="#1134" id="1134">1134</a>
+<a href="#1135" id="1135">1135</a>
+<a href="#1136" id="1136">1136</a>
+<a href="#1137" id="1137">1137</a>
+<a href="#1138" id="1138">1138</a>
+<a href="#1139" id="1139">1139</a>
+<a href="#1140" id="1140">1140</a>
+<a href="#1141" id="1141">1141</a>
+<a href="#1142" id="1142">1142</a>
+<a href="#1143" id="1143">1143</a>
+<a href="#1144" id="1144">1144</a>
+<a href="#1145" id="1145">1145</a>
 </pre><pre class="rust"><code><span class="kw">use </span>std::collections::{hash_map::Entry, HashMap, HashSet};
 
 <span class="kw">use </span>json_patch::{patch, Patch};
@@ -1072,7 +1151,11 @@
 <span class="kw">use crate</span>::{
     commons::{
         channel::SenderEnd,
-        models::{approval::Approval, state::Subject},
+        models::{
+            approval::Approval,
+            event_preevaluation::{Context, EventPreEvaluation},
+            state::Subject,
+        },
     },
     database::DB,
     distribution::{error::DistributionErrorResponses, DistributionMessagesNew},
@@ -1287,9 +1370,8 @@
         <span class="kw">let </span>json_patch = event.content.event_proposal.proposal.json_patch.as_str();
         subject.update_subject(json_patch, event.content.event_proposal.proposal.sn)<span class="question-mark">?</span>;
         <span class="self">self</span>.database.set_event(<span class="kw-2">&amp;</span>subject_id, event)<span class="question-mark">?</span>;
-        <span class="self">self</span>.database
-            .set_subject(<span class="kw-2">&amp;</span>subject_id, subject)
-            .map_err(|error| LedgerError::DatabaseError(error))<span class="question-mark">?</span>;
+        <span class="self">self</span>.database.set_subject(<span class="kw-2">&amp;</span>subject_id, subject)<span class="question-mark">?</span>;
+        <span class="self">self</span>.database.del_signatures(<span class="kw-2">&amp;</span>subject_id, sn - <span class="number">1</span>)<span class="question-mark">?</span>;
         <span class="comment">// Comprobar is_gov
         </span><span class="kw">let </span>is_gov = <span class="self">self</span>.subject_is_gov.get(<span class="kw-2">&amp;</span>subject_id);
         <span class="kw">match </span>is_gov {
@@ -1400,7 +1482,7 @@
                         .signer
                         .clone(),
                 };
-                <span class="kw">let </span><span class="kw-2">mut </span>witnesses = <span class="self">self</span>.get_witnesses(metadata).<span class="kw">await</span><span class="question-mark">?</span>;
+                <span class="kw">let </span>witnesses = <span class="self">self</span>.get_witnesses(metadata).<span class="kw">await</span><span class="question-mark">?</span>;
                 <span class="kw">if </span>!witnesses.contains(<span class="kw-2">&amp;</span><span class="self">self</span>.our_id) {
                     <span class="kw">return </span><span class="prelude-val">Err</span>(LedgerError::WeAreNotWitnesses(subject_id.to_str()));
                 }
@@ -1445,7 +1527,7 @@
                                 }
                             }
                             <span class="prelude-val">None </span>=&gt; {
-                                <span class="comment">// Es LCE y tenemos otro LCE ... TODO:
+                                <span class="comment">// Es LCE y tenemos otro LCE para un sujeto en el que no tenemos génesis ... TODO:
                                 </span><span class="kw">return </span><span class="prelude-val">Err</span>(LedgerError::LCEBiggerSN);
                             }
                         }
@@ -1503,7 +1585,7 @@
                             <span class="self">self</span>.subject_is_gov.insert(subject_id.clone(), <span class="bool-val">false</span>);
                         }
                         <span class="kw">let </span>(signers, quorum) = <span class="self">self
-                            </span>.get_signers_and_quorum(metadata, ValidationStage::Validate)
+                            </span>.get_signers_and_quorum(metadata.clone(), ValidationStage::Validate)
                             .<span class="kw">await</span><span class="question-mark">?</span>;
                         <span class="kw">let </span>notary_hash = DigestIdentifier::from_serializable_borsh(<span class="kw-2">&amp;</span>(
                             <span class="kw-2">&amp;</span>subject.governance_id,
@@ -1523,24 +1605,25 @@
                         </span><span class="kw">if </span>event.content.event_proposal.proposal.sn == subject.sn + <span class="number">1
                             </span>&amp;&amp; ledger_state.head.is_none()
                         {
-                            <span class="comment">// Caso Evento Siguientesn
-                            </span><span class="kw">let </span>sn = event.content.event_proposal.proposal.sn;
+                            <span class="comment">// Caso Evento Siguiente
+                            </span>check_context(<span class="kw-2">&amp;</span>event, metadata, subject.properties.clone())<span class="question-mark">?</span>;
+                            <span class="kw">let </span>sn = event.content.event_proposal.proposal.sn;
                             <span class="kw">let </span>json_patch =
                                 event.content.event_proposal.proposal.json_patch.as_str();
                             subject.update_subject(
                                 json_patch,
                                 event.content.event_proposal.proposal.sn,
                             )<span class="question-mark">?</span>;
-                            <span class="comment">// TODO: No guardar firmas si hay un head con mayor sn
-                            </span><span class="self">self</span>.database.set_signatures(
+                            <span class="self">self</span>.database.set_signatures(
                                 <span class="kw-2">&amp;</span>state_request.subject_id,
                                 sn,
                                 signatures,
                             )<span class="question-mark">?</span>;
                             <span class="self">self</span>.database.set_event(<span class="kw-2">&amp;</span>state_request.subject_id, event)<span class="question-mark">?</span>;
                             <span class="self">self</span>.database
-                                .set_subject(<span class="kw-2">&amp;</span>state_request.subject_id, subject)
-                                .map_err(|error| LedgerError::DatabaseError(error))<span class="question-mark">?</span>;
+                                .set_subject(<span class="kw-2">&amp;</span>state_request.subject_id, subject)<span class="question-mark">?</span>;
+                            <span class="self">self</span>.database
+                                .del_signatures(<span class="kw-2">&amp;</span>state_request.subject_id, sn - <span class="number">1</span>)<span class="question-mark">?</span>;
                             <span class="self">self</span>.ledger_state.insert(
                                 state_request.subject_id.clone(),
                                 LedgerState {
@@ -1555,7 +1638,10 @@
                                     sn,
                                 })
                                 .<span class="kw">await</span><span class="question-mark">?</span>;
-                        } <span class="kw">else if </span>event.content.event_proposal.proposal.sn &gt; subject.sn {
+                        <span class="comment">// } else if event.content.event_proposal.proposal.sn == subject.sn + 1 {
+                        // Caso en el que el LCE es S + 1
+                        // TODO:
+                        </span>} <span class="kw">else if </span>event.content.event_proposal.proposal.sn &gt; subject.sn {
                             <span class="comment">// Caso LCE
                             // Comprobar que LCE es mayor y quedarnos con el mas peque si tenemos otro
                             </span><span class="kw">let </span>last_lce = <span class="kw">match </span>ledger_state.head {
@@ -1690,6 +1776,11 @@
                                 </span><span class="kw">if </span>event.content.event_proposal.proposal.sn == current_sn + <span class="number">1 </span>{
                                     <span class="comment">// Comprobar que el evento es el que necesito
                                     </span><span class="self">self</span>.check_event(event.clone(), metadata.clone()).<span class="kw">await</span><span class="question-mark">?</span>;
+                                    check_context(
+                                        <span class="kw-2">&amp;</span>event,
+                                        metadata.clone(),
+                                        subject.properties.clone(),
+                                    )<span class="question-mark">?</span>;
                                     <span class="comment">// Guardar Evento
                                     </span><span class="self">self</span>.database.set_event(<span class="kw-2">&amp;</span>subject_id, event)<span class="question-mark">?</span>;
                                     <span class="comment">// Hacer event sourcing del evento y actualizar subject
@@ -1755,6 +1846,22 @@
                                     </span><span class="kw">let </span>metadata = <span class="self">self
                                         </span>.check_genesis(event.clone(), subject_id.clone())
                                         .<span class="kw">await</span><span class="question-mark">?</span>;
+                                    <span class="comment">// Check LCE validity
+                                    </span><span class="kw">let </span>lce = <span class="self">self</span>.database.get_event(<span class="kw-2">&amp;</span>subject_id, head)<span class="question-mark">?</span>;
+                                    <span class="kw">match </span><span class="self">self</span>.check_event(lce, metadata.clone()).<span class="kw">await </span>{
+                                        <span class="prelude-val">Ok</span>(<span class="kw">_</span>) =&gt; {}
+                                        <span class="prelude-val">Err</span>(error) =&gt; {
+                                            <span class="macro">log::error!</span>(<span class="string">&quot;Error checking LCE: {}&quot;</span>, error);
+                                            <span class="comment">// Borrar genesis y LCE
+                                            </span><span class="self">self</span>.database.del_event(<span class="kw-2">&amp;</span>subject_id, <span class="number">0</span>)<span class="question-mark">?</span>;
+                                            <span class="self">self</span>.database.del_event(<span class="kw-2">&amp;</span>subject_id, head)<span class="question-mark">?</span>;
+                                            <span class="self">self</span>.database.del_subject(<span class="kw-2">&amp;</span>subject_id)<span class="question-mark">?</span>;
+                                            <span class="self">self</span>.database.del_signatures(<span class="kw-2">&amp;</span>subject_id, head)<span class="question-mark">?</span>;
+                                            <span class="kw">return </span><span class="prelude-val">Err</span>(LedgerError::InvalidLCEAfterGenesis(
+                                                subject_id.to_str(),
+                                            ));
+                                        }
+                                    };
                                     <span class="kw">if </span>head == <span class="number">1 </span>{
                                         <span class="comment">// Hacer event sourcing del evento 1 tambien y actualizar subject
                                         </span><span class="self">self</span>.event_sourcing(subject_id.clone(), <span class="number">1</span>)<span class="question-mark">?</span>;
@@ -1963,6 +2070,16 @@
             <span class="kw">return </span><span class="prelude-val">Err</span>(LedgerError::EventDoesNotFitHash);
         }
         <span class="kw">let </span><span class="kw-2">mut </span>subject = <span class="self">self</span>.database.get_subject(<span class="kw-2">&amp;</span>subject_id)<span class="question-mark">?</span>;
+        <span class="kw">let </span>metadata = Metadata {
+            namespace: subject.namespace.clone(),
+            subject_id: subject.subject_id.clone(),
+            governance_id: subject.governance_id.clone(),
+            governance_version: event.content.event_proposal.proposal.gov_version,
+            schema_id: subject.schema_id.clone(),
+            owner: subject.owner.clone(),
+            creator: subject.creator.clone(),
+        };
+        check_context(<span class="kw-2">&amp;</span>event, metadata, subject.properties.clone())<span class="question-mark">?</span>;
         subject.update_subject(
             <span class="kw-2">&amp;</span>event.content.event_proposal.proposal.json_patch,
             event.content.event_proposal.proposal.sn,
@@ -2012,6 +2129,47 @@
         }
         <span class="prelude-val">Ok</span>(())
     }
+}
+
+<span class="kw">fn </span>check_context(
+    event: <span class="kw-2">&amp;</span>Event,
+    metadata: Metadata,
+    prev_properties: String,
+) -&gt; <span class="prelude-ty">Result</span>&lt;(), LedgerError&gt; {
+    <span class="kw">let </span>event_preevaluation = EventPreEvaluation {
+        event_request: event.content.event_proposal.proposal.event_request.clone(),
+        context: Context {
+            governance_id: metadata.governance_id,
+            schema_id: metadata.schema_id,
+            creator: metadata.creator,
+            owner: metadata.owner,
+            actual_state: prev_properties,
+            namespace: metadata.namespace,
+            governance_version: event.content.event_proposal.proposal.gov_version,
+        },
+        sn: event.content.event_proposal.proposal.sn,
+    };
+    <span class="kw">let </span>event_preevaluation_hash = DigestIdentifier::from_serializable_borsh(<span class="kw-2">&amp;</span>event_preevaluation)
+        .map_err(|<span class="kw">_</span>| {
+            LedgerError::CryptoError(String::from(
+                <span class="string">&quot;Error calculating the hash of the event pre-evaluation&quot;</span>,
+            ))
+        })<span class="question-mark">?</span>;
+    <span class="kw">if </span>event_preevaluation_hash
+        != event
+            .content
+            .event_proposal
+            .proposal
+            .evaluation
+            .as_ref()
+            .unwrap()
+            .preevaluation_hash
+    {
+        <span class="kw">return </span><span class="prelude-val">Err</span>(LedgerError::CryptoError(String::from(
+            <span class="string">&quot;The hash of the event pre-evaluation calculed does not match with the one in the event&quot;</span>,
+        )));
+    }
+    <span class="prelude-val">Ok</span>(())
 }
 
 <span class="kw">fn </span>verify_approval_signatures(

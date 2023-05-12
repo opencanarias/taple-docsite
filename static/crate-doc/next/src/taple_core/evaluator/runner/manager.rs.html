@@ -151,6 +151,18 @@
 <a href="#151" id="151">151</a>
 <a href="#152" id="152">152</a>
 <a href="#153" id="153">153</a>
+<a href="#154" id="154">154</a>
+<a href="#155" id="155">155</a>
+<a href="#156" id="156">156</a>
+<a href="#157" id="157">157</a>
+<a href="#158" id="158">158</a>
+<a href="#159" id="159">159</a>
+<a href="#160" id="160">160</a>
+<a href="#161" id="161">161</a>
+<a href="#162" id="162">162</a>
+<a href="#163" id="163">163</a>
+<a href="#164" id="164">164</a>
+<a href="#165" id="165">165</a>
 </pre><pre class="rust"><code><span class="kw">use </span>json_patch::diff;
 <span class="kw">use </span>serde_json::Value;
 <span class="kw">use </span>wasmtime::Engine;
@@ -192,6 +204,18 @@
         execute_contract: <span class="kw-2">&amp;</span>EventPreEvaluation,
         state_data: <span class="kw-2">&amp;</span>StateRequest,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;ExecuteContractResponse, ExecutorErrorResponses&gt; {
+        <span class="comment">// Check governance version
+        </span><span class="kw">let </span>governance = <span class="self">self
+            </span>.database
+            .get_subject(<span class="kw-2">&amp;</span>execute_contract.context.governance_id)
+            .map_err(|db_err| ExecutorErrorResponses::DatabaseError(db_err.to_string()))<span class="question-mark">?</span>;
+        <span class="kw">if </span>governance.sn &gt; execute_contract.context.governance_version {
+            <span class="comment">// Nuestra gov es mayor: mandamos mensaje para que actualice el emisor
+            </span><span class="kw">return </span><span class="prelude-val">Err</span>(ExecutorErrorResponses::OurGovIsHigher)
+        } <span class="kw">else if </span>governance.sn &lt; execute_contract.context.governance_version {
+            <span class="comment">// Nuestra gov es menor: no podemos hacer nada. Pedimos LCE al que nos lo envió
+            </span><span class="kw">return </span><span class="prelude-val">Err</span>(ExecutorErrorResponses::OurGovIsLower)
+        }
         <span class="kw">let </span>context_hash = <span class="self">Self</span>::generate_context_hash(execute_contract)<span class="question-mark">?</span>;
         <span class="kw">let </span>(contract, governance_version) = <span class="kw">if </span>execute_contract.context.schema_id == <span class="string">&quot;governance&quot;
             </span>&amp;&amp; execute_contract.context.governance_id.digest.is_empty()

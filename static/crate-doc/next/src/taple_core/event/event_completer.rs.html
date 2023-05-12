@@ -968,6 +968,71 @@
 <a href="#968" id="968">968</a>
 <a href="#969" id="969">969</a>
 <a href="#970" id="970">970</a>
+<a href="#971" id="971">971</a>
+<a href="#972" id="972">972</a>
+<a href="#973" id="973">973</a>
+<a href="#974" id="974">974</a>
+<a href="#975" id="975">975</a>
+<a href="#976" id="976">976</a>
+<a href="#977" id="977">977</a>
+<a href="#978" id="978">978</a>
+<a href="#979" id="979">979</a>
+<a href="#980" id="980">980</a>
+<a href="#981" id="981">981</a>
+<a href="#982" id="982">982</a>
+<a href="#983" id="983">983</a>
+<a href="#984" id="984">984</a>
+<a href="#985" id="985">985</a>
+<a href="#986" id="986">986</a>
+<a href="#987" id="987">987</a>
+<a href="#988" id="988">988</a>
+<a href="#989" id="989">989</a>
+<a href="#990" id="990">990</a>
+<a href="#991" id="991">991</a>
+<a href="#992" id="992">992</a>
+<a href="#993" id="993">993</a>
+<a href="#994" id="994">994</a>
+<a href="#995" id="995">995</a>
+<a href="#996" id="996">996</a>
+<a href="#997" id="997">997</a>
+<a href="#998" id="998">998</a>
+<a href="#999" id="999">999</a>
+<a href="#1000" id="1000">1000</a>
+<a href="#1001" id="1001">1001</a>
+<a href="#1002" id="1002">1002</a>
+<a href="#1003" id="1003">1003</a>
+<a href="#1004" id="1004">1004</a>
+<a href="#1005" id="1005">1005</a>
+<a href="#1006" id="1006">1006</a>
+<a href="#1007" id="1007">1007</a>
+<a href="#1008" id="1008">1008</a>
+<a href="#1009" id="1009">1009</a>
+<a href="#1010" id="1010">1010</a>
+<a href="#1011" id="1011">1011</a>
+<a href="#1012" id="1012">1012</a>
+<a href="#1013" id="1013">1013</a>
+<a href="#1014" id="1014">1014</a>
+<a href="#1015" id="1015">1015</a>
+<a href="#1016" id="1016">1016</a>
+<a href="#1017" id="1017">1017</a>
+<a href="#1018" id="1018">1018</a>
+<a href="#1019" id="1019">1019</a>
+<a href="#1020" id="1020">1020</a>
+<a href="#1021" id="1021">1021</a>
+<a href="#1022" id="1022">1022</a>
+<a href="#1023" id="1023">1023</a>
+<a href="#1024" id="1024">1024</a>
+<a href="#1025" id="1025">1025</a>
+<a href="#1026" id="1026">1026</a>
+<a href="#1027" id="1027">1027</a>
+<a href="#1028" id="1028">1028</a>
+<a href="#1029" id="1029">1029</a>
+<a href="#1030" id="1030">1030</a>
+<a href="#1031" id="1031">1031</a>
+<a href="#1032" id="1032">1032</a>
+<a href="#1033" id="1033">1033</a>
+<a href="#1034" id="1034">1034</a>
+<a href="#1035" id="1035">1035</a>
 </pre><pre class="rust"><code><span class="kw">use </span>std::collections::{HashMap, HashSet};
 
 <span class="kw">use </span>json_patch::{patch, Patch};
@@ -1020,7 +1085,7 @@
     own_identifier: KeyIdentifier,
     subjects_by_governance: HashMap&lt;DigestIdentifier, HashSet&lt;DigestIdentifier&gt;&gt;,
     subjects_completing_event:
-        HashMap&lt;DigestIdentifier, (ValidationStage, Vec&lt;KeyIdentifier&gt;, u32)&gt;,
+        HashMap&lt;DigestIdentifier, (ValidationStage, HashSet&lt;KeyIdentifier&gt;, u32)&gt;,
     <span class="comment">// actual_sn: HashMap&lt;DigestIdentifier, u64&gt;,
     // virtual_state: HashMap&lt;DigestIdentifier, Value&gt;,
     // Evaluation HashMaps
@@ -1380,10 +1445,11 @@
         </span><span class="kw">let </span><span class="prelude-val">Some</span>((ValidationStage::Evaluate, signers, quorum_size)) = <span class="self">self</span>.subjects_completing_event.get(<span class="kw-2">&amp;</span>subject_id) <span class="kw">else </span>{
             <span class="kw">return </span><span class="prelude-val">Err</span>(EventError::WrongEventPhase);
         };
+        <span class="kw">let </span>signer = signature.content.signer.clone();
         <span class="comment">// Check if evaluator is in the list of evaluators
-        </span><span class="kw">if </span>!signers.contains(<span class="kw-2">&amp;</span>signature.content.signer) {
+        </span><span class="kw">if </span>!signers.contains(<span class="kw-2">&amp;</span>signer) {
             <span class="kw">return </span><span class="prelude-val">Err</span>(EventError::CryptoError(String::from(
-                <span class="string">&quot;The signer is not in the list of evaluators&quot;</span>,
+                <span class="string">&quot;The signer is not in the list of evaluators or we already have the signature&quot;</span>,
             )));
         }
         <span class="comment">// Comprobar que todo es correcto criptográficamente
@@ -1404,7 +1470,6 @@
             .<span class="kw">await
             </span>.map_err(EventError::GovernanceError)<span class="question-mark">?</span>;
         <span class="comment">// Comprobar governance-version que sea la misma que la nuestra
-        // TODO: Pedir gov si la versión del evaluador es mayor
         </span><span class="kw">if </span>governance_version != evaluation.governance_version {
             <span class="kw">return </span><span class="prelude-val">Err</span>(EventError::WrongGovernanceVersion);
         }
@@ -1435,8 +1500,24 @@
         };
         <span class="kw">let </span>num_signatures_hash =
             count_signatures_with_event_content_hash(<span class="kw-2">&amp;</span>signatures_set, <span class="kw-2">&amp;</span>evaluation_hash) <span class="kw">as </span>u32;
+        <span class="kw">let </span>quorum_size = quorum_size.to_owned();
         <span class="comment">// Comprobar si llegamos a Quorum
-        </span><span class="kw">if </span>num_signatures_hash &lt; <span class="kw-2">*</span>quorum_size {
+        </span><span class="kw">if </span>num_signatures_hash &lt; quorum_size {
+            <span class="kw">let </span><span class="kw-2">mut </span>new_signers: HashSet&lt;KeyIdentifier&gt; =
+                signers.into_iter().map(|s| s.clone()).collect();
+            new_signers.remove(<span class="kw-2">&amp;</span>signer);
+            <span class="self">self</span>.ask_signatures(
+                <span class="kw-2">&amp;</span>subject_id,
+                create_evaluator_request(preevaluation_event.clone()),
+                new_signers.clone(),
+                quorum_size,
+            )
+            .<span class="kw">await</span><span class="question-mark">?</span>;
+            <span class="comment">// Hacer update de fase por la que va el evento
+            </span><span class="self">self</span>.subjects_completing_event.insert(
+                subject_id,
+                (ValidationStage::Evaluate, new_signers, quorum_size),
+            );
             <span class="kw">return </span><span class="prelude-val">Ok</span>(()); <span class="comment">// No llegamos a quorum, no hacemos nada
         </span>} <span class="kw">else </span>{
             <span class="comment">// Si es así comprobar que json patch aplicado al evento parar la petición de firmas y empezar a pedir las approves con el evento completo con lo nuevo obtenido en esta fase si se requieren approves, si no informar a validator
@@ -1576,10 +1657,11 @@
         <span class="kw">let </span><span class="prelude-val">Some</span>((ValidationStage::Approve, signers, quorum_size)) = <span class="self">self</span>.subjects_completing_event.get(<span class="kw-2">&amp;</span>subject_id) <span class="kw">else </span>{
             <span class="kw">return </span><span class="prelude-val">Err</span>(EventError::WrongEventPhase);
         };
+        <span class="kw">let </span>signer = approval.signature.content.signer.clone();
         <span class="comment">// Check if approver is in the list of approvers
-        </span><span class="kw">if </span>!signers.contains(<span class="kw-2">&amp;</span>approval.signature.content.signer) {
+        </span><span class="kw">if </span>!signers.contains(<span class="kw-2">&amp;</span>signer) {
             <span class="kw">return </span><span class="prelude-val">Err</span>(EventError::CryptoError(String::from(
-                <span class="string">&quot;The signer is not in the list of approvers&quot;</span>,
+                <span class="string">&quot;The signer is not in the list of approvers or we already have his approve&quot;</span>,
             )));
         }
         <span class="comment">// Comprobar que todo es correcto criptográficamente
@@ -1631,12 +1713,26 @@
         <span class="kw">let </span>(quorum_size, execution) = <span class="kw">match </span>approval.content.acceptance {
             <span class="kw">crate</span>::commons::models::Acceptance::Ok =&gt; (quorum_size.to_owned(), <span class="bool-val">true</span>),
             <span class="kw">crate</span>::commons::models::Acceptance::Ko =&gt; {
-                (((signers.len() <span class="kw">as </span>u32) - quorum_size) + <span class="number">1</span>, <span class="bool-val">false</span>)
+                (((signers.len() <span class="kw">as </span>u32) - <span class="kw-2">*</span>quorum_size) + <span class="number">1</span>, <span class="bool-val">false</span>)
             }
-
             <span class="kw">crate</span>::commons::models::Acceptance::Error =&gt; <span class="macro">unreachable!</span>(),
         };
         <span class="kw">if </span>num_approvals_with_same_acceptance &lt; quorum_size {
+            <span class="kw">let </span><span class="kw-2">mut </span>new_signers: HashSet&lt;KeyIdentifier&gt; =
+                signers.into_iter().map(|s| s.clone()).collect();
+            new_signers.remove(<span class="kw-2">&amp;</span>signer);
+            <span class="self">self</span>.ask_signatures(
+                <span class="kw-2">&amp;</span>subject_id,
+                create_approval_request(event_proposal.to_owned()),
+                signers.clone(),
+                quorum_size,
+            )
+            .<span class="kw">await</span><span class="question-mark">?</span>;
+            <span class="comment">// Hacer update de fase por la que va el evento
+            </span><span class="self">self</span>.subjects_completing_event.insert(
+                subject_id,
+                (ValidationStage::Evaluate, new_signers, quorum_size),
+            );
             <span class="prelude-val">Ok</span>(()) <span class="comment">// No llegamos a quorum, no hacemos nada
         </span>} <span class="kw">else </span>{
             <span class="comment">// Si se llega a Quorum dejamos de pedir approves y empezamos a pedir notarizaciones con el evento completo incluyendo lo nuevo de las approves
@@ -1713,10 +1809,11 @@
         </span><span class="kw">let </span><span class="prelude-val">Some</span>((ValidationStage::Validate, signers, quorum_size)) = <span class="self">self</span>.subjects_completing_event.get(<span class="kw-2">&amp;</span>subject_id) <span class="kw">else </span>{
             <span class="kw">return </span><span class="prelude-val">Err</span>(EventError::WrongEventPhase);
         };
+        <span class="kw">let </span>signer = signature.content.signer.clone();
         <span class="comment">// Check if approver is in the list of approvers
-        </span><span class="kw">if </span>!signers.contains(<span class="kw-2">&amp;</span>signature.content.signer) {
+        </span><span class="kw">if </span>!signers.contains(<span class="kw-2">&amp;</span>signer) {
             <span class="kw">return </span><span class="prelude-val">Err</span>(EventError::CryptoError(String::from(
-                <span class="string">&quot;The signer is not in the list of approvers&quot;</span>,
+                <span class="string">&quot;The signer is not in the list of validators or we already have the validation&quot;</span>,
             )));
         }
         <span class="comment">// Obtener sujeto para saber si lo tenemos y los metadatos del mismo
@@ -1727,6 +1824,7 @@
                 <span class="kw">crate</span>::DbError::EntryNotFound =&gt; EventError::SubjectNotFound(subject_id.to_str()),
                 <span class="kw">_ </span>=&gt; EventError::DatabaseError(error.to_string()),
             })<span class="question-mark">?</span>;
+        <span class="kw">let </span>gov_version = event.content.event_proposal.proposal.gov_version.to_owned();
         <span class="comment">// Comprobar que todo es correcto criptográficamente
         </span><span class="kw">let </span>event_hash = check_cryptography(
             (
@@ -1756,8 +1854,21 @@
                 )
             }
         };
+        <span class="kw">let </span>quorum_size = quorum_size.to_owned();
         <span class="comment">// Comprobar si llegamos a Quorum y si es así dejar de pedir firmas
-        </span><span class="kw">if </span>(validation_set.len() <span class="kw">as </span>u32) &lt; <span class="kw-2">*</span>quorum_size {
+        </span><span class="kw">if </span>(validation_set.len() <span class="kw">as </span>u32) &lt; quorum_size {
+            <span class="kw">let </span>event_message =
+                create_validator_request(<span class="self">self</span>.create_notary_event(<span class="kw-2">&amp;</span>subject, event, gov_version)<span class="question-mark">?</span>);
+            <span class="kw">let </span><span class="kw-2">mut </span>new_signers: HashSet&lt;KeyIdentifier&gt; =
+                signers.into_iter().map(|s| s.clone()).collect();
+            new_signers.remove(<span class="kw-2">&amp;</span>signer);
+            <span class="self">self</span>.ask_signatures(<span class="kw-2">&amp;</span>subject_id, event_message, new_signers.clone(), quorum_size)
+                .<span class="kw">await</span><span class="question-mark">?</span>;
+            <span class="comment">// Hacer update de fase por la que va el evento
+            </span><span class="self">self</span>.subjects_completing_event.insert(
+                subject_id,
+                (ValidationStage::Evaluate, new_signers, quorum_size),
+            );
             <span class="prelude-val">Ok</span>(())
         } <span class="kw">else </span>{
             <span class="kw">let </span>validation_signatures: HashSet&lt;Signature&gt; = validation_set
@@ -1790,19 +1901,38 @@
         }
     }
 
-    <span class="comment">// TODO: Cambiar Vec por HashSet, no se por que puse vec
-    </span><span class="kw">async fn </span>get_signers_and_quorum(
+    <span class="kw">pub async fn </span>higher_governance_expected(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        governance_id: DigestIdentifier,
+        who_asked: KeyIdentifier,
+    ) -&gt; <span class="prelude-ty">Result</span>&lt;(), EventError&gt; {
+        <span class="self">self</span>.message_channel
+            .tell(MessageTaskCommand::Request(
+                <span class="prelude-val">None</span>,
+                TapleMessages::LedgerMessages(LedgerCommand::GetLCE {
+                    who_asked: <span class="self">self</span>.own_identifier.clone(),
+                    subject_id: governance_id,
+                }),
+                <span class="macro">vec!</span>[who_asked],
+                MessageConfig {
+                    timeout: TIMEOUT,
+                    replication_factor: <span class="number">1.0</span>,
+                },
+            ))
+            .<span class="kw">await
+            </span>.map_err(EventError::ChannelError)
+    }
+
+    <span class="kw">async fn </span>get_signers_and_quorum(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         metadata: Metadata,
         stage: ValidationStage,
-    ) -&gt; <span class="prelude-ty">Result</span>&lt;(Vec&lt;KeyIdentifier&gt;, u32), EventError&gt; {
+    ) -&gt; <span class="prelude-ty">Result</span>&lt;(HashSet&lt;KeyIdentifier&gt;, u32), EventError&gt; {
         <span class="kw">let </span>signers = <span class="self">self
             </span>.gov_api
             .get_signers(metadata.clone(), stage.clone())
             .<span class="kw">await
-            </span>.map_err(EventError::GovernanceError)<span class="question-mark">?
-            </span>.into_iter()
-            .collect();
+            </span>.map_err(EventError::GovernanceError)<span class="question-mark">?</span>;
         <span class="kw">let </span>quorum_size = <span class="self">self
             </span>.gov_api
             .get_quorum(metadata, stage)
@@ -1815,7 +1945,7 @@
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         subject_id: <span class="kw-2">&amp;</span>DigestIdentifier,
         event_message: TapleMessages,
-        signers: Vec&lt;KeyIdentifier&gt;,
+        signers: HashSet&lt;KeyIdentifier&gt;,
         quorum_size: u32,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;(), EventError&gt; {
         <span class="kw">let </span>replication_factor = extend_quorum(quorum_size, signers.len());
@@ -1823,7 +1953,7 @@
             .tell(MessageTaskCommand::Request(
                 <span class="prelude-val">Some</span>(String::from(<span class="macro">format!</span>(<span class="string">&quot;{}&quot;</span>, subject_id.to_str()))),
                 event_message,
-                signers,
+                signers.into_iter().collect(),
                 MessageConfig {
                     timeout: TIMEOUT,
                     replication_factor,

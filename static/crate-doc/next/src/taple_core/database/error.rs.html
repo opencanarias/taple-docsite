@@ -19,7 +19,7 @@
 </pre><pre class="rust"><code><span class="doccomment">//! Possible errors of a TAPLE Database
 </span><span class="kw">use </span>thiserror::Error;
 
-<span class="attr">#[derive(Error, Debug, Clone)]
+<span class="attr">#[derive(Error, Debug, Clone, PartialEq)]
 </span><span class="kw">pub enum </span>Error {
   <span class="attr">#[error(<span class="string">&quot;Entry Not Found&quot;</span>)]
   </span>EntryNotFound,

@@ -777,17 +777,46 @@
 <a href="#777" id="777">777</a>
 <a href="#778" id="778">778</a>
 <a href="#779" id="779">779</a>
+<a href="#780" id="780">780</a>
+<a href="#781" id="781">781</a>
+<a href="#782" id="782">782</a>
+<a href="#783" id="783">783</a>
+<a href="#784" id="784">784</a>
+<a href="#785" id="785">785</a>
+<a href="#786" id="786">786</a>
+<a href="#787" id="787">787</a>
+<a href="#788" id="788">788</a>
+<a href="#789" id="789">789</a>
+<a href="#790" id="790">790</a>
+<a href="#791" id="791">791</a>
+<a href="#792" id="792">792</a>
+<a href="#793" id="793">793</a>
+<a href="#794" id="794">794</a>
+<a href="#795" id="795">795</a>
+<a href="#796" id="796">796</a>
+<a href="#797" id="797">797</a>
+<a href="#798" id="798">798</a>
+<a href="#799" id="799">799</a>
+<a href="#800" id="800">800</a>
+<a href="#801" id="801">801</a>
+<a href="#802" id="802">802</a>
+<a href="#803" id="803">803</a>
+<a href="#804" id="804">804</a>
+<a href="#805" id="805">805</a>
+<a href="#806" id="806">806</a>
+<a href="#807" id="807">807</a>
 </pre><pre class="rust"><code><span class="kw">use </span>std::collections::HashMap;
 
 <span class="kw">use crate</span>::{
     commons::{
+        config::VotationType,
         models::{
             approval::{Approval, ApprovalContent},
             event_proposal::EventProposal,
-            state::{Subject},
+            state::Subject,
             Acceptance,
         },
-        self_signature_manager::{SelfSignatureInterface, SelfSignatureManager}, config::VotationType,
+        self_signature_manager::{SelfSignatureInterface, SelfSignatureManager},
     },
     database::DB,
     event_content::Metadata,
@@ -798,7 +827,8 @@
 };
 
 <span class="kw">use super</span>::{
-    error::{ApprovalErrorResponse, ApprovalManagerError}, ApprovalPetitionData,
+    error::{ApprovalErrorResponse, ApprovalManagerError},
+    ApprovalPetitionData,
 };
 <span class="kw">use </span><span class="kw">crate</span>::database::Error <span class="kw">as </span>DbError;
 <span class="kw">use </span><span class="kw">crate</span>::governance::stage::ValidationStage;
@@ -874,7 +904,10 @@
         }
     }
 
-    <span class="kw">pub fn </span>get_single_request(<span class="kw-2">&amp;</span><span class="self">self</span>, request_id: <span class="kw-2">&amp;</span>DigestIdentifier) -&gt; <span class="prelude-ty">Result</span>&lt;ApprovalPetitionData, ApprovalErrorResponse&gt; {
+    <span class="kw">pub fn </span>get_single_request(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        request_id: <span class="kw-2">&amp;</span>DigestIdentifier,
+    ) -&gt; <span class="prelude-ty">Result</span>&lt;ApprovalPetitionData, ApprovalErrorResponse&gt; {
         <span class="kw">let </span><span class="prelude-val">Some</span>(request) = <span class="self">self</span>.request_table.get(request_id) <span class="kw">else </span>{
             <span class="kw">return </span><span class="prelude-val">Err</span>(ApprovalErrorResponse::ApprovalRequestNotFound);
         };
@@ -893,7 +926,11 @@
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         governance_id: <span class="kw-2">&amp;</span>DigestIdentifier,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="prelude-ty">Result</span>&lt;u64, ApprovalErrorResponse&gt;, ApprovalManagerError&gt; {
-        <span class="kw">match </span><span class="self">self</span>.governance.get_governance_version(governance_id.to_owned()).<span class="kw">await </span>{
+        <span class="kw">match </span><span class="self">self
+            </span>.governance
+            .get_governance_version(governance_id.to_owned())
+            .<span class="kw">await
+        </span>{
             <span class="prelude-val">Ok</span>(data) =&gt; <span class="prelude-val">Ok</span>(<span class="prelude-val">Ok</span>(data)),
             <span class="prelude-val">Err</span>(RequestError::GovernanceNotFound(_str)) =&gt; {
                 <span class="prelude-val">Ok</span>(<span class="prelude-val">Err</span>(ApprovalErrorResponse::GovernanceNotFound))
@@ -949,7 +986,6 @@
          intervención. En ese caso es precisar eliminar la petición y actualizar a la nueva.
          Debemos comprobar siempre si ya tenemos la petición que nos envían.
         */
-
         </span><span class="kw">let </span>id = <span class="kw-2">&amp;</span>approval_request
             .subject_signature
             .content
@@ -998,10 +1034,26 @@
             <span class="prelude-val">Err</span>(error) =&gt; <span class="kw">return </span><span class="prelude-val">Ok</span>(<span class="prelude-val">Err</span>(error)),
         };
 
-        <span class="kw">let </span>evaluation = approval_request.proposal.evaluation.clone().expect(<span class="string">&quot;los genesis no se aprueban&quot;</span>);
+        <span class="kw">let </span>evaluation = approval_request
+            .proposal
+            .evaluation
+            .clone()
+            .expect(<span class="string">&quot;los genesis no se aprueban&quot;</span>);
 
-        <span class="kw">if </span>version != evaluation.governance_version {
-            <span class="kw">return </span><span class="prelude-val">Ok</span>(<span class="prelude-val">Err</span>(ApprovalErrorResponse::InvalidGovernanceVersion));
+        <span class="kw">if </span>version &gt; evaluation.governance_version {
+            <span class="comment">// Nuestra gov es mayor: mandamos mensaje para que actualice el emisor
+            </span><span class="kw">return </span><span class="prelude-val">Ok</span>(<span class="prelude-val">Err</span>(ApprovalErrorResponse::OurGovIsHigher {
+                our_id: <span class="self">self</span>.signature_manager.get_own_identifier(),
+                sender: subject_data.owner.clone(),
+                gov_id: subject_data.governance_id.clone(),
+            }));
+        } <span class="kw">else if </span>version &lt; evaluation.governance_version {
+            <span class="comment">// Nuestra gov es menor: no podemos hacer nada. Pedimos LCE al que nos lo envió
+            </span><span class="kw">return </span><span class="prelude-val">Ok</span>(<span class="prelude-val">Err</span>(ApprovalErrorResponse::OurGovIsLower {
+                our_id: <span class="self">self</span>.signature_manager.get_own_identifier(),
+                sender: subject_data.owner.clone(),
+                gov_id: subject_data.governance_id.clone(),
+            }));
         }
 
         <span class="kw">let </span>metadata = create_metadata(<span class="kw-2">&amp;</span>subject_data, version);
@@ -1092,13 +1144,17 @@
 
         <span class="kw">match </span>evaluation.acceptance {
             Acceptance::Ok =&gt; {
-                <span class="kw">if </span>!(approval_request.proposal.evaluation_signatures.len() <span class="kw">as </span>u32 &gt;= evaluator_quorum) {
+                <span class="kw">if </span>!(approval_request.proposal.evaluation_signatures.len() <span class="kw">as </span>u32
+                    &gt;= evaluator_quorum)
+                {
                     <span class="kw">return </span><span class="prelude-val">Ok</span>(<span class="prelude-val">Err</span>(ApprovalErrorResponse::NoQuorumReached));
                 }
             }
             Acceptance::Ko =&gt; {
                 <span class="kw">let </span>negativate_quorum = evaluators.len() <span class="kw">as </span>u32 - evaluator_quorum;
-                <span class="kw">if </span>!(approval_request.proposal.evaluation_signatures.len() <span class="kw">as </span>u32 &gt; negativate_quorum) {
+                <span class="kw">if </span>!(approval_request.proposal.evaluation_signatures.len() <span class="kw">as </span>u32
+                    &gt; negativate_quorum)
+                {
                     <span class="kw">return </span><span class="prelude-val">Ok</span>(<span class="prelude-val">Err</span>(ApprovalErrorResponse::NoQuorumReached));
                 }
             }
@@ -1122,7 +1178,7 @@
                 .event_content_hash
                 .clone(),
             sender: subject_data.owner.clone(),
-            json_patch: approval_request.proposal.json_patch.clone()
+            json_patch: approval_request.proposal.json_patch.clone(),
         };
 
         <span class="self">self</span>.subject_been_approved

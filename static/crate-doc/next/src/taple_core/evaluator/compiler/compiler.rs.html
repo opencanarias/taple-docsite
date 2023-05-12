@@ -294,7 +294,7 @@
         // Read the contract from database
         </span><span class="kw">let </span>contracts = <span class="self">self
             </span>.gov_api
-            .get_contracts(governance_id.clone())
+            .get_contracts(governance_id.clone(), governance_version)
             .<span class="kw">await
             </span>.map_err(CompilerErrorResponses::GovernanceError)<span class="question-mark">?</span>;
         <span class="macro">log::info!</span>(<span class="string">&quot;UPDATE CONTRACTS - CONTRACTS ARRAY LENGTH: {}&quot;</span>, contracts.len());
