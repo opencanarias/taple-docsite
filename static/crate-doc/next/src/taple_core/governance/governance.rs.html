@@ -450,6 +450,8 @@
 <a href="#450" id="450">450</a>
 <a href="#451" id="451">451</a>
 <a href="#452" id="452">452</a>
+<a href="#453" id="453">453</a>
+<a href="#454" id="454">454</a>
 </pre><pre class="rust"><code><span class="kw">use </span>std::collections::HashSet;
 
 <span class="kw">use </span>async_trait::async_trait;
@@ -560,10 +562,10 @@
                         <span class="kw">let </span>to_send = <span class="self">self</span>.inner_governance.get_quorum(metadata, stage)<span class="question-mark">?</span>;
                         <span class="prelude-val">Ok</span>(sender.send(GovernanceResponse::GetQuorum(to_send)).unwrap())
                     }
-                    GovernanceMessage::GetGovernanceVersion { governance_id } =&gt; {
+                    GovernanceMessage::GetGovernanceVersion { governance_id, subject_id } =&gt; {
                         <span class="kw">let </span>version = <span class="self">self
                             </span>.inner_governance
-                            .get_governance_version(governance_id)<span class="question-mark">?</span>;
+                            .get_governance_version(subject_id, governance_id)<span class="question-mark">?</span>;
                         <span class="prelude-val">Ok</span>(sender
                             .send(GovernanceResponse::GetGovernanceVersion(version))
                             .map_err(|<span class="kw">_</span>| InternalError::OneshotClosed)<span class="question-mark">?</span>)
@@ -688,6 +690,7 @@
     <span class="kw">async fn </span>get_governance_version(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         governance_id: DigestIdentifier,
+        subject_id: DigestIdentifier,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;u64, RequestError&gt;;
 
     <span class="kw">async fn </span>is_governance(<span class="kw-2">&amp;</span><span class="self">self</span>, subject_id: DigestIdentifier) -&gt; <span class="prelude-ty">Result</span>&lt;bool, RequestError&gt;;
@@ -842,10 +845,11 @@
     <span class="kw">async fn </span>get_governance_version(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         governance_id: DigestIdentifier,
+        subject_id: DigestIdentifier
     ) -&gt; <span class="prelude-ty">Result</span>&lt;u64, RequestError&gt; {
         <span class="kw">let </span>response = <span class="self">self
             </span>.sender
-            .ask(GovernanceMessage::GetGovernanceVersion { governance_id })
+            .ask(GovernanceMessage::GetGovernanceVersion { governance_id, subject_id })
             .<span class="kw">await
             </span>.map_err(|<span class="kw">_</span>| RequestError::ChannelClosed)<span class="question-mark">?</span>;
         <span class="kw">if let </span>GovernanceResponse::GetGovernanceVersion(version) = response {

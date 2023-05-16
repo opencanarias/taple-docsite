@@ -1143,6 +1143,19 @@
 <a href="#1143" id="1143">1143</a>
 <a href="#1144" id="1144">1144</a>
 <a href="#1145" id="1145">1145</a>
+<a href="#1146" id="1146">1146</a>
+<a href="#1147" id="1147">1147</a>
+<a href="#1148" id="1148">1148</a>
+<a href="#1149" id="1149">1149</a>
+<a href="#1150" id="1150">1150</a>
+<a href="#1151" id="1151">1151</a>
+<a href="#1152" id="1152">1152</a>
+<a href="#1153" id="1153">1153</a>
+<a href="#1154" id="1154">1154</a>
+<a href="#1155" id="1155">1155</a>
+<a href="#1156" id="1156">1156</a>
+<a href="#1157" id="1157">1157</a>
+<a href="#1158" id="1158">1158</a>
 </pre><pre class="rust"><code><span class="kw">use </span>std::collections::{hash_map::Entry, HashMap, HashSet};
 
 <span class="kw">use </span>json_patch::{patch, Patch};
@@ -1284,10 +1297,16 @@
         </span><span class="kw">let </span>EventRequestType::Create(create_request) = event_request.request.clone() <span class="kw">else </span>{
             <span class="kw">return </span><span class="prelude-val">Err</span>(LedgerError::StateInGenesis)
         };
-        <span class="kw">let </span>governance_version = <span class="self">self
+        <span class="kw">let </span>governance_version = <span class="kw">if </span>create_request.schema_id == <span class="string">&quot;governance&quot;
+            </span>&amp;&amp; create_request.governance_id.digest.is_empty()
+        {
+            <span class="number">0
+        </span>} <span class="kw">else </span>{
+            <span class="self">self
             </span>.gov_api
-            .get_governance_version(create_request.governance_id.clone())
-            .<span class="kw">await</span><span class="question-mark">?</span>;
+            .get_governance_version(create_request.governance_id.clone(), DigestIdentifier::default())
+            .<span class="kw">await</span><span class="question-mark">?
+        </span>};
         <span class="kw">let </span>init_state = <span class="self">self
             </span>.gov_api
             .get_init_state(
@@ -1321,6 +1340,8 @@
         } <span class="kw">else </span>{
             <span class="self">self</span>.subject_is_gov.insert(subject_id.clone(), <span class="bool-val">false</span>);
         }
+        <span class="self">self</span>.database
+            .set_governance_index(<span class="kw-2">&amp;</span>subject_id, <span class="kw-2">&amp;</span>subject.governance_id)<span class="question-mark">?</span>;
         <span class="self">self</span>.database.set_subject(<span class="kw-2">&amp;</span>subject_id, subject)<span class="question-mark">?</span>;
         <span class="self">self</span>.database.set_event(<span class="kw-2">&amp;</span>subject_id, event)<span class="question-mark">?</span>;
         <span class="comment">// Actualizar Ledger State
@@ -1455,7 +1476,10 @@
                 };
                 <span class="kw">let </span>our_gov_version = <span class="self">self
                     </span>.gov_api
-                    .get_governance_version(create_request.governance_id.clone())
+                    .get_governance_version(
+                        create_request.governance_id.clone(),
+                        DigestIdentifier::default(),
+                    )
                     .<span class="kw">await</span><span class="question-mark">?</span>;
                 <span class="kw">let </span>metadata = Metadata {
                     namespace: create_request.namespace,
@@ -2039,6 +2063,8 @@
         <span class="kw">let </span>init_state = serde_json::to_string(<span class="kw-2">&amp;</span>init_state)
             .map_err(|<span class="kw">_</span>| LedgerError::ErrorParsingJsonString(<span class="string">&quot;Init state&quot;</span>.to_owned()))<span class="question-mark">?</span>;
         <span class="kw">let </span>subject = Subject::from_genesis_event(event.clone(), init_state)<span class="question-mark">?</span>;
+        <span class="self">self</span>.database
+            .set_governance_index(<span class="kw-2">&amp;</span>subject_id, <span class="kw-2">&amp;</span>subject.governance_id)<span class="question-mark">?</span>;
         <span class="self">self</span>.database.set_event(<span class="kw-2">&amp;</span>subject_id, event)<span class="question-mark">?</span>;
         <span class="self">self</span>.database.set_subject(<span class="kw-2">&amp;</span>subject_id, subject)<span class="question-mark">?</span>;
         <span class="prelude-val">Ok</span>(metadata)

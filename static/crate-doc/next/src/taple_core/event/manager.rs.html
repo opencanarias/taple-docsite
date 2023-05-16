@@ -292,6 +292,9 @@
 <a href="#292" id="292">292</a>
 <a href="#293" id="293">293</a>
 <a href="#294" id="294">294</a>
+<a href="#295" id="295">295</a>
+<a href="#296" id="296">296</a>
+<a href="#297" id="297">297</a>
 </pre><pre class="rust"><code><span class="kw">use </span>async_trait::async_trait;
 
 <span class="kw">use super</span>::{errors::EventError, event_completer::EventCompleter, EventCommand, EventResponse};
@@ -381,6 +384,7 @@
         <span class="kw">match </span><span class="self">self</span>.event_completer.init().<span class="kw">await </span>{
             <span class="prelude-val">Ok</span>(<span class="kw">_</span>) =&gt; {}
             <span class="prelude-val">Err</span>(error) =&gt; {
+                <span class="macro">log::error!</span>(<span class="string">&quot;{}&quot;</span>, error);
                 <span class="self">self</span>.shutdown_sender.send(()).expect(<span class="string">&quot;Channel Closed&quot;</span>);
                 <span class="kw">return</span>;
             }
@@ -392,6 +396,7 @@
                         <span class="prelude-val">Some</span>(command) =&gt; {
                             <span class="kw">let </span>result = <span class="self">self</span>.process_command(command).<span class="kw">await</span>;
                             <span class="kw">if </span>result.is_err() {
+                                <span class="macro">log::error!</span>(<span class="string">&quot;{}&quot;</span>, result.unwrap_err());
                                 <span class="self">self</span>.shutdown_sender.send(()).expect(<span class="string">&quot;Channel Closed&quot;</span>);
                                 <span class="kw">break</span>;
                             }
@@ -432,6 +437,7 @@
         <span class="kw-2">&amp;mut </span><span class="self">self</span>,
         command: ChannelData&lt;EventCommand, EventResponse&gt;,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;(), EventError&gt; {
+        <span class="macro">log::info!</span>(<span class="string">&quot;EVENT MANAGER MSG RECEIVED&quot;</span>);
         <span class="kw">let </span>(sender, data) = <span class="kw">match </span>command {
             ChannelData::AskData(data) =&gt; {
                 <span class="kw">let </span>(sender, data) = data.get();

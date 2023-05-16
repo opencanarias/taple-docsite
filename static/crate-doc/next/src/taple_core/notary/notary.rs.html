@@ -376,7 +376,7 @@
     ) -&gt; <span class="prelude-ty">Result</span>&lt;NotaryEventResponse, NotaryError&gt; {
         <span class="kw">let </span>actual_gov_version = <span class="kw">match </span><span class="self">self
             </span>.gov_api
-            .get_governance_version(notary_event.gov_id.clone())
+            .get_governance_version(notary_event.gov_id.clone(), notary_event.subject_id.clone())
             .<span class="kw">await
         </span>{
             <span class="prelude-val">Ok</span>(gov_version) =&gt; gov_version,

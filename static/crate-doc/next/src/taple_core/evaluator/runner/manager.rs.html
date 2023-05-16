@@ -163,6 +163,21 @@
 <a href="#163" id="163">163</a>
 <a href="#164" id="164">164</a>
 <a href="#165" id="165">165</a>
+<a href="#166" id="166">166</a>
+<a href="#167" id="167">167</a>
+<a href="#168" id="168">168</a>
+<a href="#169" id="169">169</a>
+<a href="#170" id="170">170</a>
+<a href="#171" id="171">171</a>
+<a href="#172" id="172">172</a>
+<a href="#173" id="173">173</a>
+<a href="#174" id="174">174</a>
+<a href="#175" id="175">175</a>
+<a href="#176" id="176">176</a>
+<a href="#177" id="177">177</a>
+<a href="#178" id="178">178</a>
+<a href="#179" id="179">179</a>
+<a href="#180" id="180">180</a>
 </pre><pre class="rust"><code><span class="kw">use </span>json_patch::diff;
 <span class="kw">use </span>serde_json::Value;
 <span class="kw">use </span>wasmtime::Engine;
@@ -174,7 +189,7 @@
     event_request::StateRequest,
     governance::GovernanceInterface,
     identifier::DigestIdentifier,
-    DatabaseManager,
+    DatabaseManager, EventRequestType,
 };
 
 <span class="kw">use super</span>::{executor::ContractExecutor, ExecuteContractResponse};
@@ -205,16 +220,31 @@
         state_data: <span class="kw-2">&amp;</span>StateRequest,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;ExecuteContractResponse, ExecutorErrorResponses&gt; {
         <span class="comment">// Check governance version
-        </span><span class="kw">let </span>governance = <span class="self">self
-            </span>.database
-            .get_subject(<span class="kw-2">&amp;</span>execute_contract.context.governance_id)
-            .map_err(|db_err| ExecutorErrorResponses::DatabaseError(db_err.to_string()))<span class="question-mark">?</span>;
+        </span><span class="kw">let </span>governance_id = <span class="kw">if </span><span class="kw-2">&amp;</span>execute_contract.context.schema_id == <span class="string">&quot;governance&quot; </span>{
+            <span class="kw">if let </span>EventRequestType::State(data) = <span class="kw-2">&amp;</span>execute_contract.event_request.request {
+                data.subject_id.clone()
+            } <span class="kw">else </span>{
+                <span class="kw">return </span><span class="prelude-val">Err</span>(ExecutorErrorResponses::CreateRequestNotAllowed);
+            }
+        } <span class="kw">else </span>{
+            execute_contract.context.governance_id.clone()
+        };
+        <span class="kw">let </span>governance = <span class="kw">match </span><span class="self">self</span>.database.get_subject(<span class="kw-2">&amp;</span>governance_id) {
+            <span class="prelude-val">Ok</span>(governance) =&gt; governance,
+            <span class="prelude-val">Err</span>(DbError::EntryNotFound) =&gt; {
+                <span class="comment">// Pedimos LCE
+                </span><span class="kw">return </span><span class="prelude-val">Err</span>(ExecutorErrorResponses::OurGovIsLower);
+            },
+            <span class="prelude-val">Err</span>(error) =&gt; {
+               <span class="kw">return </span><span class="prelude-val">Err</span>(ExecutorErrorResponses::DatabaseError(error.to_string())) 
+            }
+        };
         <span class="kw">if </span>governance.sn &gt; execute_contract.context.governance_version {
             <span class="comment">// Nuestra gov es mayor: mandamos mensaje para que actualice el emisor
-            </span><span class="kw">return </span><span class="prelude-val">Err</span>(ExecutorErrorResponses::OurGovIsHigher)
+            </span><span class="kw">return </span><span class="prelude-val">Err</span>(ExecutorErrorResponses::OurGovIsHigher);
         } <span class="kw">else if </span>governance.sn &lt; execute_contract.context.governance_version {
             <span class="comment">// Nuestra gov es menor: no podemos hacer nada. Pedimos LCE al que nos lo envió
-            </span><span class="kw">return </span><span class="prelude-val">Err</span>(ExecutorErrorResponses::OurGovIsLower)
+            </span><span class="kw">return </span><span class="prelude-val">Err</span>(ExecutorErrorResponses::OurGovIsLower);
         }
         <span class="kw">let </span>context_hash = <span class="self">Self</span>::generate_context_hash(execute_contract)<span class="question-mark">?</span>;
         <span class="kw">let </span>(contract, governance_version) = <span class="kw">if </span>execute_contract.context.schema_id == <span class="string">&quot;governance&quot;

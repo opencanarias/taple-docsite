@@ -848,6 +848,7 @@
 <a href="#848" id="848">848</a>
 <a href="#849" id="849">849</a>
 <a href="#850" id="850">850</a>
+<a href="#851" id="851">851</a>
 </pre><pre class="rust"><code><span class="kw">use </span>std::sync::Arc;
 
 <span class="kw">use </span>wasmtime::Engine;
@@ -936,6 +937,7 @@
                         <span class="prelude-val">Some</span>(command) =&gt; {
                             <span class="kw">let </span>result = <span class="self">self</span>.process_command(command).<span class="kw">await</span>;
                             <span class="kw">if </span>result.is_err() {
+                                <span class="macro">log::error!</span>(<span class="string">&quot;{}&quot;</span>, result.unwrap_err());
                                 <span class="self">self</span>.shutdown_sender.send(()).expect(<span class="string">&quot;Channel Closed&quot;</span>);
                             }
                         }

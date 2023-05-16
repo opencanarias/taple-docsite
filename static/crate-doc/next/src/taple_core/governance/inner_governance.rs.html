@@ -653,7 +653,6 @@
 <a href="#653" id="653">653</a>
 <a href="#654" id="654">654</a>
 <a href="#655" id="655">655</a>
-<a href="#656" id="656">656</a>
 </pre><pre class="rust"><code><span class="kw">use </span>std::{collections::HashSet, str::FromStr};
 
 <span class="kw">use crate</span>::{
@@ -1040,11 +1039,10 @@
     <span class="comment">// OLD BUT OK
     </span><span class="kw">pub fn </span>get_governance_version(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
+        subject_id: DigestIdentifier,
         governance_id: DigestIdentifier,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="prelude-ty">Result</span>&lt;u64, RequestError&gt;, InternalError&gt; {
-        <span class="kw">if </span>governance_id.digest.is_empty() {
-            <span class="kw">return </span><span class="prelude-val">Ok</span>(<span class="prelude-val">Ok</span>(<span class="number">0</span>));
-        }
+        <span class="kw">let </span>governance_id = <span class="kw">if </span>governance_id.digest.is_empty() { subject_id } <span class="kw">else </span>{ governance_id };
         <span class="kw">let </span>governance = <span class="kw">match </span><span class="self">self</span>.repo_access.get_subject(<span class="kw-2">&amp;</span>governance_id) {
             <span class="prelude-val">Ok</span>(governance) =&gt; governance,
             <span class="prelude-val">Err</span>(DbError::EntryNotFound) =&gt; {

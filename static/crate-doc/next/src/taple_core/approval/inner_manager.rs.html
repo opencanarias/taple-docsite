@@ -805,6 +805,7 @@
 <a href="#805" id="805">805</a>
 <a href="#806" id="806">806</a>
 <a href="#807" id="807">807</a>
+<a href="#808" id="808">808</a>
 </pre><pre class="rust"><code><span class="kw">use </span>std::collections::HashMap;
 
 <span class="kw">use crate</span>::{
@@ -925,10 +926,11 @@
     <span class="kw">pub async fn </span>get_governance_version(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         governance_id: <span class="kw-2">&amp;</span>DigestIdentifier,
+        subject_id: <span class="kw-2">&amp;</span>DigestIdentifier
     ) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="prelude-ty">Result</span>&lt;u64, ApprovalErrorResponse&gt;, ApprovalManagerError&gt; {
         <span class="kw">match </span><span class="self">self
             </span>.governance
-            .get_governance_version(governance_id.to_owned())
+            .get_governance_version(governance_id.to_owned(), subject_id.clone())
             .<span class="kw">await
         </span>{
             <span class="prelude-val">Ok</span>(data) =&gt; <span class="prelude-val">Ok</span>(<span class="prelude-val">Ok</span>(data)),
@@ -1027,7 +1029,7 @@
 
         // Comprobamos si la versión de la gobernanza es correcta
         </span><span class="kw">let </span>version = <span class="kw">match </span><span class="self">self
-            </span>.get_governance_version(<span class="kw-2">&amp;</span>subject_data.governance_id)
+            </span>.get_governance_version(<span class="kw-2">&amp;</span>subject_data.governance_id, <span class="kw-2">&amp;</span>subject_data.subject_id)
             .<span class="kw">await</span><span class="question-mark">?
         </span>{
             <span class="prelude-val">Ok</span>(version) =&gt; version,

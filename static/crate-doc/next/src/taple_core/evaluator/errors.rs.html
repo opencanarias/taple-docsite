@@ -93,6 +93,8 @@
 <a href="#93" id="93">93</a>
 <a href="#94" id="94">94</a>
 <a href="#95" id="95">95</a>
+<a href="#96" id="96">96</a>
+<a href="#97" id="97">97</a>
 </pre><pre class="rust"><code><span class="kw">use </span>thiserror::Error;
 
 <span class="kw">use </span><span class="kw">crate</span>::governance::error::RequestError;
@@ -151,6 +153,8 @@
     </span>OurGovIsLower,
     <span class="attr">#[error(<span class="string">&quot;Our Gov Version is Higher than sender&quot;</span>)]
     </span>OurGovIsHigher,
+    <span class="attr">#[error(<span class="string">&quot;Create Request not allowed&quot;</span>)]
+    </span>CreateRequestNotAllowed
 }
 
 <span class="attr">#[derive(Error, Debug, Clone)]

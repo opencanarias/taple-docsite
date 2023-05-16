@@ -593,6 +593,7 @@
 <a href="#593" id="593">593</a>
 <a href="#594" id="594">594</a>
 <a href="#595" id="595">595</a>
+<a href="#596" id="596">596</a>
 </pre><pre class="rust"><code><span class="kw">use </span>std::sync::Arc;
 
 <span class="kw">use </span><span class="kw">crate</span>::approval::manager::{ApprovalAPI, ApprovalManager};
@@ -1050,6 +1051,7 @@
         <span class="comment">// Creation DistributionManager
         </span><span class="kw">let </span>distribution_manager = DistributionManager::new(
             distribution_receiver,
+            governance_update_sx.subscribe(),
             bsx.clone(),
             bsx.subscribe(),
             task_sender.clone(),
