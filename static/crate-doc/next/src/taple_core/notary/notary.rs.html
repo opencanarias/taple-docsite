@@ -324,10 +324,6 @@
 <a href="#324" id="324">324</a>
 <a href="#325" id="325">325</a>
 <a href="#326" id="326">326</a>
-<a href="#327" id="327">327</a>
-<a href="#328" id="328">328</a>
-<a href="#329" id="329">329</a>
-<a href="#330" id="330">330</a>
 </pre><pre class="rust"><code><span class="kw">use </span>std::collections::HashMap;
 
 <span class="kw">use crate</span>::{
@@ -376,7 +372,10 @@
     ) -&gt; <span class="prelude-ty">Result</span>&lt;NotaryEventResponse, NotaryError&gt; {
         <span class="kw">let </span>actual_gov_version = <span class="kw">match </span><span class="self">self
             </span>.gov_api
-            .get_governance_version(notary_event.gov_id.clone(), notary_event.subject_id.clone())
+            .get_governance_version(
+                notary_event.proof.governance_id.clone(),
+                notary_event.proof.subject_id.clone(),
+            )
             .<span class="kw">await
         </span>{
             <span class="prelude-val">Ok</span>(gov_version) =&gt; gov_version,
@@ -392,18 +391,18 @@
                 <span class="kw">_ </span>=&gt; <span class="kw">return </span><span class="prelude-val">Err</span>(NotaryError::GovApiUnexpectedResponse),
             },
         };
-        <span class="kw">if </span>actual_gov_version &lt; notary_event.gov_version {
+        <span class="kw">if </span>actual_gov_version &lt; notary_event.proof.governance_version {
             <span class="kw">return </span><span class="prelude-val">Err</span>(NotaryError::GovernanceVersionTooHigh);
         }
         <span class="kw">match </span><span class="self">self
             </span>.database
-            .get_notary_register(<span class="kw-2">&amp;</span>notary_event.owner, <span class="kw-2">&amp;</span>notary_event.subject_id)
+            .get_notary_register(<span class="kw-2">&amp;</span>notary_event.proof.owner, <span class="kw-2">&amp;</span>notary_event.proof.subject_id)
         {
             <span class="prelude-val">Ok</span>(notary_register) =&gt; {
-                <span class="kw">if </span>notary_register.<span class="number">1 </span>&gt; notary_event.sn {
+                <span class="kw">if </span>notary_register.<span class="number">1 </span>&gt; notary_event.proof.sn {
                     <span class="kw">return </span><span class="prelude-val">Err</span>(NotaryError::EventSnLowerThanLastSigned);
-                } <span class="kw">else if </span>notary_register.<span class="number">1 </span>== notary_event.sn
-                    &amp;&amp; notary_event.event_hash != notary_register.<span class="number">0
+                } <span class="kw">else if </span>notary_register.<span class="number">1 </span>== notary_event.proof.sn
+                    &amp;&amp; notary_event.proof.event_hash != notary_register.<span class="number">0
                 </span>{
                     <span class="kw">return </span><span class="prelude-val">Err</span>(NotaryError::DifferentHashForEvent);
                 }
@@ -416,10 +415,10 @@
         <span class="comment">// Get in DB, it is important that this goes first to ensure that we dont sign 2 different event_hash for the same event sn and subject
         </span><span class="self">self</span>.database
             .set_notary_register(
-                <span class="kw-2">&amp;</span>notary_event.owner,
-                <span class="kw-2">&amp;</span>notary_event.subject_id,
-                notary_event.event_hash.clone(),
-                notary_event.sn,
+                <span class="kw-2">&amp;</span>notary_event.proof.owner,
+                <span class="kw-2">&amp;</span>notary_event.proof.subject_id,
+                notary_event.proof.event_hash.clone(),
+                notary_event.proof.sn,
             )
             .map_err(|<span class="kw">_</span>| NotaryError::DatabaseError)<span class="question-mark">?</span>;
         <span class="comment">// Now we sign and send
@@ -434,23 +433,16 @@
         // .map_err(|_| NotaryError::SerializingError)?;
         </span><span class="kw">let </span>notary_signature = <span class="self">self
             </span>.signature_manager
-            .sign(<span class="kw-2">&amp;</span>(
-                <span class="kw-2">&amp;</span>notary_event.gov_id,
-                <span class="kw-2">&amp;</span>notary_event.subject_id,
-                <span class="kw-2">&amp;</span>notary_event.owner,
-                <span class="kw-2">&amp;</span>notary_event.event_hash,
-                <span class="kw-2">&amp;</span>notary_event.sn,
-                <span class="kw-2">&amp;</span>notary_event.gov_version,
-            ))
+            .sign(<span class="kw-2">&amp;</span>notary_event.proof)
             .map_err(NotaryError::ProtocolErrors)<span class="question-mark">?</span>;
         <span class="self">self</span>.message_channel
             .tell(MessageTaskCommand::Request(
                 <span class="prelude-val">None</span>,
                 TapleMessages::EventMessage(EventCommand::ValidatorResponse {
-                    event_hash: notary_event.event_hash.clone(),
+                    event_hash: notary_event.proof.event_hash.clone(),
                     signature: notary_signature.clone(),
                 }),
-                <span class="macro">vec!</span>[notary_event.owner],
+                <span class="macro">vec!</span>[notary_event.proof.owner],
                 MessageConfig::direct_response(),
             ))
             .<span class="kw">await</span><span class="question-mark">?</span>; <span class="comment">// TODO borrar clone

@@ -594,6 +594,11 @@
 <a href="#594" id="594">594</a>
 <a href="#595" id="595">595</a>
 <a href="#596" id="596">596</a>
+<a href="#597" id="597">597</a>
+<a href="#598" id="598">598</a>
+<a href="#599" id="599">599</a>
+<a href="#600" id="600">600</a>
+<a href="#601" id="601">601</a>
 </pre><pre class="rust"><code><span class="kw">use </span>std::sync::Arc;
 
 <span class="kw">use </span><span class="kw">crate</span>::approval::manager::{ApprovalAPI, ApprovalManager};
@@ -612,7 +617,8 @@
 <span class="kw">use </span><span class="kw">crate</span>::distribution::error::DistributionErrorResponses;
 <span class="kw">use </span><span class="kw">crate</span>::distribution::manager::DistributionManager;
 <span class="kw">use </span><span class="kw">crate</span>::distribution::DistributionMessagesNew;
-<span class="kw">use </span><span class="kw">crate</span>::evaluator::{EvaluatorManager, EvaluatorMessage, EvaluatorResponse};
+<span class="attr">#[cfg(feature = <span class="string">&quot;evaluation&quot;</span>)]
+</span><span class="kw">use </span><span class="kw">crate</span>::evaluator::{EvaluatorManager, EvaluatorMessage, EvaluatorResponse};
 <span class="kw">use </span><span class="kw">crate</span>::event::manager::{EventAPI, EventManager};
 <span class="kw">use </span><span class="kw">crate</span>::event::{EventCommand, EventResponse};
 <span class="kw">use </span><span class="kw">crate</span>::governance::GovernanceAPI;
@@ -907,6 +913,7 @@
         </span><span class="kw">let </span>(approval_receiver, approval_sender) =
             MpscChannel::&lt;ApprovalMessages, ApprovalResponses&gt;::new(BUFFER_SIZE);
         <span class="comment">// Receiver and sender of evaluation messages
+        </span><span class="attr">#[cfg(feature = <span class="string">&quot;evaluation&quot;</span>)]
         </span><span class="kw">let </span>(evaluation_receiver, evaluation_sender) =
             MpscChannel::&lt;EvaluatorMessage, EvaluatorResponse&gt;::new(BUFFER_SIZE);
         <span class="comment">// Receiver and sender of validation messages
@@ -970,7 +977,8 @@
         </span><span class="kw">let </span>protocol_manager = ProtocolManager::new(
             protocol_receiver,
             distribution_sender.clone(),
-            evaluation_sender.clone(),
+            <span class="attr">#[cfg(feature = <span class="string">&quot;evaluation&quot;</span>)]
+            </span>evaluation_sender.clone(),
             validation_sender.clone(),
             event_sender.clone(),
             approval_sender.clone(),
@@ -1023,7 +1031,8 @@
             bsx.subscribe(),
             DB::new(db.clone()),
         );
-        <span class="comment">// Creation EvaluatorManager
+        <span class="attr">#[cfg(feature = <span class="string">&quot;evaluation&quot;</span>)]
+        </span><span class="comment">// Creation EvaluatorManager
         </span><span class="kw">let </span>evaluator_manager = EvaluatorManager::new(
             evaluation_receiver,
             db.clone(),
@@ -1088,7 +1097,8 @@
         tokio::spawn(<span class="kw">async move </span>{
             network_receiver.run().<span class="kw">await</span>;
         });
-        tokio::spawn(<span class="kw">async move </span>{
+        <span class="attr">#[cfg(feature = <span class="string">&quot;evaluation&quot;</span>)]
+        </span>tokio::spawn(<span class="kw">async move </span>{
             evaluator_manager.start().<span class="kw">await</span>;
         });
         tokio::spawn(<span class="kw">async move </span>{

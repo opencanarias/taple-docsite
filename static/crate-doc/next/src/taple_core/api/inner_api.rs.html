@@ -265,6 +265,27 @@
 <a href="#265" id="265">265</a>
 <a href="#266" id="266">266</a>
 <a href="#267" id="267">267</a>
+<a href="#268" id="268">268</a>
+<a href="#269" id="269">269</a>
+<a href="#270" id="270">270</a>
+<a href="#271" id="271">271</a>
+<a href="#272" id="272">272</a>
+<a href="#273" id="273">273</a>
+<a href="#274" id="274">274</a>
+<a href="#275" id="275">275</a>
+<a href="#276" id="276">276</a>
+<a href="#277" id="277">277</a>
+<a href="#278" id="278">278</a>
+<a href="#279" id="279">279</a>
+<a href="#280" id="280">280</a>
+<a href="#281" id="281">281</a>
+<a href="#282" id="282">282</a>
+<a href="#283" id="283">283</a>
+<a href="#284" id="284">284</a>
+<a href="#285" id="285">285</a>
+<a href="#286" id="286">286</a>
+<a href="#287" id="287">287</a>
+<a href="#288" id="288">288</a>
 </pre><pre class="rust"><code><span class="kw">use </span><span class="kw">super</span>::error::APIInternalError;
 <span class="kw">use </span><span class="kw">super</span>::ApiResponses;
 <span class="kw">use </span><span class="kw">crate</span>::approval::error::ApprovalErrorResponse;
@@ -275,6 +296,7 @@
 <span class="kw">use </span><span class="kw">crate</span>::event::manager::{EventAPI, EventAPIInterface};
 <span class="kw">use </span><span class="kw">crate</span>::event::EventResponse;
 <span class="kw">use </span><span class="kw">crate</span>::identifier::Derivable;
+<span class="kw">use </span><span class="kw">crate</span>::KeyIdentifier;
 <span class="comment">// use crate::ledger::errors::LedgerManagerError;
 </span><span class="kw">use crate</span>::{
     commons::{
@@ -289,6 +311,7 @@
     },
     DatabaseManager, DB,
 };
+<span class="kw">use </span>std::collections::HashSet;
 <span class="kw">use </span>std::str::FromStr;
 
 <span class="kw">use super</span>::{
@@ -511,6 +534,25 @@
             }
             <span class="prelude-val">Err</span>(error) =&gt; <span class="kw">return </span>ApiResponses::GetSingleRequest(<span class="prelude-val">Err</span>(error.into())),
         }
+    }
+
+    <span class="kw">pub async fn </span>set_preauthorized_subject(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        subject_id: DigestIdentifier,
+        providers: HashSet&lt;KeyIdentifier&gt;,
+    ) -&gt; <span class="prelude-ty">Result</span>&lt;ApiResponses, APIInternalError&gt; {
+        <span class="kw">if let </span><span class="prelude-val">Err</span>(error) = <span class="self">self</span>.db.set_preauthorized_subject_and_providers(<span class="kw-2">&amp;</span>subject_id, providers) {
+            <span class="kw">return </span><span class="prelude-val">Err</span>(APIInternalError::DatabaseError(error.to_string()));
+        }
+        <span class="prelude-val">Ok</span>(ApiResponses::SetPreauthorizedSubjectCompleted)
+    }
+
+    <span class="kw">pub async fn </span>expecting_transfer(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        subject: DigestIdentifier,
+        public_key: Vec&lt;u8&gt;
+    ) -&gt; <span class="prelude-ty">Result</span>&lt;ApiResponses, APIInternalError&gt; {
+        <span class="macro">todo!</span>()
     }
 }
 

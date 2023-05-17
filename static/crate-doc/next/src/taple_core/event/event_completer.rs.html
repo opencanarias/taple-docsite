@@ -1033,6 +1033,62 @@
 <a href="#1033" id="1033">1033</a>
 <a href="#1034" id="1034">1034</a>
 <a href="#1035" id="1035">1035</a>
+<a href="#1036" id="1036">1036</a>
+<a href="#1037" id="1037">1037</a>
+<a href="#1038" id="1038">1038</a>
+<a href="#1039" id="1039">1039</a>
+<a href="#1040" id="1040">1040</a>
+<a href="#1041" id="1041">1041</a>
+<a href="#1042" id="1042">1042</a>
+<a href="#1043" id="1043">1043</a>
+<a href="#1044" id="1044">1044</a>
+<a href="#1045" id="1045">1045</a>
+<a href="#1046" id="1046">1046</a>
+<a href="#1047" id="1047">1047</a>
+<a href="#1048" id="1048">1048</a>
+<a href="#1049" id="1049">1049</a>
+<a href="#1050" id="1050">1050</a>
+<a href="#1051" id="1051">1051</a>
+<a href="#1052" id="1052">1052</a>
+<a href="#1053" id="1053">1053</a>
+<a href="#1054" id="1054">1054</a>
+<a href="#1055" id="1055">1055</a>
+<a href="#1056" id="1056">1056</a>
+<a href="#1057" id="1057">1057</a>
+<a href="#1058" id="1058">1058</a>
+<a href="#1059" id="1059">1059</a>
+<a href="#1060" id="1060">1060</a>
+<a href="#1061" id="1061">1061</a>
+<a href="#1062" id="1062">1062</a>
+<a href="#1063" id="1063">1063</a>
+<a href="#1064" id="1064">1064</a>
+<a href="#1065" id="1065">1065</a>
+<a href="#1066" id="1066">1066</a>
+<a href="#1067" id="1067">1067</a>
+<a href="#1068" id="1068">1068</a>
+<a href="#1069" id="1069">1069</a>
+<a href="#1070" id="1070">1070</a>
+<a href="#1071" id="1071">1071</a>
+<a href="#1072" id="1072">1072</a>
+<a href="#1073" id="1073">1073</a>
+<a href="#1074" id="1074">1074</a>
+<a href="#1075" id="1075">1075</a>
+<a href="#1076" id="1076">1076</a>
+<a href="#1077" id="1077">1077</a>
+<a href="#1078" id="1078">1078</a>
+<a href="#1079" id="1079">1079</a>
+<a href="#1080" id="1080">1080</a>
+<a href="#1081" id="1081">1081</a>
+<a href="#1082" id="1082">1082</a>
+<a href="#1083" id="1083">1083</a>
+<a href="#1084" id="1084">1084</a>
+<a href="#1085" id="1085">1085</a>
+<a href="#1086" id="1086">1086</a>
+<a href="#1087" id="1087">1087</a>
+<a href="#1088" id="1088">1088</a>
+<a href="#1089" id="1089">1089</a>
+<a href="#1090" id="1090">1090</a>
+<a href="#1091" id="1091">1091</a>
 </pre><pre class="rust"><code><span class="kw">use </span>std::collections::{HashMap, HashSet};
 
 <span class="kw">use </span>json_patch::{patch, Patch};
@@ -1044,7 +1100,7 @@
         crypto::{check_cryptography, Payload, DSA},
         models::{
             approval::{Approval, UniqueApproval},
-            event::EventContent,
+            event::{EventContent, ValidationProof},
             event_preevaluation::{Context, EventPreEvaluation},
             event_proposal::{Evaluation, EventProposal, Proposal},
             state::Subject,
@@ -1073,8 +1129,8 @@
 <span class="kw">use </span><span class="kw">crate</span>::database::{DatabaseManager, DB};
 
 <span class="kw">const </span>TIMEOUT: u32 = <span class="number">2000</span>;
-<span class="kw">const </span>GET_ALL: isize = <span class="number">200</span>;
-<span class="kw">const </span>QUORUM_PORCENTAGE_AMPLIFICATION: f64 = <span class="number">0.2</span>;
+<span class="comment">// const GET_ALL: isize = 200;
+</span><span class="kw">const </span>QUORUM_PORCENTAGE_AMPLIFICATION: f64 = <span class="number">0.2</span>;
 
 <span class="kw">pub struct </span>EventCompleter&lt;D: DatabaseManager&gt; {
     gov_api: GovernanceAPI,
@@ -1097,6 +1153,7 @@
     <span class="comment">// Validation HashMaps
     </span>events_to_validate: HashMap&lt;DigestIdentifier, Event&gt;,
     event_validations: HashMap&lt;DigestIdentifier, HashSet&lt;UniqueSignature&gt;&gt;,
+    event_notary_events: HashMap&lt;DigestIdentifier, NotaryEvent&gt;,
     <span class="comment">// SignatureManager
     </span>signature_manager: SelfSignatureManager,
 }
@@ -1127,6 +1184,7 @@
             event_approvations: HashMap::new(),
             event_validations: HashMap::new(),
             subjects_by_governance: HashMap::new(),
+            event_notary_events: HashMap::new(),
             own_identifier,
             signature_manager,
         }
@@ -1138,28 +1196,60 @@
         event: <span class="kw-2">&amp;</span>Event,
         gov_version: u64,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;NotaryEvent, EventError&gt; {
-        <span class="kw">let </span>signature = <span class="self">self
-            </span>.signature_manager
-            .sign(<span class="kw-2">&amp;</span>(
-                <span class="kw-2">&amp;</span>subject.governance_id,
-                <span class="kw-2">&amp;</span>subject.subject_id,
-                <span class="kw-2">&amp;</span>subject.owner,
-                <span class="kw-2">&amp;</span>event.signature.content.event_content_hash,
-                event.content.event_proposal.proposal.sn,
-                gov_version,
-            ))
-            .map_err(|<span class="kw">_</span>| {
-                EventError::CryptoError(String::from(<span class="string">&quot;Notary Event hash generation failed&quot;</span>))
-            })<span class="question-mark">?</span>;
-        <span class="prelude-val">Ok</span>(NotaryEvent {
-            gov_id: subject.governance_id.clone(),
-            subject_id: subject.subject_id.clone(),
-            owner: subject.owner.clone(),
-            event_hash: event.signature.content.event_content_hash.clone(),
-            sn: event.content.event_proposal.proposal.sn,
+        <span class="kw">let </span>state_hash =
+            subject.state_hash_after_apply(<span class="kw-2">&amp;</span>event.content.event_proposal.proposal.json_patch)<span class="question-mark">?</span>;
+        <span class="kw">let </span>prev_event_hash = <span class="kw">if </span>event.content.event_proposal.proposal.sn == <span class="number">0 </span>{
+            DigestIdentifier::default()
+        } <span class="kw">else </span>{
+            <span class="self">self</span>.database
+                .get_event(
+                    <span class="kw-2">&amp;</span>subject.subject_id,
+                    event.content.event_proposal.proposal.sn - <span class="number">1</span>,
+                )
+                .map_err(|e| EventError::DatabaseError(e.to_string()))<span class="question-mark">?
+                </span>.signature
+                .content
+                .event_content_hash
+        };
+        <span class="kw">let </span>event_hash = event.signature.content.event_content_hash.clone();
+        <span class="kw">let </span>proof = ValidationProof::new(
+            subject,
+            event.content.event_proposal.proposal.sn,
+            prev_event_hash,
+            event_hash,
+            state_hash,
             gov_version,
-            owner_signature: signature,
-        })
+        );
+        <span class="kw">match </span><span class="kw-2">&amp;</span>subject.keys {
+            <span class="prelude-val">Some</span>(keys) =&gt; {
+                <span class="kw">let </span>proof_hash =
+                    DigestIdentifier::from_serializable_borsh(<span class="kw-2">&amp;</span>proof).map_err(|<span class="kw">_</span>| {
+                        EventError::CryptoError(String::from(
+                            <span class="string">&quot;Error calculating the hash of the proof&quot;</span>,
+                        ))
+                    })<span class="question-mark">?</span>;
+                <span class="kw">let </span>signature = keys
+                    .sign(Payload::Buffer(proof_hash.derivative()))
+                    .map_err(|<span class="kw">_</span>| {
+                        EventError::CryptoError(String::from(<span class="string">&quot;Error signing the proof&quot;</span>))
+                    })<span class="question-mark">?</span>;
+                <span class="prelude-val">Ok</span>(NotaryEvent {
+                    proof,
+                    subject_signature: Signature {
+                        content: SignatureContent {
+                            signer: <span class="self">self</span>.own_identifier.clone(),
+                            event_content_hash: proof_hash,
+                            timestamp: TimeStamp::now(),
+                        },
+                        signature: SignatureIdentifier::new(
+                            <span class="self">self</span>.own_identifier.to_signature_derivator(),
+                            <span class="kw-2">&amp;</span>signature,
+                        ),
+                    },
+                })
+            }
+            <span class="prelude-val">None </span>=&gt; <span class="prelude-val">Err</span>(EventError::SubjectNotOwned(subject.subject_id.to_str()))<span class="question-mark">?</span>,
+        }
     }
 
     <span class="kw">pub async fn </span>init(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;(), EventError&gt; {
@@ -1185,11 +1275,9 @@
                     <span class="kw">let </span>stage = ValidationStage::Validate;
                     <span class="kw">let </span>(signers, quorum_size) =
                         <span class="self">self</span>.get_signers_and_quorum(metadata, stage.clone()).<span class="kw">await</span><span class="question-mark">?</span>;
-                    <span class="kw">let </span>event_message = create_validator_request(<span class="self">self</span>.create_notary_event(
-                        subject,
-                        <span class="kw-2">&amp;</span>last_event,
-                        gov_version,
-                    )<span class="question-mark">?</span>);
+                    <span class="kw">let </span>notary_event =
+                        <span class="self">self</span>.create_notary_event(subject, <span class="kw-2">&amp;</span>last_event, gov_version)<span class="question-mark">?</span>;
+                    <span class="kw">let </span>event_message = create_validator_request(notary_event.clone());
                     <span class="self">self</span>.ask_signatures(
                         <span class="kw-2">&amp;</span>subject.subject_id,
                         event_message,
@@ -1197,6 +1285,10 @@
                         quorum_size,
                     )
                     .<span class="kw">await</span><span class="question-mark">?</span>;
+                    <span class="self">self</span>.event_notary_events.insert(
+                        last_event.signature.content.event_content_hash.clone(),
+                        notary_event,
+                    );
                     <span class="self">self</span>.events_to_validate.insert(
                         last_event.signature.content.event_content_hash.clone(),
                         last_event,
@@ -1293,6 +1385,7 @@
             .check_signatures()
             .map_err(EventError::SubjectError)<span class="question-mark">?</span>;
         <span class="kw">match </span><span class="kw-2">&amp;</span>event_request.request {
+            <span class="kw">crate</span>::event_request::EventRequestType::Transfer(transfer_request) =&gt; <span class="macro">todo!</span>(),
             <span class="kw">crate</span>::event_request::EventRequestType::Create(create_request) =&gt; {
                 <span class="comment">// Comprobar si es governance, entonces vale todo, si no comprobar que el invoker soy yo y puedo hacerlo
                 </span><span class="kw">if </span>event_request.signature.content.signer != <span class="self">self</span>.own_identifier {
@@ -1434,6 +1527,7 @@
             ))),
         };
         <span class="kw">let </span>subject_id = <span class="kw">match </span><span class="kw-2">&amp;</span>preevaluation_event.event_request.request {
+            <span class="kw">crate</span>::event_request::EventRequestType::Transfer(<span class="kw">_</span>) =&gt; <span class="macro">todo!</span>(),
             <span class="kw">crate</span>::event_request::EventRequestType::Create(<span class="kw">_</span>) =&gt; {
                 <span class="kw">return </span><span class="prelude-val">Err</span>(EventError::EvaluationOrApprovationInCreationEvent)
             } <span class="comment">// Que hago aquí?? devuelvo error?
@@ -1591,7 +1685,8 @@
                 <span class="comment">// Retornar TapleMessage directamente
                 </span>(ValidationStage::Approve, msg)
             } <span class="kw">else </span>{
-                <span class="kw">let </span>execution = <span class="kw">match </span>evaluation.acceptance {
+                <span class="comment">// No se necesita aprobación
+                </span><span class="kw">let </span>execution = <span class="kw">match </span>evaluation.acceptance {
                     <span class="kw">crate</span>::commons::models::Acceptance::Ok =&gt; <span class="bool-val">true</span>,
                     <span class="kw">crate</span>::commons::models::Acceptance::Ko =&gt; <span class="bool-val">false</span>,
                     <span class="kw">crate</span>::commons::models::Acceptance::Error =&gt; <span class="bool-val">false</span>,
@@ -1606,11 +1701,12 @@
                     <span class="kw-2">&amp;</span>subject,
                     execution,
                 )<span class="question-mark">?</span>;
-                <span class="kw">let </span>event_message = create_validator_request(<span class="self">self</span>.create_notary_event(
-                    <span class="kw-2">&amp;</span>subject,
-                    event,
-                    gov_version,
-                )<span class="question-mark">?</span>);
+                <span class="kw">let </span>notary_event = <span class="self">self</span>.create_notary_event(<span class="kw-2">&amp;</span>subject, <span class="kw-2">&amp;</span>event, gov_version)<span class="question-mark">?</span>;
+                <span class="kw">let </span>event_message = create_validator_request(notary_event.clone());
+                <span class="self">self</span>.event_notary_events.insert(
+                    event.signature.content.event_content_hash.clone(),
+                    notary_event,
+                );
                 <span class="self">self</span>.subjects_by_governance.remove(<span class="kw-2">&amp;</span>subject_id);
                 (ValidationStage::Validate, event_message)
             };
@@ -1647,6 +1743,7 @@
             }
         };
         <span class="kw">let </span>subject_id = <span class="kw">match </span><span class="kw-2">&amp;</span>event_proposal.proposal.event_request.request {
+            <span class="kw">crate</span>::event_request::EventRequestType::Transfer(<span class="kw">_</span>) =&gt; <span class="macro">todo!</span>(),
             <span class="kw">crate</span>::event_request::EventRequestType::Create(<span class="kw">_</span>) =&gt; {
                 <span class="kw">return </span><span class="prelude-val">Err</span>(EventError::EvaluationOrApprovationInCreationEvent)
             } <span class="comment">// Que hago aquí?? devuelvo error?
@@ -1764,8 +1861,8 @@
                 .<span class="kw">await</span><span class="question-mark">?</span>;
             <span class="kw">let </span>event =
                 <span class="kw-2">&amp;</span><span class="self">self</span>.create_event_prevalidated(event_proposal, approvals, <span class="kw-2">&amp;</span>subject, execution)<span class="question-mark">?</span>;
-            <span class="kw">let </span>event_message =
-                create_validator_request(<span class="self">self</span>.create_notary_event(<span class="kw-2">&amp;</span>subject, event, gov_version)<span class="question-mark">?</span>);
+            <span class="kw">let </span>notary_event = <span class="self">self</span>.create_notary_event(<span class="kw-2">&amp;</span>subject, <span class="kw-2">&amp;</span>event, gov_version)<span class="question-mark">?</span>;
+            <span class="kw">let </span>event_message = create_validator_request(notary_event.clone());
 
             <span class="comment">// Limpiar HashMaps
             </span><span class="self">self</span>.event_approvations
@@ -1775,6 +1872,10 @@
                 <span class="self">self</span>.get_signers_and_quorum(metadata, stage.clone()).<span class="kw">await</span><span class="question-mark">?</span>;
             <span class="self">self</span>.ask_signatures(<span class="kw-2">&amp;</span>subject_id, event_message, signers.clone(), quorum_size)
                 .<span class="kw">await</span><span class="question-mark">?</span>;
+            <span class="self">self</span>.event_notary_events.insert(
+                event.signature.content.event_content_hash.clone(),
+                notary_event,
+            );
             <span class="self">self</span>.subjects_by_governance.remove(<span class="kw-2">&amp;</span>subject_id);
             <span class="comment">// Hacer update de fase por la que va el evento
             </span><span class="self">self</span>.subjects_completing_event
@@ -1798,6 +1899,7 @@
             }
         };
         <span class="kw">let </span>subject_id = <span class="kw">match </span><span class="kw-2">&amp;</span>event.content.event_proposal.proposal.event_request.request {
+            <span class="kw">crate</span>::event_request::EventRequestType::Transfer(<span class="kw">_</span>) =&gt; <span class="macro">todo!</span>(),
             <span class="kw">crate</span>::event_request::EventRequestType::Create(<span class="kw">_</span>) =&gt; {
                 <span class="kw">return </span><span class="prelude-val">Err</span>(EventError::EvaluationOrApprovationInCreationEvent)
             } <span class="comment">// Que hago aquí?? devuelvo error?
@@ -1857,8 +1959,18 @@
         <span class="kw">let </span>quorum_size = quorum_size.to_owned();
         <span class="comment">// Comprobar si llegamos a Quorum y si es así dejar de pedir firmas
         </span><span class="kw">if </span>(validation_set.len() <span class="kw">as </span>u32) &lt; quorum_size {
-            <span class="kw">let </span>event_message =
-                create_validator_request(<span class="self">self</span>.create_notary_event(<span class="kw-2">&amp;</span>subject, event, gov_version)<span class="question-mark">?</span>);
+            <span class="kw">let </span>notary_event = <span class="kw">match </span><span class="self">self
+                </span>.event_notary_events
+                .get(<span class="kw-2">&amp;</span>event.signature.content.event_content_hash)
+            {
+                <span class="prelude-val">Some</span>(notary_event) =&gt; notary_event.to_owned(),
+                <span class="prelude-val">None </span>=&gt; {
+                    <span class="kw">return </span><span class="prelude-val">Err</span>(EventError::CryptoError(String::from(
+                        <span class="string">&quot;The hash of the event does not match any of the events&quot;</span>,
+                    )))
+                }
+            };
+            <span class="kw">let </span>event_message = create_validator_request(notary_event);
             <span class="kw">let </span><span class="kw-2">mut </span>new_signers: HashSet&lt;KeyIdentifier&gt; =
                 signers.into_iter().map(|s| s.clone()).collect();
             new_signers.remove(<span class="kw-2">&amp;</span>signer);
