@@ -109,6 +109,7 @@
 <a href="#109" id="109">109</a>
 <a href="#110" id="110">110</a>
 <a href="#111" id="111">111</a>
+<a href="#112" id="112">112</a>
 </pre><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::commons::identifier::{Derivable, KeyIdentifier};
 <span class="kw">use </span>futures::{future::BoxFuture, prelude::<span class="kw-2">*</span>};
 <span class="kw">use </span>log::debug;
@@ -170,7 +171,7 @@
             <span class="comment">// Targets are selected
             </span><span class="kw">let </span>targets_selected = Algorithm::get_targets(targets, config.replication_factor());
             <span class="kw">for </span>target <span class="kw">in </span>targets_selected {
-                sender
+                <span class="kw">let </span>result_sending = sender
                     .send_message(
                         target,
                         Message::&lt;T&gt; {
@@ -178,8 +179,9 @@
                             sender_id: <span class="prelude-val">None</span>,
                         },
                     )
-                    .<span class="kw">await
-                    </span>.map_err(|<span class="kw">_</span>| Error::SenderChannelError)<span class="question-mark">?</span>;
+                    .<span class="kw">await</span>;
+                <span class="macro">log::warn!</span>(<span class="string">&quot;RESULT SENDING: {:?}&quot;</span>, result_sending);
+                result_sending.map_err(|<span class="kw">_</span>| Error::SenderChannelError)<span class="question-mark">?</span>;
             }
             <span class="prelude-val">Ok</span>(())
         }

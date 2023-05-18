@@ -1088,7 +1088,6 @@
 <a href="#1088" id="1088">1088</a>
 <a href="#1089" id="1089">1089</a>
 <a href="#1090" id="1090">1090</a>
-<a href="#1091" id="1091">1091</a>
 </pre><pre class="rust"><code><span class="kw">use </span>std::collections::{HashMap, HashSet};
 
 <span class="kw">use </span>json_patch::{patch, Patch};
@@ -1261,7 +1260,10 @@
                 <span class="prelude-val">Ok</span>(last_event) =&gt; {
                     <span class="kw">let </span>gov_version = <span class="self">self
                         </span>.gov_api
-                        .get_governance_version(subject.governance_id.clone(), subject.subject_id.clone())
+                        .get_governance_version(
+                            subject.governance_id.clone(),
+                            subject.subject_id.clone(),
+                        )
                         .<span class="kw">await</span><span class="question-mark">?</span>;
                     <span class="kw">let </span>metadata = Metadata {
                         namespace: subject.namespace.clone(),
@@ -1693,7 +1695,10 @@
                 };
                 <span class="kw">let </span>gov_version = <span class="self">self
                     </span>.gov_api
-                    .get_governance_version(subject.governance_id.clone(), subject.subject_id.clone())
+                    .get_governance_version(
+                        subject.governance_id.clone(),
+                        subject.subject_id.clone(),
+                    )
                     .<span class="kw">await</span><span class="question-mark">?</span>;
                 <span class="kw">let </span>event = <span class="kw-2">&amp;</span><span class="self">self</span>.create_event_prevalidated(
                     event_proposal,
@@ -1898,6 +1903,10 @@
                 )))
             }
         };
+        <span class="kw">let </span>notary_event = <span class="self">self
+            </span>.event_notary_events
+            .get(<span class="kw-2">&amp;</span>event_hash)
+            .expect(<span class="string">&quot;Should be&quot;</span>);
         <span class="kw">let </span>subject_id = <span class="kw">match </span><span class="kw-2">&amp;</span>event.content.event_proposal.proposal.event_request.request {
             <span class="kw">crate</span>::event_request::EventRequestType::Transfer(<span class="kw">_</span>) =&gt; <span class="macro">todo!</span>(),
             <span class="kw">crate</span>::event_request::EventRequestType::Create(<span class="kw">_</span>) =&gt; {
@@ -1926,20 +1935,9 @@
                 <span class="kw">crate</span>::DbError::EntryNotFound =&gt; EventError::SubjectNotFound(subject_id.to_str()),
                 <span class="kw">_ </span>=&gt; EventError::DatabaseError(error.to_string()),
             })<span class="question-mark">?</span>;
-        <span class="kw">let </span>gov_version = event.content.event_proposal.proposal.gov_version.to_owned();
         <span class="comment">// Comprobar que todo es correcto criptográficamente
-        </span><span class="kw">let </span>event_hash = check_cryptography(
-            (
-                <span class="kw-2">&amp;</span>subject.governance_id,
-                <span class="kw-2">&amp;</span>subject.subject_id,
-                <span class="kw-2">&amp;</span>subject.owner,
-                <span class="kw-2">&amp;</span>event.signature.content.event_content_hash,
-                <span class="kw-2">&amp;</span>event.content.event_proposal.proposal.sn,
-                <span class="kw-2">&amp;</span>event.content.event_proposal.proposal.gov_version,
-            ),
-            <span class="kw-2">&amp;</span>signature,
-        )
-        .map_err(|error| EventError::CryptoError(error.to_string()))<span class="question-mark">?</span>;
+        </span><span class="kw">let </span>event_hash = check_cryptography(<span class="kw-2">&amp;</span>notary_event.proof, <span class="kw-2">&amp;</span>signature)
+            .map_err(|error| EventError::CryptoError(error.to_string()))<span class="question-mark">?</span>;
         <span class="comment">// Guardar validación
         </span><span class="kw">let </span>validation_set = <span class="kw">match </span><span class="self">self</span>.event_validations.get_mut(<span class="kw-2">&amp;</span>event_hash) {
             <span class="prelude-val">Some</span>(validation_set) =&gt; {

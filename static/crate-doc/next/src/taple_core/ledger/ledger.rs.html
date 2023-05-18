@@ -1409,6 +1409,27 @@
 <a href="#1409" id="1409">1409</a>
 <a href="#1410" id="1410">1410</a>
 <a href="#1411" id="1411">1411</a>
+<a href="#1412" id="1412">1412</a>
+<a href="#1413" id="1413">1413</a>
+<a href="#1414" id="1414">1414</a>
+<a href="#1415" id="1415">1415</a>
+<a href="#1416" id="1416">1416</a>
+<a href="#1417" id="1417">1417</a>
+<a href="#1418" id="1418">1418</a>
+<a href="#1419" id="1419">1419</a>
+<a href="#1420" id="1420">1420</a>
+<a href="#1421" id="1421">1421</a>
+<a href="#1422" id="1422">1422</a>
+<a href="#1423" id="1423">1423</a>
+<a href="#1424" id="1424">1424</a>
+<a href="#1425" id="1425">1425</a>
+<a href="#1426" id="1426">1426</a>
+<a href="#1427" id="1427">1427</a>
+<a href="#1428" id="1428">1428</a>
+<a href="#1429" id="1429">1429</a>
+<a href="#1430" id="1430">1430</a>
+<a href="#1431" id="1431">1431</a>
+<a href="#1432" id="1432">1432</a>
 </pre><pre class="rust"><code><span class="kw">use </span>std::collections::{hash_map::Entry, HashMap, HashSet};
 
 <span class="kw">use </span>json_patch::{patch, Patch};
@@ -1702,6 +1723,7 @@
         sender: KeyIdentifier,
         validation_proof: ValidationProof,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;(), LedgerError&gt; {
+        <span class="macro">log::error!</span>(<span class="string">&quot;External event: Event: {:?}&quot;</span>, event);
         <span class="comment">// Comprobaciones criptográficas
         </span>event.check_signatures()<span class="question-mark">?</span>;
         <span class="comment">// Comprobar si es genesis o state
@@ -1771,24 +1793,6 @@
                         .signer
                         .clone(),
                 };
-                <span class="kw">let </span>witnesses = <span class="self">self</span>.get_witnesses(metadata).<span class="kw">await</span><span class="question-mark">?</span>;
-                <span class="kw">if </span>!witnesses.contains(<span class="kw-2">&amp;</span><span class="self">self</span>.our_id) {
-                    <span class="kw">match </span><span class="self">self
-                        </span>.database
-                        .get_preauthorized_subject_and_providers(<span class="kw-2">&amp;</span>subject_id)
-                    {
-                        <span class="prelude-val">Ok</span>(<span class="kw">_</span>) =&gt; {}
-                        <span class="prelude-val">Err</span>(error) =&gt; <span class="kw">match </span>error {
-                            <span class="kw">crate</span>::DbError::EntryNotFound =&gt; {
-                                <span class="kw">return </span><span class="prelude-val">Err</span>(LedgerError::WeAreNotWitnesses(subject_id.to_str()));
-                            }
-                            <span class="kw">_ </span>=&gt; {
-                                <span class="kw">return </span><span class="prelude-val">Err</span>(LedgerError::DatabaseError(error));
-                            }
-                        },
-                    }
-                }
-                <span class="self">self</span>.check_genesis(event, subject_id.clone()).<span class="kw">await</span><span class="question-mark">?</span>;
                 <span class="kw">if </span><span class="kw-2">&amp;</span>create_request.schema_id == <span class="string">&quot;governance&quot; </span>{
                     <span class="kw">match </span><span class="self">self
                         </span>.database
@@ -1806,12 +1810,33 @@
                             }
                         },
                     }
-                    <span class="self">self</span>.subject_is_gov.insert(subject_id.clone(), <span class="bool-val">true</span>);
                     <span class="comment">// Enviar mensaje a gov de governance updated con el id y el sn
-                    </span><span class="self">self</span>.gov_api
+                    </span><span class="self">self</span>.check_genesis(event, subject_id.clone()).<span class="kw">await</span><span class="question-mark">?</span>;
+                    <span class="self">self</span>.gov_api
                         .governance_updated(subject_id.clone(), <span class="number">0</span>)
                         .<span class="kw">await</span><span class="question-mark">?</span>;
+                    <span class="self">self</span>.subject_is_gov.insert(subject_id.clone(), <span class="bool-val">true</span>);
                 } <span class="kw">else </span>{
+                    <span class="kw">let </span>witnesses = <span class="self">self</span>.get_witnesses(metadata).<span class="kw">await</span><span class="question-mark">?</span>;
+                    <span class="kw">if </span>!witnesses.contains(<span class="kw-2">&amp;</span><span class="self">self</span>.our_id) {
+                        <span class="kw">match </span><span class="self">self
+                            </span>.database
+                            .get_preauthorized_subject_and_providers(<span class="kw-2">&amp;</span>subject_id)
+                        {
+                            <span class="prelude-val">Ok</span>(<span class="kw">_</span>) =&gt; {}
+                            <span class="prelude-val">Err</span>(error) =&gt; <span class="kw">match </span>error {
+                                <span class="kw">crate</span>::DbError::EntryNotFound =&gt; {
+                                    <span class="kw">return </span><span class="prelude-val">Err</span>(LedgerError::WeAreNotWitnesses(
+                                        subject_id.to_str(),
+                                    ));
+                                }
+                                <span class="kw">_ </span>=&gt; {
+                                    <span class="kw">return </span><span class="prelude-val">Err</span>(LedgerError::DatabaseError(error));
+                                }
+                            },
+                        }
+                    }
+                    <span class="self">self</span>.check_genesis(event, subject_id.clone()).<span class="kw">await</span><span class="question-mark">?</span>;
                     <span class="self">self</span>.subject_is_gov.insert(subject_id.clone(), <span class="bool-val">false</span>);
                 }
                 <span class="kw">match </span><span class="self">self</span>.ledger_state.get_mut(<span class="kw-2">&amp;</span>subject_id) {
@@ -2199,7 +2224,7 @@
                 </span>create_subject_id(<span class="kw-2">&amp;</span>event)<span class="question-mark">?
             </span>}
             EventRequestType::State(state_request) =&gt; state_request.subject_id.clone(),
-            EventRequestType::Transfer(transfer_request) =&gt; <span class="macro">todo!</span>()
+            EventRequestType::Transfer(transfer_request) =&gt; <span class="macro">todo!</span>(),
         };
         <span class="kw">let </span>ledger_state = <span class="self">self</span>.ledger_state.get(<span class="kw-2">&amp;</span>subject_id);
         <span class="kw">match </span>ledger_state {
@@ -2406,9 +2431,18 @@
         subject_id: DigestIdentifier,
         sn: u64,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;(Event, HashSet&lt;Signature&gt;), LedgerError&gt; {
+        <span class="macro">log::warn!</span>(<span class="string">&quot;GET NEXT GOV&quot;</span>);
+        <span class="macro">log::info!</span>(<span class="string">&quot;Getting NG: {}..............{}&quot;</span>, subject_id.to_str(), sn);
+        <span class="macro">log::info!</span>(<span class="string">&quot;Who Asked: {}&quot;</span>, who_asked.to_str());
         <span class="kw">let </span>subject = <span class="self">self</span>.database.get_subject(<span class="kw-2">&amp;</span>subject_id)<span class="question-mark">?</span>;
         <span class="kw">let </span>event = <span class="self">self</span>.database.get_event(<span class="kw-2">&amp;</span>subject_id, sn)<span class="question-mark">?</span>;
-        <span class="kw">let </span>signatures = <span class="self">self</span>.database.get_signatures(<span class="kw-2">&amp;</span>subject_id, sn)<span class="question-mark">?</span>;
+        <span class="kw">let </span>signatures = <span class="kw">match </span><span class="self">self</span>.database.get_signatures(<span class="kw-2">&amp;</span>subject_id, subject.sn) {
+            <span class="prelude-val">Ok</span>(s) =&gt; s,
+            <span class="prelude-val">Err</span>(error) =&gt; <span class="kw">match </span>error {
+                <span class="kw">crate</span>::DbError::EntryNotFound =&gt; HashSet::new(),
+                <span class="kw">_ </span>=&gt; <span class="kw">return </span><span class="prelude-val">Err</span>(LedgerError::DatabaseError(error)),
+            },
+        };
         <span class="kw">let </span>prev_event_hash = <span class="kw">if </span>sn == <span class="number">0 </span>{
             DigestIdentifier::default()
         } <span class="kw">else </span>{
@@ -2451,9 +2485,17 @@
         who_asked: KeyIdentifier,
         subject_id: DigestIdentifier,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;(Event, HashSet&lt;Signature&gt;), LedgerError&gt; {
+        <span class="macro">log::info!</span>(<span class="string">&quot;Getting LCE: {}&quot;</span>, subject_id.to_str());
+        <span class="macro">log::info!</span>(<span class="string">&quot;Who Asked: {}&quot;</span>, who_asked.to_str());
         <span class="kw">let </span>subject = <span class="self">self</span>.database.get_subject(<span class="kw-2">&amp;</span>subject_id)<span class="question-mark">?</span>;
         <span class="kw">let </span>event = <span class="self">self</span>.database.get_event(<span class="kw-2">&amp;</span>subject_id, subject.sn)<span class="question-mark">?</span>;
-        <span class="kw">let </span>signatures = <span class="self">self</span>.database.get_signatures(<span class="kw-2">&amp;</span>subject_id, subject.sn)<span class="question-mark">?</span>;
+        <span class="kw">let </span>signatures = <span class="kw">match </span><span class="self">self</span>.database.get_signatures(<span class="kw-2">&amp;</span>subject_id, subject.sn) {
+            <span class="prelude-val">Ok</span>(s) =&gt; s,
+            <span class="prelude-val">Err</span>(error) =&gt; <span class="kw">match </span>error {
+                <span class="kw">crate</span>::DbError::EntryNotFound =&gt; HashSet::new(),
+                <span class="kw">_ </span>=&gt; <span class="kw">return </span><span class="prelude-val">Err</span>(LedgerError::DatabaseError(error)),
+            },
+        };
         <span class="kw">let </span>prev_event_hash = <span class="kw">if </span>event.content.event_proposal.proposal.sn == <span class="number">0 </span>{
             DigestIdentifier::default()
         } <span class="kw">else </span>{

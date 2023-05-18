@@ -307,26 +307,6 @@
 <a href="#307" id="307">307</a>
 <a href="#308" id="308">308</a>
 <a href="#309" id="309">309</a>
-<a href="#310" id="310">310</a>
-<a href="#311" id="311">311</a>
-<a href="#312" id="312">312</a>
-<a href="#313" id="313">313</a>
-<a href="#314" id="314">314</a>
-<a href="#315" id="315">315</a>
-<a href="#316" id="316">316</a>
-<a href="#317" id="317">317</a>
-<a href="#318" id="318">318</a>
-<a href="#319" id="319">319</a>
-<a href="#320" id="320">320</a>
-<a href="#321" id="321">321</a>
-<a href="#322" id="322">322</a>
-<a href="#323" id="323">323</a>
-<a href="#324" id="324">324</a>
-<a href="#325" id="325">325</a>
-<a href="#326" id="326">326</a>
-<a href="#327" id="327">327</a>
-<a href="#328" id="328">328</a>
-<a href="#329" id="329">329</a>
 </pre><pre class="rust"><code><span class="kw">use </span>async_trait::async_trait;
 
 <span class="kw">use crate</span>::{
@@ -581,27 +561,7 @@
                             ))
                             .<span class="kw">await
                             </span>.map_err(|<span class="kw">_</span>| ApprovalManagerError::MessageChannelFailed)<span class="question-mark">?</span>,
-                        ApprovalErrorResponse::APIChannelNotAvailable =&gt; <span class="macro">todo!</span>(),
-                        ApprovalErrorResponse::RequestAlreadyKnown =&gt; <span class="macro">todo!</span>(),
-                        ApprovalErrorResponse::NoFactEvent =&gt; <span class="macro">todo!</span>(),
-                        ApprovalErrorResponse::PreviousEventDetected =&gt; <span class="macro">todo!</span>(),
-                        ApprovalErrorResponse::GovernanceNotFound =&gt; <span class="macro">todo!</span>(),
-                        ApprovalErrorResponse::InvalidGovernanceID =&gt; <span class="macro">todo!</span>(),
-                        ApprovalErrorResponse::InvalidGovernanceVersion =&gt; <span class="macro">todo!</span>(),
-                        ApprovalErrorResponse::SubjectNotFound =&gt; <span class="macro">todo!</span>(),
-                        ApprovalErrorResponse::GovernanceNoCorrelation =&gt; <span class="macro">todo!</span>(),
-                        ApprovalErrorResponse::SubjectNotSynchronized =&gt; <span class="macro">todo!</span>(),
-                        ApprovalErrorResponse::SignatureSignerIsNotSubject =&gt; <span class="macro">todo!</span>(),
-                        ApprovalErrorResponse::InvalidSubjectSignature =&gt; <span class="macro">todo!</span>(),
-                        ApprovalErrorResponse::NodeIsNotApprover =&gt; <span class="macro">todo!</span>(),
-                        ApprovalErrorResponse::InvalidEvaluator =&gt; <span class="macro">todo!</span>(),
-                        ApprovalErrorResponse::InvalidEvaluatorSignature =&gt; <span class="macro">todo!</span>(),
-                        ApprovalErrorResponse::InvalidInvokator =&gt; <span class="macro">todo!</span>(),
-                        ApprovalErrorResponse::InvalidInvokatorPermission =&gt; <span class="macro">todo!</span>(),
-                        ApprovalErrorResponse::NoQuorumReached =&gt; <span class="macro">todo!</span>(),
-                        ApprovalErrorResponse::ApprovalRequestNotFound =&gt; <span class="macro">todo!</span>(),
-                        ApprovalErrorResponse::NoHashCorrelation =&gt; <span class="macro">todo!</span>(),
-                        ApprovalErrorResponse::InvalidAcceptance =&gt; <span class="macro">todo!</span>(),
+                        <span class="kw">_ </span>=&gt; {}
                     },
                 }
             }

@@ -599,10 +599,30 @@
 <a href="#599" id="599">599</a>
 <a href="#600" id="600">600</a>
 <a href="#601" id="601">601</a>
+<a href="#602" id="602">602</a>
+<a href="#603" id="603">603</a>
+<a href="#604" id="604">604</a>
+<a href="#605" id="605">605</a>
+<a href="#606" id="606">606</a>
+<a href="#607" id="607">607</a>
+<a href="#608" id="608">608</a>
+<a href="#609" id="609">609</a>
+<a href="#610" id="610">610</a>
+<a href="#611" id="611">611</a>
+<a href="#612" id="612">612</a>
+<a href="#613" id="613">613</a>
+<a href="#614" id="614">614</a>
+<a href="#615" id="615">615</a>
+<a href="#616" id="616">616</a>
+<a href="#617" id="617">617</a>
+<a href="#618" id="618">618</a>
+<a href="#619" id="619">619</a>
 </pre><pre class="rust"><code><span class="kw">use </span>std::sync::Arc;
 
 <span class="kw">use </span><span class="kw">crate</span>::approval::manager::{ApprovalAPI, ApprovalManager};
 <span class="kw">use </span><span class="kw">crate</span>::approval::{ApprovalMessages, ApprovalResponses};
+<span class="kw">use </span><span class="kw">crate</span>::authorized_subjecs::manager::{AuthorizedSubjectsAPI, AuthorizedSubjectsManager};
+<span class="kw">use </span><span class="kw">crate</span>::authorized_subjecs::{AuthorizedSubjectsCommand, AuthorizedSubjectsResponse};
 <span class="kw">use </span><span class="kw">crate</span>::commons::channel::MpscChannel;
 <span class="kw">use </span><span class="kw">crate</span>::commons::config::NetworkSettings;
 <span class="kw">use </span><span class="kw">crate</span>::commons::config::{DatabaseSettings, NodeSettings, TapleSettings};
@@ -891,6 +911,9 @@
         <span class="comment">// Receiver and sender of commands
         </span><span class="kw">let </span>(ledger_receiver, ledger_sender) =
             MpscChannel::&lt;LedgerCommand, LedgerResponse&gt;::new(BUFFER_SIZE);
+        <span class="comment">// Receiver and sender of commands AS
+        </span><span class="kw">let </span>(as_receiver, as_sender) =
+            MpscChannel::&lt;AuthorizedSubjectsCommand, AuthorizedSubjectsResponse&gt;::new(BUFFER_SIZE);
         <span class="comment">// Receiver and sender of governance messages
         </span><span class="kw">let </span>(governance_receiver, governance_sender) =
             MpscChannel::&lt;GovernanceMessage, GovernanceResponse&gt;::new(BUFFER_SIZE);
@@ -1019,11 +1042,21 @@
             distribution_sender,
             key_identifier.clone(),
         );
+        <span class="comment">// Creation AuthorizedSubjectsManager
+        </span><span class="kw">let </span>as_manager = AuthorizedSubjectsManager::new(
+            as_receiver,
+            DB::new(db.clone()),
+            task_sender.clone(),
+            key_identifier.clone(),
+            bsx.clone(),
+            bsx.subscribe(),
+        );
         <span class="comment">// Creation API module
         </span><span class="kw">let </span>api = API::new(
             <span class="self">self</span>.api_input.take().unwrap(),
             EventAPI::new(event_sender),
             ApprovalAPI::new(approval_sender),
+            AuthorizedSubjectsAPI::new(as_sender),
             wath_sender,
             <span class="self">self</span>.settings.clone(),
             kp.clone(),
@@ -1109,6 +1142,9 @@
         });
         tokio::spawn(<span class="kw">async move </span>{
             approval_manager.start().<span class="kw">await</span>;
+        });
+        tokio::spawn(<span class="kw">async move </span>{
+            as_manager.start().<span class="kw">await</span>;
         });
         tokio::spawn(network_manager.run());
         <span class="comment">// API Initialization

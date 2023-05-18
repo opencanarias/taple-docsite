@@ -779,6 +779,9 @@
 <a href="#779" id="779">779</a>
 <a href="#780" id="780">780</a>
 <a href="#781" id="781">781</a>
+<a href="#782" id="782">782</a>
+<a href="#783" id="783">783</a>
+<a href="#784" id="784">784</a>
 </pre><pre class="rust"><code><span class="kw">use super</span>::{
     reqres::{codec::TapleCodec, create_request_response_behaviour},
     routing::{RoutingBehaviour, RoutingComposedEvent},
@@ -875,7 +878,7 @@
 <span class="kw">impl </span>TapleNetworkBehavior {
     <span class="kw">pub fn </span>new(local_key: Keypair, bootstrap_nodes: Vec&lt;(PeerId, Multiaddr)&gt;) -&gt; <span class="self">Self </span>{
         <span class="kw">let </span>routing = RoutingBehaviour::new(local_key, bootstrap_nodes);
-        <span class="kw">let </span>tell = TellBehaviour::new(<span class="number">10000</span>, Duration::from_secs(<span class="number">10</span>), Duration::from_secs(<span class="number">10</span>));
+        <span class="kw">let </span>tell = TellBehaviour::new(<span class="number">100000</span>, Duration::from_secs(<span class="number">10</span>), Duration::from_secs(<span class="number">10</span>));
         <span class="kw">let </span>req_res =
             create_request_response_behaviour(Duration::from_secs(<span class="number">10</span>), Duration::from_secs(<span class="number">10</span>));
         TapleNetworkBehavior {
@@ -1423,6 +1426,7 @@
                 }
             }
             Command::SendMessage { receptor, message } =&gt; {
+                <span class="macro">log::info!</span>(<span class="string">&quot;Sending message in NETWORK&quot;</span>);
                 <span class="comment">// Check if we are the receptor
                 </span><span class="kw">if </span>receptor == <span class="self">self</span>.node_public_key {
                     <span class="comment">// It is not needed to send the message
@@ -1493,6 +1497,7 @@
                                 .send_message(<span class="kw-2">&amp;</span>peer_id, <span class="kw-2">&amp;</span>message);
                         }
                     }
+                    <span class="macro">log::info!</span>(<span class="string">&quot;Sending message in NETWORK OK&quot;</span>);
                     <span class="kw">return</span>;
                 }
 
@@ -1533,6 +1538,7 @@
 
     <span class="doccomment">/// Send all the pending messages to the specified controller
     </span><span class="kw">fn </span>send_pendings(<span class="kw-2">&amp;mut </span><span class="self">self</span>, peer_id: <span class="kw-2">&amp;</span>PeerId) {
+        <span class="macro">log::info!</span>(<span class="string">&quot;Sending message in NETWORK OK PENDINGS&quot;</span>);
         <span class="kw">let </span>pending_messages = <span class="self">self</span>.pendings.remove(peer_id);
         <span class="kw">if let </span><span class="prelude-val">Some</span>(pending_messages) = pending_messages {
             <span class="kw">for </span>message <span class="kw">in </span>pending_messages.into_iter() {

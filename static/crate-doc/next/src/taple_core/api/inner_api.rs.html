@@ -286,10 +286,21 @@
 <a href="#286" id="286">286</a>
 <a href="#287" id="287">287</a>
 <a href="#288" id="288">288</a>
+<a href="#289" id="289">289</a>
+<a href="#290" id="290">290</a>
+<a href="#291" id="291">291</a>
+<a href="#292" id="292">292</a>
+<a href="#293" id="293">293</a>
+<a href="#294" id="294">294</a>
+<a href="#295" id="295">295</a>
+<a href="#296" id="296">296</a>
+<a href="#297" id="297">297</a>
+<a href="#298" id="298">298</a>
 </pre><pre class="rust"><code><span class="kw">use </span><span class="kw">super</span>::error::APIInternalError;
 <span class="kw">use </span><span class="kw">super</span>::ApiResponses;
 <span class="kw">use </span><span class="kw">crate</span>::approval::error::ApprovalErrorResponse;
 <span class="kw">use </span><span class="kw">crate</span>::approval::manager::{ApprovalAPI, ApprovalAPIInterface};
+<span class="kw">use </span><span class="kw">crate</span>::authorized_subjecs::manager::AuthorizedSubjectsAPI;
 <span class="kw">use </span><span class="kw">crate</span>::commons::models::Acceptance;
 <span class="kw">use </span><span class="kw">crate</span>::commons::self_signature_manager::{SelfSignatureInterface, SelfSignatureManager};
 <span class="kw">use </span><span class="kw">crate</span>::event::errors::EventError;
@@ -324,6 +335,7 @@
     signature_manager: SelfSignatureManager,
     event_api: EventAPI,
     approval_api: ApprovalAPI,
+    authorized_subjects_api: AuthorizedSubjectsAPI,
     db: DB&lt;D&gt;,
 }
 
@@ -334,6 +346,7 @@
         keys: KeyPair,
         settings: <span class="kw-2">&amp;</span>TapleSettings,
         event_api: EventAPI,
+        authorized_subjects_api: AuthorizedSubjectsAPI,
         db: DB&lt;D&gt;,
         approval_api: ApprovalAPI,
     ) -&gt; <span class="self">Self </span>{
@@ -341,6 +354,7 @@
             signature_manager: SelfSignatureManager::new(keys, settings),
             event_api,
             approval_api,
+            authorized_subjects_api,
             db,
         }
     }
@@ -541,7 +555,13 @@
         subject_id: DigestIdentifier,
         providers: HashSet&lt;KeyIdentifier&gt;,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;ApiResponses, APIInternalError&gt; {
-        <span class="kw">if let </span><span class="prelude-val">Err</span>(error) = <span class="self">self</span>.db.set_preauthorized_subject_and_providers(<span class="kw-2">&amp;</span>subject_id, providers) {
+        <span class="macro">log::info!</span>(<span class="string">&quot;HOLA&quot;</span>);
+        <span class="kw">if let </span><span class="prelude-val">Err</span>(error) = <span class="self">self
+            </span>.authorized_subjects_api
+            .new_authorized_subject(subject_id, providers)
+            .<span class="kw">await
+        </span>{
+            <span class="macro">log::error!</span>(<span class="string">&quot;ERROR FATAL: {:?}&quot;</span>, error);
             <span class="kw">return </span><span class="prelude-val">Err</span>(APIInternalError::DatabaseError(error.to_string()));
         }
         <span class="prelude-val">Ok</span>(ApiResponses::SetPreauthorizedSubjectCompleted)
@@ -550,7 +570,7 @@
     <span class="kw">pub async fn </span>expecting_transfer(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         subject: DigestIdentifier,
-        public_key: Vec&lt;u8&gt;
+        public_key: Vec&lt;u8&gt;,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;ApiResponses, APIInternalError&gt; {
         <span class="macro">todo!</span>()
     }
