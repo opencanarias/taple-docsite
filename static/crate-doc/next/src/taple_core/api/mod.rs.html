@@ -100,7 +100,7 @@
     GetPendingRequests,
     GetSingleRequest(DigestIdentifier),
     SetPreauthorizedSubject(DigestIdentifier, HashSet&lt;KeyIdentifier&gt;),
-    ExpectingTransfer(DigestIdentifier, Vec&lt;u8&gt;),
+    ExpectingTransfer(DigestIdentifier),
     Shutdown,
 }
 
@@ -115,7 +115,7 @@
     HandleRequest(<span class="prelude-ty">Result</span>&lt;DigestIdentifier, ApiError&gt;), <span class="comment">// Borrar RequestData
     </span>GetPendingRequests(<span class="prelude-ty">Result</span>&lt;Vec&lt;ApprovalPetitionData&gt;, ApiError&gt;),
     GetSingleRequest(<span class="prelude-ty">Result</span>&lt;ApprovalPetitionData, ApiError&gt;),
-    ExpectingTransfer(<span class="prelude-ty">Result</span>&lt;DigestIdentifier, ApiError&gt;),
+    ExpectingTransfer(<span class="prelude-ty">Result</span>&lt;KeyIdentifier, ApiError&gt;),
     ShutdownCompleted,
     SetPreauthorizedSubjectCompleted
 }

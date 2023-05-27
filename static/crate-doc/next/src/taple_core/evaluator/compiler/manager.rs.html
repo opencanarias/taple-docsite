@@ -111,14 +111,14 @@
     database::DB,
     evaluator::errors::CompilerError,
     governance::{GovernanceInterface, GovernanceUpdatedMessage},
-    DatabaseManager,
+    DatabaseCollection
 };
 
 <span class="kw">use </span><span class="kw">super</span>::compiler::Compiler;
 
-<span class="kw">pub struct </span>TapleCompiler&lt;D: DatabaseManager, G: GovernanceInterface&gt; {
+<span class="kw">pub struct </span>TapleCompiler&lt;C: DatabaseCollection, G: GovernanceInterface&gt; {
     input_channel: tokio::sync::broadcast::Receiver&lt;GovernanceUpdatedMessage&gt;,
-    inner_compiler: Compiler&lt;D, G&gt;,
+    inner_compiler: Compiler&lt;C, G&gt;,
     shutdown_receiver: tokio::sync::broadcast::Receiver&lt;()&gt;,
     shutdown_sender: tokio::sync::broadcast::Sender&lt;()&gt;,
 }
@@ -129,10 +129,10 @@
     <span class="prelude-val">Ok</span>,
 }
 
-<span class="kw">impl</span>&lt;D: DatabaseManager, G: GovernanceInterface + Send&gt; TapleCompiler&lt;D, G&gt; {
+<span class="kw">impl</span>&lt;C: DatabaseCollection, G: GovernanceInterface + Send&gt; TapleCompiler&lt;C, G&gt; {
     <span class="kw">pub fn </span>new(
         input_channel: tokio::sync::broadcast::Receiver&lt;GovernanceUpdatedMessage&gt;,
-        database: DB&lt;D&gt;,
+        database: DB&lt;C&gt;,
         gov_api: G,
         contracts_path: String,
         engine: Engine,
@@ -141,7 +141,7 @@
     ) -&gt; <span class="self">Self </span>{
         <span class="self">Self </span>{
             input_channel,
-            inner_compiler: Compiler::&lt;D, G&gt;::new(database, gov_api, engine, contracts_path),
+            inner_compiler: Compiler::&lt;C, G&gt;::new(database, gov_api, engine, contracts_path),
             shutdown_receiver,
             shutdown_sender,
         }

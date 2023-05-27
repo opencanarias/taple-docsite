@@ -509,6 +509,17 @@
 <a href="#509" id="509">509</a>
 <a href="#510" id="510">510</a>
 <a href="#511" id="511">511</a>
+<a href="#512" id="512">512</a>
+<a href="#513" id="513">513</a>
+<a href="#514" id="514">514</a>
+<a href="#515" id="515">515</a>
+<a href="#516" id="516">516</a>
+<a href="#517" id="517">517</a>
+<a href="#518" id="518">518</a>
+<a href="#519" id="519">519</a>
+<a href="#520" id="520">520</a>
+<a href="#521" id="521">521</a>
+<a href="#522" id="522">522</a>
 </pre><pre class="rust"><code><span class="kw">use </span>std::collections::{HashMap, HashSet};
 
 <span class="kw">use </span><span class="kw">crate</span>::commons::channel::SenderEnd;
@@ -529,24 +540,24 @@
 <span class="kw">use crate</span>::{
     database::{Error <span class="kw">as </span>DbError, DB},
     governance::GovernanceInterface,
-    DatabaseManager,
+    DatabaseCollection
 };
 
 <span class="kw">use </span><span class="kw">super</span>::error::{DistributionErrorResponses, DistributionManagerError};
 <span class="kw">use </span><span class="kw">super</span>::StartDistribution;
-<span class="kw">pub struct </span>InnerDistributionManager&lt;G: GovernanceInterface, D: DatabaseManager&gt; {
+<span class="kw">pub struct </span>InnerDistributionManager&lt;G: GovernanceInterface, C: DatabaseCollection&gt; {
     governance: G,
-    db: DB&lt;D&gt;,
+    db: DB&lt;C&gt;,
     messenger_channel: SenderEnd&lt;MessageTaskCommand&lt;TapleMessages&gt;, ()&gt;,
     signature_manager: SelfSignatureManager,
     timeout: u32,
     replication_factor: f64,
 }
 
-<span class="kw">impl</span>&lt;G: GovernanceInterface, D: DatabaseManager&gt; InnerDistributionManager&lt;G, D&gt; {
+<span class="kw">impl</span>&lt;G: GovernanceInterface, C: DatabaseCollection&gt; InnerDistributionManager&lt;G, C&gt; {
     <span class="kw">pub fn </span>new(
         governance: G,
-        db: DB&lt;D&gt;,
+        db: DB&lt;C&gt;,
         messenger_channel: SenderEnd&lt;MessageTaskCommand&lt;TapleMessages&gt;, ()&gt;,
         signature_manager: SelfSignatureManager,
         settings: TapleSettings,
@@ -579,8 +590,9 @@
                 </span>.db
                 .get_subject(<span class="kw-2">&amp;</span>id)
                 .map_err(|error| DistributionManagerError::DatabaseError(error.to_string()))<span class="question-mark">?</span>;
+            <span class="kw">let </span>owner = subject.owner.clone();
             <span class="kw">let </span>metadata = build_metadata(<span class="kw-2">&amp;</span>subject, governance.sn);
-            <span class="kw">let </span>witnesses = <span class="self">self
+            <span class="kw">let </span><span class="kw-2">mut </span>witnesses = <span class="self">self
                 </span>.governance
                 .get_signers(metadata, ValidationStage::Witness)
                 .<span class="kw">await
@@ -603,6 +615,7 @@
                 .collect();
             <span class="kw">let </span>remaining_signers: HashSet&lt;KeyIdentifier&gt; =
                 witnesses.difference(<span class="kw-2">&amp;</span>current_signers).cloned().collect();
+            witnesses.insert(owner);
             <span class="kw">if </span>!remaining_signers.is_empty() {
                 <span class="self">self</span>.send_signature_request(<span class="kw-2">&amp;</span>id, subject.sn, witnesses, <span class="kw-2">&amp;</span>remaining_signers)
                     .<span class="kw">await</span><span class="question-mark">?</span>;
@@ -726,7 +739,8 @@
                 </span>.map_err(|<span class="kw">_</span>| DistributionManagerError::GovernanceChannelNotAvailable)<span class="question-mark">?</span>;
             <span class="kw">if </span>witnesses.contains(<span class="kw-2">&amp;</span><span class="self">self</span>.signature_manager.get_own_identifier()) {
                 <span class="comment">// Seguimos siendo testigos
-                </span>witnesses.remove(<span class="kw-2">&amp;</span><span class="self">self</span>.signature_manager.get_own_identifier());
+                </span>witnesses.insert(subject.owner.clone());
+                witnesses.remove(<span class="kw-2">&amp;</span><span class="self">self</span>.signature_manager.get_own_identifier());
                 <span class="self">self</span>.restart_distribution(<span class="kw-2">&amp;</span>subject, <span class="kw-2">&amp;</span>signatures, <span class="kw-2">&amp;</span>witnesses)
                     .<span class="kw">await</span><span class="question-mark">?</span>;
                 governances_still_witness_flags.insert(
@@ -772,6 +786,7 @@
             </span>.db
             .get_subject(<span class="kw-2">&amp;</span>msg.subject_id)
             .map_err(|e| DistributionManagerError::DatabaseError(e.to_string()))<span class="question-mark">?</span>;
+        <span class="kw">let </span>owner = subject.owner.clone();
         <span class="kw">let </span>governance_version = <span class="self">self
             </span>.governance
             .get_governance_version(subject.governance_id.clone(), subject.subject_id.clone())
@@ -780,6 +795,11 @@
         <span class="comment">// Empezamos la distribución
         </span><span class="kw">let </span>metadata = build_metadata(<span class="kw-2">&amp;</span>subject, governance_version);
         <span class="kw">let </span><span class="kw-2">mut </span>targets = <span class="self">self</span>.get_targets(metadata).<span class="kw">await</span><span class="question-mark">?</span>;
+        <span class="macro">log::warn!</span>(<span class="string">&quot;REMAIMING SIGNATURES: {}&quot;</span>, targets.len());
+        <span class="kw">for </span>signer <span class="kw">in </span>targets.iter() {
+            <span class="macro">log::warn!</span>(<span class="string">&quot;REMAIMING SIGNER: {}&quot;</span>, signer.to_str());
+        }
+        targets.insert(owner);
         targets.remove(<span class="kw-2">&amp;</span><span class="self">self</span>.signature_manager.get_own_identifier());
         <span class="kw">if </span>!targets.is_empty() {
             <span class="self">self</span>.send_signature_request(<span class="kw-2">&amp;</span>subject.subject_id, msg.sn, targets.clone(), <span class="kw-2">&amp;</span>targets)
@@ -951,6 +971,7 @@
                         <span class="kw">return </span><span class="prelude-val">Err</span>(DistributionManagerError::DatabaseError(error.to_string()))
                     }
                 };
+                <span class="kw">let </span>owner = subject.owner.clone();
                 <span class="kw">let </span>governance_version = <span class="self">self
                     </span>.governance
                     .get_governance_version(
@@ -990,6 +1011,7 @@
                 <span class="kw">if </span>remaining_signatures.len() == <span class="number">0 </span>{
                     <span class="self">self</span>.cancel_signature_request(<span class="kw-2">&amp;</span>subject.subject_id).<span class="kw">await</span><span class="question-mark">?</span>;
                 } <span class="kw">else </span>{
+                    targets.insert(owner);
                     <span class="self">self</span>.send_signature_request(
                         <span class="kw-2">&amp;</span>subject.subject_id,
                         msg.sn,

@@ -782,6 +782,26 @@
 <a href="#782" id="782">782</a>
 <a href="#783" id="783">783</a>
 <a href="#784" id="784">784</a>
+<a href="#785" id="785">785</a>
+<a href="#786" id="786">786</a>
+<a href="#787" id="787">787</a>
+<a href="#788" id="788">788</a>
+<a href="#789" id="789">789</a>
+<a href="#790" id="790">790</a>
+<a href="#791" id="791">791</a>
+<a href="#792" id="792">792</a>
+<a href="#793" id="793">793</a>
+<a href="#794" id="794">794</a>
+<a href="#795" id="795">795</a>
+<a href="#796" id="796">796</a>
+<a href="#797" id="797">797</a>
+<a href="#798" id="798">798</a>
+<a href="#799" id="799">799</a>
+<a href="#800" id="800">800</a>
+<a href="#801" id="801">801</a>
+<a href="#802" id="802">802</a>
+<a href="#803" id="803">803</a>
+<a href="#804" id="804">804</a>
 </pre><pre class="rust"><code><span class="kw">use super</span>::{
     reqres::{codec::TapleCodec, create_request_response_behaviour},
     routing::{RoutingBehaviour, RoutingComposedEvent},
@@ -982,12 +1002,34 @@
                             .boxed(),
                     );
                     <span class="comment">// DNS
-                    </span>transport = <span class="prelude-val">Some</span>(
-                        dns::GenDnsConfig::system(transport.unwrap())
-                            <span class="comment">// .await
-                            </span>.expect(<span class="string">&quot;DNS wont fail&quot;</span>)
-                            .boxed(),
-                    );
+                    </span>transport = {
+                        <span class="kw">match </span>dns::GenDnsConfig::system(transport.unwrap()) {
+                            <span class="prelude-val">Ok</span>(t) =&gt; <span class="prelude-val">Some</span>(t.boxed()),
+                            <span class="prelude-val">Err</span>(<span class="kw">_</span>) =&gt; { 
+                                <span class="comment">// TODO: vuelvo a crear el transporte porque no tiene clone, quizás sería interesante poner una variable de entorno que diga si estamos en android y hacer lo segundo directamente en ese caso 
+                                </span><span class="kw">let </span>transport = <span class="prelude-val">Some</span>(
+                                    TokioTcpConfig::new()
+                                        .nodelay(<span class="bool-val">true</span>)
+                                        .upgrade(upgrade::Version::V1)
+                                        .authenticate(
+                                            noise::NoiseConfig::xx(noise_key.clone())
+                                                .into_authenticated(),
+                                        )
+                                        .multiplex(mplex::MplexConfig::new())
+                                        .boxed(),
+                                );
+                                <span class="prelude-val">Some</span>(
+                                    dns::GenDnsConfig::custom(
+                                        transport.unwrap(),
+                                        dns::ResolverConfig::cloudflare(),
+                                        dns::ResolverOpts::default(),
+                                    )
+                                    .expect(<span class="string">&quot;DNS wont fail&quot;</span>)
+                                    .boxed(),
+                                )
+                            }
+                        }
+                    };
                     <span class="kw">break</span>;
                 } <span class="kw">else if let </span>Protocol::Memory(<span class="kw">_</span>) = protocol {
                     transport = <span class="prelude-val">Some</span>(
@@ -1497,7 +1539,6 @@
                                 .send_message(<span class="kw-2">&amp;</span>peer_id, <span class="kw-2">&amp;</span>message);
                         }
                     }
-                    <span class="macro">log::info!</span>(<span class="string">&quot;Sending message in NETWORK OK&quot;</span>);
                     <span class="kw">return</span>;
                 }
 
@@ -1538,7 +1579,6 @@
 
     <span class="doccomment">/// Send all the pending messages to the specified controller
     </span><span class="kw">fn </span>send_pendings(<span class="kw-2">&amp;mut </span><span class="self">self</span>, peer_id: <span class="kw-2">&amp;</span>PeerId) {
-        <span class="macro">log::info!</span>(<span class="string">&quot;Sending message in NETWORK OK PENDINGS&quot;</span>);
         <span class="kw">let </span>pending_messages = <span class="self">self</span>.pendings.remove(peer_id);
         <span class="kw">if let </span><span class="prelude-val">Some</span>(pending_messages) = pending_messages {
             <span class="kw">for </span>message <span class="kw">in </span>pending_messages.into_iter() {

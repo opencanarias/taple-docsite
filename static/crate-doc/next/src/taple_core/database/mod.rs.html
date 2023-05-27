@@ -24,43 +24,31 @@
 <a href="#24" id="24">24</a>
 <a href="#25" id="25">25</a>
 <a href="#26" id="26">26</a>
-<a href="#27" id="27">27</a>
-<a href="#28" id="28">28</a>
-<a href="#29" id="29">29</a>
-<a href="#30" id="30">30</a>
-<a href="#31" id="31">31</a>
-<a href="#32" id="32">32</a>
 </pre><pre class="rust"><code><span class="kw">mod </span>db;
 <span class="kw">mod </span>error;
 <span class="kw">mod </span>memory;
+<span class="kw">mod </span>layers;
 
-<span class="kw">use </span>serde::{de::DeserializeOwned, Serialize};
-
-<span class="kw">pub use </span>error::Error;
-<span class="kw">pub use </span>db::DB;
 <span class="kw">pub use </span><span class="self">self</span>::memory::MemoryManager;
+<span class="kw">pub use </span>db::DB;
+<span class="kw">pub use </span>error::Error;
 
-<span class="kw">pub trait </span>DatabaseManager: Sync + Send {
-    <span class="kw">fn </span>create_collection&lt;V&gt;(
-        <span class="kw-2">&amp;</span><span class="self">self</span>,
-        identifier: <span class="kw-2">&amp;</span>str,
-    ) -&gt; Box&lt;<span class="kw">dyn </span>DatabaseCollection&lt;InnerDataType = V&gt;&gt;
-    <span class="kw">where
-        </span>V: Serialize + DeserializeOwned + Sync + Send + <span class="lifetime">&#39;static</span>;
+<span class="kw">pub trait </span>DatabaseManager&lt;C&gt;: Sync + Send
+<span class="kw">where
+    </span>C: DatabaseCollection,
+{
+    <span class="kw">fn </span>create_collection(<span class="kw-2">&amp;</span><span class="self">self</span>, identifier: <span class="kw-2">&amp;</span>str) -&gt; C;
 }
 
 <span class="kw">pub trait </span>DatabaseCollection: Sync + Send {
-    <span class="kw">type </span>InnerDataType: Serialize + DeserializeOwned + Sync + Send;
-
-    <span class="kw">fn </span>put(<span class="kw-2">&amp;</span><span class="self">self</span>, key: <span class="kw-2">&amp;</span>str, data: <span class="self">Self</span>::InnerDataType) -&gt; <span class="prelude-ty">Result</span>&lt;(), Error&gt;;
-    <span class="kw">fn </span>get(<span class="kw-2">&amp;</span><span class="self">self</span>, key: <span class="kw-2">&amp;</span>str) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>::InnerDataType, Error&gt;;
+    <span class="kw">fn </span>get(<span class="kw-2">&amp;</span><span class="self">self</span>, key: <span class="kw-2">&amp;</span>str) -&gt; <span class="prelude-ty">Result</span>&lt;Vec&lt;u8&gt;, Error&gt;;
+    <span class="kw">fn </span>put(<span class="kw-2">&amp;</span><span class="self">self</span>, key: <span class="kw-2">&amp;</span>str, data: Vec&lt;u8&gt;) -&gt; <span class="prelude-ty">Result</span>&lt;(), Error&gt;;
     <span class="kw">fn </span>del(<span class="kw-2">&amp;</span><span class="self">self</span>, key: <span class="kw-2">&amp;</span>str) -&gt; <span class="prelude-ty">Result</span>&lt;(), Error&gt;;
-    <span class="kw">fn </span>partition&lt;<span class="lifetime">&#39;a</span>&gt;(
+    <span class="kw">fn </span>iter&lt;<span class="lifetime">&#39;a</span>&gt;(
         <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="self">self</span>,
-        key: <span class="kw-2">&amp;</span>str,
-    ) -&gt; Box&lt;<span class="kw">dyn </span>DatabaseCollection&lt;InnerDataType = <span class="self">Self</span>::InnerDataType&gt; + <span class="lifetime">&#39;a</span>&gt;;
-    <span class="kw">fn </span>iter&lt;<span class="lifetime">&#39;a</span>&gt;(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="self">self</span>) -&gt; Box&lt;<span class="kw">dyn </span>Iterator&lt;Item = (String, <span class="self">Self</span>::InnerDataType)&gt; + <span class="lifetime">&#39;a</span>&gt;;
-    <span class="kw">fn </span>rev_iter&lt;<span class="lifetime">&#39;a</span>&gt;(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="self">self</span>) -&gt; Box&lt;<span class="kw">dyn </span>Iterator&lt;Item = (String, <span class="self">Self</span>::InnerDataType)&gt; + <span class="lifetime">&#39;a</span>&gt;;
+        reverse: bool,
+        prefix: String,
+    ) -&gt; Box&lt;<span class="kw">dyn </span>Iterator&lt;Item = (String, Vec&lt;u8&gt;)&gt; + <span class="lifetime">&#39;a</span>&gt;;
 }
 </code></pre></div>
 </section></main><div id="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="taple_core" data-themes="" data-resource-suffix="" data-rustdoc-version="1.69.0 (84c898d65 2023-04-16)" data-search-js="search-8a59a8356673ec1f.js" data-settings-js="settings-f0c5c39777a9a2f6.js" data-settings-css="settings-0bcba95ff279c1db.css" ></div></body></html>

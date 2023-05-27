@@ -231,7 +231,7 @@
 <span class="kw">use </span><span class="kw">crate</span>::evaluator::errors::CompilerError;
 <span class="kw">use </span><span class="kw">crate</span>::governance::GovernanceInterface;
 <span class="kw">use </span><span class="kw">crate</span>::identifier::{DigestIdentifier, Derivable};
-<span class="kw">use crate</span>::{database::DB, evaluator::errors::CompilerErrorResponses, DatabaseManager};
+<span class="kw">use crate</span>::{database::DB, evaluator::errors::CompilerErrorResponses, DatabaseCollection};
 <span class="kw">use </span>async_std::fs;
 <span class="kw">use </span>std::collections::HashSet;
 <span class="kw">use </span>std::path::Path;
@@ -239,16 +239,16 @@
 <span class="kw">use </span>wasm_gc::garbage_collect_file;
 <span class="kw">use </span>wasmtime::{Engine, ExternType};
 
-<span class="kw">pub struct </span>Compiler&lt;D: DatabaseManager, G: GovernanceInterface&gt; {
-    database: DB&lt;D&gt;,
+<span class="kw">pub struct </span>Compiler&lt;C: DatabaseCollection, G: GovernanceInterface&gt; {
+    database: DB&lt;C&gt;,
     gov_api: G,
     engine: Engine,
     contracts_path: String,
     available_imports_set: HashSet&lt;String&gt;,
 }
 
-<span class="kw">impl</span>&lt;D: DatabaseManager, G: GovernanceInterface&gt; Compiler&lt;D, G&gt; {
-    <span class="kw">pub fn </span>new(database: DB&lt;D&gt;, gov_api: G, engine: Engine, contracts_path: String) -&gt; <span class="self">Self </span>{
+<span class="kw">impl</span>&lt;C: DatabaseCollection, G: GovernanceInterface&gt; Compiler&lt;C, G&gt; {
+    <span class="kw">pub fn </span>new(database: DB&lt;C&gt;, gov_api: G, engine: Engine, contracts_path: String) -&gt; <span class="self">Self </span>{
         <span class="kw">let </span>available_imports_set = get_sdk_functions_identifier();
         <span class="self">Self </span>{
             database,

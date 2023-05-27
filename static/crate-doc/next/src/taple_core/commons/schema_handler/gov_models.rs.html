@@ -152,19 +152,21 @@
 <a href="#152" id="152">152</a>
 <a href="#153" id="153">153</a>
 <a href="#154" id="154">154</a>
+<a href="#155" id="155">155</a>
 </pre><pre class="rust"><code><span class="kw">use </span>std::collections::HashSet;
 
-<span class="kw">use </span>serde::{Deserialize, Serialize, de::Visitor};
+<span class="kw">use </span>serde::{de::Visitor, Deserialize, Serialize};
 
 <span class="attr">#[derive(Debug, Serialize, Deserialize)]
 #[serde(untagged)]
-#[allow(non_snake_case)]
 </span><span class="kw">pub enum </span>Quorum {
-    <span class="attr">#[serde(rename = <span class="string">&quot;majority&quot;</span>)]
-    </span>Majority,
-    Fixed { fixed: u32 },
-    Porcentaje { porcentaje: f64 },
-    BFT { BFT: f64 },
+    Majority(String),
+    <span class="attr">#[serde(rename_all = <span class="string">&quot;PascalCase&quot;</span>)]
+    </span>Fixed { fixed: u32 },
+    <span class="attr">#[serde(rename_all = <span class="string">&quot;PascalCase&quot;</span>)]
+    </span>Porcentaje { porcentaje: f64 },
+    <span class="attr">#[serde(rename_all = <span class="string">&quot;PascalCase&quot;</span>)]
+    </span>BFT { BFT: f64 },
 }
 
 <span class="attr">#[derive(Debug)]
@@ -181,7 +183,7 @@
         </span>S: serde::Serializer,
     {
         <span class="kw">match </span><span class="self">self </span>{
-            Who::Id{ id } =&gt; serializer.serialize_str(<span class="kw-2">&amp;</span>id),
+            Who::Id { id } =&gt; serializer.serialize_str(<span class="kw-2">&amp;</span>id),
             Who::Members =&gt; serializer.serialize_str(<span class="string">&quot;Members&quot;</span>),
             Who::All =&gt; serializer.serialize_str(<span class="string">&quot;All&quot;</span>),
             Who::External =&gt; serializer.serialize_str(<span class="string">&quot;External&quot;</span>),
@@ -208,7 +210,7 @@
                     <span class="string">&quot;Members&quot; </span>=&gt; <span class="prelude-val">Ok</span>(Who::Members),
                     <span class="string">&quot;All&quot; </span>=&gt; <span class="prelude-val">Ok</span>(Who::All),
                     <span class="string">&quot;External&quot; </span>=&gt; <span class="prelude-val">Ok</span>(Who::External),
-                    <span class="kw-2">&amp;</span><span class="kw">_ </span>=&gt; <span class="prelude-val">Ok</span>(<span class="self">Self</span>::Value::Id{ id: v }),
+                    <span class="kw-2">&amp;</span><span class="kw">_ </span>=&gt; <span class="prelude-val">Ok</span>(<span class="self">Self</span>::Value::Id { id: v }),
                 }
             }
             <span class="kw">fn </span>visit_borrowed_str&lt;E&gt;(<span class="self">self</span>, v: <span class="kw-2">&amp;</span><span class="lifetime">&#39;de </span>str) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>::Value, E&gt;
@@ -239,7 +241,7 @@
         </span>S: serde::Serializer,
     {
         <span class="kw">match </span><span class="self">self </span>{
-            Schema::Id{ id } =&gt; serializer.serialize_str(<span class="kw-2">&amp;</span>id),
+            Schema::Id { id } =&gt; serializer.serialize_str(<span class="kw-2">&amp;</span>id),
             Schema::AllSchemas =&gt; serializer.serialize_str(<span class="string">&quot;all_schemas&quot;</span>),
         }
     }
@@ -262,7 +264,7 @@
             {
                 <span class="kw">match </span>v.as_str() {
                     <span class="string">&quot;all_schemas&quot; </span>=&gt; <span class="prelude-val">Ok</span>(<span class="self">Self</span>::Value::AllSchemas),
-                    <span class="kw-2">&amp;</span><span class="kw">_ </span>=&gt; <span class="prelude-val">Ok</span>(<span class="self">Self</span>::Value::Id{id: v}),
+                    <span class="kw-2">&amp;</span><span class="kw">_ </span>=&gt; <span class="prelude-val">Ok</span>(<span class="self">Self</span>::Value::Id { id: v }),
                 }
             }
             <span class="kw">fn </span>visit_borrowed_str&lt;E&gt;(<span class="self">self</span>, v: <span class="kw-2">&amp;</span><span class="lifetime">&#39;de </span>str) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>::Value, E&gt;
@@ -271,7 +273,7 @@
             {
                 <span class="kw">match </span>v {
                     <span class="string">&quot;all_schemas&quot; </span>=&gt; <span class="prelude-val">Ok</span>(<span class="self">Self</span>::Value::AllSchemas),
-                    <span class="kw-2">&amp;</span><span class="kw">_ </span>=&gt; <span class="prelude-val">Ok</span>(<span class="self">Self</span>::Value::Id{id: v.to_string()}),
+                    <span class="kw-2">&amp;</span><span class="kw">_ </span>=&gt; <span class="prelude-val">Ok</span>(<span class="self">Self</span>::Value::Id { id: v.to_string() }),
                 }
             }
         }

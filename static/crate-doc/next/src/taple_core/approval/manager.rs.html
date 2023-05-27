@@ -321,7 +321,7 @@
     message::{MessageConfig, MessageTaskCommand},
     protocol::protocol_message_manager::TapleMessages,
     utils::message::event::create_approver_response,
-    DatabaseManager, Notification, TapleSettings,
+    DatabaseCollection, Notification, TapleSettings
 };
 
 <span class="kw">use super</span>::{
@@ -330,13 +330,13 @@
     ApprovalMessages, ApprovalPetitionData, ApprovalResponses, EmitVote,
 };
 
-<span class="kw">pub struct </span>ApprovalManager&lt;D: DatabaseManager&gt; {
+<span class="kw">pub struct </span>ApprovalManager&lt;C: DatabaseCollection&gt; {
     input_channel: MpscChannel&lt;ApprovalMessages, ApprovalResponses&gt;,
     shutdown_sender: tokio::sync::broadcast::Sender&lt;()&gt;,
     shutdown_receiver: tokio::sync::broadcast::Receiver&lt;()&gt;,
     governance_update_channel: tokio::sync::broadcast::Receiver&lt;GovernanceUpdatedMessage&gt;,
     messenger_channel: SenderEnd&lt;MessageTaskCommand&lt;TapleMessages&gt;, ()&gt;,
-    inner_manager: InnerApprovalManager&lt;GovernanceAPI, D, RequestNotifier&gt;,
+    inner_manager: InnerApprovalManager&lt;GovernanceAPI, RequestNotifier, C&gt;,
 }
 
 <span class="kw">pub struct </span>ApprovalAPI {
@@ -418,7 +418,7 @@
     }
 }
 
-<span class="kw">impl</span>&lt;D: DatabaseManager&gt; ApprovalManager&lt;D&gt; {
+<span class="kw">impl</span>&lt;C: DatabaseCollection&gt; ApprovalManager&lt;C&gt; {
     <span class="kw">pub fn </span>new(
         gov_api: GovernanceAPI,
         input_channel: MpscChannel&lt;ApprovalMessages, ApprovalResponses&gt;,
@@ -429,7 +429,7 @@
         signature_manager: SelfSignatureManager,
         notification_sender: tokio::sync::broadcast::Sender&lt;Notification&gt;,
         settings: TapleSettings,
-        database: DB&lt;D&gt;,
+        database: DB&lt;C&gt;,
     ) -&gt; <span class="self">Self </span>{
         <span class="kw">let </span>passvotation = settings.node.passvotation.into();
         <span class="self">Self </span>{

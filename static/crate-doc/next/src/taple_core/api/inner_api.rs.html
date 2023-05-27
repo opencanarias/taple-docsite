@@ -296,6 +296,15 @@
 <a href="#296" id="296">296</a>
 <a href="#297" id="297">297</a>
 <a href="#298" id="298">298</a>
+<a href="#299" id="299">299</a>
+<a href="#300" id="300">300</a>
+<a href="#301" id="301">301</a>
+<a href="#302" id="302">302</a>
+<a href="#303" id="303">303</a>
+<a href="#304" id="304">304</a>
+<a href="#305" id="305">305</a>
+<a href="#306" id="306">306</a>
+<a href="#307" id="307">307</a>
 </pre><pre class="rust"><code><span class="kw">use </span><span class="kw">super</span>::error::APIInternalError;
 <span class="kw">use </span><span class="kw">super</span>::ApiResponses;
 <span class="kw">use </span><span class="kw">crate</span>::approval::error::ApprovalErrorResponse;
@@ -308,6 +317,7 @@
 <span class="kw">use </span><span class="kw">crate</span>::event::EventResponse;
 <span class="kw">use </span><span class="kw">crate</span>::identifier::Derivable;
 <span class="kw">use </span><span class="kw">crate</span>::KeyIdentifier;
+<span class="kw">use </span><span class="kw">crate</span>::ledger::manager::{EventManagerAPI, EventManagerInterface};
 <span class="comment">// use crate::ledger::errors::LedgerManagerError;
 </span><span class="kw">use crate</span>::{
     commons::{
@@ -320,10 +330,9 @@
             timestamp::TimeStamp,
         },
     },
-    DatabaseManager, DB,
+    DB, DatabaseCollection
 };
 <span class="kw">use </span>std::collections::HashSet;
-<span class="kw">use </span>std::str::FromStr;
 
 <span class="kw">use super</span>::{
     error::ApiError, GetAllSubjects, GetEventsOfSubject, GetSingleSubject <span class="kw">as </span>GetSingleSubjectAPI,
@@ -331,24 +340,26 @@
 
 <span class="kw">use </span><span class="kw">crate</span>::database::Error <span class="kw">as </span>DbError;
 
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct </span>InnerAPI&lt;D: DatabaseManager&gt; {
+<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct </span>InnerAPI&lt;C: DatabaseCollection&gt; {
     signature_manager: SelfSignatureManager,
     event_api: EventAPI,
     approval_api: ApprovalAPI,
     authorized_subjects_api: AuthorizedSubjectsAPI,
-    db: DB&lt;D&gt;,
+    ledger_api: EventManagerAPI,
+    db: DB&lt;C&gt;,
 }
 
 <span class="kw">const </span>MAX_QUANTITY: isize = <span class="number">100</span>;
 
-<span class="kw">impl</span>&lt;D: DatabaseManager&gt; InnerAPI&lt;D&gt; {
+<span class="kw">impl</span>&lt;C: DatabaseCollection&gt; InnerAPI&lt;C&gt; {
     <span class="kw">pub fn </span>new(
         keys: KeyPair,
         settings: <span class="kw-2">&amp;</span>TapleSettings,
         event_api: EventAPI,
         authorized_subjects_api: AuthorizedSubjectsAPI,
-        db: DB&lt;D&gt;,
+        db: DB&lt;C&gt;,
         approval_api: ApprovalAPI,
+        ledger_api: EventManagerAPI
     ) -&gt; <span class="self">Self </span>{
         <span class="self">Self </span>{
             signature_manager: SelfSignatureManager::new(keys, settings),
@@ -356,6 +367,7 @@
             approval_api,
             authorized_subjects_api,
             db,
+            ledger_api
         }
     }
 
@@ -569,10 +581,16 @@
 
     <span class="kw">pub async fn </span>expecting_transfer(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        subject: DigestIdentifier,
-        public_key: Vec&lt;u8&gt;,
+        subject_id: DigestIdentifier,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;ApiResponses, APIInternalError&gt; {
-        <span class="macro">todo!</span>()
+        <span class="kw">match </span><span class="self">self</span>.ledger_api.expecting_transfer(subject_id).<span class="kw">await </span>{
+            <span class="prelude-val">Ok</span>(public_key) =&gt; {
+                <span class="prelude-val">Ok</span>(ApiResponses::ExpectingTransfer(<span class="prelude-val">Ok</span>(public_key)))
+            },
+            <span class="prelude-val">Err</span>(error) =&gt; {
+                <span class="prelude-val">Err</span>(APIInternalError::DatabaseError(error.to_string()))
+            }
+        }
     }
 }
 

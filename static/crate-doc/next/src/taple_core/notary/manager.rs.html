@@ -102,9 +102,7 @@
 <a href="#102" id="102">102</a>
 <a href="#103" id="103">103</a>
 <a href="#104" id="104">104</a>
-</pre><pre class="rust"><code><span class="kw">use super</span>::{errors::NotaryError, notary::Notary, NotaryCommand, NotaryResponse};
-<span class="kw">use </span><span class="kw">crate</span>::database::{DatabaseManager, DB};
-<span class="kw">use </span><span class="kw">crate</span>::message::MessageTaskCommand;
+</pre><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::message::MessageTaskCommand;
 <span class="kw">use </span><span class="kw">crate</span>::protocol::protocol_message_manager::TapleMessages;
 <span class="kw">use crate</span>::{
     commons::{
@@ -113,6 +111,8 @@
     },
     governance::GovernanceAPI,
 };
+<span class="kw">use </span><span class="kw">crate</span>::database::{DB, DatabaseCollection};
+<span class="kw">use super</span>::{errors::NotaryError, notary::Notary, NotaryCommand, NotaryResponse};
 
 <span class="attr">#[derive(Clone, Debug)]
 </span><span class="kw">pub struct </span>NotaryAPI {
@@ -125,20 +125,20 @@
     }
 }
 
-<span class="kw">pub struct </span>NotaryManager&lt;D: DatabaseManager&gt; {
+<span class="kw">pub struct </span>NotaryManager&lt;C: DatabaseCollection&gt; {
     <span class="doccomment">/// Communication channel for incoming petitions
     </span>input_channel: MpscChannel&lt;NotaryCommand, NotaryResponse&gt;,
     <span class="doccomment">/// Notarization functions
-    </span>inner_notary: Notary&lt;D&gt;,
+    </span>inner_notary: Notary&lt;C&gt;,
     shutdown_sender: tokio::sync::broadcast::Sender&lt;()&gt;,
     shutdown_receiver: tokio::sync::broadcast::Receiver&lt;()&gt;,
 }
 
-<span class="kw">impl</span>&lt;D: DatabaseManager&gt; NotaryManager&lt;D&gt; {
+<span class="kw">impl</span>&lt;C: DatabaseCollection&gt; NotaryManager&lt;C&gt; {
     <span class="kw">pub fn </span>new(
         input_channel: MpscChannel&lt;NotaryCommand, NotaryResponse&gt;,
         gov_api: GovernanceAPI,
-        database: DB&lt;D&gt;,
+        database: DB&lt;C&gt;,
         signature_manager: SelfSignatureManager,
         shutdown_sender: tokio::sync::broadcast::Sender&lt;()&gt;,
         shutdown_receiver: tokio::sync::broadcast::Receiver&lt;()&gt;,

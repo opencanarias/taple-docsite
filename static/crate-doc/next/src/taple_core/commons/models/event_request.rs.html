@@ -311,7 +311,7 @@
 </span><span class="kw">pub struct </span>TransferRequest {
     <span class="attr">#[schema(value_type = String)]
     </span><span class="kw">pub </span>subject_id: DigestIdentifier,
-    <span class="kw">pub </span>public_key: Vec&lt;u8&gt;,
+    <span class="kw">pub </span>public_key: KeyIdentifier,
 }
 
 <span class="kw">impl </span>EventRequest {

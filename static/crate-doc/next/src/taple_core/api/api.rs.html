@@ -585,6 +585,7 @@
 <a href="#585" id="585">585</a>
 <a href="#586" id="586">586</a>
 <a href="#587" id="587">587</a>
+<a href="#588" id="588">588</a>
 </pre><pre class="rust"><code><span class="kw">use </span>std::collections::HashSet;
 
 <span class="kw">use </span><span class="kw">super</span>::GetEventsOfSubject;
@@ -605,12 +606,13 @@
 };
 <span class="kw">use </span><span class="kw">crate</span>::event::manager::EventAPI;
 <span class="kw">use </span><span class="kw">crate</span>::KeyIdentifier;
+<span class="kw">use </span><span class="kw">crate</span>::ledger::manager::EventManagerAPI;
 <span class="kw">use crate</span>::{
     approval::ApprovalPetitionData,
     commons::models::Acceptance,
     event_request::{CreateRequest, EventRequestType, StateRequest},
     identifier::DigestIdentifier,
-    DatabaseManager, DB,
+    DatabaseManager, DB, DatabaseCollection
 };
 <span class="kw">use </span>async_trait::async_trait;
 <span class="kw">use </span>tokio::sync::watch::Sender;
@@ -758,8 +760,7 @@
     <span class="kw">async fn </span>expecting_transfer(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         subject_id: DigestIdentifier,
-        public_key: Vec&lt;u8&gt;,
-    ) -&gt; <span class="prelude-ty">Result</span>&lt;DigestIdentifier, ApiError&gt;;
+    ) -&gt; <span class="prelude-ty">Result</span>&lt;KeyIdentifier, ApiError&gt;;
 }
 
 <span class="doccomment">/// Object that allows interaction with a TAPLE node.
@@ -1024,11 +1025,10 @@
     <span class="kw">async fn </span>expecting_transfer(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         subject_id: DigestIdentifier,
-        public_key: Vec&lt;u8&gt;,
-    ) -&gt; <span class="prelude-ty">Result</span>&lt;DigestIdentifier, ApiError&gt; {
+    ) -&gt; <span class="prelude-ty">Result</span>&lt;KeyIdentifier, ApiError&gt; {
         <span class="kw">let </span>response = <span class="self">self
             </span>.sender
-            .ask(APICommands::ExpectingTransfer(subject_id, public_key))
+            .ask(APICommands::ExpectingTransfer(subject_id))
             .<span class="kw">await
             </span>.unwrap();
         <span class="kw">if let </span>ApiResponses::ExpectingTransfer(data) = response {
@@ -1039,26 +1039,27 @@
     }
 }
 
-<span class="kw">pub struct </span>API&lt;D: DatabaseManager&gt; {
+<span class="kw">pub struct </span>API&lt;C: DatabaseCollection,&gt; {
     input: MpscChannel&lt;APICommands, ApiResponses&gt;,
     _settings_sender: Sender&lt;TapleSettings&gt;,
-    inner_api: InnerAPI&lt;D&gt;,
+    inner_api: InnerAPI&lt;C&gt;,
     shutdown_sender: <span class="prelude-ty">Option</span>&lt;tokio::sync::broadcast::Sender&lt;()&gt;&gt;,
     shutdown_receiver: tokio::sync::broadcast::Receiver&lt;()&gt;,
 }
 
-<span class="kw">impl</span>&lt;D: DatabaseManager&gt; API&lt;D&gt; {
+<span class="kw">impl</span>&lt;C: DatabaseCollection,&gt; API&lt;C&gt; {
     <span class="kw">pub fn </span>new(
         input: MpscChannel&lt;APICommands, ApiResponses&gt;,
         event_api: EventAPI,
         approval_api: ApprovalAPI,
         authorized_subjects_api: AuthorizedSubjectsAPI,
+        ledger_api: EventManagerAPI,
         settings_sender: Sender&lt;TapleSettings&gt;,
         initial_settings: TapleSettings,
         keys: KeyPair,
         shutdown_sender: tokio::sync::broadcast::Sender&lt;()&gt;,
         shutdown_receiver: tokio::sync::broadcast::Receiver&lt;()&gt;,
-        db: DB&lt;D&gt;,
+        db: DB&lt;C&gt;,
     ) -&gt; <span class="self">Self </span>{
         <span class="self">Self </span>{
             input,
@@ -1070,6 +1071,7 @@
                 authorized_subjects_api,
                 db,
                 approval_api,
+                ledger_api
             ),
             shutdown_sender: <span class="prelude-val">Some</span>(shutdown_sender),
             shutdown_receiver: shutdown_receiver,
@@ -1156,9 +1158,9 @@
                             .set_preauthorized_subject(subject_id, providers)
                             .<span class="kw">await</span><span class="question-mark">?
                     </span>}
-                    APICommands::ExpectingTransfer(subject_id, public_key) =&gt; {
+                    APICommands::ExpectingTransfer(subject_id) =&gt; {
                         <span class="self">self</span>.inner_api
-                            .expecting_transfer(subject_id, public_key)
+                            .expecting_transfer(subject_id)
                             .<span class="kw">await</span><span class="question-mark">?
                     </span>}
                 };

@@ -114,36 +114,30 @@
 <a href="#114" id="114">114</a>
 <a href="#115" id="115">115</a>
 <a href="#116" id="116">116</a>
-<a href="#117" id="117">117</a>
-<a href="#118" id="118">118</a>
-<a href="#119" id="119">119</a>
-<a href="#120" id="120">120</a>
-<a href="#121" id="121">121</a>
 </pre><pre class="rust"><code><span class="kw">use </span>std::collections::HashSet;
 
 <span class="kw">use crate</span>::{
     commons::channel::SenderEnd,
     database::DB,
-    distribution::LedgerMessages,
     ledger::LedgerCommand,
     message::{MessageConfig, MessageTaskCommand},
     protocol::protocol_message_manager::TapleMessages,
-    DatabaseManager, Derivable, DigestIdentifier, KeyIdentifier,
+    DatabaseCollection, Derivable, DigestIdentifier, KeyIdentifier,
 };
 
 <span class="kw">use </span><span class="kw">super</span>::error::AuthorizedSubjectsError;
 
 <span class="doccomment">/// Estructura que maneja los sujetos preautorizados en un sistema y se comunica con otros componentes del sistema a través de un canal de mensajes.
-</span><span class="kw">pub struct </span>AuthorizedSubjects&lt;D: DatabaseManager&gt; {
+</span><span class="kw">pub struct </span>AuthorizedSubjects&lt;C: DatabaseCollection&gt; {
     <span class="doccomment">/// Objeto que maneja la conexión a la base de datos.
-    </span>database: DB&lt;D&gt;,
+    </span>database: DB&lt;C&gt;,
     <span class="doccomment">/// Canal de mensajes que se utiliza para comunicarse con otros componentes del sistema.
     </span>message_channel: SenderEnd&lt;MessageTaskCommand&lt;TapleMessages&gt;, ()&gt;,
     <span class="doccomment">/// Identificador único para el componente que utiliza esta estructura.
     </span>our_id: KeyIdentifier,
 }
 
-<span class="kw">impl</span>&lt;D: DatabaseManager&gt; AuthorizedSubjects&lt;D&gt; {
+<span class="kw">impl</span>&lt;C: DatabaseCollection&gt; AuthorizedSubjects&lt;C&gt; {
     <span class="doccomment">/// Crea una nueva instancia de la estructura `AuthorizedSubjects`.
     ///
     /// # Arguments
@@ -152,7 +146,7 @@
     /// * `message_channel` - Canal de mensajes.
     /// * `our_id` - Identificador único.
     </span><span class="kw">pub fn </span>new(
-        database: DB&lt;D&gt;,
+        database: DB&lt;C&gt;,
         message_channel: SenderEnd&lt;MessageTaskCommand&lt;TapleMessages&gt;, ()&gt;,
         our_id: KeyIdentifier,
     ) -&gt; <span class="self">Self </span>{
@@ -185,10 +179,6 @@
 
         <span class="comment">// Para cada sujeto preautorizado, enviamos un mensaje a los proveedores asociados a través del canal de mensajes.
         </span><span class="kw">for </span>(subject_id, providers) <span class="kw">in </span>preauthorized_subjects.into_iter() {
-            <span class="macro">log::warn!</span>(<span class="string">&quot;SUBJECT_ID: {}&quot;</span>, subject_id.to_str());
-            providers.iter().for_each(|p| {
-                <span class="macro">log::warn!</span>(<span class="string">&quot;PROVIDER: {}&quot;</span>, p.to_str());
-            });
             <span class="kw">if </span>!providers.is_empty() {
                 <span class="self">self</span>.message_channel
                     .tell(MessageTaskCommand::Request(

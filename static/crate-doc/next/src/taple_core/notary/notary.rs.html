@@ -340,20 +340,20 @@
 };
 
 <span class="kw">use super</span>::{errors::NotaryError, NotaryEvent, NotaryEventResponse};
-<span class="kw">use </span><span class="kw">crate</span>::database::{DatabaseManager, DB};
+<span class="kw">use </span><span class="kw">crate</span>::database::{DB, DatabaseCollection};
 
-<span class="kw">pub struct </span>Notary&lt;D: DatabaseManager&gt; {
+<span class="kw">pub struct </span>Notary&lt;C: DatabaseCollection&gt; {
     gov_api: GovernanceAPI,
-    database: DB&lt;D&gt;,
+    database: DB&lt;C&gt;,
     cache_gov_ver: HashMap&lt;DigestIdentifier, u32&gt;,
     signature_manager: SelfSignatureManager,
     message_channel: SenderEnd&lt;MessageTaskCommand&lt;TapleMessages&gt;, ()&gt;,
 }
 
-<span class="kw">impl</span>&lt;D: DatabaseManager&gt; Notary&lt;D&gt; {
+<span class="kw">impl</span>&lt;C: DatabaseCollection&gt; Notary&lt;C&gt; {
     <span class="kw">pub fn </span>new(
         gov_api: GovernanceAPI,
-        database: DB&lt;D&gt;,
+        database: DB&lt;C&gt;,
         signature_manager: SelfSignatureManager,
         message_channel: SenderEnd&lt;MessageTaskCommand&lt;TapleMessages&gt;, ()&gt;,
     ) -&gt; <span class="self">Self </span>{

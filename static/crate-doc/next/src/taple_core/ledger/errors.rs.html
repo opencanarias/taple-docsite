@@ -55,6 +55,18 @@
 <a href="#55" id="55">55</a>
 <a href="#56" id="56">56</a>
 <a href="#57" id="57">57</a>
+<a href="#58" id="58">58</a>
+<a href="#59" id="59">59</a>
+<a href="#60" id="60">60</a>
+<a href="#61" id="61">61</a>
+<a href="#62" id="62">62</a>
+<a href="#63" id="63">63</a>
+<a href="#64" id="64">64</a>
+<a href="#65" id="65">65</a>
+<a href="#66" id="66">66</a>
+<a href="#67" id="67">67</a>
+<a href="#68" id="68">68</a>
+<a href="#69" id="69">69</a>
 </pre><pre class="rust"><code><span class="kw">use crate</span>::{commons::errors::SubjectError, governance::error::RequestError};
 <span class="kw">use </span>thiserror::Error;
 <span class="kw">use </span><span class="kw">crate</span>::database::Error <span class="kw">as </span>DbError;
@@ -63,8 +75,12 @@
 </span><span class="kw">pub enum </span>LedgerError {
     <span class="attr">#[error(<span class="string">&quot;A channel has been closed&quot;</span>)]
     </span>ChannelClosed,
+    <span class="attr">#[error(<span class="string">&quot;Unexpected response&quot;</span>)]
+    </span>UnexpectedResponse,
     <span class="attr">#[error(<span class="string">&quot;Subject Not Found: {0}&quot;</span>)]
     </span>SubjectNotFound(String),
+    <span class="attr">#[error(<span class="string">&quot;Unexpected transfer received&quot;</span>)]
+    </span>UnexpectedTransfer,
     <span class="attr">#[error(<span class="string">&quot;Error parsing json string: \&quot;{0}\&quot;&quot;</span>)]
     </span>ErrorParsingJsonString(String),
     <span class="attr">#[error(<span class="string">&quot;Error applying patch: \&quot;{0}\&quot;&quot;</span>)]
@@ -111,6 +127,14 @@
     </span>GovernanceNotPreauthorized(String),
     <span class="attr">#[error(<span class="string">&quot;Governance LCE: {0}&quot;</span>)]
     </span>GovernanceLCE(String),
+    <span class="attr">#[error(<span class="string">&quot;Evaluation found in Transfer Event&quot;</span>)]
+    </span>EvaluationInTransferEvent,
+    <span class="attr">#[error(<span class="string">&quot;Approval found in transfer event&quot;</span>)]
+    </span>ApprovalInTransferEvent,
+    <span class="attr">#[error(<span class="string">&quot;State event with an SN of 0 detected&quot;</span>)]
+    </span>StateEventWithZeroSNDetected,
+    <span class="attr">#[error(<span class="string">&quot;Unexpected create event&quot;</span>)]
+    </span>UnexpectedCreateEvent
 }
 </code></pre></div>
 </section></main><div id="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="taple_core" data-themes="" data-resource-suffix="" data-rustdoc-version="1.69.0 (84c898d65 2023-04-16)" data-search-js="search-8a59a8356673ec1f.js" data-settings-js="settings-f0c5c39777a9a2f6.js" data-settings-css="settings-0bcba95ff279c1db.css" ></div></body></html>

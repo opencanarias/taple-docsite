@@ -849,7 +849,13 @@
 <a href="#849" id="849">849</a>
 <a href="#850" id="850">850</a>
 <a href="#851" id="851">851</a>
-</pre><pre class="rust"><code><span class="kw">use </span>std::sync::Arc;
+<a href="#852" id="852">852</a>
+<a href="#853" id="853">853</a>
+<a href="#854" id="854">854</a>
+<a href="#855" id="855">855</a>
+<a href="#856" id="856">856</a>
+</pre><pre class="rust"><code><span class="kw">use </span>std::marker::PhantomData;
+<span class="kw">use </span>std::sync::Arc;
 
 <span class="kw">use </span>wasmtime::Engine;
 
@@ -857,7 +863,7 @@
 <span class="kw">use </span><span class="kw">super</span>::errors::EvaluatorError;
 <span class="kw">use super</span>::{EvaluatorMessage, EvaluatorResponse};
 <span class="kw">use </span><span class="kw">crate</span>::commons::self_signature_manager::{SelfSignatureInterface, SelfSignatureManager};
-<span class="kw">use </span><span class="kw">crate</span>::database::{DatabaseManager, DB};
+<span class="kw">use </span><span class="kw">crate</span>::database::{DatabaseManager, DB, DatabaseCollection};
 <span class="kw">use </span><span class="kw">crate</span>::evaluator::errors::ExecutorErrorResponses;
 <span class="kw">use </span><span class="kw">crate</span>::evaluator::runner::manager::TapleRunner;
 <span class="kw">use </span><span class="kw">crate</span>::event_request::{EventRequestType};
@@ -881,23 +887,25 @@
 }
 
 <span class="kw">pub struct </span>EvaluatorManager&lt;
-    D: DatabaseManager + Send + <span class="lifetime">&#39;static</span>,
+    M: DatabaseManager&lt;C&gt;,
+    C: DatabaseCollection + <span class="lifetime">&#39;static</span>,
     G: GovernanceInterface + Send + Clone + <span class="lifetime">&#39;static</span>,
 &gt; {
     <span class="doccomment">/// Communication channel for incoming petitions
     </span>input_channel: MpscChannel&lt;EvaluatorMessage, EvaluatorResponse&gt;,
     <span class="doccomment">/// Contract executioner
-    </span>runner: TapleRunner&lt;D, G&gt;,
+    </span>runner: TapleRunner&lt;C, G&gt;,
     signature_manager: SelfSignatureManager,
     shutdown_sender: tokio::sync::broadcast::Sender&lt;()&gt;,
     shutdown_receiver: tokio::sync::broadcast::Receiver&lt;()&gt;,
     messenger_channel: SenderEnd&lt;MessageTaskCommand&lt;TapleMessages&gt;, ()&gt;,
+    _m: PhantomData&lt;M&gt;
 }
 
-<span class="kw">impl</span>&lt;D: DatabaseManager, G: GovernanceInterface + Send + Clone + <span class="lifetime">&#39;static</span>&gt; EvaluatorManager&lt;D, G&gt; {
+<span class="kw">impl</span>&lt;M: DatabaseManager&lt;C&gt;, C: DatabaseCollection, G: GovernanceInterface + Send + Clone + <span class="lifetime">&#39;static</span>&gt; EvaluatorManager&lt;M, C, G&gt; {
     <span class="kw">pub fn </span>new(
         input_channel: MpscChannel&lt;EvaluatorMessage, EvaluatorResponse&gt;,
-        database: Arc&lt;D&gt;,
+        database: Arc&lt;M&gt;,
         signature_manager: SelfSignatureManager,
         compiler_channel: tokio::sync::broadcast::Receiver&lt;GovernanceUpdatedMessage&gt;,
         shutdown_sender: tokio::sync::broadcast::Sender&lt;()&gt;,
@@ -926,6 +934,7 @@
             shutdown_receiver,
             shutdown_sender,
             messenger_channel,
+            _m: PhantomData::default()
         }
     }
 
@@ -974,6 +983,7 @@
                         <span class="kw">break </span><span class="lifetime">&#39;response </span>EvaluatorResponse::AskForEvaluation(<span class="prelude-val">Err</span>(<span class="kw">super</span>::errors::EvaluatorErrorResponses::CreateRequestNotAllowed));
                     };
                     <span class="kw">let </span>result = <span class="self">self</span>.runner.execute_contract(<span class="kw-2">&amp;</span>data, state_data).<span class="kw">await</span>;
+                    <span class="macro">log::warn!</span>(<span class="string">&quot;Execution result: {:?}&quot;</span>, result);
                     <span class="kw">match </span>result {
                         <span class="prelude-val">Ok</span>(executor_response) =&gt; {
                             <span class="kw">let </span>governance_version = executor_response.governance_version;

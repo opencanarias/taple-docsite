@@ -617,7 +617,13 @@
 <a href="#617" id="617">617</a>
 <a href="#618" id="618">618</a>
 <a href="#619" id="619">619</a>
-</pre><pre class="rust"><code><span class="kw">use </span>std::sync::Arc;
+<a href="#620" id="620">620</a>
+<a href="#621" id="621">621</a>
+<a href="#622" id="622">622</a>
+<a href="#623" id="623">623</a>
+<a href="#624" id="624">624</a>
+</pre><pre class="rust"><code><span class="kw">use </span>std::marker::PhantomData;
+<span class="kw">use </span>std::sync::Arc;
 
 <span class="kw">use </span><span class="kw">crate</span>::approval::manager::{ApprovalAPI, ApprovalManager};
 <span class="kw">use </span><span class="kw">crate</span>::approval::{ApprovalMessages, ApprovalResponses};
@@ -633,7 +639,7 @@
 <span class="kw">use </span><span class="kw">crate</span>::commons::identifier::{Derivable, KeyIdentifier};
 <span class="kw">use </span><span class="kw">crate</span>::commons::models::notification::Notification;
 <span class="kw">use </span><span class="kw">crate</span>::commons::self_signature_manager::{SelfSignatureInterface, SelfSignatureManager};
-<span class="kw">use </span><span class="kw">crate</span>::database::{DatabaseManager, DB};
+<span class="kw">use </span><span class="kw">crate</span>::database::{DatabaseManager, DB, DatabaseCollection};
 <span class="kw">use </span><span class="kw">crate</span>::distribution::error::DistributionErrorResponses;
 <span class="kw">use </span><span class="kw">crate</span>::distribution::manager::DistributionManager;
 <span class="kw">use </span><span class="kw">crate</span>::distribution::DistributionMessagesNew;
@@ -643,6 +649,7 @@
 <span class="kw">use </span><span class="kw">crate</span>::event::{EventCommand, EventResponse};
 <span class="kw">use </span><span class="kw">crate</span>::governance::GovernanceAPI;
 <span class="kw">use </span><span class="kw">crate</span>::governance::{governance::Governance, GovernanceMessage, GovernanceResponse};
+<span class="kw">use </span><span class="kw">crate</span>::ledger::manager::EventManagerAPI;
 <span class="kw">use </span><span class="kw">crate</span>::ledger::{manager::EventManager <span class="kw">as </span>LedgerManager, LedgerCommand, LedgerResponse};
 <span class="kw">use </span><span class="kw">crate</span>::message::{
     Message, MessageReceiver, MessageSender, MessageTaskCommand, MessageTaskManager, NetworkEvent,
@@ -723,7 +730,7 @@
 /// of [configuration](Settings) parameters in order to be properly initialized.
 ///
 </span><span class="attr">#[derive(Debug)]
-</span><span class="kw">pub struct </span>Taple&lt;D: DatabaseManager&gt; {
+</span><span class="kw">pub struct </span>Taple&lt;M: DatabaseManager&lt;C&gt;, C: DatabaseCollection&gt; {
     api: NodeAPI,
     peer_id: <span class="prelude-ty">Option</span>&lt;PeerId&gt;,
     controller_id: <span class="prelude-ty">Option</span>&lt;String&gt;,
@@ -731,10 +738,11 @@
     api_input: <span class="prelude-ty">Option</span>&lt;MpscChannel&lt;APICommands, ApiResponses&gt;&gt;,
     notification_sender: tokio::sync::broadcast::Sender&lt;Notification&gt;,
     settings: TapleSettings,
-    database: <span class="prelude-ty">Option</span>&lt;D&gt;,
+    database: <span class="prelude-ty">Option</span>&lt;M&gt;,
+    _c: PhantomData&lt;C&gt;
 }
 
-<span class="kw">impl</span>&lt;D: DatabaseManager + <span class="lifetime">&#39;static</span>&gt; Taple&lt;D&gt; {
+<span class="kw">impl</span>&lt;M: DatabaseManager&lt;C&gt; + <span class="lifetime">&#39;static</span>, C: DatabaseCollection + <span class="lifetime">&#39;static</span>&gt; Taple&lt;M, C&gt; {
     <span class="doccomment">/// Returns the [PeerId] of the node is available.
     /// This ID is the identifier of the node at the network level.
     /// **None** can only be get if the node has not been started yet.
@@ -794,7 +802,7 @@
     }
 
     <span class="doccomment">/// Main and unique method to create an instance of a TAPLE node.
-    </span><span class="kw">pub fn </span>new(settings: TapleSettings, database: D) -&gt; <span class="self">Self </span>{
+    </span><span class="kw">pub fn </span>new(settings: TapleSettings, database: M) -&gt; <span class="self">Self </span>{
         check_dev_settings(<span class="kw-2">&amp;</span>settings);
         <span class="kw">let </span>(api_input, api_sender) = MpscChannel::new(BUFFER_SIZE);
         <span class="kw">let </span>(sender, <span class="kw">_</span>) = tokio::sync::broadcast::channel(BUFFER_SIZE);
@@ -808,6 +816,7 @@
             notification_sender: sender,
             settings,
             database: <span class="prelude-val">Some</span>(database),
+            _c: PhantomData::default()
         }
     }
 
@@ -1009,7 +1018,7 @@
             bsx.clone(),
         );
         <span class="comment">// Creation Governance
-        </span><span class="kw">let </span><span class="kw-2">mut </span>governance_manager = Governance::new(
+        </span><span class="kw">let </span><span class="kw-2">mut </span>governance_manager = Governance::&lt;M, C&gt;::new(
             governance_receiver,
             bsx.clone(),
             bsx.subscribe(),
@@ -1026,7 +1035,7 @@
             bsx.subscribe(),
             task_sender.clone(),
             <span class="self">self</span>.notification_sender.clone(),
-            ledger_sender,
+            ledger_sender.clone(),
             signature_manager.get_own_identifier(),
             signature_manager.clone(),
         );
@@ -1057,6 +1066,7 @@
             EventAPI::new(event_sender),
             ApprovalAPI::new(approval_sender),
             AuthorizedSubjectsAPI::new(as_sender),
+            EventManagerAPI::new(ledger_sender),
             wath_sender,
             <span class="self">self</span>.settings.clone(),
             kp.clone(),

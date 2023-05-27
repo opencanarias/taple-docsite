@@ -52,6 +52,10 @@
 <a href="#52" id="52">52</a>
 <a href="#53" id="53">53</a>
 <a href="#54" id="54">54</a>
+<a href="#55" id="55">55</a>
+<a href="#56" id="56">56</a>
+<a href="#57" id="57">57</a>
+<a href="#58" id="58">58</a>
 </pre><pre class="rust"><code><span class="kw">use </span>std::collections::HashSet;
 
 <span class="kw">use </span>serde::{Deserialize, Serialize};
@@ -97,6 +101,9 @@
         who_asked: KeyIdentifier,
         subject_id: DigestIdentifier,
     },
+    ExpectingTransfer {
+        subject_id: DigestIdentifier,
+    }
 }
 
 <span class="attr">#[derive(Debug, Clone)]
@@ -104,6 +111,7 @@
     GetEvent(<span class="prelude-ty">Result</span>&lt;Event, errors::LedgerError&gt;),
     GetNextGov(<span class="prelude-ty">Result</span>&lt;(Event, HashSet&lt;Signature&gt;), errors::LedgerError&gt;),
     GetLCE(<span class="prelude-ty">Result</span>&lt;(Event, HashSet&lt;Signature&gt;), errors::LedgerError&gt;),
+    ExpectingTransfer(<span class="prelude-ty">Result</span>&lt;KeyIdentifier, errors::LedgerError&gt;),
     NoResponse,
 }
 </code></pre></div>

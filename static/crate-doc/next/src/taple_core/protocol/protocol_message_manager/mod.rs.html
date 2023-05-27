@@ -148,6 +148,7 @@
 <a href="#148" id="148">148</a>
 <a href="#149" id="149">149</a>
 <a href="#150" id="150">150</a>
+<a href="#151" id="151">151</a>
 </pre><pre class="rust"><code><span class="kw">use </span>serde::{Deserialize, Serialize};
 
 <span class="kw">use crate</span>::{
@@ -268,6 +269,7 @@
                 .<span class="kw">await
                 </span>.map_err(|<span class="kw">_</span>| ProtocolErrors::ChannelClosed)<span class="question-mark">?</span>,
             TapleMessages::EvaluationMessage(data) =&gt; {
+                <span class="macro">log::warn!</span>(<span class="string">&quot;Evaluation Message Received&quot;</span>);
                 <span class="attr">#[cfg(feature = <span class="string">&quot;evaluation&quot;</span>)]
                 </span>{
                     <span class="kw">return </span><span class="prelude-val">Ok</span>(<span class="self">self
