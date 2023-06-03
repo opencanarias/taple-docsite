@@ -75,9 +75,12 @@
 <a href="#75" id="75">75</a>
 <a href="#76" id="76">76</a>
 <a href="#77" id="77">77</a>
+<a href="#78" id="78">78</a>
+<a href="#79" id="79">79</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">super</span>::utils::{get_key, Element};
+<span class="kw">use </span><span class="kw">crate</span>::commons::models::event::ValidationProof;
 <span class="kw">use </span><span class="kw">crate</span>::signature::Signature;
-<span class="kw">use </span><span class="kw">crate</span>::DbError;
+<span class="kw">use crate</span>::{DbError};
 <span class="kw">use crate</span>::{DatabaseCollection, DatabaseManager, Derivable, DigestIdentifier};
 <span class="kw">use </span>std::collections::HashSet;
 <span class="kw">use </span>std::sync::Arc;
@@ -99,7 +102,7 @@
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         subject_id: <span class="kw-2">&amp;</span>DigestIdentifier,
         sn: u64,
-    ) -&gt; <span class="prelude-ty">Result</span>&lt;HashSet&lt;Signature&gt;, DbError&gt; {
+    ) -&gt; <span class="prelude-ty">Result</span>&lt;(HashSet&lt;Signature&gt;, ValidationProof), DbError&gt; {
         <span class="kw">let </span>key_elements: Vec&lt;Element&gt; = <span class="macro">vec!</span>[
             Element::S(<span class="self">self</span>.prefix.clone()),
             Element::S(subject_id.to_str()),
@@ -107,7 +110,7 @@
         ];
         <span class="kw">let </span>key = get_key(key_elements)<span class="question-mark">?</span>;
         <span class="kw">let </span>signatures = <span class="self">self</span>.collection.get(<span class="kw-2">&amp;</span>key)<span class="question-mark">?</span>;
-        <span class="prelude-val">Ok</span>(bincode::deserialize::&lt;HashSet&lt;Signature&gt;&gt;(<span class="kw-2">&amp;</span>signatures).map_err(|<span class="kw">_</span>| {
+        <span class="prelude-val">Ok</span>(bincode::deserialize::&lt;(HashSet&lt;Signature&gt;, ValidationProof)&gt;(<span class="kw-2">&amp;</span>signatures).map_err(|<span class="kw">_</span>| {
             DbError::DeserializeError
         })<span class="question-mark">?</span>)
     }
@@ -117,6 +120,7 @@
         subject_id: <span class="kw-2">&amp;</span>DigestIdentifier,
         sn: u64,
         signatures: HashSet&lt;Signature&gt;,
+        validation_proof: ValidationProof
     ) -&gt; <span class="prelude-ty">Result</span>&lt;(), DbError&gt; {
         <span class="kw">let </span>key_elements: Vec&lt;Element&gt; = <span class="macro">vec!</span>[
             Element::S(<span class="self">self</span>.prefix.clone()),
@@ -126,7 +130,7 @@
         <span class="kw">let </span>key = get_key(key_elements)<span class="question-mark">?</span>;
         <span class="kw">let </span>total_signatures = <span class="kw">match </span><span class="self">self</span>.collection.get(<span class="kw-2">&amp;</span>key) {
             <span class="prelude-val">Ok</span>(other) =&gt; {
-                <span class="kw">let </span>other = bincode::deserialize::&lt;HashSet&lt;Signature&gt;&gt;(<span class="kw-2">&amp;</span>other).map_err(|<span class="kw">_</span>| {
+                <span class="kw">let </span>(other, <span class="kw">_</span>) = bincode::deserialize::&lt;(HashSet&lt;Signature&gt;, ValidationProof)&gt;(<span class="kw-2">&amp;</span>other).map_err(|<span class="kw">_</span>| {
                     DbError::SerializeError
                 })<span class="question-mark">?</span>;
                 signatures.union(<span class="kw-2">&amp;</span>other).cloned().collect()
@@ -136,7 +140,7 @@
                 <span class="kw">return </span><span class="prelude-val">Err</span>(error);
             }
         };
-        <span class="kw">let </span>total_signatures = bincode::serialize(<span class="kw-2">&amp;</span>total_signatures).map_err(|<span class="kw">_</span>| {
+        <span class="kw">let </span>total_signatures = bincode::serialize(<span class="kw-2">&amp;</span>(total_signatures, validation_proof)).map_err(|<span class="kw">_</span>| {
             DbError::SerializeError
         })<span class="question-mark">?</span>;
         <span class="self">self</span>.collection.put(<span class="kw-2">&amp;</span>key, total_signatures)

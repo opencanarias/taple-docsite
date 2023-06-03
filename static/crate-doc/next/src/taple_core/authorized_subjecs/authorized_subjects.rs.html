@@ -112,8 +112,6 @@
 <a href="#112" id="112">112</a>
 <a href="#113" id="113">113</a>
 <a href="#114" id="114">114</a>
-<a href="#115" id="115">115</a>
-<a href="#116" id="116">116</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>std::collections::HashSet;
 
 <span class="kw">use crate</span>::{
@@ -170,7 +168,6 @@
         {
             <span class="prelude-val">Ok</span>(psp) =&gt; psp,
             <span class="prelude-val">Err</span>(error) =&gt; {
-                <span class="macro">log::error!</span>(<span class="string">&quot;ERROR PSP_GET: {:?}&quot;</span>, error);
                 <span class="kw">match </span>error {
                     <span class="kw">_ </span>=&gt; <span class="kw">return </span><span class="prelude-val">Err</span>(AuthorizedSubjectsError::DatabaseError(error)),
                 }
@@ -211,7 +208,6 @@
         subject_id: DigestIdentifier,
         providers: HashSet&lt;KeyIdentifier&gt;,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;(), AuthorizedSubjectsError&gt; {
-        <span class="macro">log::info!</span>(<span class="string">&quot;HOLAW&quot;</span>);
         <span class="self">self</span>.database
             .set_preauthorized_subject_and_providers(<span class="kw-2">&amp;</span>subject_id, providers.clone())<span class="question-mark">?</span>;
         <span class="kw">if </span>!providers.is_empty() {

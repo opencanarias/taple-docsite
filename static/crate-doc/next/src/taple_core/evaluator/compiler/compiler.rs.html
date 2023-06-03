@@ -297,7 +297,6 @@
             .get_contracts(governance_id.clone(), governance_version)
             .<span class="kw">await
             </span>.map_err(CompilerErrorResponses::GovernanceError)<span class="question-mark">?</span>;
-        <span class="macro">log::info!</span>(<span class="string">&quot;UPDATE CONTRACTS - CONTRACTS ARRAY LENGTH: {}&quot;</span>, contracts.len());
         <span class="kw">for </span>contract_info <span class="kw">in </span>contracts {
             <span class="kw">let </span>contract_data = <span class="kw">match </span><span class="self">self
                 </span>.database
@@ -320,7 +319,8 @@
                     <span class="kw">continue</span>;
                 }
                 <span class="kw">if </span>contract_data.<span class="number">1 </span>== new_contract_hash {
-                    <span class="self">self</span>.database
+                    <span class="comment">// Se actualiza la versión de la gobernanza asociada
+                    </span><span class="self">self</span>.database
                         .put_contract(
                             <span class="kw-2">&amp;</span>governance_id,
                             <span class="kw-2">&amp;</span>contract_info.name,

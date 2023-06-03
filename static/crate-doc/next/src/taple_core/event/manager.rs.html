@@ -296,6 +296,8 @@
 <a href="#296" id="296">296</a>
 <a href="#297" id="297">297</a>
 <a href="#298" id="298">298</a>
+<a href="#299" id="299">299</a>
+<a href="#300" id="300">300</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>async_trait::async_trait;
 
 <span class="kw">use super</span>::{errors::EventError, event_completer::EventCompleter, EventCommand, EventResponse};
@@ -438,7 +440,6 @@
         <span class="kw-2">&amp;mut </span><span class="self">self</span>,
         command: ChannelData&lt;EventCommand, EventResponse&gt;,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;(), EventError&gt; {
-        <span class="macro">log::info!</span>(<span class="string">&quot;EVENT MANAGER MSG RECEIVED&quot;</span>);
         <span class="kw">let </span>(sender, data) = <span class="kw">match </span>command {
             ChannelData::AskData(data) =&gt; {
                 <span class="kw">let </span>(sender, data) = data.get();
@@ -529,10 +530,11 @@
                 EventCommand::ValidatorResponse {
                     event_hash,
                     signature,
+                    governance_version,
                 } =&gt; {
                     <span class="kw">match </span><span class="self">self
                         </span>.event_completer
-                        .validation_signatures(event_hash, signature)
+                        .validation_signatures(event_hash, signature, governance_version)
                         .<span class="kw">await
                     </span>{
                         <span class="prelude-val">Err</span>(error) =&gt; <span class="kw">match </span>error {
@@ -552,7 +554,9 @@
                                 <span class="macro">log::error!</span>(<span class="string">&quot;VALIDATION ERROR: {:?}&quot;</span>, error);
                             }
                         },
-                        <span class="kw">_ </span>=&gt; {}
+                        <span class="kw">_ </span>=&gt; {
+                            <span class="macro">log::error!</span>(<span class="string">&quot;VALIDATION ACCEPTED&quot;</span>);
+                        }
                     }
                     EventResponse::NoResponse
                 }

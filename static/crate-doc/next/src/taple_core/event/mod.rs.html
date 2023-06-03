@@ -42,6 +42,7 @@
 <a href="#42" id="42">42</a>
 <a href="#43" id="43">43</a>
 <a href="#44" id="44">44</a>
+<a href="#45" id="45">45</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>serde::{Deserialize, Serialize};
 
 <span class="kw">use crate</span>::{
@@ -74,6 +75,7 @@
     ValidatorResponse {
         event_hash: DigestIdentifier,
         signature: Signature,
+        governance_version: u64,
     },
     HigherGovernanceExpected {
         governance_id: DigestIdentifier,

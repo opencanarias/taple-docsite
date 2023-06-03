@@ -55,12 +55,31 @@
 <a href="#55" id="55">55</a>
 <a href="#56" id="56">56</a>
 <a href="#57" id="57">57</a>
+<a href="#58" id="58">58</a>
+<a href="#59" id="59">59</a>
+<a href="#60" id="60">60</a>
+<a href="#61" id="61">61</a>
+<a href="#62" id="62">62</a>
+<a href="#63" id="63">63</a>
+<a href="#64" id="64">64</a>
+<a href="#65" id="65">65</a>
+<a href="#66" id="66">66</a>
+<a href="#67" id="67">67</a>
+<a href="#68" id="68">68</a>
+<a href="#69" id="69">69</a>
+<a href="#70" id="70">70</a>
+<a href="#71" id="71">71</a>
+<a href="#72" id="72">72</a>
+<a href="#73" id="73">73</a>
+<a href="#74" id="74">74</a>
+<a href="#75" id="75">75</a>
+<a href="#76" id="76">76</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">super</span>::utils::{get_key, Element};
 <span class="kw">use </span><span class="kw">crate</span>::crypto::KeyPair;
-<span class="kw">use crate</span>::{DatabaseCollection, DatabaseManager, Derivable, DigestIdentifier};
 <span class="kw">use </span><span class="kw">crate</span>::DbError;
+<span class="kw">use crate</span>::{DatabaseCollection, DatabaseManager, Derivable, DigestIdentifier, KeyIdentifier};
+<span class="kw">use </span>std::collections::HashSet;
 <span class="kw">use </span>std::sync::Arc;
-
 
 <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct </span>TransferEventsDb&lt;C: DatabaseCollection&gt; {
     collection: C,
@@ -75,15 +94,18 @@
         }
     }
 
-    <span class="kw">pub fn </span>get_expecting_transfer(<span class="kw-2">&amp;</span><span class="self">self</span>, subject_id: <span class="kw-2">&amp;</span>DigestIdentifier) -&gt; <span class="prelude-ty">Result</span>&lt;KeyPair, DbError&gt; {
+    <span class="kw">pub fn </span>get_expecting_transfer(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        subject_id: <span class="kw-2">&amp;</span>DigestIdentifier,
+    ) -&gt; <span class="prelude-ty">Result</span>&lt;KeyPair, DbError&gt; {
         <span class="kw">let </span>key_elements: Vec&lt;Element&gt; = <span class="macro">vec!</span>[
             Element::S(<span class="self">self</span>.prefix.clone()),
             Element::S(subject_id.to_str()),
         ];
         <span class="kw">let </span>key = get_key(key_elements)<span class="question-mark">?</span>;
         <span class="kw">let </span>value = <span class="self">self</span>.collection.get(<span class="kw-2">&amp;</span>key)<span class="question-mark">?</span>;
-        <span class="kw">let </span>result = bincode::deserialize::&lt;KeyPair&gt;(<span class="kw-2">&amp;</span>value)
-            .map_err(|<span class="kw">_</span>| DbError::DeserializeError)<span class="question-mark">?</span>;
+        <span class="kw">let </span>result =
+            bincode::deserialize::&lt;KeyPair&gt;(<span class="kw-2">&amp;</span>value).map_err(|<span class="kw">_</span>| DbError::DeserializeError)<span class="question-mark">?</span>;
         <span class="prelude-val">Ok</span>(result)
     }
 
@@ -99,7 +121,7 @@
         <span class="kw">let </span>key = get_key(key_elements)<span class="question-mark">?</span>;
         <span class="kw">let </span><span class="prelude-val">Ok</span>(data) = bincode::serialize::&lt;KeyPair&gt;(<span class="kw-2">&amp;</span>keypair) <span class="kw">else </span>{
             <span class="kw">return </span><span class="prelude-val">Err</span>(DbError::SerializeError);
-        }; 
+        };
         <span class="self">self</span>.collection.put(<span class="kw-2">&amp;</span>key, data)
     }
 
@@ -111,4 +133,21 @@
         <span class="kw">let </span>key = get_key(key_elements)<span class="question-mark">?</span>;
         <span class="self">self</span>.collection.del(<span class="kw-2">&amp;</span>key)
     }
-}</code></pre></div></section></main></body></html>
+
+    <span class="kw">pub fn </span>get_all_expecting_transfers(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+    ) -&gt; <span class="prelude-ty">Result</span>&lt;Vec&lt;(DigestIdentifier, HashSet&lt;KeyIdentifier&gt;)&gt;, DbError&gt; {
+        <span class="kw">let </span>key_elements: Vec&lt;Element&gt; = <span class="macro">vec!</span>[Element::S(<span class="self">self</span>.prefix.clone())];
+        <span class="kw">let </span>key = get_key(key_elements)<span class="question-mark">?</span>;
+        <span class="kw">let </span>iter = <span class="self">self</span>.collection.iter(<span class="bool-val">false</span>, key);
+        <span class="kw">let </span><span class="kw-2">mut </span>result = Vec::new();
+        <span class="kw">for </span>(<span class="kw">_</span>, bytes) <span class="kw">in </span>iter {
+            <span class="kw">let </span>subject =
+                bincode::deserialize::&lt;(DigestIdentifier, HashSet&lt;KeyIdentifier&gt;)&gt;(<span class="kw-2">&amp;</span>bytes)
+                    .map_err(|<span class="kw">_</span>| DbError::DeserializeError)<span class="question-mark">?</span>;
+            result.push(subject);
+        }
+        <span class="prelude-val">Ok</span>(result)
+    }
+}
+</code></pre></div></section></main></body></html>

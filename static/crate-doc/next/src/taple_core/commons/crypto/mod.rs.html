@@ -329,6 +329,10 @@
 <a href="#329" id="329">329</a>
 <a href="#330" id="330">330</a>
 <a href="#331" id="331">331</a>
+<a href="#332" id="332">332</a>
+<a href="#333" id="333">333</a>
+<a href="#334" id="334">334</a>
+<a href="#335" id="335">335</a>
 </pre></div><pre class="rust"><code><span class="doccomment">//! This module provides the structs and traits for the generation of key pairs for
 //! cryptographic operations.
 //!
@@ -362,16 +366,19 @@
     serializable: T,
     signature: <span class="kw-2">&amp;</span>Signature,
 ) -&gt; <span class="prelude-ty">Result</span>&lt;DigestIdentifier, CryptoError&gt; {
+    <span class="macro">log::error!</span>(<span class="string">&quot;AQUÍ 0&quot;</span>);
     <span class="kw">let </span>hash = DigestIdentifier::from_serializable_borsh(<span class="kw-2">&amp;</span>serializable).map_err(|<span class="kw">_</span>| {
         CryptoError::CryptoError(String::from(
             <span class="string">&quot;Error calculating the hash of the serializable&quot;</span>,
         ))
     })<span class="question-mark">?</span>;
+    <span class="macro">log::error!</span>(<span class="string">&quot;AQUÍ 1&quot;</span>);
     <span class="kw">if </span>hash != signature.content.event_content_hash {
         <span class="kw">return </span><span class="prelude-val">Err</span>(CryptoError::CryptoError(String::from(
             <span class="string">&quot;The hash does not match the content of the signature&quot;</span>,
         )));
     }
+    <span class="macro">log::error!</span>(<span class="string">&quot;AQUÍ 2&quot;</span>);
     signature
         .content
         .signer
@@ -379,6 +386,7 @@
         .map_err(|<span class="kw">_</span>| {
             CryptoError::CryptoError(String::from(<span class="string">&quot;The signature does not validate the hash&quot;</span>))
         })<span class="question-mark">?</span>;
+    <span class="macro">log::error!</span>(<span class="string">&quot;AQUÍ 3&quot;</span>);
     <span class="prelude-val">Ok</span>(hash)
 }
 

@@ -512,14 +512,6 @@
 <a href="#512" id="512">512</a>
 <a href="#513" id="513">513</a>
 <a href="#514" id="514">514</a>
-<a href="#515" id="515">515</a>
-<a href="#516" id="516">516</a>
-<a href="#517" id="517">517</a>
-<a href="#518" id="518">518</a>
-<a href="#519" id="519">519</a>
-<a href="#520" id="520">520</a>
-<a href="#521" id="521">521</a>
-<a href="#522" id="522">522</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>std::collections::{HashMap, HashSet};
 
 <span class="kw">use </span><span class="kw">crate</span>::commons::channel::SenderEnd;
@@ -592,11 +584,7 @@
                 .map_err(|error| DistributionManagerError::DatabaseError(error.to_string()))<span class="question-mark">?</span>;
             <span class="kw">let </span>owner = subject.owner.clone();
             <span class="kw">let </span>metadata = build_metadata(<span class="kw-2">&amp;</span>subject, governance.sn);
-            <span class="kw">let </span><span class="kw-2">mut </span>witnesses = <span class="self">self
-                </span>.governance
-                .get_signers(metadata, ValidationStage::Witness)
-                .<span class="kw">await
-                </span>.map_err(|<span class="kw">_</span>| DistributionManagerError::GovernanceChannelNotAvailable)<span class="question-mark">?</span>;
+            <span class="kw">let </span><span class="kw-2">mut </span>witnesses = <span class="self">self</span>.get_targets(metadata).<span class="kw">await</span><span class="question-mark">?</span>;
             <span class="kw">if </span>!witnesses.contains(<span class="kw-2">&amp;</span><span class="self">self</span>.signature_manager.get_own_identifier()) {
                 <span class="comment">// Ya no somos testigos
                 </span><span class="self">self</span>.db
@@ -631,10 +619,6 @@
         witnesses: <span class="kw-2">&amp;</span>HashSet&lt;KeyIdentifier&gt;,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;(), DistributionManagerError&gt; {
         <span class="kw">let </span>remaining_signatures = <span class="self">self</span>.get_remaining_signers(signatures, witnesses);
-        <span class="macro">log::warn!</span>(<span class="string">&quot;REMAIMING SIGNATURES: {}&quot;</span>, remaining_signatures.len());
-        <span class="kw">for </span>signer <span class="kw">in </span>remaining_signatures.iter() {
-            <span class="macro">log::warn!</span>(<span class="string">&quot;REMAIMING SIGNER: {}&quot;</span>, signer.to_str());
-        }
         <span class="kw">if </span>remaining_signatures.len() &gt; <span class="number">0 </span>{
             <span class="self">self</span>.send_signature_request(
                 <span class="kw-2">&amp;</span>subject.subject_id,
@@ -701,7 +685,7 @@
                 } <span class="kw">else </span>{
                     <span class="comment">// Somos testigos. Realizamos el proceso de solicitud de firmas
                     // En principio, ya tenemos nuestra firma.
-                    // Es posible que los testigos hayan cambiado y algunas firmas ya no sean correctas. No obstante,
+                    // Es posible que los testigos hayan cambiado y algunas firmas ya no sean correctos. No obstante,
                     // esto no supone ningún problema. Tener firmas de más es irrelevante a nivel de protocolo.
                     </span><span class="self">self</span>.restart_distribution(<span class="kw-2">&amp;</span>subject, <span class="kw-2">&amp;</span>signatures, witnesses.as_ref().unwrap())
                         .<span class="kw">await</span><span class="question-mark">?</span>;
@@ -730,13 +714,8 @@
             };
             <span class="comment">// Comprobamos si seguimos siendo testigos para los sujetos de esta gobernanza
             </span><span class="kw">let </span><span class="kw-2">mut </span>witnesses = <span class="self">self
-                </span>.governance
-                .get_signers(
-                    build_metadata(<span class="kw-2">&amp;</span>subject, governance_version),
-                    ValidationStage::Witness,
-                )
-                .<span class="kw">await
-                </span>.map_err(|<span class="kw">_</span>| DistributionManagerError::GovernanceChannelNotAvailable)<span class="question-mark">?</span>;
+                </span>.get_targets(build_metadata(<span class="kw-2">&amp;</span>subject, governance_version))
+                .<span class="kw">await</span><span class="question-mark">?</span>;
             <span class="kw">if </span>witnesses.contains(<span class="kw-2">&amp;</span><span class="self">self</span>.signature_manager.get_own_identifier()) {
                 <span class="comment">// Seguimos siendo testigos
                 </span>witnesses.insert(subject.owner.clone());
@@ -856,10 +835,15 @@
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         metadata: Metadata,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;HashSet&lt;KeyIdentifier&gt;, DistributionManagerError&gt; {
-        <span class="self">self</span>.governance
+        <span class="comment">// Owner of subject must be included
+        </span><span class="kw">let </span>owner = metadata.owner.clone();
+        <span class="kw">let </span><span class="kw-2">mut </span>targets = <span class="self">self
+            </span>.governance
             .get_signers(metadata, ValidationStage::Witness)
             .<span class="kw">await
-            </span>.map_err(|<span class="kw">_</span>| DistributionManagerError::GovernanceChannelNotAvailable)
+            </span>.map_err(|<span class="kw">_</span>| DistributionManagerError::GovernanceChannelNotAvailable)<span class="question-mark">?</span>;
+        targets.insert(owner);
+        <span class="prelude-val">Ok</span>(targets)
     }
 
     <span class="kw">pub async fn </span>provide_signatures(
