@@ -27,7 +27,13 @@
 <a href="#27" id="27">27</a>
 <a href="#28" id="28">28</a>
 <a href="#29" id="29">29</a>
-</pre></div><pre class="rust"><code><span class="kw">use </span>serde::{Deserialize, Serialize};
+<a href="#30" id="30">30</a>
+<a href="#31" id="31">31</a>
+<a href="#32" id="32">32</a>
+<a href="#33" id="33">33</a>
+</pre></div><pre class="rust"><code><span class="kw">use </span>std::collections::HashSet;
+
+<span class="kw">use </span>serde::{Deserialize, Serialize};
 
 <span class="kw">use crate</span>::{
     commons::models::{event::ValidationProof, notary::NotaryEventResponse},
@@ -55,5 +61,7 @@
 </span><span class="kw">pub struct </span>NotaryEvent {
     <span class="kw">pub </span>proof: ValidationProof,
     <span class="kw">pub </span>subject_signature: Signature,
+    <span class="kw">pub </span>previous_proof: <span class="prelude-ty">Option</span>&lt;ValidationProof&gt;,
+    <span class="kw">pub </span>prev_event_validation_signatures: HashSet&lt;Signature&gt;,
 }
 </code></pre></div></section></main></body></html>

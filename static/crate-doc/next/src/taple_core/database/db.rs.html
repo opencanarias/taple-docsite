@@ -450,7 +450,8 @@
         signatures: HashSet&lt;Signature&gt;,
         validation_proof: ValidationProof,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;(), Error&gt; {
-        <span class="self">self</span>.signature_db.set_signatures(subject_id, sn, signatures, validation_proof)
+        <span class="self">self</span>.signature_db
+            .set_signatures(subject_id, sn, signatures, validation_proof)
     }
 
     <span class="kw">pub fn </span>del_signatures(<span class="kw-2">&amp;</span><span class="self">self</span>, subject_id: <span class="kw-2">&amp;</span>DigestIdentifier, sn: u64) -&gt; <span class="prelude-ty">Result</span>&lt;(), Error&gt; {
@@ -564,21 +565,18 @@
 
     <span class="kw">pub fn </span>get_notary_register(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        owner: <span class="kw-2">&amp;</span>KeyIdentifier,
         subject_id: <span class="kw-2">&amp;</span>DigestIdentifier,
-    ) -&gt; <span class="prelude-ty">Result</span>&lt;(DigestIdentifier, u64), Error&gt; {
-        <span class="self">self</span>.notary_db.get_notary_register(owner, subject_id)
+    ) -&gt; <span class="prelude-ty">Result</span>&lt;ValidationProof, Error&gt; {
+        <span class="self">self</span>.notary_db.get_notary_register(subject_id)
     }
 
     <span class="kw">pub fn </span>set_notary_register(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        owner: <span class="kw-2">&amp;</span>KeyIdentifier,
         subject_id: <span class="kw-2">&amp;</span>DigestIdentifier,
-        event_hash: DigestIdentifier,
-        sn: u64,
+        validation_proof: <span class="kw-2">&amp;</span>ValidationProof,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;(), Error&gt; {
         <span class="self">self</span>.notary_db
-            .set_notary_register(owner, subject_id, event_hash, sn)
+            .set_notary_register(subject_id, validation_proof)
     }
 
     <span class="kw">pub fn </span>get_contract(
@@ -659,7 +657,9 @@
         <span class="self">self</span>.transfer_events_db.get_expecting_transfer(subject_id)
     }
 
-    <span class="kw">pub fn </span>get_all_expecting_transfers(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;Vec&lt;(DigestIdentifier, HashSet&lt;KeyIdentifier&gt;)&gt;, Error&gt; {
+    <span class="kw">pub fn </span>get_all_expecting_transfers(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+    ) -&gt; <span class="prelude-ty">Result</span>&lt;Vec&lt;(DigestIdentifier, HashSet&lt;KeyIdentifier&gt;)&gt;, Error&gt; {
         <span class="self">self</span>.transfer_events_db.get_all_expecting_transfers()
     }
 

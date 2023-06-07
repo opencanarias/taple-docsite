@@ -259,7 +259,6 @@
 <a href="#259" id="259">259</a>
 <a href="#260" id="260">260</a>
 <a href="#261" id="261">261</a>
-<a href="#262" id="262">262</a>
 </pre></div><pre class="rust"><code><span class="doccomment">//! Contains the data structures related to event requests.
 </span><span class="kw">use </span>borsh::{BorshDeserialize, BorshSerialize};
 
@@ -331,7 +330,6 @@
 </span><span class="kw">pub struct </span>EOLRequest {
     <span class="attr">#[schema(value_type = String)]
     </span><span class="kw">pub </span>subject_id: DigestIdentifier,
-    <span class="kw">pub </span>public_key: KeyIdentifier,
 }
 
 <span class="kw">impl </span>EventRequest {

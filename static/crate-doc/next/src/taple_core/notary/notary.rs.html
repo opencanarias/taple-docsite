@@ -328,28 +328,180 @@
 <a href="#328" id="328">328</a>
 <a href="#329" id="329">329</a>
 <a href="#330" id="330">330</a>
-</pre></div><pre class="rust"><code><span class="kw">use </span>std::collections::HashMap;
+<a href="#331" id="331">331</a>
+<a href="#332" id="332">332</a>
+<a href="#333" id="333">333</a>
+<a href="#334" id="334">334</a>
+<a href="#335" id="335">335</a>
+<a href="#336" id="336">336</a>
+<a href="#337" id="337">337</a>
+<a href="#338" id="338">338</a>
+<a href="#339" id="339">339</a>
+<a href="#340" id="340">340</a>
+<a href="#341" id="341">341</a>
+<a href="#342" id="342">342</a>
+<a href="#343" id="343">343</a>
+<a href="#344" id="344">344</a>
+<a href="#345" id="345">345</a>
+<a href="#346" id="346">346</a>
+<a href="#347" id="347">347</a>
+<a href="#348" id="348">348</a>
+<a href="#349" id="349">349</a>
+<a href="#350" id="350">350</a>
+<a href="#351" id="351">351</a>
+<a href="#352" id="352">352</a>
+<a href="#353" id="353">353</a>
+<a href="#354" id="354">354</a>
+<a href="#355" id="355">355</a>
+<a href="#356" id="356">356</a>
+<a href="#357" id="357">357</a>
+<a href="#358" id="358">358</a>
+<a href="#359" id="359">359</a>
+<a href="#360" id="360">360</a>
+<a href="#361" id="361">361</a>
+<a href="#362" id="362">362</a>
+<a href="#363" id="363">363</a>
+<a href="#364" id="364">364</a>
+<a href="#365" id="365">365</a>
+<a href="#366" id="366">366</a>
+<a href="#367" id="367">367</a>
+<a href="#368" id="368">368</a>
+<a href="#369" id="369">369</a>
+<a href="#370" id="370">370</a>
+<a href="#371" id="371">371</a>
+<a href="#372" id="372">372</a>
+<a href="#373" id="373">373</a>
+<a href="#374" id="374">374</a>
+<a href="#375" id="375">375</a>
+<a href="#376" id="376">376</a>
+<a href="#377" id="377">377</a>
+<a href="#378" id="378">378</a>
+<a href="#379" id="379">379</a>
+<a href="#380" id="380">380</a>
+<a href="#381" id="381">381</a>
+<a href="#382" id="382">382</a>
+<a href="#383" id="383">383</a>
+<a href="#384" id="384">384</a>
+<a href="#385" id="385">385</a>
+<a href="#386" id="386">386</a>
+<a href="#387" id="387">387</a>
+<a href="#388" id="388">388</a>
+<a href="#389" id="389">389</a>
+<a href="#390" id="390">390</a>
+<a href="#391" id="391">391</a>
+<a href="#392" id="392">392</a>
+<a href="#393" id="393">393</a>
+<a href="#394" id="394">394</a>
+<a href="#395" id="395">395</a>
+<a href="#396" id="396">396</a>
+<a href="#397" id="397">397</a>
+<a href="#398" id="398">398</a>
+<a href="#399" id="399">399</a>
+<a href="#400" id="400">400</a>
+<a href="#401" id="401">401</a>
+<a href="#402" id="402">402</a>
+<a href="#403" id="403">403</a>
+<a href="#404" id="404">404</a>
+<a href="#405" id="405">405</a>
+<a href="#406" id="406">406</a>
+<a href="#407" id="407">407</a>
+<a href="#408" id="408">408</a>
+<a href="#409" id="409">409</a>
+<a href="#410" id="410">410</a>
+<a href="#411" id="411">411</a>
+<a href="#412" id="412">412</a>
+<a href="#413" id="413">413</a>
+<a href="#414" id="414">414</a>
+<a href="#415" id="415">415</a>
+<a href="#416" id="416">416</a>
+<a href="#417" id="417">417</a>
+<a href="#418" id="418">418</a>
+<a href="#419" id="419">419</a>
+<a href="#420" id="420">420</a>
+<a href="#421" id="421">421</a>
+<a href="#422" id="422">422</a>
+<a href="#423" id="423">423</a>
+<a href="#424" id="424">424</a>
+<a href="#425" id="425">425</a>
+<a href="#426" id="426">426</a>
+<a href="#427" id="427">427</a>
+<a href="#428" id="428">428</a>
+<a href="#429" id="429">429</a>
+<a href="#430" id="430">430</a>
+<a href="#431" id="431">431</a>
+<a href="#432" id="432">432</a>
+<a href="#433" id="433">433</a>
+<a href="#434" id="434">434</a>
+<a href="#435" id="435">435</a>
+<a href="#436" id="436">436</a>
+<a href="#437" id="437">437</a>
+<a href="#438" id="438">438</a>
+<a href="#439" id="439">439</a>
+<a href="#440" id="440">440</a>
+<a href="#441" id="441">441</a>
+<a href="#442" id="442">442</a>
+<a href="#443" id="443">443</a>
+<a href="#444" id="444">444</a>
+<a href="#445" id="445">445</a>
+<a href="#446" id="446">446</a>
+<a href="#447" id="447">447</a>
+<a href="#448" id="448">448</a>
+<a href="#449" id="449">449</a>
+<a href="#450" id="450">450</a>
+<a href="#451" id="451">451</a>
+<a href="#452" id="452">452</a>
+<a href="#453" id="453">453</a>
+<a href="#454" id="454">454</a>
+<a href="#455" id="455">455</a>
+<a href="#456" id="456">456</a>
+<a href="#457" id="457">457</a>
+<a href="#458" id="458">458</a>
+<a href="#459" id="459">459</a>
+<a href="#460" id="460">460</a>
+<a href="#461" id="461">461</a>
+<a href="#462" id="462">462</a>
+<a href="#463" id="463">463</a>
+<a href="#464" id="464">464</a>
+<a href="#465" id="465">465</a>
+<a href="#466" id="466">466</a>
+<a href="#467" id="467">467</a>
+<a href="#468" id="468">468</a>
+<a href="#469" id="469">469</a>
+<a href="#470" id="470">470</a>
+<a href="#471" id="471">471</a>
+<a href="#472" id="472">472</a>
+<a href="#473" id="473">473</a>
+<a href="#474" id="474">474</a>
+<a href="#475" id="475">475</a>
+<a href="#476" id="476">476</a>
+<a href="#477" id="477">477</a>
+<a href="#478" id="478">478</a>
+<a href="#479" id="479">479</a>
+</pre></div><pre class="rust"><code><span class="kw">use </span>std::collections::{HashMap, HashSet};
 
 <span class="kw">use crate</span>::{
     commons::{
         channel::SenderEnd,
         errors::ChannelErrors,
+        models::event::ValidationProof,
         self_signature_manager::{SelfSignatureInterface, SelfSignatureManager},
     },
     event::EventCommand,
-    governance::{GovernanceAPI, GovernanceInterface},
+    event_content::Metadata,
+    governance::{stage::ValidationStage, GovernanceAPI, GovernanceInterface},
     identifier::DigestIdentifier,
     message::{MessageConfig, MessageTaskCommand},
-    protocol::protocol_message_manager::TapleMessages, Derivable,
+    protocol::protocol_message_manager::TapleMessages,
+    signature::Signature,
+    Derivable, KeyIdentifier,
 };
 
 <span class="kw">use super</span>::{errors::NotaryError, NotaryEvent, NotaryEventResponse};
-<span class="kw">use </span><span class="kw">crate</span>::database::{DB, DatabaseCollection};
+<span class="kw">use </span><span class="kw">crate</span>::database::{DatabaseCollection, DB};
 
 <span class="kw">pub struct </span>Notary&lt;C: DatabaseCollection&gt; {
     gov_api: GovernanceAPI,
     database: DB&lt;C&gt;,
-    cache_gov_ver: HashMap&lt;DigestIdentifier, u32&gt;,
     signature_manager: SelfSignatureManager,
     message_channel: SenderEnd&lt;MessageTaskCommand&lt;TapleMessages&gt;, ()&gt;,
 }
@@ -364,7 +516,6 @@
         <span class="self">Self </span>{
             gov_api,
             database,
-            cache_gov_ver: HashMap::new(),
             signature_manager,
             message_channel,
         }
@@ -397,51 +548,71 @@
         };
         <span class="kw">if </span>actual_gov_version &lt; notary_event.proof.governance_version {
             <span class="kw">return </span><span class="prelude-val">Err</span>(NotaryError::GovernanceVersionTooHigh);
+        } <span class="kw">else if </span>actual_gov_version &gt; notary_event.proof.governance_version {
+            <span class="comment">// Informar de Gov desactualizada
+            </span><span class="self">self</span>.message_channel
+                .tell(MessageTaskCommand::Request(
+                    <span class="prelude-val">None</span>,
+                    TapleMessages::EventMessage(
+                        <span class="kw">crate</span>::event::EventCommand::HigherGovernanceExpected {
+                            governance_id: notary_event.proof.governance_id.clone(),
+                            who_asked: <span class="self">self</span>.signature_manager.get_own_identifier(),
+                        },
+                    ),
+                    <span class="macro">vec!</span>[notary_event.proof.owner],
+                    MessageConfig::direct_response(),
+                ))
+                .<span class="kw">await</span><span class="question-mark">?</span>;
+            <span class="kw">return </span><span class="prelude-val">Err</span>(NotaryError::GovernanceVersionTooLow);
+        }
+        <span class="kw">let </span>last_proof = {
+            <span class="kw">match </span><span class="self">self
+                </span>.database
+                .get_notary_register(<span class="kw-2">&amp;</span>notary_event.proof.subject_id)
+            {
+                <span class="prelude-val">Ok</span>(last_proof) =&gt; <span class="prelude-val">Some</span>(last_proof),
+                <span class="prelude-val">Err</span>(error) =&gt; <span class="kw">match </span>error {
+                    <span class="kw">crate</span>::DbError::EntryNotFound =&gt; <span class="prelude-val">None</span>,
+                    <span class="kw">_ </span>=&gt; <span class="kw">return </span><span class="prelude-val">Err</span>(NotaryError::DatabaseError),
+                },
+            }
+        };
+        <span class="comment">// Verificar firma de sujecto sobre proof
+        </span><span class="kw">let </span>proof_hash = DigestIdentifier::from_serializable_borsh(<span class="kw-2">&amp;</span>notary_event.proof)
+            .map_err(|<span class="kw">_</span>| NotaryError::SubjectSignatureNotValid)<span class="question-mark">?</span>;
+        <span class="kw">if </span>notary_event.subject_signature.verify().is_err()
+            || proof_hash != notary_event.subject_signature.content.event_content_hash
+        {
+            <span class="kw">return </span><span class="prelude-val">Err</span>(NotaryError::SubjectSignatureNotValid);
         }
         <span class="kw">match </span><span class="self">self
-            </span>.database
-            .get_notary_register(<span class="kw-2">&amp;</span>notary_event.proof.owner, <span class="kw-2">&amp;</span>notary_event.proof.subject_id)
-        {
-            <span class="prelude-val">Ok</span>(notary_register) =&gt; {
-                <span class="macro">log::error!</span>(<span class="string">&quot;SN REGISTRADO ES: {}&quot;</span>, notary_register.<span class="number">1</span>);
-                <span class="kw">if </span>notary_register.<span class="number">1 </span>&gt; notary_event.proof.sn {
-                    <span class="kw">return </span><span class="prelude-val">Err</span>(NotaryError::EventSnLowerThanLastSigned);
-                } <span class="kw">else if </span>notary_register.<span class="number">1 </span>== notary_event.proof.sn
-                    &amp;&amp; notary_event.proof.event_hash != notary_register.<span class="number">0
-                </span>{
-                    <span class="kw">return </span><span class="prelude-val">Err</span>(NotaryError::DifferentHashForEvent);
+            </span>.check_proofs(
+                <span class="kw-2">&amp;</span>notary_event.proof,
+                notary_event.previous_proof,
+                <span class="kw-2">&amp;</span>notary_event.prev_event_validation_signatures,
+                last_proof,
+            )
+            .<span class="kw">await</span><span class="question-mark">?
+        </span>{
+            <span class="prelude-val">Some</span>(subject_pk) =&gt; {
+                <span class="kw">if </span>notary_event.subject_signature.content.signer != subject_pk {
+                    <span class="kw">return </span><span class="prelude-val">Err</span>(NotaryError::SubjectSignatureNotValid);
                 }
             }
-            <span class="prelude-val">Err</span>(error) =&gt; <span class="kw">match </span>error {
-                <span class="kw">crate</span>::DbError::EntryNotFound =&gt; {}
-                <span class="kw">_ </span>=&gt; <span class="kw">return </span><span class="prelude-val">Err</span>(NotaryError::DatabaseError),
-            },
-        };
-        <span class="macro">log::error!</span>(<span class="string">&quot;NO SE CUMPLE NINGUNA DE LAS CONDICIONES SUPERIORES&quot;</span>);
-        <span class="comment">// Get in DB, it is important that this goes first to ensure that we dont sign 2 different event_hash for the same event sn and subject
-        </span><span class="self">self</span>.database
-            .set_notary_register(
-                <span class="kw-2">&amp;</span>notary_event.proof.owner,
-                <span class="kw-2">&amp;</span>notary_event.proof.subject_id,
-                notary_event.proof.event_hash.clone(),
-                notary_event.proof.sn,
-            )
+            <span class="prelude-val">None </span>=&gt; {}
+        }
+        <span class="self">self</span>.database
+            .set_notary_register(<span class="kw-2">&amp;</span>notary_event.proof.subject_id, <span class="kw-2">&amp;</span>notary_event.proof)
             .map_err(|<span class="kw">_</span>| NotaryError::DatabaseError)<span class="question-mark">?</span>;
         <span class="comment">// Now we sign and send
-        // let hash = DigestIdentifier::from_serializable_borsh((
-        //     &amp;notary_event.gov_id,
-        //     &amp;notary_event.subject_id,
-        //     &amp;notary_event.owner,
-        //     &amp;notary_event.event_hash,
-        //     &amp;notary_event.sn,
-        //     &amp;notary_event.gov_version,
-        // ))
-        // .map_err(|_| NotaryError::SerializingError)?;
         </span><span class="kw">let </span>notary_signature = <span class="self">self
             </span>.signature_manager
             .sign(<span class="kw-2">&amp;</span>notary_event.proof)
             .map_err(NotaryError::ProtocolErrors)<span class="question-mark">?</span>;
-        <span class="macro">log::warn!</span>(<span class="string">&quot;SE ENVÍA LA VALIDACIÓN A {}&quot;</span>, notary_event.proof.owner.to_str());
+        <span class="macro">log::warn!</span>(
+            <span class="string">&quot;SE ENVÍA LA VALIDACIÓN A {}&quot;</span>,
+            notary_event.proof.owner.to_str()
+        );
         <span class="self">self</span>.message_channel
             .tell(MessageTaskCommand::Request(
                 <span class="prelude-val">None</span>,
@@ -458,6 +629,133 @@
             notary_signature,
             gov_version_notary: actual_gov_version,
         })
+    }
+
+    <span class="kw">async fn </span>check_proofs(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        new_proof: <span class="kw-2">&amp;</span>ValidationProof,
+        previous_proof: <span class="prelude-ty">Option</span>&lt;ValidationProof&gt;,
+        validation_signatures: <span class="kw-2">&amp;</span>HashSet&lt;Signature&gt;,
+        last_proof: <span class="prelude-ty">Option</span>&lt;ValidationProof&gt;,
+    ) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="prelude-ty">Option</span>&lt;KeyIdentifier&gt;, NotaryError&gt; {
+        <span class="kw">if </span>previous_proof.is_none() &amp;&amp; new_proof.sn != <span class="number">1 </span>{
+            <span class="kw">return </span><span class="prelude-val">Err</span>(NotaryError::PreviousProofLeft);
+        }
+        <span class="kw">match </span>last_proof {
+            <span class="prelude-val">Some</span>(last_proof) =&gt; {
+                <span class="comment">// Comprobar que tenemos la prueba del evento anterior, si no tenemos que hacer la comprobación de la que nos llega en el mensaje como cuando no tenemos el registro
+                </span><span class="kw">if </span>last_proof.sn &gt; new_proof.sn {
+                    <span class="prelude-val">Err</span>(NotaryError::EventSnLowerThanLastSigned)
+                } <span class="kw">else if </span>last_proof.sn == new_proof.sn {
+                    <span class="comment">// Comprobar que solo cambia la versión de la governanza
+                    </span><span class="kw">if </span>!last_proof.is_similar(<span class="kw-2">&amp;</span>new_proof) {
+                        <span class="prelude-val">Err</span>(NotaryError::DifferentProofForEvent)
+                    } <span class="kw">else </span>{
+                        <span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(last_proof.subject_public_key))
+                    }
+                } <span class="kw">else if </span>last_proof.sn + <span class="number">1 </span>== new_proof.sn {
+                    <span class="comment">// Comprobar que es similar a la prueba del evento anterior que nos llega en el mensaje
+                    </span><span class="kw">if </span>!last_proof.is_similar(<span class="kw-2">&amp;</span>previous_proof.unwrap())
+                        || last_proof.event_hash != new_proof.prev_event_hash
+                    {
+                        <span class="prelude-val">Err</span>(NotaryError::DifferentProofForEvent)
+                    } <span class="kw">else </span>{
+                        <span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(last_proof.subject_public_key))
+                    }
+                } <span class="kw">else </span>{
+                    <span class="comment">// Mismo caso que en not found, no tengo la prueba anterior
+                    </span><span class="kw">if </span>new_proof.sn == <span class="number">1 </span>{
+                        <span class="comment">// Nos tenemos que fiar:
+                        // TODO: actualmente si el evento 0 no lo validamos no existe la prueba de sn 0, con lo que si el evento 1 es de transferencia ya se va a cambiar la public key del sujeto en la prueba (se pone la nueva), con lo que no puedo validar la firma del sujeto que viene en el evento 1 en este caso porque se va a firmar con otro material criptográfico (el que tenía previamente) entonces no me queda otra que fiarme de los eventos 1
+                        </span><span class="prelude-val">Ok</span>(<span class="prelude-val">None</span>)
+                    } <span class="kw">else </span>{
+                        <span class="kw">if </span>previous_proof.is_none() {
+                            <span class="kw">return </span><span class="prelude-val">Err</span>(NotaryError::PreviousProofLeft);
+                        }
+                        <span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(
+                            <span class="self">self</span>.validate_previous_proof(
+                                new_proof,
+                                previous_proof.unwrap(),
+                                validation_signatures,
+                            )
+                            .<span class="kw">await</span><span class="question-mark">?</span>,
+                        ))
+                    }
+                }
+            }
+            <span class="prelude-val">None </span>=&gt; {
+                <span class="comment">// Comprobar la prueba de validación anterior junto con las firmas de validación de dicha prueba, su validez criptográfica y si llega a quorum
+                </span><span class="kw">if </span>previous_proof.is_none() {
+                    <span class="kw">return </span><span class="prelude-val">Err</span>(NotaryError::PreviousProofLeft);
+                }
+                <span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(
+                    <span class="self">self</span>.validate_previous_proof(
+                        new_proof,
+                        previous_proof.unwrap(),
+                        validation_signatures,
+                    )
+                    .<span class="kw">await</span><span class="question-mark">?</span>,
+                ))
+            }
+        }
+    }
+
+    <span class="kw">async fn </span>validate_previous_proof(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        new_proof: <span class="kw-2">&amp;</span>ValidationProof,
+        previous_proof: ValidationProof,
+        validation_signatures: <span class="kw-2">&amp;</span>HashSet&lt;Signature&gt;,
+    ) -&gt; <span class="prelude-ty">Result</span>&lt;KeyIdentifier, NotaryError&gt; {
+        <span class="comment">// Comprobar que la previous encaja con la nueva
+        </span><span class="kw">if </span>previous_proof.event_hash != new_proof.prev_event_hash {
+            <span class="kw">return </span><span class="prelude-val">Err</span>(NotaryError::DifferentProofForEvent);
+        }
+        <span class="kw">if </span>previous_proof.sn + <span class="number">1 </span>!= new_proof.sn {
+            <span class="kw">return </span><span class="prelude-val">Err</span>(NotaryError::DifferentProofForEvent);
+        }
+        <span class="kw">for </span>signature <span class="kw">in </span>validation_signatures.iter() {
+            signature
+                .verify()
+                .map_err(|<span class="kw">_</span>| NotaryError::InvalidSignature)<span class="question-mark">?</span>;
+        }
+        <span class="kw">let </span>actual_signers: <span class="prelude-ty">Result</span>&lt;HashSet&lt;KeyIdentifier&gt;, NotaryError&gt; = validation_signatures
+            .iter()
+            .map(|signature| {
+                <span class="kw">if </span>signature.verify().is_err() {
+                    <span class="kw">return </span><span class="prelude-val">Err</span>(NotaryError::InvalidSignature);
+                }
+                <span class="prelude-val">Ok</span>(signature.content.signer.clone())
+            })
+            .collect();
+        <span class="kw">let </span>actual_signers = actual_signers<span class="question-mark">?</span>;
+        <span class="kw">let </span>(signers, quorum_size) = <span class="self">self
+            </span>.get_signers_and_quorum(previous_proof.get_metadata(), ValidationStage::Validate)
+            .<span class="kw">await</span><span class="question-mark">?</span>;
+        <span class="kw">if </span>!actual_signers.is_subset(<span class="kw-2">&amp;</span>signers) {
+            <span class="kw">return </span><span class="prelude-val">Err</span>(NotaryError::InvalidSigner);
+        }
+        <span class="kw">if </span>actual_signers.len() &lt; quorum_size <span class="kw">as </span>usize {
+            <span class="kw">return </span><span class="prelude-val">Err</span>(NotaryError::QuorumNotReached);
+        }
+        <span class="prelude-val">Ok</span>(previous_proof.subject_public_key)
+    }
+
+    <span class="kw">async fn </span>get_signers_and_quorum(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        metadata: Metadata,
+        stage: ValidationStage,
+    ) -&gt; <span class="prelude-ty">Result</span>&lt;(HashSet&lt;KeyIdentifier&gt;, u32), NotaryError&gt; {
+        <span class="kw">let </span>signers = <span class="self">self
+            </span>.gov_api
+            .get_signers(metadata.clone(), stage.clone())
+            .<span class="kw">await
+            </span>.map_err(NotaryError::GovernanceError)<span class="question-mark">?</span>;
+        <span class="kw">let </span>quorum_size = <span class="self">self
+            </span>.gov_api
+            .get_quorum(metadata, stage)
+            .<span class="kw">await
+            </span>.map_err(NotaryError::GovernanceError)<span class="question-mark">?</span>;
+        <span class="prelude-val">Ok</span>((signers, quorum_size))
     }
 }
 
