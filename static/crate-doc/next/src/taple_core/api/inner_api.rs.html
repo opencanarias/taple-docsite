@@ -303,10 +303,18 @@
 <a href="#303" id="303">303</a>
 <a href="#304" id="304">304</a>
 <a href="#305" id="305">305</a>
+<a href="#306" id="306">306</a>
+<a href="#307" id="307">307</a>
+<a href="#308" id="308">308</a>
+<a href="#309" id="309">309</a>
+<a href="#310" id="310">310</a>
+<a href="#311" id="311">311</a>
+<a href="#312" id="312">312</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">super</span>::error::APIInternalError;
 <span class="kw">use </span><span class="kw">super</span>::ApiResponses;
 <span class="kw">use </span><span class="kw">crate</span>::approval::error::ApprovalErrorResponse;
-<span class="kw">use </span><span class="kw">crate</span>::approval::manager::{ApprovalAPI, ApprovalAPIInterface};
+<span class="attr">#[cfg(feature = <span class="string">&quot;aproval&quot;</span>)]
+</span><span class="kw">use </span><span class="kw">crate</span>::approval::manager::{ApprovalAPI, ApprovalAPIInterface};
 <span class="kw">use </span><span class="kw">crate</span>::authorized_subjecs::manager::AuthorizedSubjectsAPI;
 <span class="kw">use </span><span class="kw">crate</span>::commons::models::Acceptance;
 <span class="kw">use </span><span class="kw">crate</span>::commons::self_signature_manager::{SelfSignatureInterface, SelfSignatureManager};
@@ -341,7 +349,8 @@
 <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct </span>InnerAPI&lt;C: DatabaseCollection&gt; {
     signature_manager: SelfSignatureManager,
     event_api: EventAPI,
-    approval_api: ApprovalAPI,
+    <span class="attr">#[cfg(feature = <span class="string">&quot;aproval&quot;</span>)]
+    </span>approval_api: ApprovalAPI,
     authorized_subjects_api: AuthorizedSubjectsAPI,
     ledger_api: EventManagerAPI,
     db: DB&lt;C&gt;,
@@ -356,13 +365,15 @@
         event_api: EventAPI,
         authorized_subjects_api: AuthorizedSubjectsAPI,
         db: DB&lt;C&gt;,
-        approval_api: ApprovalAPI,
+        <span class="attr">#[cfg(feature = <span class="string">&quot;aproval&quot;</span>)]
+        </span>approval_api: ApprovalAPI,
         ledger_api: EventManagerAPI
     ) -&gt; <span class="self">Self </span>{
         <span class="self">Self </span>{
             signature_manager: SelfSignatureManager::new(keys, settings),
             event_api,
-            approval_api,
+            <span class="attr">#[cfg(feature = <span class="string">&quot;aproval&quot;</span>)]
+            </span>approval_api,
             authorized_subjects_api,
             db,
             ledger_api
@@ -427,7 +438,8 @@
         ))
     }
 
-    <span class="kw">pub async fn </span>emit_vote(
+    <span class="attr">#[cfg(feature = <span class="string">&quot;aproval&quot;</span>)]
+    </span><span class="kw">pub async fn </span>emit_vote(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         request_id: DigestIdentifier,
         acceptance: Acceptance,
@@ -536,14 +548,16 @@
         }
     }
 
-    <span class="kw">pub async fn </span>get_pending_request(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; ApiResponses {
+    <span class="attr">#[cfg(feature = <span class="string">&quot;aproval&quot;</span>)]
+    </span><span class="kw">pub async fn </span>get_pending_request(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; ApiResponses {
         <span class="kw">match </span><span class="self">self</span>.approval_api.get_all_requests().<span class="kw">await </span>{
             <span class="prelude-val">Ok</span>(data) =&gt; <span class="kw">return </span>ApiResponses::GetPendingRequests(<span class="prelude-val">Ok</span>(data)),
             <span class="prelude-val">Err</span>(error) =&gt; <span class="kw">return </span>ApiResponses::GetPendingRequests(<span class="prelude-val">Err</span>(error.into())),
         }
     }
 
-    <span class="kw">pub async fn </span>get_single_request(<span class="kw-2">&amp;</span><span class="self">self</span>, request_id: DigestIdentifier) -&gt; ApiResponses {
+    <span class="attr">#[cfg(feature = <span class="string">&quot;aproval&quot;</span>)]
+    </span><span class="kw">pub async fn </span>get_single_request(<span class="kw-2">&amp;</span><span class="self">self</span>, request_id: DigestIdentifier) -&gt; ApiResponses {
         <span class="kw">match </span><span class="self">self
             </span>.approval_api
             .get_single_request(request_id.clone())

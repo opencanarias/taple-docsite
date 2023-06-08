@@ -622,11 +622,45 @@
 <a href="#622" id="622">622</a>
 <a href="#623" id="623">623</a>
 <a href="#624" id="624">624</a>
-</pre></div><pre class="rust"><code><span class="kw">use </span>std::marker::PhantomData;
-<span class="kw">use </span>std::sync::Arc;
-
-<span class="kw">use </span><span class="kw">crate</span>::approval::manager::{ApprovalAPI, ApprovalManager};
-<span class="kw">use </span><span class="kw">crate</span>::approval::{ApprovalMessages, ApprovalResponses};
+<a href="#625" id="625">625</a>
+<a href="#626" id="626">626</a>
+<a href="#627" id="627">627</a>
+<a href="#628" id="628">628</a>
+<a href="#629" id="629">629</a>
+<a href="#630" id="630">630</a>
+<a href="#631" id="631">631</a>
+<a href="#632" id="632">632</a>
+<a href="#633" id="633">633</a>
+<a href="#634" id="634">634</a>
+<a href="#635" id="635">635</a>
+<a href="#636" id="636">636</a>
+<a href="#637" id="637">637</a>
+<a href="#638" id="638">638</a>
+<a href="#639" id="639">639</a>
+<a href="#640" id="640">640</a>
+<a href="#641" id="641">641</a>
+<a href="#642" id="642">642</a>
+<a href="#643" id="643">643</a>
+<a href="#644" id="644">644</a>
+<a href="#645" id="645">645</a>
+<a href="#646" id="646">646</a>
+<a href="#647" id="647">647</a>
+<a href="#648" id="648">648</a>
+<a href="#649" id="649">649</a>
+<a href="#650" id="650">650</a>
+<a href="#651" id="651">651</a>
+<a href="#652" id="652">652</a>
+<a href="#653" id="653">653</a>
+<a href="#654" id="654">654</a>
+<a href="#655" id="655">655</a>
+<a href="#656" id="656">656</a>
+<a href="#657" id="657">657</a>
+<a href="#658" id="658">658</a>
+<a href="#659" id="659">659</a>
+</pre></div><pre class="rust"><code><span class="attr">#[cfg(feature = <span class="string">&quot;aproval&quot;</span>)]
+</span><span class="kw">use </span><span class="kw">crate</span>::approval::manager::{ApprovalAPI, ApprovalManager};
+<span class="attr">#[cfg(feature = <span class="string">&quot;aproval&quot;</span>)]
+</span><span class="kw">use </span><span class="kw">crate</span>::approval::{ApprovalMessages, ApprovalResponses};
 <span class="kw">use </span><span class="kw">crate</span>::authorized_subjecs::manager::{AuthorizedSubjectsAPI, AuthorizedSubjectsManager};
 <span class="kw">use </span><span class="kw">crate</span>::authorized_subjecs::{AuthorizedSubjectsCommand, AuthorizedSubjectsResponse};
 <span class="kw">use </span><span class="kw">crate</span>::commons::channel::MpscChannel;
@@ -639,7 +673,7 @@
 <span class="kw">use </span><span class="kw">crate</span>::commons::identifier::{Derivable, KeyIdentifier};
 <span class="kw">use </span><span class="kw">crate</span>::commons::models::notification::Notification;
 <span class="kw">use </span><span class="kw">crate</span>::commons::self_signature_manager::{SelfSignatureInterface, SelfSignatureManager};
-<span class="kw">use </span><span class="kw">crate</span>::database::{DatabaseManager, DB, DatabaseCollection};
+<span class="kw">use </span><span class="kw">crate</span>::database::{DatabaseCollection, DatabaseManager, DB};
 <span class="kw">use </span><span class="kw">crate</span>::distribution::error::DistributionErrorResponses;
 <span class="kw">use </span><span class="kw">crate</span>::distribution::manager::DistributionManager;
 <span class="kw">use </span><span class="kw">crate</span>::distribution::DistributionMessagesNew;
@@ -655,12 +689,15 @@
     Message, MessageReceiver, MessageSender, MessageTaskCommand, MessageTaskManager, NetworkEvent,
 };
 <span class="kw">use </span><span class="kw">crate</span>::network::network::{NetworkProcessor, SendMode};
-<span class="kw">use </span><span class="kw">crate</span>::notary::manager::NotaryManager;
+<span class="attr">#[cfg(feature = <span class="string">&quot;validation&quot;</span>)]
+</span><span class="kw">use </span><span class="kw">crate</span>::notary::manager::NotaryManager;
 <span class="kw">use </span><span class="kw">crate</span>::notary::{NotaryCommand, NotaryResponse};
 <span class="kw">use </span><span class="kw">crate</span>::protocol::protocol_message_manager::{ProtocolManager, TapleMessages};
 <span class="kw">use </span>futures::future::BoxFuture;
 <span class="kw">use </span>futures::FutureExt;
 <span class="kw">use </span>libp2p::{Multiaddr, PeerId};
+<span class="kw">use </span>std::marker::PhantomData;
+<span class="kw">use </span>std::sync::Arc;
 <span class="kw">use </span>tokio::sync::broadcast::error::{RecvError, TryRecvError};
 
 <span class="kw">use </span><span class="kw">crate</span>::api::{APICommands, ApiResponses, NodeAPI, API};
@@ -739,7 +776,7 @@
     notification_sender: tokio::sync::broadcast::Sender&lt;Notification&gt;,
     settings: TapleSettings,
     database: <span class="prelude-ty">Option</span>&lt;M&gt;,
-    _c: PhantomData&lt;C&gt;
+    _c: PhantomData&lt;C&gt;,
 }
 
 <span class="kw">impl</span>&lt;M: DatabaseManager&lt;C&gt; + <span class="lifetime">&#39;static</span>, C: DatabaseCollection + <span class="lifetime">&#39;static</span>&gt; Taple&lt;M, C&gt; {
@@ -816,7 +853,7 @@
             notification_sender: sender,
             settings,
             database: <span class="prelude-val">Some</span>(database),
-            _c: PhantomData::default()
+            _c: PhantomData::default(),
         }
     }
 
@@ -827,6 +864,7 @@
                 p2p_port: <span class="number">50000u32</span>,
                 addr: <span class="string">&quot;/ip4/0.0.0.0/tcp&quot;</span>.into(),
                 known_nodes: Vec::&lt;String&gt;::new(),
+                external_address: <span class="macro">vec!</span>[],
             },
             node: NodeSettings {
                 key_derivator: KeyDerivator::Ed25519,
@@ -942,6 +980,7 @@
             <span class="prelude-ty">Result</span>&lt;(), DistributionErrorResponses&gt;,
         &gt;::new(BUFFER_SIZE);
         <span class="comment">// Receiver and sender of approval messages
+        </span><span class="attr">#[cfg(feature = <span class="string">&quot;aproval&quot;</span>)]
         </span><span class="kw">let </span>(approval_receiver, approval_sender) =
             MpscChannel::&lt;ApprovalMessages, ApprovalResponses&gt;::new(BUFFER_SIZE);
         <span class="comment">// Receiver and sender of evaluation messages
@@ -949,6 +988,7 @@
         </span><span class="kw">let </span>(evaluation_receiver, evaluation_sender) =
             MpscChannel::&lt;EvaluatorMessage, EvaluatorResponse&gt;::new(BUFFER_SIZE);
         <span class="comment">// Receiver and sender of validation messages
+        </span><span class="attr">#[cfg(feature = <span class="string">&quot;validation&quot;</span>)]
         </span><span class="kw">let </span>(validation_receiver, validation_sender) =
             MpscChannel::&lt;NotaryCommand, NotaryResponse&gt;::new(BUFFER_SIZE);
         <span class="comment">// Shutdown channel
@@ -972,12 +1012,19 @@
         <span class="kw">let </span>public_key = kp.public_key_bytes();
         <span class="kw">let </span>key_identifier = KeyIdentifier::new(kp.get_key_derivator(), <span class="kw-2">&amp;</span>public_key);
         <span class="comment">// Creation Network
-        </span><span class="kw">let </span>network_manager = NetworkProcessor::new(
-            <span class="prelude-val">Some</span>(<span class="macro">format!</span>(
-                <span class="string">&quot;{}/{}&quot;</span>,
-                <span class="self">self</span>.settings.network.addr.clone(),
-                <span class="self">self</span>.settings.network.p2p_port.clone()
-            )),
+        </span><span class="kw">let </span>addr = {
+            <span class="kw">if </span><span class="kw-2">&amp;</span><span class="self">self</span>.settings.network.addr == <span class="string">&quot;&quot; </span>|| <span class="self">self</span>.settings.network.p2p_port == <span class="number">0 </span>{
+                <span class="prelude-val">None
+            </span>} <span class="kw">else </span>{
+                <span class="prelude-val">Some</span>(<span class="macro">format!</span>(
+                    <span class="string">&quot;{}/{}&quot;</span>,
+                    <span class="self">self</span>.settings.network.addr.clone(),
+                    <span class="self">self</span>.settings.network.p2p_port.clone()
+                ))
+            }
+        };
+        <span class="kw">let </span>network_manager = NetworkProcessor::new(
+            addr,
             network_access_points(<span class="kw-2">&amp;</span><span class="self">self</span>.settings.network.known_nodes)<span class="question-mark">?</span>, <span class="comment">// TODO: Provide Bootraps nodes per configuration
             </span>sender_network,
             kp.clone(),
@@ -987,6 +1034,7 @@
             } <span class="kw">else </span>{
                 SendMode::Tell
             },
+            external_addresses(<span class="kw-2">&amp;</span><span class="self">self</span>.settings.network.external_address)<span class="question-mark">?</span>,
         )
         .<span class="kw">await
         </span>.expect(<span class="string">&quot;Error en creación de la capa de red&quot;</span>);
@@ -1011,9 +1059,11 @@
             distribution_sender.clone(),
             <span class="attr">#[cfg(feature = <span class="string">&quot;evaluation&quot;</span>)]
             </span>evaluation_sender.clone(),
-            validation_sender.clone(),
+            <span class="attr">#[cfg(feature = <span class="string">&quot;validation&quot;</span>)]
+            </span>validation_sender.clone(),
             event_sender.clone(),
-            approval_sender.clone(),
+            <span class="attr">#[cfg(feature = <span class="string">&quot;aproval&quot;</span>)]
+            </span>approval_sender.clone(),
             ledger_sender.clone(),
             bsx.clone(),
         );
@@ -1064,7 +1114,8 @@
         </span><span class="kw">let </span>api = API::new(
             <span class="self">self</span>.api_input.take().unwrap(),
             EventAPI::new(event_sender),
-            ApprovalAPI::new(approval_sender),
+            <span class="attr">#[cfg(feature = <span class="string">&quot;aproval&quot;</span>)]
+            </span>ApprovalAPI::new(approval_sender),
             AuthorizedSubjectsAPI::new(as_sender),
             EventManagerAPI::new(ledger_sender),
             wath_sender,
@@ -1088,6 +1139,7 @@
             task_sender.clone(),
         );
         <span class="comment">// Creation ApprovalManager
+        </span><span class="attr">#[cfg(feature = <span class="string">&quot;aproval&quot;</span>)]
         </span><span class="kw">let </span>approval_manager = ApprovalManager::new(
             GovernanceAPI::new(governance_sender.clone()),
             approval_receiver,
@@ -1112,7 +1164,8 @@
             <span class="self">self</span>.settings.clone(),
             DB::new(db.clone()),
         );
-        <span class="kw">let </span>validation_manager = NotaryManager::new(
+        <span class="attr">#[cfg(feature = <span class="string">&quot;validation&quot;</span>)]
+        </span><span class="kw">let </span>validation_manager = NotaryManager::new(
             validation_receiver,
             GovernanceAPI::new(governance_sender),
             DB::new(db.clone()),
@@ -1144,13 +1197,15 @@
         </span>tokio::spawn(<span class="kw">async move </span>{
             evaluator_manager.start().<span class="kw">await</span>;
         });
-        tokio::spawn(<span class="kw">async move </span>{
+        <span class="attr">#[cfg(feature = <span class="string">&quot;validation&quot;</span>)]
+        </span>tokio::spawn(<span class="kw">async move </span>{
             validation_manager.start().<span class="kw">await</span>;
         });
         tokio::spawn(<span class="kw">async move </span>{
             distribution_manager.start().<span class="kw">await</span>;
         });
-        tokio::spawn(<span class="kw">async move </span>{
+        <span class="attr">#[cfg(feature = <span class="string">&quot;aproval&quot;</span>)]
+        </span>tokio::spawn(<span class="kw">async move </span>{
             approval_manager.start().<span class="kw">await</span>;
         });
         tokio::spawn(<span class="kw">async move </span>{
@@ -1238,6 +1293,21 @@
         }
     }
     <span class="prelude-val">Ok</span>(access_points)
+}
+
+<span class="kw">fn </span>external_addresses(addresses: <span class="kw-2">&amp;</span>[String]) -&gt; <span class="prelude-ty">Result</span>&lt;Vec&lt;Multiaddr&gt;, Error&gt; {
+    <span class="kw">let </span><span class="kw-2">mut </span>external_addresses: Vec&lt;Multiaddr&gt; = Vec::new();
+    <span class="kw">for </span>address <span class="kw">in </span>addresses {
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(value) = multiaddr(address) {
+            external_addresses.push(value);
+        } <span class="kw">else </span>{
+            <span class="kw">return </span><span class="prelude-val">Err</span>(Error::AcessPointError(<span class="macro">format!</span>(
+                <span class="string">&quot;Invalid MultiAddress conversion in External Address: {}&quot;</span>,
+                address
+            )));
+        }
+    }
+    <span class="prelude-val">Ok</span>(external_addresses)
 }
 
 <span class="kw">fn </span>multiaddr(addr: <span class="kw-2">&amp;</span>str) -&gt; <span class="prelude-ty">Option</span>&lt;Multiaddr&gt; {

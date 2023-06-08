@@ -329,10 +329,6 @@
 <a href="#329" id="329">329</a>
 <a href="#330" id="330">330</a>
 <a href="#331" id="331">331</a>
-<a href="#332" id="332">332</a>
-<a href="#333" id="333">333</a>
-<a href="#334" id="334">334</a>
-<a href="#335" id="335">335</a>
 </pre></div><pre class="rust"><code><span class="doccomment">//! This module provides the structs and traits for the generation of key pairs for
 //! cryptographic operations.
 //!
@@ -341,8 +337,6 @@
 <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">mod </span>error;
 <span class="attr">#[cfg(feature = <span class="string">&quot;secp256k1&quot;</span>)]
 </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">mod </span>secp256k1;
-<span class="attr">#[cfg(feature = <span class="string">&quot;x25519&quot;</span>)]
-</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">mod </span>x25519;
 
 <span class="kw">use </span>borsh::BorshSerialize;
 <span class="kw">use </span>identifier::error::Error;
@@ -352,8 +346,6 @@
 <span class="attr">#[cfg(feature = <span class="string">&quot;secp256k1&quot;</span>)]
 </span><span class="kw">pub use </span>secp256k1::Secp256k1KeyPair;
 <span class="kw">use </span>serde::{Deserialize, Serialize};
-<span class="attr">#[cfg(feature = <span class="string">&quot;x25519&quot;</span>)]
-</span><span class="kw">pub use </span>x25519::X25519KeyPair;
 
 <span class="kw">use crate</span>::{
     identifier::{<span class="self">self</span>, derive::KeyDerivator, DigestIdentifier, Derivable},

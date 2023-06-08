@@ -796,6 +796,10 @@
 <a href="#796" id="796">796</a>
 <a href="#797" id="797">797</a>
 <a href="#798" id="798">798</a>
+<a href="#799" id="799">799</a>
+<a href="#800" id="800">800</a>
+<a href="#801" id="801">801</a>
+<a href="#802" id="802">802</a>
 </pre></div><pre class="rust"><code><span class="kw">pub mod </span>network;
 <span class="kw">pub mod </span>reqres;
 <span class="kw">pub mod </span>routing;
@@ -854,7 +858,8 @@
                 mc1,
                 bsx.subscribe(),
                 SendMode::Tell,
-            )
+                <span class="prelude-val">None
+            </span>)
             .<span class="kw">await</span>.unwrap();
             <span class="kw">let </span>msg_sender_boot = bootstrap_network.client();
             <span class="kw">let </span><span class="kw-2">mut </span>msg_rcv_boot = ReceiverStream::new(receiver_boot);
@@ -866,7 +871,8 @@
                 mc2,
                 brx,
                 SendMode::Tell,
-            )
+                <span class="prelude-val">None
+            </span>)
             .<span class="kw">await</span>.unwrap();
             <span class="kw">let </span>msg_sender_1 = node1_network.client();
             <span class="kw">let </span><span class="kw-2">mut </span>msg_rcv_1 = ReceiverStream::new(receiver1);
@@ -936,7 +942,8 @@
                 mc1,
                 bsx.subscribe(),
                 SendMode::RequestResponse,
-            )
+                <span class="prelude-val">None
+            </span>)
             .<span class="kw">await</span>.unwrap();
             <span class="kw">let </span>msg_sender_boot = bootstrap_network.client();
             <span class="kw">let </span><span class="kw-2">mut </span>msg_rcv_boot = ReceiverStream::new(receiver_boot);
@@ -948,7 +955,8 @@
                 mc2,
                 brx,
                 SendMode::RequestResponse,
-            )
+                <span class="prelude-val">None
+            </span>)
             .<span class="kw">await</span>.unwrap();
             <span class="kw">let </span>msg_sender_1 = node1_network.client();
             <span class="kw">let </span><span class="kw-2">mut </span>msg_rcv_1 = ReceiverStream::new(receiver1);

@@ -586,6 +586,18 @@
 <a href="#586" id="586">586</a>
 <a href="#587" id="587">587</a>
 <a href="#588" id="588">588</a>
+<a href="#589" id="589">589</a>
+<a href="#590" id="590">590</a>
+<a href="#591" id="591">591</a>
+<a href="#592" id="592">592</a>
+<a href="#593" id="593">593</a>
+<a href="#594" id="594">594</a>
+<a href="#595" id="595">595</a>
+<a href="#596" id="596">596</a>
+<a href="#597" id="597">597</a>
+<a href="#598" id="598">598</a>
+<a href="#599" id="599">599</a>
+<a href="#600" id="600">600</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>std::collections::HashSet;
 
 <span class="kw">use </span><span class="kw">super</span>::GetEventsOfSubject;
@@ -594,7 +606,8 @@
     inner_api::InnerAPI,
     APICommands, ApiResponses,
 };
-<span class="kw">use </span><span class="kw">crate</span>::approval::manager::ApprovalAPI;
+<span class="attr">#[cfg(feature = <span class="string">&quot;aproval&quot;</span>)]
+</span><span class="kw">use </span><span class="kw">crate</span>::approval::manager::ApprovalAPI;
 <span class="kw">use </span><span class="kw">crate</span>::authorized_subjecs::manager::AuthorizedSubjectsAPI;
 <span class="kw">use </span><span class="kw">crate</span>::commons::models::event::Event;
 <span class="kw">use </span><span class="kw">crate</span>::commons::models::event_request::EventRequest;
@@ -729,6 +742,7 @@
     /// • [ApiError::InvalidParameters] if the specified request identifier does not match a valid [DigestIdentifier].&lt;br /&gt;
     /// • [ApiError::VoteNotNeeded] if the node&#39;s vote is no longer required. &lt;br /&gt;
     /// This occurs when the acceptance of the changes proposed by the petition has already been resolved by the rest of the nodes in the network or when the node cannot participate in the voting process because it lacks the voting role.
+    </span><span class="attr">#[cfg(feature = <span class="string">&quot;aproval&quot;</span>)]
     </span><span class="kw">async fn </span>approval_request(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         request_id: DigestIdentifier,
@@ -740,6 +754,7 @@
     /// the proposed changes in order for the events to be implemented.
     /// # Possible errors
     /// • [ApiError::InternalError] if an internal error occurs during operation execution.
+    </span><span class="attr">#[cfg(feature = <span class="string">&quot;aproval&quot;</span>)]
     </span><span class="kw">async fn </span>get_pending_requests(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;Vec&lt;ApprovalPetitionData&gt;, ApiError&gt;;
     <span class="doccomment">/// It allows to obtain a single voting request pending to be resolved in the node.
     /// This request is received from other nodes in the network when they try to update
@@ -748,6 +763,7 @@
     /// # Possible errors
     /// • [ApiError::InternalError] if an internal error occurs during operation execution.
     /// • [ApiError::NotFound] if the requested request does not exist.
+    </span><span class="attr">#[cfg(feature = <span class="string">&quot;aproval&quot;</span>)]
     </span><span class="kw">async fn </span>get_single_request(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         id: DigestIdentifier,
@@ -810,7 +826,8 @@
         }
     }
 
-    <span class="kw">async fn </span>get_pending_requests(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;Vec&lt;ApprovalPetitionData&gt;, ApiError&gt; {
+    <span class="attr">#[cfg(feature = <span class="string">&quot;aproval&quot;</span>)]
+    </span><span class="kw">async fn </span>get_pending_requests(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;Vec&lt;ApprovalPetitionData&gt;, ApiError&gt; {
         <span class="kw">let </span>response = <span class="self">self
             </span>.sender
             .ask(APICommands::GetPendingRequests)
@@ -823,7 +840,8 @@
         }
     }
 
-    <span class="kw">async fn </span>get_single_request(
+    <span class="attr">#[cfg(feature = <span class="string">&quot;aproval&quot;</span>)]
+    </span><span class="kw">async fn </span>get_single_request(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         id: DigestIdentifier,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;ApprovalPetitionData, ApiError&gt; {
@@ -976,7 +994,8 @@
         }
     }
 
-    <span class="kw">async fn </span>approval_request(
+    <span class="attr">#[cfg(feature = <span class="string">&quot;aproval&quot;</span>)]
+    </span><span class="kw">async fn </span>approval_request(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         request_id: DigestIdentifier,
         acceptance: Acceptance,
@@ -1051,7 +1070,8 @@
     <span class="kw">pub fn </span>new(
         input: MpscChannel&lt;APICommands, ApiResponses&gt;,
         event_api: EventAPI,
-        approval_api: ApprovalAPI,
+        <span class="attr">#[cfg(feature = <span class="string">&quot;aproval&quot;</span>)]
+        </span>approval_api: ApprovalAPI,
         authorized_subjects_api: AuthorizedSubjectsAPI,
         ledger_api: EventManagerAPI,
         settings_sender: Sender&lt;TapleSettings&gt;,
@@ -1070,7 +1090,8 @@
                 event_api,
                 authorized_subjects_api,
                 db,
-                approval_api,
+                <span class="attr">#[cfg(feature = <span class="string">&quot;aproval&quot;</span>)]
+                </span>approval_api,
                 ledger_api
             ),
             shutdown_sender: <span class="prelude-val">Some</span>(shutdown_sender),
@@ -1141,11 +1162,14 @@
                     APICommands::GetSingleSubject(data) =&gt; {
                         <span class="self">self</span>.inner_api.get_single_subject(data).<span class="kw">await
                     </span>}
-                    APICommands::VoteResolve(acceptance, id) =&gt; {
+                    <span class="attr">#[cfg(feature = <span class="string">&quot;aproval&quot;</span>)]
+                    </span>APICommands::VoteResolve(acceptance, id) =&gt; {
                         <span class="self">self</span>.inner_api.emit_vote(id, acceptance).<span class="kw">await</span><span class="question-mark">?
                     </span>}
-                    APICommands::GetPendingRequests =&gt; <span class="self">self</span>.inner_api.get_pending_request().<span class="kw">await</span>,
-                    APICommands::GetSingleRequest(data) =&gt; {
+                    <span class="attr">#[cfg(feature = <span class="string">&quot;aproval&quot;</span>)]
+                    </span>APICommands::GetPendingRequests =&gt; <span class="self">self</span>.inner_api.get_pending_request().<span class="kw">await</span>,
+                    <span class="attr">#[cfg(feature = <span class="string">&quot;aproval&quot;</span>)]
+                    </span>APICommands::GetSingleRequest(data) =&gt; {
                         <span class="self">self</span>.inner_api.get_single_request(data).<span class="kw">await
                     </span>}
                     APICommands::HandleRequest(data) =&gt; <span class="self">self</span>.inner_api.handle_request(data).<span class="kw">await</span><span class="question-mark">?</span>,

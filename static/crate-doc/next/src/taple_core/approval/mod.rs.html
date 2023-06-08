@@ -60,6 +60,8 @@
 <a href="#60" id="60">60</a>
 <a href="#61" id="61">61</a>
 <a href="#62" id="62">62</a>
+<a href="#63" id="63">63</a>
+<a href="#64" id="64">64</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>serde::{Deserialize, Serialize};
 
 <span class="kw">use crate</span>::{
@@ -72,8 +74,10 @@
 <span class="kw">use </span><span class="self">self</span>::error::ApprovalErrorResponse;
 
 <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">mod </span>error;
-<span class="kw">mod </span>inner_manager;
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">mod </span>manager;
+<span class="attr">#[cfg(feature = <span class="string">&quot;aproval&quot;</span>)]
+</span><span class="kw">mod </span>inner_manager;
+<span class="attr">#[cfg(feature = <span class="string">&quot;aproval&quot;</span>)]
+</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">mod </span>manager;
 
 <span class="attr">#[derive(Clone, Serialize, Deserialize, Debug)]
 </span><span class="kw">pub enum </span>ApprovalMessages {

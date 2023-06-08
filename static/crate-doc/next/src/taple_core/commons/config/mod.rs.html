@@ -93,6 +93,9 @@
 <a href="#93" id="93">93</a>
 <a href="#94" id="94">94</a>
 <a href="#95" id="95">95</a>
+<a href="#96" id="96">96</a>
+<a href="#97" id="97">97</a>
+<a href="#98" id="98">98</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>std::collections::HashMap;
 
 <span class="kw">use </span><span class="kw">super</span>::identifier::derive::{digest::DigestDerivator, KeyDerivator};
@@ -118,6 +121,9 @@
     <span class="attr">#[serde(rename = <span class="string">&quot;knownnodes&quot;</span>)]
     </span><span class="doccomment">/// List of bootstrap nodes to connect to.
     </span><span class="kw">pub </span>known_nodes: Vec&lt;String&gt;,
+    <span class="attr">#[serde(rename = <span class="string">&quot;externaladdress&quot;</span>)]
+    </span><span class="doccomment">/// List of bootstrap nodes to connect to.
+    </span><span class="kw">pub </span>external_address: Vec&lt;String&gt;,
 }
 
 <span class="attr">#[derive(Debug, Deserialize, Clone)]

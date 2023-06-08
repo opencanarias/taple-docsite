@@ -31,21 +31,23 @@
 <a href="#31" id="31">31</a>
 <a href="#32" id="32">32</a>
 <a href="#33" id="33">33</a>
+<a href="#34" id="34">34</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>std::collections::HashSet;
 
 <span class="kw">use </span>serde::{Deserialize, Serialize};
 
 <span class="kw">use crate</span>::{
     commons::models::{event::ValidationProof, notary::NotaryEventResponse},
-    identifier::{DigestIdentifier, KeyIdentifier},
     signature::Signature,
 };
 
 <span class="kw">use </span><span class="self">self</span>::errors::NotaryError;
 
 <span class="kw">pub mod </span>errors;
-<span class="kw">pub mod </span>manager;
-<span class="kw">pub mod </span>notary;
+<span class="attr">#[cfg(feature = <span class="string">&quot;validation&quot;</span>)]
+</span><span class="kw">pub mod </span>manager;
+<span class="attr">#[cfg(feature = <span class="string">&quot;validation&quot;</span>)]
+</span><span class="kw">pub mod </span>notary;
 
 <span class="attr">#[derive(Debug, Clone, Serialize, Deserialize)]
 </span><span class="kw">pub enum </span>NotaryCommand {

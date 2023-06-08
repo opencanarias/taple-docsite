@@ -68,14 +68,18 @@
 <a href="#68" id="68">68</a>
 <a href="#69" id="69">69</a>
 <a href="#70" id="70">70</a>
+<a href="#71" id="71">71</a>
+<a href="#72" id="72">72</a>
+<a href="#73" id="73">73</a>
+<a href="#74" id="74">74</a>
+<a href="#75" id="75">75</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>std::collections::HashSet;
-
-<span class="kw">use </span><span class="kw">crate</span>::KeyIdentifier;
-<span class="kw">use </span><span class="kw">crate</span>::approval::ApprovalPetitionData;
+<span class="attr">#[cfg(feature = <span class="string">&quot;aproval&quot;</span>)]
+</span><span class="kw">use crate</span>::{Acceptance, ApprovalPetitionData};
+<span class="kw">use crate</span>::{KeyIdentifier};
 <span class="kw">use </span><span class="kw">crate</span>::commons::models::event::Event;
 <span class="kw">use </span><span class="kw">crate</span>::commons::models::event_request::EventRequest;
 <span class="kw">use </span><span class="kw">crate</span>::commons::models::state::SubjectData;
-<span class="kw">use </span><span class="kw">crate</span>::commons::models::Acceptance;
 <span class="kw">use </span><span class="kw">crate</span>::event_request::{EventRequestType};
 <span class="kw">use </span><span class="kw">crate</span>::identifier::DigestIdentifier;
 
@@ -94,11 +98,14 @@
     GetAllGovernances(GetAllSubjects),
     GetSingleSubject(GetSingleSubject),
     GetEventsOfSubject(GetEventsOfSubject),
-    VoteResolve(Acceptance, DigestIdentifier),
+    <span class="attr">#[cfg(feature = <span class="string">&quot;aproval&quot;</span>)]
+    </span>VoteResolve(Acceptance, DigestIdentifier),
     HandleRequest(EventRequestType),
     ExternalRequest(EventRequest),
-    GetPendingRequests,
-    GetSingleRequest(DigestIdentifier),
+    <span class="attr">#[cfg(feature = <span class="string">&quot;aproval&quot;</span>)]
+    </span>GetPendingRequests,
+    <span class="attr">#[cfg(feature = <span class="string">&quot;aproval&quot;</span>)]
+    </span>GetSingleRequest(DigestIdentifier),
     SetPreauthorizedSubject(DigestIdentifier, HashSet&lt;KeyIdentifier&gt;),
     ExpectingTransfer(DigestIdentifier),
     Shutdown,
@@ -111,10 +118,13 @@
     GetSingleSubject(<span class="prelude-ty">Result</span>&lt;SubjectData, ApiError&gt;),
     GetEventsOfSubject(<span class="prelude-ty">Result</span>&lt;Vec&lt;Event&gt;, ApiError&gt;),
     HandleExternalRequest(<span class="prelude-ty">Result</span>&lt;DigestIdentifier, ApiError&gt;),
-    VoteResolve(<span class="prelude-ty">Result</span>&lt;DigestIdentifier, ApiError&gt;),
+    <span class="attr">#[cfg(feature = <span class="string">&quot;aproval&quot;</span>)]
+    </span>VoteResolve(<span class="prelude-ty">Result</span>&lt;DigestIdentifier, ApiError&gt;),
     HandleRequest(<span class="prelude-ty">Result</span>&lt;DigestIdentifier, ApiError&gt;), <span class="comment">// Borrar RequestData
+    </span><span class="attr">#[cfg(feature = <span class="string">&quot;aproval&quot;</span>)]
     </span>GetPendingRequests(<span class="prelude-ty">Result</span>&lt;Vec&lt;ApprovalPetitionData&gt;, ApiError&gt;),
-    GetSingleRequest(<span class="prelude-ty">Result</span>&lt;ApprovalPetitionData, ApiError&gt;),
+    <span class="attr">#[cfg(feature = <span class="string">&quot;aproval&quot;</span>)]
+    </span>GetSingleRequest(<span class="prelude-ty">Result</span>&lt;ApprovalPetitionData, ApiError&gt;),
     ExpectingTransfer(<span class="prelude-ty">Result</span>&lt;KeyIdentifier, ApiError&gt;),
     ShutdownCompleted,
     SetPreauthorizedSubjectCompleted

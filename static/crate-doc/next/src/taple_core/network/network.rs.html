@@ -802,6 +802,20 @@
 <a href="#802" id="802">802</a>
 <a href="#803" id="803">803</a>
 <a href="#804" id="804">804</a>
+<a href="#805" id="805">805</a>
+<a href="#806" id="806">806</a>
+<a href="#807" id="807">807</a>
+<a href="#808" id="808">808</a>
+<a href="#809" id="809">809</a>
+<a href="#810" id="810">810</a>
+<a href="#811" id="811">811</a>
+<a href="#812" id="812">812</a>
+<a href="#813" id="813">813</a>
+<a href="#814" id="814">814</a>
+<a href="#815" id="815">815</a>
+<a href="#816" id="816">816</a>
+<a href="#817" id="817">817</a>
+<a href="#818" id="818">818</a>
 </pre></div><pre class="rust"><code><span class="kw">use super</span>::{
     reqres::{codec::TapleCodec, create_request_response_behaviour},
     routing::{RoutingBehaviour, RoutingComposedEvent},
@@ -829,7 +843,7 @@
     multiaddr::Protocol,
     noise,
     request_response::{RequestResponse, RequestResponseEvent, ResponseChannel},
-    swarm::{ConnectionHandlerUpgrErr, NetworkBehaviour, SwarmBuilder, SwarmEvent},
+    swarm::{AddressScore, ConnectionHandlerUpgrErr, NetworkBehaviour, SwarmBuilder, SwarmEvent},
     tcp::TokioTcpConfig,
     yamux, Multiaddr, NetworkBehaviour, PeerId, Swarm, Transport,
 };
@@ -942,7 +956,7 @@
 
 <span class="doccomment">/// Network Structure for connect message-sender, message-receiver and LibP2P network stack
 </span><span class="kw">pub struct </span>NetworkProcessor {
-    addr: Multiaddr,
+    addr: <span class="prelude-ty">Option</span>&lt;Multiaddr&gt;,
     swarm: Swarm&lt;TapleNetworkBehavior&gt;,
     command_sender: mpsc::Sender&lt;Command&gt;,
     command_receiver: mpsc::Receiver&lt;Command&gt;,
@@ -960,6 +974,7 @@
     open_requests: HashMap&lt;PeerId, VecDeque&lt;ResponseChannel&lt;Vec&lt;u8&gt;&gt;&gt;&gt;,
     send_mode: SendMode,
     node_public_key: Vec&lt;u8&gt;,
+    external_addresses: Vec&lt;Multiaddr&gt;,
 }
 
 <span class="kw">impl </span>NetworkProcessor {
@@ -970,6 +985,7 @@
         controller_mc: KeyPair,
         shutdown_receiver: tokio::sync::broadcast::Receiver&lt;()&gt;,
         send_mode: SendMode,
+        external_addresses: Vec&lt;Multiaddr&gt;,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>, Box&lt;<span class="kw">dyn </span>Error&gt;&gt; {
         <span class="kw">let </span>public_key = controller_mc.public_key_bytes();
         <span class="kw">let </span>local_key = {
@@ -978,80 +994,18 @@
             Keypair::Ed25519(sk.into())
         };
         <span class="comment">// Create a keypair for authenticated encryption of the transport.
-        </span><span class="kw">let </span>noise_key = noise::Keypair::&lt;noise::X25519Spec&gt;::new()
-            .into_authentic(<span class="kw-2">&amp;</span>local_key)
-            .expect(<span class="string">&quot;Signing libp2p-noise static DH keypair failed.&quot;</span>);
+        </span><span class="kw">let </span>noise_key: noise::AuthenticKeypair&lt;noise::X25519Spec&gt; =
+            noise::Keypair::&lt;noise::X25519Spec&gt;::new()
+                .into_authentic(<span class="kw-2">&amp;</span>local_key)
+                .expect(<span class="string">&quot;Signing libp2p-noise static DH keypair failed.&quot;</span>);
 
-        <span class="kw">let </span>addr: Multiaddr = <span class="kw">match </span>addr {
-            <span class="prelude-val">Some</span>(add) =&gt; add.parse().expect(<span class="string">&quot;String para multiaddress es válida&quot;</span>),
-            <span class="prelude-val">None </span>=&gt; String::from(<span class="string">&quot;/ip4/0.0.0.0/tcp/0&quot;</span>).parse().unwrap(),
+        <span class="kw">let </span>addr: <span class="prelude-ty">Option</span>&lt;Multiaddr&gt; = <span class="kw">match </span>addr {
+            <span class="prelude-val">Some</span>(add) =&gt; <span class="prelude-val">Some</span>(add.parse().expect(<span class="string">&quot;String para multiaddress es válida&quot;</span>)),
+            <span class="prelude-val">None </span>=&gt; <span class="prelude-val">None</span>,
         };
 
-        <span class="kw">let </span>transport = {
-            <span class="kw">let </span><span class="kw-2">mut </span>transport: <span class="prelude-ty">Option</span>&lt;Boxed&lt;(PeerId, StreamMuxerBox)&gt;&gt; = <span class="prelude-val">None</span>;
-            <span class="kw">for </span>protocol <span class="kw">in </span>addr.clone().iter() {
-                <span class="kw">if let </span>Protocol::Ip4(<span class="kw">_</span>) | Protocol::Ip6(<span class="kw">_</span>) = protocol {
-                    transport = <span class="prelude-val">Some</span>(
-                        TokioTcpConfig::new()
-                            .nodelay(<span class="bool-val">true</span>)
-                            .upgrade(upgrade::Version::V1)
-                            .authenticate(
-                                noise::NoiseConfig::xx(noise_key.clone()).into_authenticated(),
-                            )
-                            .multiplex(mplex::MplexConfig::new())
-                            .boxed(),
-                    );
-                    <span class="comment">// DNS
-                    </span>transport = {
-                        <span class="kw">match </span>dns::GenDnsConfig::system(transport.unwrap()) {
-                            <span class="prelude-val">Ok</span>(t) =&gt; <span class="prelude-val">Some</span>(t.boxed()),
-                            <span class="prelude-val">Err</span>(<span class="kw">_</span>) =&gt; { 
-                                <span class="comment">// TODO: vuelvo a crear el transporte porque no tiene clone, quizás sería interesante poner una variable de entorno que diga si estamos en android y hacer lo segundo directamente en ese caso 
-                                </span><span class="kw">let </span>transport = <span class="prelude-val">Some</span>(
-                                    TokioTcpConfig::new()
-                                        .nodelay(<span class="bool-val">true</span>)
-                                        .upgrade(upgrade::Version::V1)
-                                        .authenticate(
-                                            noise::NoiseConfig::xx(noise_key.clone())
-                                                .into_authenticated(),
-                                        )
-                                        .multiplex(mplex::MplexConfig::new())
-                                        .boxed(),
-                                );
-                                <span class="prelude-val">Some</span>(
-                                    dns::GenDnsConfig::custom(
-                                        transport.unwrap(),
-                                        dns::ResolverConfig::cloudflare(),
-                                        dns::ResolverOpts::default(),
-                                    )
-                                    .expect(<span class="string">&quot;DNS wont fail&quot;</span>)
-                                    .boxed(),
-                                )
-                            }
-                        }
-                    };
-                    <span class="kw">break</span>;
-                } <span class="kw">else if let </span>Protocol::Memory(<span class="kw">_</span>) = protocol {
-                    transport = <span class="prelude-val">Some</span>(
-                        MemoryTransport
-                            .upgrade(upgrade::Version::V1)
-                            .authenticate(
-                                noise::NoiseConfig::xx(noise_key.clone()).into_authenticated(),
-                            )
-                            .multiplex(yamux::YamuxConfig::default())
-                            .boxed(),
-                    );
-                    <span class="kw">break</span>;
-                }
-            }
-            transport.expect(
-                <span class="string">&quot;String for address in constructor is valid and has ipv4 or memory protocol&quot;</span>,
-            )
-        };
+        <span class="kw">let </span>transport = create_transport_by_protocol(addr.clone(), noise_key);
         <span class="kw">let </span>peer_id = local_key.public().to_peer_id();
-
-        <span class="comment">// DNS
-        </span><span class="kw">let </span>transport = dns::GenDnsConfig::system(transport)<span class="question-mark">?</span>.boxed();
 
         <span class="comment">// Swarm creation
         </span><span class="kw">let </span>swarm = SwarmBuilder::new(
@@ -1088,6 +1042,7 @@
             bootstrap_retries_steam: futures::stream::futures_unordered::FuturesUnordered::new(),
             open_requests: HashMap::new(),
             send_mode,
+            external_addresses,
         })
     }
 
@@ -1099,9 +1054,15 @@
     <span class="doccomment">/// Run network processor.
     </span><span class="kw">pub async fn </span>run(<span class="kw-2">mut </span><span class="self">self</span>) {
         <span class="macro">debug!</span>(<span class="string">&quot;Running network&quot;</span>);
-        <span class="kw">let </span>a = <span class="self">self</span>.swarm.listen_on(<span class="self">self</span>.addr.clone());
-        <span class="kw">if </span>a.is_err() {
-            <span class="macro">println!</span>(<span class="string">&quot;Error: {:?}&quot;</span>, a.unwrap_err());
+        <span class="kw">for </span>external_address <span class="kw">in </span><span class="self">self</span>.external_addresses.clone().into_iter() {
+            <span class="self">self</span>.swarm
+                .add_external_address(external_address, AddressScore::Infinite);
+        }
+        <span class="kw">if </span><span class="self">self</span>.addr.is_some() {
+            <span class="kw">let </span>a = <span class="self">self</span>.swarm.listen_on(<span class="self">self</span>.addr.clone().unwrap());
+            <span class="kw">if </span>a.is_err() {
+                <span class="macro">println!</span>(<span class="string">&quot;Error: {:?}&quot;</span>, a.unwrap_err());
+            }
         }
         <span class="kw">for </span>(_peer_id, addr) <span class="kw">in </span><span class="self">self</span>.bootstrap_nodes.iter() {
             <span class="kw">let </span><span class="prelude-val">Ok</span>(()) = <span class="self">self</span>.swarm.dial(addr.to_owned()) <span class="kw">else </span>{
@@ -1605,5 +1566,72 @@
     <span class="kw">pub fn </span>local_peer_id(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>PeerId {
         <span class="self">self</span>.swarm.local_peer_id()
     }
+}
+
+<span class="kw">fn </span>create_ip4_ip6_transport(
+    noise_key: noise::AuthenticKeypair&lt;noise::X25519Spec&gt;,
+) -&gt; Boxed&lt;(PeerId, StreamMuxerBox)&gt; {
+    <span class="kw">let </span>transport = TokioTcpConfig::new()
+        .nodelay(<span class="bool-val">true</span>)
+        .upgrade(upgrade::Version::V1)
+        .authenticate(noise::NoiseConfig::xx(noise_key.clone()).into_authenticated())
+        .multiplex(mplex::MplexConfig::new())
+        .boxed();
+    <span class="comment">// DNS
+    </span><span class="kw">match </span>dns::GenDnsConfig::system(transport) {
+        <span class="prelude-val">Ok</span>(t) =&gt; t.boxed(),
+        <span class="prelude-val">Err</span>(<span class="kw">_</span>) =&gt; {
+            <span class="comment">// TODO: vuelvo a crear el transporte porque no tiene clone, quizás sería interesante poner una variable de entorno que diga si estamos en android y hacer lo segundo directamente en ese caso
+            </span><span class="kw">let </span>transport = TokioTcpConfig::new()
+                .nodelay(<span class="bool-val">true</span>)
+                .upgrade(upgrade::Version::V1)
+                .authenticate(noise::NoiseConfig::xx(noise_key.clone()).into_authenticated())
+                .multiplex(mplex::MplexConfig::new())
+                .boxed();
+            <span class="comment">// TODO: Lo mismo aquí
+            </span><span class="kw">match </span>dns::GenDnsConfig::custom(
+                transport,
+                dns::ResolverConfig::cloudflare(),
+                dns::ResolverOpts::default(),
+            ) {
+                <span class="prelude-val">Ok</span>(t) =&gt; t.boxed(),
+                <span class="prelude-val">Err</span>(<span class="kw">_</span>) =&gt; TokioTcpConfig::new()
+                    .nodelay(<span class="bool-val">true</span>)
+                    .upgrade(upgrade::Version::V1)
+                    .authenticate(noise::NoiseConfig::xx(noise_key.clone()).into_authenticated())
+                    .multiplex(mplex::MplexConfig::new())
+                    .boxed(),
+            }
+        }
+    }
+}
+
+<span class="kw">fn </span>create_transport_by_protocol(
+    addr: <span class="prelude-ty">Option</span>&lt;Multiaddr&gt;,
+    noise_key: noise::AuthenticKeypair&lt;noise::X25519Spec&gt;,
+) -&gt; Boxed&lt;(PeerId, StreamMuxerBox)&gt; {
+    <span class="kw">let </span><span class="kw-2">mut </span>transport: <span class="prelude-ty">Option</span>&lt;Boxed&lt;(PeerId, StreamMuxerBox)&gt;&gt; = <span class="prelude-val">None</span>;
+    <span class="kw">if </span>addr.is_some() {
+        <span class="kw">for </span>protocol <span class="kw">in </span>addr.unwrap().iter() {
+            <span class="kw">if let </span>Protocol::Ip4(<span class="kw">_</span>) | Protocol::Ip6(<span class="kw">_</span>) = protocol {
+                transport = <span class="prelude-val">Some</span>(create_ip4_ip6_transport(noise_key));
+                <span class="kw">break</span>;
+            } <span class="kw">else if let </span>Protocol::Memory(<span class="kw">_</span>) = protocol {
+                transport = <span class="prelude-val">Some</span>(
+                    MemoryTransport
+                        .upgrade(upgrade::Version::V1)
+                        .authenticate(
+                            noise::NoiseConfig::xx(noise_key.clone()).into_authenticated(),
+                        )
+                        .multiplex(yamux::YamuxConfig::default())
+                        .boxed(),
+                );
+                <span class="kw">break</span>;
+            }
+        }
+    } <span class="kw">else </span>{
+        transport = <span class="prelude-val">Some</span>(create_ip4_ip6_transport(noise_key));
+    }
+    transport.expect(<span class="string">&quot;String for address in constructor is valid and has ipv4 or memory protocol&quot;</span>)
 }
 </code></pre></div></section></main></body></html>
