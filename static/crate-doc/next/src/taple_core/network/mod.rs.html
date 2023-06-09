@@ -800,6 +800,19 @@
 <a href="#800" id="800">800</a>
 <a href="#801" id="801">801</a>
 <a href="#802" id="802">802</a>
+<a href="#803" id="803">803</a>
+<a href="#804" id="804">804</a>
+<a href="#805" id="805">805</a>
+<a href="#806" id="806">806</a>
+<a href="#807" id="807">807</a>
+<a href="#808" id="808">808</a>
+<a href="#809" id="809">809</a>
+<a href="#810" id="810">810</a>
+<a href="#811" id="811">811</a>
+<a href="#812" id="812">812</a>
+<a href="#813" id="813">813</a>
+<a href="#814" id="814">814</a>
+<a href="#815" id="815">815</a>
 </pre></div><pre class="rust"><code><span class="kw">pub mod </span>network;
 <span class="kw">pub mod </span>reqres;
 <span class="kw">pub mod </span>routing;
@@ -807,7 +820,7 @@
 
 <span class="attr">#[cfg(test)]
 </span><span class="kw">mod </span>tests {
-    <span class="kw">use </span><span class="kw">crate</span>::message::Command;
+    <span class="kw">use crate</span>::{message::Command, network::routing::RoutingComposedEvent};
     <span class="kw">pub use </span><span class="kw">crate</span>::message::{MessageReceiver, MessageSender, NetworkEvent};
     <span class="kw">use </span><span class="kw">crate</span>::network::{
         network::{NetworkComposedEvent, NetworkProcessor, TapleNetworkBehavior},
@@ -827,15 +840,17 @@
             upgrade,
         },
         identity::Keypair,
-        kad::KademliaEvent,
+        kad::{KademliaEvent, Record, Quorum, QueryResult, PeerRecord, record::Key},
         noise,
         swarm::{Swarm, SwarmEvent},
-        yamux, Multiaddr, PeerId,
+        yamux, Multiaddr, PeerId, multiaddr::Protocol, multihash::Multihash,
     };
     <span class="kw">use </span>tokio_stream::wrappers::ReceiverStream;
 
     <span class="kw">use </span><span class="kw">crate</span>::commons::crypto::{Ed25519KeyPair, KeyGenerator, KeyMaterial, KeyPair};
     <span class="kw">use </span>std::time::Duration;
+
+    <span class="kw">const </span>LOG_TARGET: <span class="kw-2">&amp;</span>str = <span class="string">&quot;NETWORK_TEST&quot;</span>;
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>create_network() {
@@ -845,10 +860,6 @@
             <span class="kw">let </span>mc1 = KeyPair::Ed25519(<span class="kw">crate</span>::commons::crypto::Ed25519KeyPair::from_seed(
                 <span class="macro">format!</span>(<span class="string">&quot;pepe&quot;</span>).as_bytes(),
             ));
-            <span class="kw">let </span>mc2 = KeyPair::Ed25519(<span class="kw">crate</span>::commons::crypto::Ed25519KeyPair::from_seed(
-                <span class="macro">format!</span>(<span class="string">&quot;paco&quot;</span>).as_bytes(),
-            ));
-            <span class="kw">let </span>(sender1, receiver1) = mpsc::channel(<span class="number">10000</span>);
             <span class="kw">let </span>(sender_boot, receiver_boot) = mpsc::channel(<span class="number">10000</span>);
             <span class="kw">let </span>(bsx, brx) = tokio::sync::broadcast::channel::&lt;()&gt;(<span class="number">10</span>);
             <span class="kw">let </span>bootstrap_network = NetworkProcessor::new(
@@ -858,12 +869,17 @@
                 mc1,
                 bsx.subscribe(),
                 SendMode::Tell,
-                <span class="prelude-val">None
-            </span>)
+                <span class="macro">vec!</span>[]
+            )
             .<span class="kw">await</span>.unwrap();
             <span class="kw">let </span>msg_sender_boot = bootstrap_network.client();
             <span class="kw">let </span><span class="kw-2">mut </span>msg_rcv_boot = ReceiverStream::new(receiver_boot);
+
             <span class="kw">let </span>bt_pid = bootstrap_network.local_peer_id().clone();
+            <span class="kw">let </span>mc2 = KeyPair::Ed25519(<span class="kw">crate</span>::commons::crypto::Ed25519KeyPair::from_seed(
+                <span class="macro">format!</span>(<span class="string">&quot;paco&quot;</span>).as_bytes(),
+            ));
+            <span class="kw">let </span>(sender1, receiver1) = mpsc::channel(<span class="number">10000</span>);
             <span class="kw">let </span>node1_network = NetworkProcessor::new(
                 <span class="prelude-val">Some</span>(String::from(<span class="string">&quot;/memory/647999&quot;</span>)),
                 <span class="macro">vec!</span>[(bt_pid, String::from(<span class="string">&quot;/memory/647988&quot;</span>).parse().unwrap())],
@@ -871,8 +887,8 @@
                 mc2,
                 brx,
                 SendMode::Tell,
-                <span class="prelude-val">None
-            </span>)
+                <span class="macro">vec!</span>[]
+            )
             .<span class="kw">await</span>.unwrap();
             <span class="kw">let </span>msg_sender_1 = node1_network.client();
             <span class="kw">let </span><span class="kw-2">mut </span>msg_rcv_1 = ReceiverStream::new(receiver1);
@@ -919,8 +935,6 @@
         })
     }
 
-    <span class="kw">const </span>LOG_TARGET: <span class="kw-2">&amp;</span>str = <span class="string">&quot;NETWORK_TEST&quot;</span>;
-
     <span class="attr">#[test]
     </span><span class="kw">fn </span>create_network_req_res() {
         <span class="kw">let </span>rt = Runtime::new().unwrap();
@@ -929,10 +943,6 @@
             <span class="kw">let </span>mc1 = KeyPair::Ed25519(<span class="kw">crate</span>::commons::crypto::Ed25519KeyPair::from_seed(
                 <span class="macro">format!</span>(<span class="string">&quot;pepe&quot;</span>).as_bytes(),
             ));
-            <span class="kw">let </span>mc2 = KeyPair::Ed25519(<span class="kw">crate</span>::commons::crypto::Ed25519KeyPair::from_seed(
-                <span class="macro">format!</span>(<span class="string">&quot;paco&quot;</span>).as_bytes(),
-            ));
-            <span class="kw">let </span>(sender1, receiver1) = mpsc::channel(<span class="number">10000</span>);
             <span class="kw">let </span>(sender_boot, receiver_boot) = mpsc::channel(<span class="number">10000</span>);
             <span class="kw">let </span>(bsx, brx) = tokio::sync::broadcast::channel::&lt;()&gt;(<span class="number">10</span>);
             <span class="kw">let </span>bootstrap_network = NetworkProcessor::new(
@@ -942,12 +952,17 @@
                 mc1,
                 bsx.subscribe(),
                 SendMode::RequestResponse,
-                <span class="prelude-val">None
-            </span>)
+                <span class="macro">vec!</span>[]
+            )
             .<span class="kw">await</span>.unwrap();
             <span class="kw">let </span>msg_sender_boot = bootstrap_network.client();
             <span class="kw">let </span><span class="kw-2">mut </span>msg_rcv_boot = ReceiverStream::new(receiver_boot);
+
             <span class="kw">let </span>bt_pid = bootstrap_network.local_peer_id().clone();
+            <span class="kw">let </span>mc2 = KeyPair::Ed25519(<span class="kw">crate</span>::commons::crypto::Ed25519KeyPair::from_seed(
+                <span class="macro">format!</span>(<span class="string">&quot;paco&quot;</span>).as_bytes(),
+            ));
+            <span class="kw">let </span>(sender1, receiver1) = mpsc::channel(<span class="number">10000</span>);
             <span class="kw">let </span>node1_network = NetworkProcessor::new(
                 <span class="prelude-val">Some</span>(String::from(<span class="string">&quot;/memory/647999&quot;</span>)),
                 <span class="macro">vec!</span>[(bt_pid, String::from(<span class="string">&quot;/memory/647988&quot;</span>).parse().unwrap())],
@@ -955,8 +970,8 @@
                 mc2,
                 brx,
                 SendMode::RequestResponse,
-                <span class="prelude-val">None
-            </span>)
+                <span class="macro">vec!</span>[]
+            )
             .<span class="kw">await</span>.unwrap();
             <span class="kw">let </span>msg_sender_1 = node1_network.client();
             <span class="kw">let </span><span class="kw-2">mut </span>msg_rcv_1 = ReceiverStream::new(receiver1);
@@ -1148,426 +1163,437 @@
         })
     }
 
-    <span class="comment">// #[test]
-    // fn test_node_behaviour_works() {
-    //     let rt = Runtime::new().unwrap();
+    <span class="attr">#[test]
+    </span><span class="kw">fn </span>test_node_behaviour_works() {
+        <span class="kw">let </span>rt = Runtime::new().unwrap();
 
-    //     rt.block_on(async {
-    //         let (mut boot1, boot_addr1) = build_swarm(None);
-    //         let (mut node1, _addr1) =
-    //             build_swarm(Some((boot1.local_peer_id(), boot_addr1.clone())));
-    //         let (mut boot2, boot_addr2) = build_swarm(None);
-    //         let (mut node2, _addr2) =
-    //             build_swarm(Some((boot2.local_peer_id(), boot_addr2.clone())));
+        rt.block_on(<span class="kw">async </span>{
+            <span class="kw">let </span>(<span class="kw-2">mut </span>boot1, boot_addr1) = build_swarm(<span class="prelude-val">None</span>);
+            <span class="kw">let </span>(<span class="kw-2">mut </span>node1, _addr1) =
+                build_swarm(<span class="prelude-val">Some</span>((boot1.local_peer_id(), boot_addr1.clone())));
+            <span class="kw">let </span>(<span class="kw-2">mut </span>boot2, boot_addr2) = build_swarm(<span class="prelude-val">None</span>);
+            <span class="kw">let </span>(<span class="kw-2">mut </span>node2, _addr2) =
+                build_swarm(<span class="prelude-val">Some</span>((boot2.local_peer_id(), boot_addr2.clone())));
 
-    //         let boot1_peer_id = boot1.local_peer_id().clone();
-    //         let boot2_peer_id = boot2.local_peer_id().clone();
-    //         let node1_peer_id = node1.local_peer_id().clone();
-    //         let node2_peer_id = node2.local_peer_id().clone();
-    //         println!(&quot;BOOT2: {:?}, {:?}&quot;, boot2_peer_id, boot_addr2);
-    //         println!(&quot;NODE1: {:?}, {:?}&quot;, node1_peer_id, _addr1);
-    //         println!(&quot;NODE2: {:?}, {:?}&quot;, node2_peer_id, _addr2);
+            <span class="kw">let </span>boot1_peer_id = boot1.local_peer_id().clone();
+            <span class="kw">let </span>boot2_peer_id = boot2.local_peer_id().clone();
+            <span class="kw">let </span>node1_peer_id = node1.local_peer_id().clone();
+            <span class="kw">let </span>node2_peer_id = node2.local_peer_id().clone();
 
-    //         // Communicate bootstrap nodes to share routing table.
-    //         boot1.dial(boot_addr2).unwrap();
+            <span class="macro">println!</span>(<span class="string">&quot;BOOT1: {:?}, {:?}&quot;</span>, boot1_peer_id, boot_addr1);
+            <span class="macro">println!</span>(<span class="string">&quot;BOOT2: {:?}, {:?}&quot;</span>, boot2_peer_id, boot_addr2);
+            <span class="macro">println!</span>(<span class="string">&quot;NODE1: {:?}, {:?}&quot;</span>, node1_peer_id, _addr1);
+            <span class="macro">println!</span>(<span class="string">&quot;NODE2: {:?}, {:?}&quot;</span>, node2_peer_id, _addr2);
 
-    //         // Currently we have this drawing n1 -&gt; b1 &lt;-&gt; b2 &lt;- n2 In order to make the connections between nodes
-    //         // and bootstraps bidirectional and to make them known to each other, either PUT or BOOTSTRAP must be done in both of them
-    //         // Boot 1 loop
-    //         tokio::spawn(async move {
-    //             loop {
-    //                 match boot1.select_next_some().await {
-    //                     SwarmEvent::Dialing(peer_id) =&gt; {
-    //                         println!(&quot;{}: Dialing to peer: {:?}&quot;, LOG_TARGET, peer_id);
-    //                     }
-    //                     SwarmEvent::Behaviour(NetworkComposedEvent::TellBehaviourEvent(
-    //                         TellBehaviourEvent::RequestReceived { peer_id: _, data },
-    //                     )) =&gt; {
-    //                         println!(&quot;Tell RECEIVED 1&quot;);
-    //                         assert_eq!(&amp;data, b&quot;Hello Node1!&quot;);
-    //                     }
-    //                     SwarmEvent::Behaviour(NetworkComposedEvent::TellBehaviourEvent(
-    //                         TellBehaviourEvent::RequestSent { peer_id },
-    //                     )) =&gt; {
-    //                         assert_eq!(node2_peer_id, peer_id);
-    //                     }
-    //                     SwarmEvent::Behaviour(NetworkComposedEvent::RoutingEvent(ev)) =&gt; match ev {
-    //                         routing::RoutingComposedEvent::KademliaEvent(
-    //                             KademliaEvent::RoutingUpdated { peer, .. },
-    //                         ) =&gt; {
-    //                             println!(&quot;ROUTING UPDATED B1 {:?}&quot;, peer);
-    //                         }
-    //                         _ =&gt; {
-    //                             boot1.behaviour_mut().handle_rout_ev(ev);
-    //                         }
-    //                     },
-    //                     _ =&gt; {}
-    //                 }
-    //             }
-    //         });
+            <span class="comment">// Communicate bootstrap nodes to share routing table.
+            </span>boot1.dial(boot_addr2).unwrap();
 
-    //         // Node 1 loop
-    //         tokio::spawn(async move {
-    //             loop {
-    //                 match node1.select_next_some().await {
-    //                     SwarmEvent::Dialing(peer_id) =&gt; {
-    //                         println!(&quot;{}: Dialing to peer: {:?}&quot;, LOG_TARGET, peer_id);
-    //                     }
-    //                     SwarmEvent::Behaviour(NetworkComposedEvent::TellBehaviourEvent(
-    //                         TellBehaviourEvent::RequestReceived { peer_id: _, data },
-    //                     )) =&gt; {
-    //                         println!(&quot;Tell RECEIVED 1&quot;);
-    //                         assert_eq!(&amp;data, b&quot;Hello Node1!&quot;);
-    //                     }
-    //                     SwarmEvent::Behaviour(NetworkComposedEvent::TellBehaviourEvent(
-    //                         TellBehaviourEvent::RequestSent { peer_id },
-    //                     )) =&gt; {
-    //                         assert_eq!(node2_peer_id, peer_id);
-    //                     }
-    //                     SwarmEvent::Behaviour(NetworkComposedEvent::RoutingEvent(ev)) =&gt; {
-    //                         match ev {
-    //                             routing::RoutingComposedEvent::KademliaEvent(
-    //                                 KademliaEvent::RoutingUpdated { peer, .. },
-    //                             ) =&gt; {
-    //                                 println!(&quot;ROUTING UPDATED 1 {:?}&quot;, peer);
-    //                                 if peer == node2_peer_id {
-    //                                     // Sent tell to node 1
-    //                                     node1
-    //                                         .behaviour_mut()
-    //                                         .send_message(&amp;node2_peer_id, b&quot;Hello Node2!&quot;);
-    //                                 } else if peer == boot1_peer_id {
-    //                                     println!(&quot;HACIENDO BOOTSTRAP 1&quot;);
-    //                                     node1.behaviour_mut().bootstrap();
-    //                                 }
-    //                             }
-    //                             _ =&gt; {
-    //                                 node1.behaviour_mut().handle_rout_ev(ev);
-    //                             }
-    //                         }
-    //                     }
-    //                     _ =&gt; {}
-    //                 }
-    //             }
-    //         });
+            <span class="comment">// Currently we have this drawing n1 -&gt; b1 &lt;-&gt; b2 &lt;- n2 In order to make the connections between nodes
+            // and bootstraps bidirectional and to make them known to each other, either PUT or BOOTSTRAP must be done in both of them
+            // Boot 1 loop
+            </span>tokio::spawn(<span class="kw">async move </span>{
+                <span class="kw">loop </span>{
+                    <span class="kw">match </span>boot1.select_next_some().<span class="kw">await </span>{
+                        SwarmEvent::Dialing(peer_id) =&gt; {
+                            <span class="macro">println!</span>(<span class="string">&quot;{}: Dialing to peer: {:?}&quot;</span>, LOG_TARGET, peer_id);
+                        }
+                        SwarmEvent::Behaviour(NetworkComposedEvent::TellBehaviourEvent(
+                            TellBehaviourEvent::RequestReceived { peer_id: <span class="kw">_</span>, data },
+                        )) =&gt; {
+                            <span class="macro">println!</span>(<span class="string">&quot;Tell RECEIVED 1&quot;</span>);
+                            <span class="macro">assert_eq!</span>(<span class="kw-2">&amp;</span>data, <span class="string">b&quot;Hello Node1!&quot;</span>);
+                        }
+                        SwarmEvent::Behaviour(NetworkComposedEvent::TellBehaviourEvent(
+                            TellBehaviourEvent::RequestSent { peer_id },
+                        )) =&gt; {
+                            <span class="macro">assert_eq!</span>(node2_peer_id, peer_id);
+                        }
+                        SwarmEvent::Behaviour(NetworkComposedEvent::RoutingEvent(ev)) =&gt; <span class="kw">match </span>ev {
+                            routing::RoutingComposedEvent::KademliaEvent(
+                                KademliaEvent::RoutingUpdated { peer, .. },
+                            ) =&gt; {
+                                <span class="macro">println!</span>(<span class="string">&quot;ROUTING UPDATED B1 {:?}&quot;</span>, peer);
+                            }
+                            <span class="kw">_ </span>=&gt; {
+                                boot1.behaviour_mut().handle_rout_ev(ev);
+                            }
+                        },
+                        <span class="kw">_ </span>=&gt; {}
+                    }
+                }
+            });
 
-    //         // Boot 2 loop
-    //         tokio::spawn(async move {
-    //             loop {
-    //                 match boot2.select_next_some().await {
-    //                     SwarmEvent::Dialing(peer_id) =&gt; {
-    //                         println!(&quot;{}: Dialing to peer: {:?}&quot;, LOG_TARGET, peer_id);
-    //                     }
-    //                     SwarmEvent::Behaviour(NetworkComposedEvent::TellBehaviourEvent(
-    //                         TellBehaviourEvent::RequestReceived { peer_id: _, data },
-    //                     )) =&gt; {
-    //                         println!(&quot;Tell RECEIVED 1&quot;);
-    //                         assert_eq!(&amp;data, b&quot;Hello Node1!&quot;);
-    //                     }
-    //                     SwarmEvent::Behaviour(NetworkComposedEvent::TellBehaviourEvent(
-    //                         TellBehaviourEvent::RequestSent { peer_id },
-    //                     )) =&gt; {
-    //                         assert_eq!(node2_peer_id, peer_id);
-    //                     }
-    //                     SwarmEvent::Behaviour(NetworkComposedEvent::RoutingEvent(ev)) =&gt; match ev {
-    //                         routing::RoutingComposedEvent::KademliaEvent(
-    //                             KademliaEvent::RoutingUpdated { peer, .. },
-    //                         ) =&gt; {
-    //                             println!(&quot;ROUTING UPDATED B2 {:?}&quot;, peer);
-    //                         }
-    //                         _ =&gt; {
-    //                             boot2.behaviour_mut().handle_rout_ev(ev);
-    //                         }
-    //                     },
-    //                     _ =&gt; {}
-    //                 }
-    //             }
-    //         });
+            <span class="comment">// Boot 2 loop
+            </span>tokio::spawn(<span class="kw">async move </span>{
+                <span class="kw">loop </span>{
+                    <span class="kw">match </span>boot2.select_next_some().<span class="kw">await </span>{
+                        SwarmEvent::Dialing(peer_id) =&gt; {
+                            <span class="macro">println!</span>(<span class="string">&quot;{}: Dialing to peer: {:?}&quot;</span>, LOG_TARGET, peer_id);
+                        }
+                        SwarmEvent::Behaviour(NetworkComposedEvent::TellBehaviourEvent(
+                            TellBehaviourEvent::RequestReceived { peer_id: <span class="kw">_</span>, data },
+                        )) =&gt; {
+                            <span class="macro">println!</span>(<span class="string">&quot;Tell RECEIVED 1&quot;</span>);
+                            <span class="macro">assert_eq!</span>(<span class="kw-2">&amp;</span>data, <span class="string">b&quot;Hello Node1!&quot;</span>);
+                        }
+                        SwarmEvent::Behaviour(NetworkComposedEvent::TellBehaviourEvent(
+                            TellBehaviourEvent::RequestSent { peer_id },
+                        )) =&gt; {
+                            <span class="macro">assert_eq!</span>(node2_peer_id, peer_id);
+                        }
+                        SwarmEvent::Behaviour(NetworkComposedEvent::RoutingEvent(ev)) =&gt; <span class="kw">match </span>ev {
+                            routing::RoutingComposedEvent::KademliaEvent(
+                                KademliaEvent::RoutingUpdated { peer, .. },
+                            ) =&gt; {
+                                <span class="macro">println!</span>(<span class="string">&quot;ROUTING UPDATED B2 {:?}&quot;</span>, peer);
+                            }
+                            <span class="kw">_ </span>=&gt; {
+                                boot2.behaviour_mut().handle_rout_ev(ev);
+                            }
+                        },
+                        <span class="kw">_ </span>=&gt; {}
+                    }
+                }
+            });
 
-    //         // Node 2 loop
-    //         loop {
-    //             match node2.select_next_some().await {
-    //                 SwarmEvent::Dialing(peer_id) =&gt; {
-    //                     println!(&quot;{}: Dialing to peer: {:?}&quot;, LOG_TARGET, peer_id);
-    //                 }
-    //                 SwarmEvent::Behaviour(NetworkComposedEvent::TellBehaviourEvent(
-    //                     TellBehaviourEvent::RequestReceived { peer_id: _, data },
-    //                 )) =&gt; {
-    //                     println!(&quot;Tell RECEIVED 2&quot;);
-    //                     assert_eq!(&amp;data, b&quot;Hello Node2!&quot;);
-    //                     break;
-    //                 }
-    //                 SwarmEvent::Behaviour(NetworkComposedEvent::TellBehaviourEvent(
-    //                     TellBehaviourEvent::RequestSent { peer_id },
-    //                 )) =&gt; {
-    //                     assert_eq!(node1_peer_id, peer_id);
-    //                 }
-    //                 SwarmEvent::Behaviour(NetworkComposedEvent::RoutingEvent(ev)) =&gt; {
-    //                     match ev {
-    //                         routing::RoutingComposedEvent::KademliaEvent(
-    //                             KademliaEvent::RoutingUpdated { peer, .. },
-    //                         ) =&gt; {
-    //                             println!(&quot;ROUTING UPDATED 2 {:?}&quot;, peer);
-    //                             if peer == node1_peer_id {
-    //                                 // Sent tell to node 1
-    //                                 node2
-    //                                     .behaviour_mut()
-    //                                     .send_message(&amp;node1_peer_id, b&quot;Hello Node1!&quot;);
-    //                             } else if peer == boot2_peer_id {
-    //                                 println!(&quot;HACIENDO BOOTSTRAP 2&quot;);
-    //                                 node2.behaviour_mut().bootstrap();
-    //                             }
-    //                         }
-    //                         _ =&gt; {
-    //                             node2.behaviour_mut().handle_rout_ev(ev);
-    //                             node2.behaviour_mut().bootstrap();
-    //                         }
-    //                     }
-    //                 }
-    //                 _ =&gt; {}
-    //             }
-    //         }
-    //     })
-    // }
+            <span class="comment">// Node 1 loop
+            </span>tokio::spawn(<span class="kw">async move </span>{
+                <span class="kw">loop </span>{
+                    <span class="kw">match </span>node1.select_next_some().<span class="kw">await </span>{
+                        SwarmEvent::Dialing(peer_id) =&gt; {
+                            <span class="macro">println!</span>(<span class="string">&quot;{}: Dialing to peer: {:?}&quot;</span>, LOG_TARGET, peer_id);
+                        }
+                        SwarmEvent::Behaviour(NetworkComposedEvent::TellBehaviourEvent(
+                            TellBehaviourEvent::RequestReceived { peer_id: <span class="kw">_</span>, data },
+                        )) =&gt; {
+                            <span class="macro">println!</span>(<span class="string">&quot;Tell RECEIVED 1&quot;</span>);
+                            <span class="macro">assert_eq!</span>(<span class="kw-2">&amp;</span>data, <span class="string">b&quot;Hello Node1!&quot;</span>);
+                        }
+                        SwarmEvent::Behaviour(NetworkComposedEvent::TellBehaviourEvent(
+                            TellBehaviourEvent::RequestSent { peer_id },
+                        )) =&gt; {
+                            <span class="macro">assert_eq!</span>(node2_peer_id, peer_id);
+                        }
+                        SwarmEvent::Behaviour(NetworkComposedEvent::RoutingEvent(ev)) =&gt; {
+                            <span class="kw">match </span>ev {
+                                routing::RoutingComposedEvent::KademliaEvent(
+                                    KademliaEvent::RoutingUpdated { peer, .. },
+                                ) =&gt; {
+                                    <span class="macro">println!</span>(<span class="string">&quot;ROUTING UPDATED 1 {:?}&quot;</span>, peer);
+                                    <span class="kw">if </span>peer == node2_peer_id {
+                                        <span class="comment">// Sent tell to node 1
+                                        </span>node1
+                                            .behaviour_mut()
+                                            .send_message(<span class="kw-2">&amp;</span>node2_peer_id, <span class="string">b&quot;Hello Node2!&quot;</span>);
+                                    } <span class="kw">else if </span>peer == boot1_peer_id {
+                                        <span class="macro">println!</span>(<span class="string">&quot;HACIENDO BOOTSTRAP 1&quot;</span>);
+                                        node1.behaviour_mut().bootstrap();
+                                    }
+                                }
+                                <span class="kw">_ </span>=&gt; {
+                                    node1.behaviour_mut().handle_rout_ev(ev);
+                                }
+                            }
+                        }
+                        <span class="kw">_ </span>=&gt; {}
+                    }
+                }
+            });
 
-    // #[test]
-    // fn test_node_behaviour_with_put_get() {
-    //     let rt = Runtime::new().unwrap();
+            <span class="comment">// Node 2 loop
+            </span><span class="kw">loop </span>{
+                <span class="kw">match </span>node2.select_next_some().<span class="kw">await </span>{
+                    SwarmEvent::Dialing(peer_id) =&gt; {
+                        <span class="macro">println!</span>(<span class="string">&quot;{}: Dialing to peer: {:?}&quot;</span>, LOG_TARGET, peer_id);
+                    }
+                    SwarmEvent::Behaviour(NetworkComposedEvent::TellBehaviourEvent(
+                        TellBehaviourEvent::RequestReceived { peer_id: <span class="kw">_</span>, data },
+                    )) =&gt; {
+                        <span class="macro">println!</span>(<span class="string">&quot;Tell RECEIVED 2&quot;</span>);
+                        <span class="macro">assert_eq!</span>(<span class="kw-2">&amp;</span>data, <span class="string">b&quot;Hello Node2!&quot;</span>);
+                        <span class="kw">break</span>;
+                    }
+                    SwarmEvent::Behaviour(NetworkComposedEvent::TellBehaviourEvent(
+                        TellBehaviourEvent::RequestSent { peer_id },
+                    )) =&gt; {
+                        <span class="macro">assert_eq!</span>(node1_peer_id, peer_id);
+                    }
+                    SwarmEvent::Behaviour(NetworkComposedEvent::RoutingEvent(ev)) =&gt; {
+                        <span class="kw">match </span>ev {
+                            routing::RoutingComposedEvent::KademliaEvent(
+                                KademliaEvent::RoutingUpdated { peer, .. },
+                            ) =&gt; {
+                                <span class="macro">println!</span>(<span class="string">&quot;ROUTING UPDATED 2 {:?}&quot;</span>, peer);
+                                <span class="kw">if </span>peer == node1_peer_id {
+                                    <span class="comment">// Sent tell to node 1
+                                    </span>node2
+                                        .behaviour_mut()
+                                        .send_message(<span class="kw-2">&amp;</span>node1_peer_id, <span class="string">b&quot;Hello Node1!&quot;</span>);
+                                } <span class="kw">else if </span>peer == boot2_peer_id {
+                                    <span class="macro">println!</span>(<span class="string">&quot;HACIENDO BOOTSTRAP 2&quot;</span>);
+                                    node2.behaviour_mut().bootstrap();
+                                }
+                            }
+                            <span class="kw">_ </span>=&gt; {
+                                node2.behaviour_mut().handle_rout_ev(ev);
+                                node2.behaviour_mut().bootstrap();
+                            }
+                        }
+                    }
+                    <span class="kw">_ </span>=&gt; {}
+                }
+            }
+        })
+    }
 
-    //     rt.block_on(async {
-    //         let (mut boot1, boot_addr1) = build_swarm(None);
-    //         let (mut node1, _addr1) =
-    //             build_swarm(Some((boot1.local_peer_id(), boot_addr1.clone())));
-    //         let (mut node2, _addr2) =
-    //             build_swarm(Some((boot1.local_peer_id(), boot_addr1.clone())));
+    <span class="attr">#[test]
+    </span><span class="kw">fn </span>test_node_behaviour_with_put_get() {
+        <span class="kw">let </span>rt = Runtime::new().unwrap();
 
-    //         let boot1_peer_id = boot1.local_peer_id().clone();
-    //         let node1_peer_id = node1.local_peer_id().clone();
-    //         let node2_peer_id = node2.local_peer_id().clone();
-    //         println!(&quot;BOOT1: {:?}, {:?}&quot;, boot1_peer_id, boot_addr1);
-    //         println!(&quot;NODE1: {:?}, {:?}&quot;, node1_peer_id, _addr1);
-    //         println!(&quot;NODE2: {:?}, {:?}&quot;, node2_peer_id, _addr2);
+        rt.block_on(<span class="kw">async </span>{
+            <span class="kw">let </span>(<span class="kw-2">mut </span>boot1, boot_addr1) = build_swarm(<span class="prelude-val">None</span>);
+            <span class="kw">let </span>(<span class="kw-2">mut </span>node1, _addr1) =
+                build_swarm(<span class="prelude-val">Some</span>((boot1.local_peer_id(), boot_addr1.clone())));
+            <span class="kw">let </span>(<span class="kw-2">mut </span>node2, _addr2) =
+                build_swarm(<span class="prelude-val">Some</span>((boot1.local_peer_id(), boot_addr1.clone())));
 
-    //         // Currently we have this drawing n1 -&gt; b1 &lt;- n2 To make the connections between nodes and bootstraps bidirectional and
-    //         // to make them known to each other, either PUT or BOOTSTRAP must be done in both of them
-    //         // Boot 1 loop
-    //         tokio::spawn(async move {
-    //             loop {
-    //                 match boot1.select_next_some().await {
-    //                     SwarmEvent::NewListenAddr {
-    //                         listener_id: _,
-    //                         address,
-    //                     } =&gt; {
-    //                         let peer_id = boot1.local_peer_id().to_owned();
-    //                         match boot1.behaviour_mut().put_record(
-    //                             Record {
-    //                                 key: Key::new(&amp;peer_id.to_bytes()),
-    //                                 value: address.to_vec(),
-    //                                 publisher: None,
-    //                                 expires: None,
-    //                             },
-    //                             Quorum::One,
-    //                         ) {
-    //                             Ok(_) =&gt; (),
-    //                             Err(_) =&gt; (),
-    //                         }
-    //                     }
-    //                     SwarmEvent::Dialing(peer_id) =&gt; {
-    //                         println!(&quot;{}: Dialing to peer: {:?}&quot;, LOG_TARGET, peer_id);
-    //                     }
-    //                     SwarmEvent::Behaviour(NetworkComposedEvent::TellBehaviourEvent(
-    //                         TellBehaviourEvent::RequestReceived { peer_id: _, data: _ },
-    //                     )) =&gt; {
-    //                         println!(&quot;Tell RECEIVED 1&quot;);
-    //                     }
-    //                     SwarmEvent::Behaviour(NetworkComposedEvent::TellBehaviourEvent(
-    //                         TellBehaviourEvent::RequestSent { peer_id },
-    //                     )) =&gt; {
-    //                         assert_eq!(node1_peer_id, peer_id);
-    //                     }
-    //                     SwarmEvent::Behaviour(NetworkComposedEvent::RoutingEvent(ev)) =&gt; match ev {
-    //                         routing::RoutingComposedEvent::KademliaEvent(
-    //                             KademliaEvent::RoutingUpdated { peer, .. },
-    //                         ) =&gt; {
-    //                             println!(&quot;ROUTING UPDATED B1 {:?}&quot;, peer);
-    //                             if peer == node2_peer_id {
-    //                             } else if peer == node1_peer_id {
-    //                                 boot1
-    //                                     .behaviour_mut()
-    //                                     .send_message(&amp;node1_peer_id, b&quot;Hello Node1!&quot;);
-    //                             }
-    //                         }
-    //                         _ =&gt; {
-    //                             boot1.behaviour_mut().handle_rout_ev(ev);
-    //                         }
-    //                     },
-    //                     _ =&gt; {}
-    //                 }
-    //             }
-    //         });
+            <span class="kw">let </span>boot1_peer_id = boot1.local_peer_id().clone();
+            <span class="kw">let </span>node1_peer_id = node1.local_peer_id().clone();
+            <span class="kw">let </span>node2_peer_id = node2.local_peer_id().clone();
+            <span class="macro">println!</span>(<span class="string">&quot;BOOT1: {:?}, {:?}&quot;</span>, boot1_peer_id, boot_addr1);
+            <span class="macro">println!</span>(<span class="string">&quot;NODE1: {:?}, {:?}&quot;</span>, node1_peer_id, _addr1);
+            <span class="macro">println!</span>(<span class="string">&quot;NODE2: {:?}, {:?}&quot;</span>, node2_peer_id, _addr2);
 
-    //         // Node 1 loop
-    //         tokio::spawn(async move {
-    //             loop {
-    //                 match node1.select_next_some().await {
-    //                     SwarmEvent::NewListenAddr {
-    //                         listener_id: _,
-    //                         address,
-    //                     } =&gt; {
-    //                         let peer_id = node1.local_peer_id().to_owned();
-    //                         match node1.behaviour_mut().put_record(
-    //                             Record {
-    //                                 key: Key::new(&amp;peer_id.to_bytes()),
-    //                                 value: address.to_vec(),
-    //                                 publisher: None,
-    //                                 expires: None,
-    //                             },
-    //                             Quorum::One,
-    //                         ) {
-    //                             Ok(_) =&gt; (),
-    //                             Err(_) =&gt; (),
-    //                         }
-    //                     }
-    //                     SwarmEvent::Dialing(peer_id) =&gt; {
-    //                         println!(&quot;{}: Dialing to peer: {:?}&quot;, LOG_TARGET, peer_id);
-    //                     }
-    //                     SwarmEvent::Behaviour(NetworkComposedEvent::TellBehaviourEvent(
-    //                         TellBehaviourEvent::RequestReceived { peer_id: _, data },
-    //                     )) =&gt; {
-    //                         println!(&quot;Tell RECEIVED 1&quot;);
-    //                         assert_eq!(&amp;data, b&quot;Hello Node1!&quot;);
-    //                         println!(&quot;HACIENDO GET DESDE NODO1&quot;);
-    //                         let key = Key::new(&amp;node2_peer_id.to_bytes());
-    //                         node1.behaviour_mut().get_record(key, Quorum::One);
-    //                         println!(&quot;HACIENDO GET DESDE NODO1 FIN&quot;);
-    //                     }
-    //                     SwarmEvent::Behaviour(NetworkComposedEvent::TellBehaviourEvent(
-    //                         TellBehaviourEvent::RequestSent { peer_id },
-    //                     )) =&gt; {
-    //                         println!(&quot;TELL SENDED 1&quot;);
-    //                         assert_eq!(node2_peer_id, peer_id);
-    //                     }
-    //                     SwarmEvent::Behaviour(NetworkComposedEvent::RoutingEvent(ev)) =&gt; {
-    //                         match ev {
-    //                             routing::RoutingComposedEvent::KademliaEvent(
-    //                                 KademliaEvent::RoutingUpdated { peer, .. },
-    //                             ) =&gt; {
-    //                                 println!(&quot;ROUTING UPDATED 1 {:?}&quot;, peer);
-    //                             }
-    //                             RoutingComposedEvent::KademliaEvent(
-    //                                 KademliaEvent::OutboundQueryCompleted { id: _, result, stats: _ },
-    //                             ) =&gt; match result {
-    //                                 QueryResult::GetRecord(Ok(ok)) =&gt; {
-    //                                     for PeerRecord {
-    //                                         record:
-    //                                             Record {
-    //                                                 key,
-    //                                                 value,
-    //                                                 publisher : _,
-    //                                                 ..
-    //                                             },
-    //                                         ..
-    //                                     } in ok.records
-    //                                     {
-    //                                         println!(
-    //                                             &quot;Got record {:?} {:?}&quot;,
-    //                                             key,
-    //                                             value,
-    //                                         );
-    //                                         match PeerId::from_bytes(&amp;key.to_vec()) {
-    //                                             Ok(peer_id) =&gt; {
-    //                                                 match Multiaddr::try_from(value.to_owned()) {
-    //                                                     Ok(addr) =&gt; {
-    //                                                         match node1.dial(addr.with(Protocol::P2p(Multihash::from(peer_id)))) {
-    //                                                             Ok(_) =&gt; println!(&quot;Success&quot;),
-    //                                                             Err(e) =&gt; println!(&quot;{}&quot;, e),
-    //                                                         }
-    //                                                     },
-    //                                                     Err(e) =&gt; println!(&quot;Problemas al recuperar la Multiaddr del value del Record: {:?}&quot;, e),
-    //                                                 }
-    //                                             }
-    //                                             Err(e) =&gt; println!(
-    //                                                 &quot;Problemas al recuperar el peerId de la Key del Record: {:?}&quot;,
-    //                                                 e
-    //                                             ),
-    //                                         }
-    //                                     }
-    //                                 }
-    //                                 _ =&gt; {}
-    //                             }
-    //                             _ =&gt; {
-    //                                 node1.behaviour_mut().handle_rout_ev(ev);
-    //                             }
-    //                         }
-    //                     }
-    //                 _ =&gt; {}
-    //             }}
-    //         });
+            <span class="comment">// Currently we have this drawing n1 -&gt; b1 &lt;- n2 To make the connections between nodes and bootstraps bidirectional and
+            // to make them known to each other, either PUT or BOOTSTRAP must be done in both of them
+            // Boot 1 loop
+            </span>tokio::spawn(<span class="kw">async move </span>{
+                <span class="kw">loop </span>{
+                    <span class="kw">match </span>boot1.select_next_some().<span class="kw">await </span>{
+                        SwarmEvent::NewListenAddr {
+                            listener_id: <span class="kw">_</span>,
+                            address,
+                        } =&gt; {
+                            <span class="kw">let </span>peer_id = boot1.local_peer_id().to_owned();
+                            <span class="kw">match </span>boot1.behaviour_mut().put_record(
+                                Record {
+                                    key: Key::new(<span class="kw-2">&amp;</span>peer_id.to_bytes()),
+                                    value: address.to_vec(),
+                                    publisher: <span class="prelude-val">None</span>,
+                                    expires: <span class="prelude-val">None</span>,
+                                },
+                                Quorum::One,
+                            ) {
+                                <span class="prelude-val">Ok</span>(<span class="kw">_</span>) =&gt; (),
+                                <span class="prelude-val">Err</span>(<span class="kw">_</span>) =&gt; (),
+                            }
+                        }
+                        SwarmEvent::Dialing(peer_id) =&gt; {
+                            <span class="macro">println!</span>(<span class="string">&quot;{}: Dialing to peer: {:?}&quot;</span>, LOG_TARGET, peer_id);
+                        }
+                        SwarmEvent::Behaviour(NetworkComposedEvent::TellBehaviourEvent(
+                            TellBehaviourEvent::RequestReceived { peer_id: <span class="kw">_</span>, data: <span class="kw">_ </span>},
+                        )) =&gt; {
+                            <span class="macro">println!</span>(<span class="string">&quot;Tell RECEIVED 1&quot;</span>);
+                        }
+                        SwarmEvent::Behaviour(NetworkComposedEvent::TellBehaviourEvent(
+                            TellBehaviourEvent::RequestSent { peer_id },
+                        )) =&gt; {
+                            <span class="macro">assert_eq!</span>(node1_peer_id, peer_id);
+                        }
+                        SwarmEvent::Behaviour(NetworkComposedEvent::RoutingEvent(ev)) =&gt; <span class="kw">match </span>ev {
+                            routing::RoutingComposedEvent::KademliaEvent(
+                                KademliaEvent::RoutingUpdated { peer, .. },
+                            ) =&gt; {
+                                <span class="macro">println!</span>(<span class="string">&quot;ROUTING UPDATED B1 {:?}&quot;</span>, peer);
+                                <span class="kw">if </span>peer == node2_peer_id {
+                                } <span class="kw">else if </span>peer == node1_peer_id {
+                                    boot1
+                                        .behaviour_mut()
+                                        .send_message(<span class="kw-2">&amp;</span>node1_peer_id, <span class="string">b&quot;Hello Node1!&quot;</span>);
+                                }
+                            }
+                            <span class="kw">_ </span>=&gt; {
+                                boot1.behaviour_mut().handle_rout_ev(ev);
+                            }
+                        },
+                        <span class="kw">_ </span>=&gt; {}
+                    }
+                }
+            });
 
-    //         // Node 2 loop
-    //         loop {
-    //             match node2.select_next_some().await {
-    //                 SwarmEvent::NewListenAddr {
-    //                     listener_id: _,
-    //                     address,
-    //                 } =&gt; {
-    //                     let peer_id = node2.local_peer_id().to_owned();
-    //                     match node2.behaviour_mut().put_record(
-    //                         Record {
-    //                             key: Key::new(&amp;peer_id.to_bytes()),
-    //                             value: address.to_vec(),
-    //                             publisher: None,
-    //                             expires: None,
-    //                         },
-    //                         Quorum::One,
-    //                     ) {
-    //                         Ok(_) =&gt; (),
-    //                         Err(_) =&gt; (),
-    //                     }
-    //                 }
-    //                 SwarmEvent::Dialing(peer_id) =&gt; {
-    //                     println!(&quot;{}: Dialing to peer: {:?}&quot;, LOG_TARGET, peer_id);
-    //                 }
-    //                 SwarmEvent::Behaviour(NetworkComposedEvent::TellBehaviourEvent(
-    //                     TellBehaviourEvent::RequestReceived { peer_id: _, data },
-    //                 )) =&gt; {
-    //                     println!(&quot;Tell RECEIVED 2&quot;);
-    //                     assert_eq!(&amp;data, b&quot;Hello Node2!&quot;);
-    //                     break;
-    //                 }
-    //                 SwarmEvent::Behaviour(NetworkComposedEvent::TellBehaviourEvent(
-    //                     TellBehaviourEvent::RequestSent { peer_id },
-    //                 )) =&gt; {
-    //                     println!(&quot;TELL SENDED 2&quot;);
-    //                     assert_eq!(node1_peer_id, peer_id);
-    //                 }
-    //                 SwarmEvent::Behaviour(NetworkComposedEvent::RoutingEvent(ev)) =&gt; {
-    //                     match ev {
-    //                         routing::RoutingComposedEvent::KademliaEvent(
-    //                             KademliaEvent::RoutingUpdated { peer, .. },
-    //                         ) =&gt; {
-    //                             println!(&quot;ROUTING UPDATED 2 {:?}&quot;, peer);
-    //                             if peer == node1_peer_id {
-    //                                 // Sent tell to node 1
-    //                                 node2
-    //                                     .behaviour_mut()
-    //                                     .send_message(&amp;node1_peer_id, b&quot;Hello Node1!&quot;);
-    //                             } else if peer == boot1_peer_id {
-    //                                 println!(&quot;HACIENDO BOOTSTRAP 2&quot;);
-    //                                 node2.behaviour_mut().bootstrap();
-    //                             }
-    //                         }
-    //                         _ =&gt; {
-    //                             node2.behaviour_mut().handle_rout_ev(ev);
-    //                         }
-    //                     }
-    //                 }
-    //                 _ =&gt; {}
-    //             }
-    //         }
-    //     })
-    // }
+            <span class="comment">// Node 1 loop
+            </span>tokio::spawn(<span class="kw">async move </span>{
+                <span class="kw">loop </span>{
+                    <span class="kw">match </span>node1.select_next_some().<span class="kw">await </span>{
+                        SwarmEvent::NewListenAddr {
+                            listener_id: <span class="kw">_</span>,
+                            address,
+                        } =&gt; {
+                            <span class="kw">let </span>peer_id = node1.local_peer_id().to_owned();
+                            <span class="kw">match </span>node1.behaviour_mut().put_record(
+                                Record {
+                                    key: Key::new(<span class="kw-2">&amp;</span>peer_id.to_bytes()),
+                                    value: address.to_vec(),
+                                    publisher: <span class="prelude-val">None</span>,
+                                    expires: <span class="prelude-val">None</span>,
+                                },
+                                Quorum::One,
+                            ) {
+                                <span class="prelude-val">Ok</span>(<span class="kw">_</span>) =&gt; (),
+                                <span class="prelude-val">Err</span>(<span class="kw">_</span>) =&gt; (),
+                            }
+                        }
+                        SwarmEvent::Dialing(peer_id) =&gt; {
+                            <span class="macro">println!</span>(<span class="string">&quot;{}: Dialing to peer: {:?}&quot;</span>, LOG_TARGET, peer_id);
+                        }
+                        SwarmEvent::Behaviour(NetworkComposedEvent::TellBehaviourEvent(
+                            TellBehaviourEvent::RequestReceived { peer_id: <span class="kw">_</span>, data },
+                        )) =&gt; {
+                            <span class="macro">println!</span>(<span class="string">&quot;Tell RECEIVED 1&quot;</span>);
+                            <span class="macro">assert_eq!</span>(<span class="kw-2">&amp;</span>data, <span class="string">b&quot;Hello Node1!&quot;</span>);
+                            <span class="macro">println!</span>(<span class="string">&quot;HACIENDO GET DESDE NODO1&quot;</span>);
+                            <span class="kw">let </span>key = Key::new(<span class="kw-2">&amp;</span>node2_peer_id.to_bytes());
+                            node1.behaviour_mut().get_record(key, Quorum::One);
+                            <span class="macro">println!</span>(<span class="string">&quot;HACIENDO GET DESDE NODO1 FIN&quot;</span>);
+                        }
+                        SwarmEvent::Behaviour(NetworkComposedEvent::TellBehaviourEvent(
+                            TellBehaviourEvent::RequestSent { peer_id },
+                        )) =&gt; {
+                            <span class="macro">println!</span>(<span class="string">&quot;TELL SENDED 1&quot;</span>);
+                            <span class="macro">assert_eq!</span>(node2_peer_id, peer_id);
+                        }
+                        SwarmEvent::Behaviour(NetworkComposedEvent::RoutingEvent(ev)) =&gt; {
+                            <span class="kw">match </span>ev {
+                                routing::RoutingComposedEvent::KademliaEvent(
+                                    KademliaEvent::RoutingUpdated { peer, .. },
+                                ) =&gt; {
+                                    <span class="macro">println!</span>(<span class="string">&quot;ROUTING UPDATED 1 {:?}&quot;</span>, peer);
+                                    <span class="kw">if </span>peer == node2_peer_id {
+                                        <span class="comment">// Sent tell to node 1
+                                        </span>node1
+                                            .behaviour_mut()
+                                            .send_message(<span class="kw-2">&amp;</span>node2_peer_id, <span class="string">b&quot;Hello Node2!&quot;</span>);
+                                    } <span class="kw">else if </span>peer == boot1_peer_id {
+                                        <span class="macro">println!</span>(<span class="string">&quot;HACIENDO BOOTSTRAP 1&quot;</span>);
+                                        node1.behaviour_mut().bootstrap();
+                                    }
+                                }
+                                RoutingComposedEvent::KademliaEvent(
+                                    KademliaEvent::OutboundQueryCompleted { id: <span class="kw">_</span>, result, stats: <span class="kw">_ </span>},
+                                ) =&gt; <span class="kw">match </span>result {
+                                    QueryResult::GetRecord(<span class="prelude-val">Ok</span>(ok)) =&gt; {
+                                        <span class="kw">for </span>PeerRecord {
+                                            record:
+                                                Record {
+                                                    key,
+                                                    value,
+                                                    publisher : <span class="kw">_</span>,
+                                                    ..
+                                                },
+                                            ..
+                                        } <span class="kw">in </span>ok.records
+                                        {
+                                            <span class="macro">println!</span>(
+                                                <span class="string">&quot;Got record {:?} {:?}&quot;</span>,
+                                                key,
+                                                value,
+                                            );
+                                            <span class="kw">match </span>PeerId::from_bytes(<span class="kw-2">&amp;</span>key.to_vec()) {
+                                                <span class="prelude-val">Ok</span>(peer_id) =&gt; {
+                                                    <span class="kw">match </span>Multiaddr::try_from(value.to_owned()) {
+                                                        <span class="prelude-val">Ok</span>(addr) =&gt; {
+                                                            <span class="kw">match </span>node1.dial(addr.with(Protocol::P2p(Multihash::from(peer_id)))) {
+                                                                <span class="prelude-val">Ok</span>(<span class="kw">_</span>) =&gt; <span class="macro">println!</span>(<span class="string">&quot;Success&quot;</span>),
+                                                                <span class="prelude-val">Err</span>(e) =&gt; <span class="macro">println!</span>(<span class="string">&quot;{}&quot;</span>, e),
+                                                            }
+                                                        },
+                                                        <span class="prelude-val">Err</span>(e) =&gt; <span class="macro">println!</span>(<span class="string">&quot;Problemas al recuperar la Multiaddr del value del Record: {:?}&quot;</span>, e),
+                                                    }
+                                                }
+                                                <span class="prelude-val">Err</span>(e) =&gt; <span class="macro">println!</span>(
+                                                    <span class="string">&quot;Problemas al recuperar el peerId de la Key del Record: {:?}&quot;</span>,
+                                                    e
+                                                ),
+                                            }
+                                        }
+                                    }
+                                    <span class="kw">_ </span>=&gt; {}
+                                }
+                                <span class="kw">_ </span>=&gt; {
+                                    node1.behaviour_mut().handle_rout_ev(ev);
+                                }
+                            }
+                        }
+                    <span class="kw">_ </span>=&gt; {}
+                }}
+            });
 
-    // Build swarm with `TapleNodeBehaviour`
+            <span class="comment">// Node 2 loop
+            </span><span class="kw">loop </span>{
+                <span class="kw">match </span>node2.select_next_some().<span class="kw">await </span>{
+                    SwarmEvent::NewListenAddr {
+                        listener_id: <span class="kw">_</span>,
+                        address,
+                    } =&gt; {
+                        <span class="kw">let </span>peer_id = node2.local_peer_id().to_owned();
+                        <span class="kw">match </span>node2.behaviour_mut().put_record(
+                            Record {
+                                key: Key::new(<span class="kw-2">&amp;</span>peer_id.to_bytes()),
+                                value: address.to_vec(),
+                                publisher: <span class="prelude-val">None</span>,
+                                expires: <span class="prelude-val">None</span>,
+                            },
+                            Quorum::One,
+                        ) {
+                            <span class="prelude-val">Ok</span>(<span class="kw">_</span>) =&gt; (),
+                            <span class="prelude-val">Err</span>(<span class="kw">_</span>) =&gt; (),
+                        }
+                    }
+                    SwarmEvent::Dialing(peer_id) =&gt; {
+                        <span class="macro">println!</span>(<span class="string">&quot;{}: Dialing to peer: {:?}&quot;</span>, LOG_TARGET, peer_id);
+                    }
+                    SwarmEvent::Behaviour(NetworkComposedEvent::TellBehaviourEvent(
+                        TellBehaviourEvent::RequestReceived { peer_id: <span class="kw">_</span>, data },
+                    )) =&gt; {
+                        <span class="macro">println!</span>(<span class="string">&quot;Tell RECEIVED 2&quot;</span>);
+                        <span class="macro">assert_eq!</span>(<span class="kw-2">&amp;</span>data, <span class="string">b&quot;Hello Node2!&quot;</span>);
+                        <span class="kw">break</span>;
+                    }
+                    SwarmEvent::Behaviour(NetworkComposedEvent::TellBehaviourEvent(
+                        TellBehaviourEvent::RequestSent { peer_id },
+                    )) =&gt; {
+                        <span class="macro">println!</span>(<span class="string">&quot;TELL SENDED 2&quot;</span>);
+                        <span class="macro">assert_eq!</span>(node1_peer_id, peer_id);
+                    }
+                    SwarmEvent::Behaviour(NetworkComposedEvent::RoutingEvent(ev)) =&gt; {
+                        <span class="kw">match </span>ev {
+                            routing::RoutingComposedEvent::KademliaEvent(
+                                KademliaEvent::RoutingUpdated { peer, .. },
+                            ) =&gt; {
+                                <span class="macro">println!</span>(<span class="string">&quot;ROUTING UPDATED 2 {:?}&quot;</span>, peer);
+                                <span class="kw">if </span>peer == node1_peer_id {
+                                    <span class="comment">// Sent tell to node 1
+                                    </span>node2
+                                        .behaviour_mut()
+                                        .send_message(<span class="kw-2">&amp;</span>node1_peer_id, <span class="string">b&quot;Hello Node1!&quot;</span>);
+                                } <span class="kw">else if </span>peer == boot1_peer_id {
+                                    <span class="macro">println!</span>(<span class="string">&quot;HACIENDO BOOTSTRAP 2&quot;</span>);
+                                    node2.behaviour_mut().bootstrap();
+                                }
+                            }
+                            <span class="kw">_ </span>=&gt; {
+                                node2.behaviour_mut().handle_rout_ev(ev);
+                            }
+                        }
+                    }
+                    <span class="kw">_ </span>=&gt; {}
+                }
+            }
+        })
+    }
+
+    <span class="comment">// Build swarm with `TapleNodeBehaviour`
     </span><span class="kw">fn </span>build_swarm(
         boot_node: <span class="prelude-ty">Option</span>&lt;(<span class="kw-2">&amp;</span>PeerId, Multiaddr)&gt;,
     ) -&gt; (Swarm&lt;TapleNetworkBehavior&gt;, Multiaddr) {

@@ -327,8 +327,6 @@
 <a href="#327" id="327">327</a>
 <a href="#328" id="328">328</a>
 <a href="#329" id="329">329</a>
-<a href="#330" id="330">330</a>
-<a href="#331" id="331">331</a>
 </pre></div><pre class="rust"><code><span class="doccomment">//! This module provides the structs and traits for the generation of key pairs for
 //! cryptographic operations.
 //!
@@ -348,7 +346,7 @@
 <span class="kw">use </span>serde::{Deserialize, Serialize};
 
 <span class="kw">use crate</span>::{
-    identifier::{<span class="self">self</span>, derive::KeyDerivator, DigestIdentifier, Derivable},
+    identifier::{<span class="self">self</span>, derive::KeyDerivator, Derivable, DigestIdentifier},
     signature::Signature,
 };
 
@@ -603,7 +601,7 @@
         <span class="macro">assert!</span>(create_seed(seed).is_ok());
         <span class="kw">let </span>seed = <span class="string">&quot;witness&quot;</span>.as_bytes();
         <span class="macro">assert!</span>(create_seed(seed).is_ok());
-        <span class="kw">let </span>seed = <span class="string">&quot;witnesssdfasfasfasfsafsafasfsafsafasfasfasdf&quot;</span>.as_bytes();
+        <span class="kw">let </span>seed = <span class="string">&quot;witnesssdfasfasfasfsafsafasfsafsa&quot;</span>.as_bytes();
         <span class="macro">assert!</span>(create_seed(seed).is_err());
     }
 
@@ -614,7 +612,6 @@
         <span class="kw">let </span>signature = key_pair.sign(Payload::Buffer(message.to_vec())).unwrap();
         <span class="macro">println!</span>(<span class="string">&quot;Tamaño: {}&quot;</span>, signature.len());
         <span class="kw">let </span>valid = key_pair.verify(Payload::Buffer(message.to_vec()), <span class="kw-2">&amp;</span>signature);
-
         <span class="macro">matches!</span>(valid, <span class="prelude-val">Ok</span>(()));
     }
 
@@ -626,7 +623,6 @@
         <span class="kw">let </span>signature = key_pair.sign(Payload::Buffer(message.to_vec())).unwrap();
         <span class="macro">println!</span>(<span class="string">&quot;Tamaño: {}&quot;</span>, signature.len());
         <span class="kw">let </span>valid = key_pair.verify(Payload::Buffer(message.to_vec()), <span class="kw-2">&amp;</span>signature);
-
         <span class="macro">matches!</span>(valid, <span class="prelude-val">Ok</span>(()));
     }
 

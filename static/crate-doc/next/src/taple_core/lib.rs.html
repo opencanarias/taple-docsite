@@ -120,6 +120,7 @@
 <a href="#120" id="120">120</a>
 <a href="#121" id="121">121</a>
 <a href="#122" id="122">122</a>
+<a href="#123" id="123">123</a>
 </pre></div><pre class="rust"><code><span class="attr">#![recursion_limit = <span class="string">&quot;256&quot;</span>]
 </span><span class="doccomment">//! TAPLE is a DLT focused on traceability characterized by its level of scalability,
 //! its flexibility to be employed in different devices and use cases and its reduced resource consumption,
@@ -237,6 +238,7 @@
     identifier::derive::{digest::DigestDerivator, KeyDerivator},
     models::notification::Notification,
     models::timestamp::TimeStamp,
+    models::event::ValidationProof
 };
 <span class="kw">pub use </span>error::Error;
 <span class="kw">pub use </span>unitary_component::{NotificationHandler, Taple};

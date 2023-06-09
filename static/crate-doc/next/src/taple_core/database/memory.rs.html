@@ -465,6 +465,7 @@
 <a href="#465" id="465">465</a>
 <a href="#466" id="466">466</a>
 <a href="#467" id="467">467</a>
+<a href="#468" id="468">468</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>std::{
     collections::{btree_map::Iter, BTreeMap, HashMap},
     iter::Rev,
@@ -517,11 +518,12 @@
 
 <span class="kw">impl </span>DatabaseManager&lt;MemoryCollection&gt; <span class="kw">for </span>MemoryManager {
     <span class="kw">fn </span>create_collection(<span class="kw-2">&amp;</span><span class="self">self</span>, identifier: <span class="kw-2">&amp;</span>str) -&gt; MemoryCollection {
-        <span class="kw">let </span>lock = <span class="self">self</span>.data.write().unwrap();
+        <span class="kw">let </span><span class="kw-2">mut </span>lock = <span class="self">self</span>.data.write().unwrap();
         <span class="kw">let </span>db: Arc&lt;DataStore&gt; = <span class="kw">match </span>lock.get(identifier) {
             <span class="prelude-val">Some</span>(map) =&gt; map.clone(),
             <span class="prelude-val">None </span>=&gt; {
-                <span class="kw">let </span>db = Arc::new(DataStore::new());
+                <span class="kw">let </span>db: Arc&lt;DataStore&gt; = Arc::new(DataStore::new());
+                lock.insert(identifier.to_string(), db.clone());
                 db
             }
         };

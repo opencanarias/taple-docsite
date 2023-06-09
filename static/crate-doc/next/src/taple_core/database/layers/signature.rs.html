@@ -77,6 +77,24 @@
 <a href="#77" id="77">77</a>
 <a href="#78" id="78">78</a>
 <a href="#79" id="79">79</a>
+<a href="#80" id="80">80</a>
+<a href="#81" id="81">81</a>
+<a href="#82" id="82">82</a>
+<a href="#83" id="83">83</a>
+<a href="#84" id="84">84</a>
+<a href="#85" id="85">85</a>
+<a href="#86" id="86">86</a>
+<a href="#87" id="87">87</a>
+<a href="#88" id="88">88</a>
+<a href="#89" id="89">89</a>
+<a href="#90" id="90">90</a>
+<a href="#91" id="91">91</a>
+<a href="#92" id="92">92</a>
+<a href="#93" id="93">93</a>
+<a href="#94" id="94">94</a>
+<a href="#95" id="95">95</a>
+<a href="#96" id="96">96</a>
+<a href="#97" id="97">97</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">super</span>::utils::{get_key, Element};
 <span class="kw">use </span><span class="kw">crate</span>::commons::models::event::ValidationProof;
 <span class="kw">use </span><span class="kw">crate</span>::signature::Signature;
@@ -154,6 +172,24 @@
         ];
         <span class="kw">let </span>key = get_key(key_elements)<span class="question-mark">?</span>;
         <span class="self">self</span>.collection.del(<span class="kw-2">&amp;</span>key)
+    }
+
+    <span class="kw">pub fn </span>get_validation_proof(<span class="kw-2">&amp;</span><span class="self">self</span>, subject_id: <span class="kw-2">&amp;</span>DigestIdentifier) -&gt; <span class="prelude-ty">Result</span>&lt;HashSet&lt;Signature&gt;, DbError&gt; {
+        <span class="kw">let </span>key_elements: Vec&lt;Element&gt; = <span class="macro">vec!</span>[
+            Element::S(<span class="self">self</span>.prefix.clone()),
+            Element::S(subject_id.to_str()),
+        ];
+        <span class="kw">let </span>key = get_key(key_elements)<span class="question-mark">?</span>;
+        <span class="kw">let </span><span class="kw-2">mut </span>iter = <span class="self">self</span>.collection.iter(<span class="bool-val">false</span>, <span class="macro">format!</span>(<span class="string">&quot;{}{}&quot;</span>, key, char::MAX));
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(vproof) = iter.next() {
+            <span class="macro">log::info!</span>(<span class="string">&quot;{:#?}&quot;</span>, vproof);
+            <span class="kw">let </span>vproof = bincode::deserialize::&lt;(HashSet&lt;Signature&gt;, ValidationProof)&gt;(<span class="kw-2">&amp;</span>vproof.<span class="number">1</span>).map_err(|<span class="kw">_</span>| {
+                DbError::DeserializeError
+            })<span class="question-mark">?</span>;
+            <span class="kw">return </span><span class="prelude-val">Ok</span>(vproof.<span class="number">0</span>);
+        } <span class="kw">else </span>{
+            <span class="kw">return </span><span class="prelude-val">Err</span>(DbError::EntryNotFound)
+        }
     }
 }
 </code></pre></div></section></main></body></html>

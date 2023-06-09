@@ -73,7 +73,11 @@
 <a href="#73" id="73">73</a>
 <a href="#74" id="74">74</a>
 <a href="#75" id="75">75</a>
+<a href="#76" id="76">76</a>
+<a href="#77" id="77">77</a>
+<a href="#78" id="78">78</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>std::collections::HashSet;
+<span class="kw">use </span><span class="kw">crate</span>::signature::Signature;
 <span class="attr">#[cfg(feature = <span class="string">&quot;aproval&quot;</span>)]
 </span><span class="kw">use crate</span>::{Acceptance, ApprovalPetitionData};
 <span class="kw">use crate</span>::{KeyIdentifier};
@@ -108,6 +112,7 @@
     </span>GetSingleRequest(DigestIdentifier),
     SetPreauthorizedSubject(DigestIdentifier, HashSet&lt;KeyIdentifier&gt;),
     ExpectingTransfer(DigestIdentifier),
+    GetValidationProof(DigestIdentifier),
     Shutdown,
 }
 
@@ -126,6 +131,7 @@
     <span class="attr">#[cfg(feature = <span class="string">&quot;aproval&quot;</span>)]
     </span>GetSingleRequest(<span class="prelude-ty">Result</span>&lt;ApprovalPetitionData, ApiError&gt;),
     ExpectingTransfer(<span class="prelude-ty">Result</span>&lt;KeyIdentifier, ApiError&gt;),
+    GetValidationProof(<span class="prelude-ty">Result</span>&lt;HashSet&lt;Signature&gt;, ApiError&gt;),
     ShutdownCompleted,
     SetPreauthorizedSubjectCompleted
 }

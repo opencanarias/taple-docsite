@@ -1446,6 +1446,39 @@
 <a href="#1446" id="1446">1446</a>
 <a href="#1447" id="1447">1447</a>
 <a href="#1448" id="1448">1448</a>
+<a href="#1449" id="1449">1449</a>
+<a href="#1450" id="1450">1450</a>
+<a href="#1451" id="1451">1451</a>
+<a href="#1452" id="1452">1452</a>
+<a href="#1453" id="1453">1453</a>
+<a href="#1454" id="1454">1454</a>
+<a href="#1455" id="1455">1455</a>
+<a href="#1456" id="1456">1456</a>
+<a href="#1457" id="1457">1457</a>
+<a href="#1458" id="1458">1458</a>
+<a href="#1459" id="1459">1459</a>
+<a href="#1460" id="1460">1460</a>
+<a href="#1461" id="1461">1461</a>
+<a href="#1462" id="1462">1462</a>
+<a href="#1463" id="1463">1463</a>
+<a href="#1464" id="1464">1464</a>
+<a href="#1465" id="1465">1465</a>
+<a href="#1466" id="1466">1466</a>
+<a href="#1467" id="1467">1467</a>
+<a href="#1468" id="1468">1468</a>
+<a href="#1469" id="1469">1469</a>
+<a href="#1470" id="1470">1470</a>
+<a href="#1471" id="1471">1471</a>
+<a href="#1472" id="1472">1472</a>
+<a href="#1473" id="1473">1473</a>
+<a href="#1474" id="1474">1474</a>
+<a href="#1475" id="1475">1475</a>
+<a href="#1476" id="1476">1476</a>
+<a href="#1477" id="1477">1477</a>
+<a href="#1478" id="1478">1478</a>
+<a href="#1479" id="1479">1479</a>
+<a href="#1480" id="1480">1480</a>
+<a href="#1481" id="1481">1481</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>std::collections::{HashMap, HashSet};
 
 <span class="kw">use </span>json_patch::{patch, Patch};
@@ -1498,12 +1531,12 @@
     own_identifier: KeyIdentifier,
     subjects_by_governance: HashMap&lt;DigestIdentifier, HashSet&lt;DigestIdentifier&gt;&gt;,
     subjects_completing_event:
-        HashMap&lt;DigestIdentifier, (ValidationStage, HashSet&lt;KeyIdentifier&gt;, u32)&gt;,
+        HashMap&lt;DigestIdentifier, (ValidationStage, HashSet&lt;KeyIdentifier&gt;, (u32, u32))&gt;,
     <span class="comment">// actual_sn: HashMap&lt;DigestIdentifier, u64&gt;,
     // virtual_state: HashMap&lt;DigestIdentifier, Value&gt;,
     // Evaluation HashMaps
     </span>event_pre_evaluations: HashMap&lt;DigestIdentifier, EventPreEvaluation&gt;,
-    event_evaluations: HashMap&lt;DigestIdentifier, HashSet&lt;UniqueSignature&gt;&gt;,
+    event_evaluations: HashMap&lt;DigestIdentifier, HashSet&lt;(UniqueSignature, Acceptance)&gt;&gt;,
     <span class="comment">// Approval HashMaps
     </span>event_proposals: HashMap&lt;DigestIdentifier, EventProposal&gt;,
     event_approvations: HashMap&lt;DigestIdentifier, HashSet&lt;UniqueApproval&gt;&gt;,
@@ -1635,12 +1668,12 @@
                     proof,
                     subject_signature: Signature {
                         content: SignatureContent {
-                            signer: <span class="self">self</span>.own_identifier.clone(),
+                            signer: subject.public_key.clone(),
                             event_content_hash: proof_hash,
                             timestamp: TimeStamp::now(),
                         },
                         signature: SignatureIdentifier::new(
-                            <span class="self">self</span>.own_identifier.to_signature_derivator(),
+                            subject.public_key.to_signature_derivator(),
                             <span class="kw-2">&amp;</span>signature,
                         ),
                     },
@@ -1696,8 +1729,10 @@
                         last_event.signature.content.event_content_hash.clone(),
                         last_event,
                     );
-                    <span class="self">self</span>.subjects_completing_event
-                        .insert(subject.subject_id.clone(), (stage, signers, quorum_size));
+                    <span class="self">self</span>.subjects_completing_event.insert(
+                        subject.subject_id.clone(),
+                        (stage, signers, (quorum_size, <span class="number">0</span>)),
+                    );
                     <span class="kw">continue</span>;
                 }
                 <span class="prelude-val">Err</span>(error) =&gt; <span class="kw">match </span>error {
@@ -1814,7 +1849,7 @@
                             );
                             <span class="comment">// Hacer update de fase por la que va el evento
                             </span><span class="self">self</span>.subjects_completing_event
-                                .insert(subject_id.clone(), (stage, signers, quorum_size));
+                                .insert(subject_id.clone(), (stage, signers, (quorum_size, <span class="number">0</span>)));
                         }
                         <span class="prelude-val">Err</span>(error) =&gt; <span class="kw">match </span>error {
                             <span class="kw">crate</span>::DbError::EntryNotFound =&gt; {}
@@ -1890,7 +1925,7 @@
             .<span class="kw">await</span><span class="question-mark">?</span>;
         <span class="comment">// Hacer update de fase por la que va el evento
         </span><span class="self">self</span>.subjects_completing_event
-            .insert(subject_id.clone(), (stage, signers, quorum_size));
+            .insert(subject_id.clone(), (stage, signers, (quorum_size, <span class="number">0</span>)));
         <span class="prelude-val">Ok</span>(())
     }
 
@@ -2127,8 +2162,11 @@
                 //     unreachable!(&quot;Unwraped before&quot;)
                 // }
                 // Add the event to the hashset to not complete two at the same time for the same subject
-                </span><span class="self">self</span>.subjects_completing_event
-                    .insert(subject_id.clone(), (stage, signers.clone(), quorum_size));
+                </span><span class="kw">let </span>negative_quorum_size = (signers.len() <span class="kw">as </span>u32 - quorum_size) + <span class="number">1</span>;
+                <span class="self">self</span>.subjects_completing_event.insert(
+                    subject_id.clone(),
+                    (stage, signers.clone(), (quorum_size, negative_quorum_size)),
+                );
                 <span class="self">self</span>.subjects_by_governance
                     .entry(subject.governance_id)
                     .or_insert_with(HashSet::new)
@@ -2222,12 +2260,16 @@
             .get_mut(<span class="kw-2">&amp;</span>evaluation.preevaluation_hash)
         {
             <span class="prelude-val">Some</span>(signatures_set) =&gt; {
-                insert_or_replace_and_check(signatures_set, UniqueSignature { signature });
+                insert_or_replace_and_check(
+                    signatures_set,
+                    (UniqueSignature { signature }, evaluation.acceptance.clone()),
+                );
                 signatures_set
             }
             <span class="prelude-val">None </span>=&gt; {
                 <span class="kw">let </span><span class="kw-2">mut </span>new_signatures_set = HashSet::new();
-                new_signatures_set.insert(UniqueSignature { signature });
+                new_signatures_set
+                    .insert((UniqueSignature { signature }, evaluation.acceptance.clone()));
                 <span class="self">self</span>.event_evaluations
                     .insert(evaluation.preevaluation_hash.clone(), new_signatures_set);
                 <span class="self">self</span>.event_evaluations
@@ -2235,11 +2277,20 @@
             .expect(<span class="string">&quot;Acabamos de insertar el conjunto de firmas, por lo que debe estar presente&quot;</span>)
             }
         };
-        <span class="kw">let </span>num_signatures_hash =
-            count_signatures_with_event_content_hash(<span class="kw-2">&amp;</span>signatures_set, <span class="kw-2">&amp;</span>evaluation_hash) <span class="kw">as </span>u32;
-        <span class="kw">let </span>quorum_size = quorum_size.to_owned();
+        <span class="kw">let </span>(num_signatures_hash_ok, num_signatures_hash_ko) =
+            count_signatures_with_event_content_hash(<span class="kw-2">&amp;</span>signatures_set, <span class="kw-2">&amp;</span>evaluation_hash);
+        <span class="kw">let </span>(quorum_size, negative_quorum_size) = quorum_size.to_owned();
         <span class="comment">// Comprobar si llegamos a Quorum
-        </span><span class="kw">if </span>num_signatures_hash &lt; quorum_size {
+        </span><span class="kw">let </span>quorum_reached = {
+            <span class="kw">if </span>num_signatures_hash_ok &lt; quorum_size {
+                <span class="prelude-val">Some</span>(Acceptance::Ok)
+            } <span class="kw">else if </span>num_signatures_hash_ko &lt; negative_quorum_size {
+                <span class="prelude-val">Some</span>(Acceptance::Ko)
+            } <span class="kw">else </span>{
+                <span class="prelude-val">None
+            </span>}
+        };
+        <span class="kw">if </span>quorum_reached.is_none() {
             <span class="kw">let </span><span class="kw-2">mut </span>new_signers: HashSet&lt;KeyIdentifier&gt; =
                 signers.into_iter().map(|s| s.clone()).collect();
             new_signers.remove(<span class="kw-2">&amp;</span>signer);
@@ -2253,7 +2304,11 @@
             <span class="comment">// Hacer update de fase por la que va el evento
             </span><span class="self">self</span>.subjects_completing_event.insert(
                 subject_id,
-                (ValidationStage::Evaluate, new_signers, quorum_size),
+                (
+                    ValidationStage::Evaluate,
+                    new_signers,
+                    (quorum_size, negative_quorum_size),
+                ),
             );
             <span class="kw">return </span><span class="prelude-val">Ok</span>(()); <span class="comment">// No llegamos a quorum, no hacemos nada
         </span>} <span class="kw">else </span>{
@@ -2262,10 +2317,11 @@
             // Crear Event Proposal
             </span><span class="kw">let </span>evaluator_signatures = signatures_set
                 .iter()
-                .filter(|signature| {
+                .filter(|(signature, acceptance)| {
                     signature.signature.content.event_content_hash == evaluation_hash
+                        &amp;&amp; quorum_reached.as_ref().unwrap() == acceptance
                 })
-                .map(|signature| signature.signature.clone())
+                .map(|(signature, <span class="kw">_</span>)| signature.signature.clone())
                 .collect();
             <span class="kw">let </span>hash_prev_event = <span class="self">self
                 </span>.database
@@ -2332,7 +2388,6 @@
                 </span><span class="kw">let </span>execution = <span class="kw">match </span>evaluation.acceptance {
                     <span class="kw">crate</span>::commons::models::Acceptance::Ok =&gt; <span class="bool-val">true</span>,
                     <span class="kw">crate</span>::commons::models::Acceptance::Ko =&gt; <span class="bool-val">false</span>,
-                    <span class="kw">crate</span>::commons::models::Acceptance::Error =&gt; <span class="bool-val">false</span>,
                 };
                 <span class="kw">let </span>gov_version = <span class="self">self
                     </span>.gov_api
@@ -2370,8 +2425,11 @@
                 <span class="string">&quot;LLEGA A ACTUALIZAR EL STAGE PARA EL SUJETO: {:?}&quot;</span>,
                 subject_id.to_str()
             );
-            <span class="self">self</span>.subjects_completing_event
-                .insert(subject_id.clone(), (stage, signers, quorum_size));
+            <span class="kw">let </span>negative_quorum_size = (signers.len() <span class="kw">as </span>u32 - quorum_size) + <span class="number">1</span>;
+            <span class="self">self</span>.subjects_completing_event.insert(
+                subject_id.clone(),
+                (stage, signers, (quorum_size, negative_quorum_size)),
+            );
             <span class="kw">let </span>tmp = <span class="self">self</span>.subjects_completing_event.get(<span class="kw-2">&amp;</span>subject_id);
         }
         <span class="prelude-val">Ok</span>(())
@@ -2379,9 +2437,6 @@
 
     <span class="kw">pub async fn </span>approver_signatures(<span class="kw-2">&amp;mut </span><span class="self">self</span>, approval: Approval) -&gt; <span class="prelude-ty">Result</span>&lt;(), EventError&gt; {
         <span class="macro">log::warn!</span>(<span class="string">&quot;APPROVAL SIGNATURES&quot;</span>);
-        <span class="kw">if let </span>Acceptance::Error = approval.content.acceptance {
-            <span class="kw">return </span><span class="prelude-val">Ok</span>(()); <span class="comment">// Ignoramos respuestas de Error
-        </span>}
         <span class="macro">log::warn!</span>(<span class="string">&quot;APPROVAL 1&quot;</span>);
         <span class="comment">// Mirar en que estado está el evento, si está en aprovación o no
         </span><span class="kw">let </span>event_proposal = <span class="kw">match </span><span class="self">self
@@ -2475,14 +2530,11 @@
                 unique_approval.approval.content.acceptance == approval.content.acceptance
             })
             .count() <span class="kw">as </span>u32;
-        <span class="kw">let </span>(quorum_size, execution) = <span class="kw">match </span>approval.content.acceptance {
-            <span class="kw">crate</span>::commons::models::Acceptance::Ok =&gt; (quorum_size.to_owned(), <span class="bool-val">true</span>),
-            <span class="kw">crate</span>::commons::models::Acceptance::Ko =&gt; {
-                (((signers.len() <span class="kw">as </span>u32) - <span class="kw-2">*</span>quorum_size) + <span class="number">1</span>, <span class="bool-val">false</span>)
-            }
-            <span class="kw">crate</span>::commons::models::Acceptance::Error =&gt; <span class="macro">unreachable!</span>(),
+        <span class="kw">let </span>(quorum_size_now, execution) = <span class="kw">match </span>approval.content.acceptance {
+            <span class="kw">crate</span>::commons::models::Acceptance::Ok =&gt; (quorum_size.<span class="number">0</span>, <span class="bool-val">true</span>),
+            <span class="kw">crate</span>::commons::models::Acceptance::Ko =&gt; (quorum_size.<span class="number">1</span>, <span class="bool-val">false</span>),
         };
-        <span class="kw">if </span>num_approvals_with_same_acceptance &lt; quorum_size {
+        <span class="kw">if </span>num_approvals_with_same_acceptance &lt; quorum_size_now {
             <span class="kw">let </span><span class="kw-2">mut </span>new_signers: HashSet&lt;KeyIdentifier&gt; =
                 signers.into_iter().map(|s| s.clone()).collect();
             new_signers.remove(<span class="kw-2">&amp;</span>signer);
@@ -2490,13 +2542,17 @@
                 <span class="kw-2">&amp;</span>subject_id,
                 create_approval_request(event_proposal.to_owned()),
                 signers.clone(),
-                quorum_size,
+                quorum_size_now,
             )
             .<span class="kw">await</span><span class="question-mark">?</span>;
             <span class="comment">// Hacer update de fase por la que va el evento
             </span><span class="self">self</span>.subjects_completing_event.insert(
                 subject_id,
-                (ValidationStage::Approve, new_signers, quorum_size),
+                (
+                    ValidationStage::Approve,
+                    new_signers,
+                    quorum_size.to_owned(),
+                ),
             );
             <span class="prelude-val">Ok</span>(()) <span class="comment">// No llegamos a quorum, no hacemos nada
         </span>} <span class="kw">else </span>{
@@ -2551,7 +2607,7 @@
             );
             <span class="comment">// Hacer update de fase por la que va el evento
             </span><span class="self">self</span>.subjects_completing_event
-                .insert(subject_id, (stage, signers, quorum_size));
+                .insert(subject_id, (stage, signers, (quorum_size, <span class="number">0</span>)));
             <span class="prelude-val">Ok</span>(())
         }
     }
@@ -2668,7 +2724,7 @@
         <span class="macro">log::warn!</span>(<span class="string">&quot;PASO 5&quot;</span>);
         <span class="kw">let </span>quorum_size = quorum_size.to_owned();
         <span class="comment">// Comprobar si llegamos a Quorum y si es así dejar de pedir firmas
-        </span><span class="kw">if </span>(validation_set.len() <span class="kw">as </span>u32) &lt; quorum_size {
+        </span><span class="kw">if </span>(validation_set.len() <span class="kw">as </span>u32) &lt; quorum_size.<span class="number">0 </span>{
             <span class="macro">log::warn!</span>(<span class="string">&quot;PASO 6 IF&quot;</span>);
             <span class="kw">let </span>notary_event = <span class="kw">match </span><span class="self">self
                 </span>.event_notary_events
@@ -2685,8 +2741,13 @@
             <span class="kw">let </span><span class="kw-2">mut </span>new_signers: HashSet&lt;KeyIdentifier&gt; =
                 signers.into_iter().map(|s| s.clone()).collect();
             new_signers.remove(<span class="kw-2">&amp;</span>signer);
-            <span class="self">self</span>.ask_signatures(<span class="kw-2">&amp;</span>subject_id, event_message, new_signers.clone(), quorum_size)
-                .<span class="kw">await</span><span class="question-mark">?</span>;
+            <span class="self">self</span>.ask_signatures(
+                <span class="kw-2">&amp;</span>subject_id,
+                event_message,
+                new_signers.clone(),
+                quorum_size.<span class="number">0</span>,
+            )
+            .<span class="kw">await</span><span class="question-mark">?</span>;
             <span class="comment">// Hacer update de fase por la que va el evento
             </span><span class="self">self</span>.subjects_completing_event.insert(
                 subject_id,
@@ -2842,15 +2903,20 @@
 }
 
 <span class="kw">fn </span>count_signatures_with_event_content_hash(
-    signatures: <span class="kw-2">&amp;</span>HashSet&lt;UniqueSignature&gt;,
+    signatures: <span class="kw-2">&amp;</span>HashSet&lt;(UniqueSignature, Acceptance)&gt;,
     target_event_content_hash: <span class="kw-2">&amp;</span>DigestIdentifier,
-) -&gt; usize {
-    signatures
-        .iter()
-        .filter(|signature| {
-            signature.signature.content.event_content_hash == <span class="kw-2">*</span>target_event_content_hash
-        })
-        .count()
+) -&gt; (u32, u32) {
+    <span class="kw">let </span><span class="kw-2">mut </span>ok: u32 = <span class="number">0</span>;
+    <span class="kw">let </span><span class="kw-2">mut </span>ko: u32 = <span class="number">0</span>;
+    <span class="kw">for </span>(signature, acceptance) <span class="kw">in </span>signatures.iter() {
+        <span class="kw">if </span>signature.signature.content.event_content_hash == <span class="kw-2">*</span>target_event_content_hash {
+            <span class="kw">match </span>acceptance {
+                Acceptance::Ok =&gt; ok += <span class="number">1</span>,
+                Acceptance::Ko =&gt; ko += <span class="number">1</span>,
+            }
+        }
+    }
+    (ok, ko)
 }
 
 <span class="kw">fn </span>insert_or_replace_and_check&lt;T: PartialEq + Eq + Hash&gt;(

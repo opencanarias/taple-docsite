@@ -598,6 +598,29 @@
 <a href="#598" id="598">598</a>
 <a href="#599" id="599">599</a>
 <a href="#600" id="600">600</a>
+<a href="#601" id="601">601</a>
+<a href="#602" id="602">602</a>
+<a href="#603" id="603">603</a>
+<a href="#604" id="604">604</a>
+<a href="#605" id="605">605</a>
+<a href="#606" id="606">606</a>
+<a href="#607" id="607">607</a>
+<a href="#608" id="608">608</a>
+<a href="#609" id="609">609</a>
+<a href="#610" id="610">610</a>
+<a href="#611" id="611">611</a>
+<a href="#612" id="612">612</a>
+<a href="#613" id="613">613</a>
+<a href="#614" id="614">614</a>
+<a href="#615" id="615">615</a>
+<a href="#616" id="616">616</a>
+<a href="#617" id="617">617</a>
+<a href="#618" id="618">618</a>
+<a href="#619" id="619">619</a>
+<a href="#620" id="620">620</a>
+<a href="#621" id="621">621</a>
+<a href="#622" id="622">622</a>
+<a href="#623" id="623">623</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>std::collections::HashSet;
 
 <span class="kw">use </span><span class="kw">super</span>::GetEventsOfSubject;
@@ -609,7 +632,7 @@
 <span class="attr">#[cfg(feature = <span class="string">&quot;aproval&quot;</span>)]
 </span><span class="kw">use </span><span class="kw">crate</span>::approval::manager::ApprovalAPI;
 <span class="kw">use </span><span class="kw">crate</span>::authorized_subjecs::manager::AuthorizedSubjectsAPI;
-<span class="kw">use </span><span class="kw">crate</span>::commons::models::event::Event;
+<span class="kw">use </span><span class="kw">crate</span>::commons::models::event::{Event, ValidationProof};
 <span class="kw">use </span><span class="kw">crate</span>::commons::models::event_request::EventRequest;
 <span class="kw">use </span><span class="kw">crate</span>::commons::models::state::SubjectData;
 <span class="kw">use </span><span class="kw">crate</span>::commons::{
@@ -618,14 +641,15 @@
     crypto::KeyPair,
 };
 <span class="kw">use </span><span class="kw">crate</span>::event::manager::EventAPI;
-<span class="kw">use </span><span class="kw">crate</span>::KeyIdentifier;
 <span class="kw">use </span><span class="kw">crate</span>::ledger::manager::EventManagerAPI;
+<span class="kw">use </span><span class="kw">crate</span>::KeyIdentifier;
+<span class="kw">use </span><span class="kw">crate</span>::signature::Signature;
 <span class="kw">use crate</span>::{
     approval::ApprovalPetitionData,
     commons::models::Acceptance,
     event_request::{CreateRequest, EventRequestType, StateRequest},
     identifier::DigestIdentifier,
-    DatabaseManager, DB, DatabaseCollection
+    DatabaseCollection, DB,
 };
 <span class="kw">use </span>async_trait::async_trait;
 <span class="kw">use </span>tokio::sync::watch::Sender;
@@ -777,6 +801,11 @@
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         subject_id: DigestIdentifier,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;KeyIdentifier, ApiError&gt;;
+    <span class="kw">async fn </span>get_validation_proof(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        subject_id: DigestIdentifier
+    ) -&gt;  <span class="prelude-ty">Result</span>&lt;HashSet&lt;Signature&gt;, ApiError&gt;;
+
 }
 
 <span class="doccomment">/// Object that allows interaction with a TAPLE node.
@@ -1056,9 +1085,25 @@
             <span class="macro">unreachable!</span>()
         }
     }
+
+    <span class="kw">async fn </span>get_validation_proof(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        subject_id: DigestIdentifier
+    ) -&gt; <span class="prelude-ty">Result</span>&lt;HashSet&lt;Signature&gt;, ApiError&gt; {
+        <span class="kw">let </span>response = <span class="self">self</span>.
+            sender
+            .ask(APICommands::GetValidationProof(subject_id))
+            .<span class="kw">await
+            </span>.unwrap();
+        <span class="kw">if let </span>ApiResponses::GetValidationProof(data) = response {
+            data
+        } <span class="kw">else </span>{
+            <span class="macro">unreachable!</span>()
+        }
+    }
 }
 
-<span class="kw">pub struct </span>API&lt;C: DatabaseCollection,&gt; {
+<span class="kw">pub struct </span>API&lt;C: DatabaseCollection&gt; {
     input: MpscChannel&lt;APICommands, ApiResponses&gt;,
     _settings_sender: Sender&lt;TapleSettings&gt;,
     inner_api: InnerAPI&lt;C&gt;,
@@ -1066,7 +1111,7 @@
     shutdown_receiver: tokio::sync::broadcast::Receiver&lt;()&gt;,
 }
 
-<span class="kw">impl</span>&lt;C: DatabaseCollection,&gt; API&lt;C&gt; {
+<span class="kw">impl</span>&lt;C: DatabaseCollection&gt; API&lt;C&gt; {
     <span class="kw">pub fn </span>new(
         input: MpscChannel&lt;APICommands, ApiResponses&gt;,
         event_api: EventAPI,
@@ -1092,7 +1137,7 @@
                 db,
                 <span class="attr">#[cfg(feature = <span class="string">&quot;aproval&quot;</span>)]
                 </span>approval_api,
-                ledger_api
+                ledger_api,
             ),
             shutdown_sender: <span class="prelude-val">Some</span>(shutdown_sender),
             shutdown_receiver: shutdown_receiver,
@@ -1183,9 +1228,10 @@
                             .<span class="kw">await</span><span class="question-mark">?
                     </span>}
                     APICommands::ExpectingTransfer(subject_id) =&gt; {
-                        <span class="self">self</span>.inner_api
-                            .expecting_transfer(subject_id)
-                            .<span class="kw">await</span><span class="question-mark">?
+                        <span class="self">self</span>.inner_api.expecting_transfer(subject_id).<span class="kw">await</span><span class="question-mark">?
+                    </span>}
+                    APICommands::GetValidationProof(subject_id) =&gt; {
+                        <span class="self">self</span>.inner_api.get_validation_proof(subject_id).<span class="kw">await
                     </span>}
                 };
                 sx.send(response)
