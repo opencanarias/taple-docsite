@@ -2282,9 +2282,9 @@
         <span class="kw">let </span>(quorum_size, negative_quorum_size) = quorum_size.to_owned();
         <span class="comment">// Comprobar si llegamos a Quorum
         </span><span class="kw">let </span>quorum_reached = {
-            <span class="kw">if </span>num_signatures_hash_ok &lt; quorum_size {
+            <span class="kw">if </span>num_signatures_hash_ok &gt;= quorum_size {
                 <span class="prelude-val">Some</span>(Acceptance::Ok)
-            } <span class="kw">else if </span>num_signatures_hash_ko &lt; negative_quorum_size {
+            } <span class="kw">else if </span>num_signatures_hash_ko &gt;= negative_quorum_size {
                 <span class="prelude-val">Some</span>(Acceptance::Ko)
             } <span class="kw">else </span>{
                 <span class="prelude-val">None

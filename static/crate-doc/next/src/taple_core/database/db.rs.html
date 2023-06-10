@@ -365,6 +365,16 @@
 <a href="#365" id="365">365</a>
 <a href="#366" id="366">366</a>
 <a href="#367" id="367">367</a>
+<a href="#368" id="368">368</a>
+<a href="#369" id="369">369</a>
+<a href="#370" id="370">370</a>
+<a href="#371" id="371">371</a>
+<a href="#372" id="372">372</a>
+<a href="#373" id="373">373</a>
+<a href="#374" id="374">374</a>
+<a href="#375" id="375">375</a>
+<a href="#376" id="376">376</a>
+<a href="#377" id="377">377</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>std::collections::HashSet;
 <span class="kw">use </span>std::sync::Arc;
 
@@ -488,14 +498,6 @@
 
     <span class="kw">pub fn </span>del_subject(<span class="kw-2">&amp;</span><span class="self">self</span>, subject_id: <span class="kw-2">&amp;</span>DigestIdentifier) -&gt; <span class="prelude-ty">Result</span>&lt;(), Error&gt; {
         <span class="self">self</span>.subject_db.del_subject(subject_id)
-    }
-
-    <span class="kw">pub fn </span>get_governances(
-        <span class="kw-2">&amp;</span><span class="self">self</span>,
-        from: <span class="prelude-ty">Option</span>&lt;String&gt;,
-        quantity: isize,
-    ) -&gt; <span class="prelude-ty">Result</span>&lt;Vec&lt;Subject&gt;, Error&gt; {
-        <span class="self">self</span>.subject_db.get_governances(from, quantity)
     }
 
     <span class="kw">pub fn </span>get_all_subjects(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Vec&lt;Subject&gt; {
@@ -647,18 +649,36 @@
     <span class="kw">pub fn </span>set_governance_index(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         subject_id: <span class="kw-2">&amp;</span>DigestIdentifier,
-        gobernance_id: <span class="kw-2">&amp;</span>DigestIdentifier,
+        governance_id: <span class="kw-2">&amp;</span>DigestIdentifier,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;(), Error&gt; {
         <span class="self">self</span>.subject_by_governance_db
-            .set_governance_index(subject_id, gobernance_id)
+            .set_governance_index(subject_id, governance_id)
     }
 
     <span class="kw">pub fn </span>get_subjects_by_governance(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        gobernance_id: <span class="kw-2">&amp;</span>DigestIdentifier,
+        governance_id: <span class="kw-2">&amp;</span>DigestIdentifier,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;Vec&lt;DigestIdentifier&gt;, Error&gt; {
         <span class="self">self</span>.subject_by_governance_db
-            .get_subjects_by_governance(gobernance_id)
+            .get_subjects_by_governance(governance_id)
+    }
+
+    <span class="kw">pub fn </span>get_governances(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        from: <span class="prelude-ty">Option</span>&lt;String&gt;,
+        quantity: isize,
+    ) -&gt; <span class="prelude-ty">Result</span>&lt;Vec&lt;Subject&gt;, Error&gt; {
+        <span class="self">self</span>.subject_by_governance_db.get_governances(from, quantity)
+    }
+
+    <span class="kw">pub fn </span>get_governance_subjects(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        governance_id: <span class="kw-2">&amp;</span>DigestIdentifier,
+        from: <span class="prelude-ty">Option</span>&lt;String&gt;,
+        quantity: isize,
+    ) -&gt; <span class="prelude-ty">Result</span>&lt;Vec&lt;Subject&gt;, Error&gt; {
+        <span class="self">self</span>.subject_by_governance_db
+            .get_governance_subjects(governance_id, from, quantity)
     }
 
     <span class="kw">pub fn </span>get_expecting_transfer(<span class="kw-2">&amp;</span><span class="self">self</span>, subject_id: <span class="kw-2">&amp;</span>DigestIdentifier) -&gt; <span class="prelude-ty">Result</span>&lt;KeyPair, Error&gt; {
