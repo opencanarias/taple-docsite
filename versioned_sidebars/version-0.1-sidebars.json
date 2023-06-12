@@ -40,7 +40,7 @@
         {
           "type": "link",
           "label": "Whitepaper (DRAFT)",
-          "href": "pathname:///whitepaper/taple-whitepaper.pdf"
+          "href": "pathname:///whitepaper/0.1/taple-whitepaper.pdf"
         }
       ]
     },
