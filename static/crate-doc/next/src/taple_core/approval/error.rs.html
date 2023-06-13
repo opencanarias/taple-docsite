@@ -77,6 +77,8 @@
 <a href="#77" id="77">77</a>
 <a href="#78" id="78">78</a>
 <a href="#79" id="79">79</a>
+<a href="#80" id="80">80</a>
+<a href="#81" id="81">81</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>thiserror::Error;
 
 <span class="kw">use crate</span>::{DigestIdentifier, KeyIdentifier};
@@ -101,6 +103,8 @@
 
 <span class="attr">#[derive(Error, Debug, Clone)]
 </span><span class="kw">pub enum </span>ApprovalErrorResponse {
+    <span class="attr">#[error(<span class="string">&quot;Evaluation is not present at request&quot;</span>)]
+    </span>NotEvaluationInRequest,
     <span class="attr">#[error(<span class="string">&quot;API Channel not available&quot;</span>)]
     </span>APIChannelNotAvailable,
     <span class="attr">#[error(<span class="string">&quot;Request already known&quot;</span>)]
