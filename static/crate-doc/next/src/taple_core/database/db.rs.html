@@ -375,23 +375,61 @@
 <a href="#375" id="375">375</a>
 <a href="#376" id="376">376</a>
 <a href="#377" id="377">377</a>
+<a href="#378" id="378">378</a>
+<a href="#379" id="379">379</a>
+<a href="#380" id="380">380</a>
+<a href="#381" id="381">381</a>
+<a href="#382" id="382">382</a>
+<a href="#383" id="383">383</a>
+<a href="#384" id="384">384</a>
+<a href="#385" id="385">385</a>
+<a href="#386" id="386">386</a>
+<a href="#387" id="387">387</a>
+<a href="#388" id="388">388</a>
+<a href="#389" id="389">389</a>
+<a href="#390" id="390">390</a>
+<a href="#391" id="391">391</a>
+<a href="#392" id="392">392</a>
+<a href="#393" id="393">393</a>
+<a href="#394" id="394">394</a>
+<a href="#395" id="395">395</a>
+<a href="#396" id="396">396</a>
+<a href="#397" id="397">397</a>
+<a href="#398" id="398">398</a>
+<a href="#399" id="399">399</a>
+<a href="#400" id="400">400</a>
+<a href="#401" id="401">401</a>
+<a href="#402" id="402">402</a>
+<a href="#403" id="403">403</a>
+<a href="#404" id="404">404</a>
+<a href="#405" id="405">405</a>
+<a href="#406" id="406">406</a>
+<a href="#407" id="407">407</a>
+<a href="#408" id="408">408</a>
+<a href="#409" id="409">409</a>
+<a href="#410" id="410">410</a>
+<a href="#411" id="411">411</a>
+<a href="#412" id="412">412</a>
+<a href="#413" id="413">413</a>
+<a href="#414" id="414">414</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>std::collections::HashSet;
 <span class="kw">use </span>std::sync::Arc;
 
+<span class="kw">use </span><span class="kw">crate</span>::commons::models::approval::ApprovalStatus;
 <span class="kw">use </span><span class="kw">crate</span>::commons::models::event::ValidationProof;
-<span class="kw">use </span><span class="kw">crate</span>::commons::models::notary::NotaryEventResponse;
 <span class="kw">use </span><span class="kw">crate</span>::commons::models::state::Subject;
 <span class="kw">use </span><span class="kw">crate</span>::crypto::KeyPair;
 <span class="kw">use </span><span class="kw">crate</span>::event_request::EventRequest;
 <span class="kw">use </span><span class="kw">crate</span>::identifier::{DigestIdentifier, KeyIdentifier};
 <span class="kw">use </span><span class="kw">crate</span>::signature::Signature;
-<span class="kw">use </span><span class="kw">crate</span>::Event;
+<span class="kw">use crate</span>::{Event, ApprovalPetitionData};
 
 <span class="kw">use </span><span class="kw">super</span>::error::Error;
-<span class="kw">use </span><span class="kw">super</span>::layers::lce_validation_proofs::{<span class="self">self</span>, LceValidationProofs};
+<span class="kw">use </span><span class="kw">super</span>::layers::lce_validation_proofs::LceValidationProofs;
 <span class="kw">use super</span>::{
     layers::{
-        contract::ContractDb, controller_id::ControllerIdDb, event::EventDb, notary::NotaryDb,
+        approvals::ApprovalsDb, contract::ContractDb, controller_id::ControllerIdDb,
+        event::EventDb, notary::NotaryDb,
         preauthorized_subjects_and_providers::PreauthorizedSbujectsAndProovidersDb,
         prevalidated_event::PrevalidatedEventDb, request::RequestDb, signature::SignatureDb,
         subject::SubjectDb, subject_by_governance::SubjectByGovernanceDb,
@@ -414,6 +452,7 @@
     transfer_events_db: TransferEventsDb&lt;C&gt;,
     preauthorized_subjects_and_providers_db: PreauthorizedSbujectsAndProovidersDb&lt;C&gt;,
     lce_validation_proofs_db: LceValidationProofs&lt;C&gt;,
+    approvals_db: ApprovalsDb&lt;C&gt;,
 }
 
 <span class="kw">impl</span>&lt;C: DatabaseCollection&gt; DB&lt;C&gt; {
@@ -432,6 +471,7 @@
         <span class="kw">let </span>preauthorized_subjects_and_providers_db =
             PreauthorizedSbujectsAndProovidersDb::new(<span class="kw-2">&amp;</span>manager);
         <span class="kw">let </span>lce_validation_proofs_db = LceValidationProofs::new(<span class="kw-2">&amp;</span>manager);
+        <span class="kw">let </span>approvals_db = ApprovalsDb::new(<span class="kw-2">&amp;</span>manager);
         <span class="self">Self </span>{
             signature_db,
             subject_db,
@@ -446,6 +486,7 @@
             transfer_events_db,
             preauthorized_subjects_and_providers_db,
             lce_validation_proofs_db,
+            approvals_db,
         }
     }
 
@@ -472,7 +513,10 @@
         <span class="self">self</span>.signature_db.del_signatures(subject_id, sn)
     }
 
-    <span class="kw">pub fn </span>get_validation_proof(<span class="kw-2">&amp;</span><span class="self">self</span>, subject_id: <span class="kw-2">&amp;</span>DigestIdentifier) -&gt; <span class="prelude-ty">Result</span>&lt;HashSet&lt;Signature&gt;, Error&gt; {
+    <span class="kw">pub fn </span>get_validation_proof(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        subject_id: <span class="kw-2">&amp;</span>DigestIdentifier,
+    ) -&gt; <span class="prelude-ty">Result</span>&lt;HashSet&lt;Signature&gt;, Error&gt; {
         <span class="self">self</span>.signature_db.get_validation_proof(subject_id)
     }
 
@@ -668,7 +712,8 @@
         from: <span class="prelude-ty">Option</span>&lt;String&gt;,
         quantity: isize,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;Vec&lt;Subject&gt;, Error&gt; {
-        <span class="self">self</span>.subject_by_governance_db.get_governances(from, quantity)
+        <span class="self">self</span>.subject_by_governance_db
+            .get_governances(from, quantity)
     }
 
     <span class="kw">pub fn </span>get_governance_subjects(
@@ -750,6 +795,35 @@
     <span class="kw">pub fn </span>del_lce_validation_proof(<span class="kw-2">&amp;</span><span class="self">self</span>, subject_id: <span class="kw-2">&amp;</span>DigestIdentifier) -&gt; <span class="prelude-ty">Result</span>&lt;(), Error&gt; {
         <span class="self">self</span>.lce_validation_proofs_db
             .del_lce_validation_proof(subject_id)
+    }
+
+    <span class="kw">pub fn </span>get_approval(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        request_id: <span class="kw-2">&amp;</span>DigestIdentifier,
+    ) -&gt; <span class="prelude-ty">Result</span>&lt;(ApprovalPetitionData, ApprovalStatus), Error&gt; {
+        <span class="self">self</span>.approvals_db.get_approval(request_id)
+    }
+
+    <span class="kw">pub fn </span>get_approvals(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        status: <span class="prelude-ty">Option</span>&lt;String&gt;,
+    ) -&gt; <span class="prelude-ty">Result</span>&lt;Vec&lt;ApprovalPetitionData&gt;, Error&gt; {
+        <span class="self">self</span>.approvals_db.get_approvals(status)
+    }
+
+    <span class="kw">pub fn </span>set_approval(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        request_id: <span class="kw-2">&amp;</span>DigestIdentifier,
+        approval: (ApprovalPetitionData, ApprovalStatus),
+    ) -&gt; <span class="prelude-ty">Result</span>&lt;(), Error&gt; {
+        <span class="self">self</span>.approvals_db.set_approval(request_id, approval)
+    }
+
+    <span class="kw">pub fn </span>del_approval(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        request_id: <span class="kw-2">&amp;</span>DigestIdentifier
+    ) -&gt; <span class="prelude-ty">Result</span>&lt;(), Error&gt; {
+        <span class="self">self</span>.approvals_db.del_approval(request_id)
     }
 }
 </code></pre></div></section></main></body></html>

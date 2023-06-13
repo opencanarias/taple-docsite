@@ -18,6 +18,8 @@
 <a href="#18" id="18">18</a>
 <a href="#19" id="19">19</a>
 <a href="#20" id="20">20</a>
+<a href="#21" id="21">21</a>
+<a href="#22" id="22">22</a>
 </pre></div><pre class="rust"><code><span class="doccomment">//! Possible errors of a TAPLE Database
 </span><span class="kw">use </span>thiserror::Error;
 
@@ -37,5 +39,7 @@
     </span>KeyElementsError,
     <span class="attr">#[error(<span class="string">&quot;An error withing the database custom implementation {0}&quot;</span>)]
     </span>CustomError(String),
+    <span class="attr">#[error(<span class="string">&quot;State non existent, possibilities are: Pending or Voted.&quot;</span>)]
+    </span>NonExistentStatus
 }
 </code></pre></div></section></main></body></html>

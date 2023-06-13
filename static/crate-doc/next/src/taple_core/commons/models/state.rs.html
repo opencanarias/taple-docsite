@@ -226,58 +226,37 @@
 <a href="#226" id="226">226</a>
 <a href="#227" id="227">227</a>
 <a href="#228" id="228">228</a>
-<a href="#229" id="229">229</a>
-<a href="#230" id="230">230</a>
-<a href="#231" id="231">231</a>
-<a href="#232" id="232">232</a>
-<a href="#233" id="233">233</a>
-<a href="#234" id="234">234</a>
-<a href="#235" id="235">235</a>
-<a href="#236" id="236">236</a>
-<a href="#237" id="237">237</a>
-<a href="#238" id="238">238</a>
-<a href="#239" id="239">239</a>
-<a href="#240" id="240">240</a>
-<a href="#241" id="241">241</a>
 </pre></div><pre class="rust"><code><span class="kw">use crate</span>::{
     commons::{
         crypto::{Ed25519KeyPair, KeyGenerator, KeyMaterial, KeyPair},
         errors::SubjectError,
-        identifier::{
-            DigestIdentifier, KeyIdentifier,
-        },
+        identifier::{DigestIdentifier, KeyIdentifier},
     },
     event_request::EventRequest,
 };
 <span class="kw">use </span>json_patch::{patch, Patch};
 <span class="kw">use </span>serde::{Deserialize, Serialize};
 <span class="kw">use </span>serde_json::Value;
-<span class="kw">use </span>utoipa::ToSchema;
 
 <span class="kw">use super</span>::{event::Event, event_request::EventRequestType};
 
-<span class="attr">#[derive(Debug, Deserialize, Serialize, Clone, ToSchema)]
+<span class="attr">#[derive(Debug, Deserialize, Serialize, Clone)]
 </span><span class="kw">pub struct </span>Subject {
     <span class="kw">pub </span>keys: <span class="prelude-ty">Option</span>&lt;KeyPair&gt;,
     <span class="doccomment">/// Subject identifier
-    </span><span class="attr">#[schema(value_type = String)]
     </span><span class="kw">pub </span>subject_id: DigestIdentifier,
     <span class="doccomment">/// Governance identifier
-    </span><span class="attr">#[schema(value_type = String)]
     </span><span class="kw">pub </span>governance_id: DigestIdentifier,
     <span class="doccomment">/// Current sequence number of the subject
     </span><span class="kw">pub </span>sn: u64,
     <span class="doccomment">/// Public key of the subject
-    </span><span class="attr">#[schema(value_type = String)]
     </span><span class="kw">pub </span>public_key: KeyIdentifier,
     <span class="kw">pub </span>namespace: String,
     <span class="doccomment">/// Identifier of the schema used by the subject and defined in associated governance
     </span><span class="kw">pub </span>schema_id: String,
     <span class="doccomment">/// Subject owner identifier
-    </span><span class="attr">#[schema(value_type = String)]
     </span><span class="kw">pub </span>owner: KeyIdentifier,
     <span class="doccomment">/// Subject creator identifier
-    </span><span class="attr">#[schema(value_type = String)]
     </span><span class="kw">pub </span>creator: KeyIdentifier,
     <span class="doccomment">/// Current status of the subject
     </span><span class="kw">pub </span>properties: String,
@@ -285,27 +264,22 @@
     </span><span class="kw">pub </span>active: bool,
 }
 
-<span class="attr">#[derive(Debug, Deserialize, Serialize, Clone, ToSchema)]
+<span class="attr">#[derive(Debug, Deserialize, Serialize, Clone)]
 </span><span class="kw">pub struct </span>SubjectData {
     <span class="doccomment">/// Subject identifier
-    </span><span class="attr">#[schema(value_type = String)]
     </span><span class="kw">pub </span>subject_id: DigestIdentifier,
     <span class="doccomment">/// Governance identifier
-    </span><span class="attr">#[schema(value_type = String)]
     </span><span class="kw">pub </span>governance_id: DigestIdentifier,
     <span class="doccomment">/// Current sequence number of the subject
     </span><span class="kw">pub </span>sn: u64,
     <span class="doccomment">/// Public key of the subject
-    </span><span class="attr">#[schema(value_type = String)]
     </span><span class="kw">pub </span>public_key: KeyIdentifier,
     <span class="kw">pub </span>namespace: String,
     <span class="doccomment">/// Identifier of the schema used by the subject and defined in associated governance
     </span><span class="kw">pub </span>schema_id: String,
     <span class="doccomment">/// Subject owner identifier
-    </span><span class="attr">#[schema(value_type = String)]
     </span><span class="kw">pub </span>owner: KeyIdentifier,
     <span class="doccomment">/// Subject creator identifier
-    </span><span class="attr">#[schema(value_type = String)]
     </span><span class="kw">pub </span>creator: KeyIdentifier,
     <span class="doccomment">/// Current status of the subject
     </span><span class="kw">pub </span>properties: String,

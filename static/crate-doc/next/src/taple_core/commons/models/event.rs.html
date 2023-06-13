@@ -411,11 +411,6 @@
 <a href="#411" id="411">411</a>
 <a href="#412" id="412">412</a>
 <a href="#413" id="413">413</a>
-<a href="#414" id="414">414</a>
-<a href="#415" id="415">415</a>
-<a href="#416" id="416">416</a>
-<a href="#417" id="417">417</a>
-<a href="#418" id="418">418</a>
 </pre></div><pre class="rust"><code><span class="comment">// use std::{collections::HashSet, str::FromStr};
 
 // use borsh::{BorshDeserialize, BorshSerialize};
@@ -620,7 +615,6 @@
 <span class="kw">use </span>json_patch::{diff, Patch};
 <span class="kw">use </span>serde::{Deserialize, Serialize};
 <span class="kw">use </span>serde_json::{json, Value};
-<span class="kw">use </span>utoipa::ToSchema;
 
 <span class="kw">use super</span>::{
     approval::Approval,
@@ -628,17 +622,13 @@
     state::Subject,
 };
 
-<span class="attr">#[derive(
-    Debug, Clone, Serialize, Deserialize, Eq, PartialEq, BorshSerialize, BorshDeserialize, ToSchema,
-)]
+<span class="attr">#[derive(Debug, Clone, Serialize, Deserialize, Eq, PartialEq, BorshSerialize, BorshDeserialize)]
 </span><span class="kw">pub struct </span>Event {
     <span class="kw">pub </span>content: EventContent,
     <span class="kw">pub </span>signature: Signature,
 }
 
-<span class="attr">#[derive(
-    Debug, Clone, Serialize, Deserialize, Eq, PartialEq, BorshSerialize, BorshDeserialize, ToSchema,
-)]
+<span class="attr">#[derive(Debug, Clone, Serialize, Deserialize, Eq, PartialEq, BorshSerialize, BorshDeserialize)]
 </span><span class="kw">pub struct </span>EventContent {
     <span class="kw">pub </span>event_proposal: EventProposal,
     <span class="kw">pub </span>approvals: HashSet&lt;Approval&gt;,

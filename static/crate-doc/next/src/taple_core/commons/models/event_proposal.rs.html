@@ -76,15 +76,6 @@
 <a href="#76" id="76">76</a>
 <a href="#77" id="77">77</a>
 <a href="#78" id="78">78</a>
-<a href="#79" id="79">79</a>
-<a href="#80" id="80">80</a>
-<a href="#81" id="81">81</a>
-<a href="#82" id="82">82</a>
-<a href="#83" id="83">83</a>
-<a href="#84" id="84">84</a>
-<a href="#85" id="85">85</a>
-<a href="#86" id="86">86</a>
-<a href="#87" id="87">87</a>
 </pre></div><pre class="rust"><code><span class="doccomment">//! Contains the data structures related to event  to send to approvers, or to validators if approval is not required.
 </span><span class="kw">use </span>std::collections::HashSet;
 
@@ -96,21 +87,16 @@
 };
 <span class="kw">use </span>borsh::{BorshDeserialize, BorshSerialize};
 <span class="kw">use </span>serde::{Deserialize, Serialize};
-<span class="kw">use </span>utoipa::ToSchema;
 
 <span class="kw">use </span><span class="kw">super</span>::Acceptance;
 
-<span class="attr">#[derive(
-    Debug, Clone, Serialize, Deserialize, Eq, PartialEq, BorshSerialize, BorshDeserialize, ToSchema,
-)]
+<span class="attr">#[derive(Debug, Clone, Serialize, Deserialize, Eq, PartialEq, BorshSerialize, BorshDeserialize)]
 </span><span class="kw">pub struct </span>EventProposal {
     <span class="kw">pub </span>proposal: Proposal,
     <span class="kw">pub </span>subject_signature: Signature,
 }
 
-<span class="attr">#[derive(
-    Debug, Clone, Serialize, Deserialize, Eq, PartialEq, BorshSerialize, BorshDeserialize, ToSchema,
-)]
+<span class="attr">#[derive(Debug, Clone, Serialize, Deserialize, Eq, PartialEq, BorshSerialize, BorshDeserialize)]
 </span><span class="kw">pub struct </span>Proposal {
     <span class="kw">pub </span>event_request: EventRequest,
     <span class="kw">pub </span>sn: u64,
@@ -143,14 +129,10 @@
     }
 }
 
-<span class="attr">#[derive(
-    Debug, Clone, Serialize, Deserialize, Eq, PartialEq, BorshSerialize, BorshDeserialize, ToSchema,
-)]
+<span class="attr">#[derive(Debug, Clone, Serialize, Deserialize, Eq, PartialEq, BorshSerialize, BorshDeserialize)]
 </span><span class="kw">pub struct </span>Evaluation {
-    <span class="attr">#[schema(value_type = String)]
-    </span><span class="kw">pub </span>preevaluation_hash: DigestIdentifier,
-    <span class="attr">#[schema(value_type = String)]
-    </span><span class="kw">pub </span>state_hash: DigestIdentifier,
+    <span class="kw">pub </span>preevaluation_hash: DigestIdentifier,
+    <span class="kw">pub </span>state_hash: DigestIdentifier,
     <span class="kw">pub </span>governance_version: u64,
     <span class="kw">pub </span>acceptance: Acceptance,
     <span class="kw">pub </span>approval_required: bool,

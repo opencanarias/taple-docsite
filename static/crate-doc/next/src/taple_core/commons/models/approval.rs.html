@@ -63,6 +63,8 @@
 <a href="#63" id="63">63</a>
 <a href="#64" id="64">64</a>
 <a href="#65" id="65">65</a>
+<a href="#66" id="66">66</a>
+<a href="#67" id="67">67</a>
 </pre></div><pre class="rust"><code><span class="doccomment">//! Contains the data structures related to event  to send to approvers, or to validators if approval is not required.
 </span><span class="kw">use </span>std::hash::Hasher;
 
@@ -71,7 +73,6 @@
 <span class="kw">use </span>borsh::{BorshDeserialize, BorshSerialize};
 <span class="kw">use </span>serde::{Deserialize, Serialize};
 <span class="kw">use </span>std::hash::Hash;
-<span class="kw">use </span>utoipa::ToSchema;
 
 <span class="attr">#[derive(
     Debug,
@@ -81,7 +82,6 @@
     Eq,
     BorshSerialize,
     BorshDeserialize,
-    ToSchema,
     PartialOrd,
     PartialEq,
     Hash,
@@ -99,19 +99,17 @@
     Eq,
     BorshSerialize,
     BorshDeserialize,
-    ToSchema,
     PartialOrd,
     PartialEq,
     Hash,
 )]
 </span><span class="kw">pub struct </span>ApprovalContent {
-    <span class="attr">#[schema(value_type = String)]
-    </span><span class="kw">pub </span>event_proposal_hash: DigestIdentifier,
+    <span class="kw">pub </span>event_proposal_hash: DigestIdentifier,
     <span class="kw">pub </span>acceptance: Acceptance,
 }
 
 <span class="attr">#[derive(
-    Debug, Clone, Serialize, Deserialize, Eq, BorshSerialize, BorshDeserialize, ToSchema, PartialOrd,
+    Debug, Clone, Serialize, Deserialize, Eq, BorshSerialize, BorshDeserialize, PartialOrd,
 )]
 </span><span class="kw">pub struct </span>UniqueApproval {
     <span class="kw">pub </span>approval: Approval,
@@ -127,5 +125,11 @@
     <span class="kw">fn </span>hash&lt;H: Hasher&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, state: <span class="kw-2">&amp;mut </span>H) {
         <span class="self">self</span>.approval.signature.content.signer.hash(state);
     }
+}
+
+<span class="attr">#[derive(Debug, Clone, Serialize, Deserialize, Eq, PartialEq, BorshSerialize, BorshDeserialize)]
+</span><span class="kw">pub enum </span>ApprovalStatus {
+    Pending,
+    Voted,
 }
 </code></pre></div></section></main></body></html>

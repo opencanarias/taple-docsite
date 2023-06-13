@@ -85,11 +85,19 @@
 <a href="#85" id="85">85</a>
 <a href="#86" id="86">86</a>
 <a href="#87" id="87">87</a>
+<a href="#88" id="88">88</a>
+<a href="#89" id="89">89</a>
+<a href="#90" id="90">90</a>
+<a href="#91" id="91">91</a>
+<a href="#92" id="92">92</a>
+<a href="#93" id="93">93</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>std::collections::HashSet;
+<span class="kw">use </span><span class="kw">crate</span>::commons::models::approval::ApprovalStatus;
 <span class="kw">use </span><span class="kw">crate</span>::signature::Signature;
 <span class="attr">#[cfg(feature = <span class="string">&quot;aproval&quot;</span>)]
-</span><span class="kw">use crate</span>::{Acceptance, ApprovalPetitionData};
-<span class="kw">use crate</span>::{KeyIdentifier};
+</span><span class="kw">use </span><span class="kw">crate</span>::Acceptance;
+<span class="kw">use </span><span class="kw">crate</span>::KeyIdentifier;
+<span class="kw">use </span><span class="kw">crate</span>::ApprovalPetitionData;
 <span class="kw">use </span><span class="kw">crate</span>::commons::models::event::Event;
 <span class="kw">use </span><span class="kw">crate</span>::commons::models::event_request::EventRequest;
 <span class="kw">use </span><span class="kw">crate</span>::commons::models::state::SubjectData;
@@ -123,6 +131,8 @@
     ExpectingTransfer(DigestIdentifier),
     GetValidationProof(DigestIdentifier),
     GetGovernanceSubjects(GetGovernanceSubjects),
+    GetApproval(DigestIdentifier),
+    GetApprovals(<span class="prelude-ty">Option</span>&lt;String&gt;),
     Shutdown,
 }
 
@@ -143,6 +153,8 @@
     ExpectingTransfer(<span class="prelude-ty">Result</span>&lt;KeyIdentifier, ApiError&gt;),
     GetValidationProof(<span class="prelude-ty">Result</span>&lt;HashSet&lt;Signature&gt;, ApiError&gt;),
     GetGovernanceSubjects(<span class="prelude-ty">Result</span>&lt;Vec&lt;SubjectData&gt;, ApiError&gt;),
+    GetApproval(<span class="prelude-ty">Result</span>&lt;(ApprovalPetitionData, ApprovalStatus), ApiError&gt;),
+    GetApprovals(<span class="prelude-ty">Result</span>&lt;Vec&lt;ApprovalPetitionData&gt;, ApiError&gt;),
     ShutdownCompleted,
     SetPreauthorizedSubjectCompleted
 }
@@ -171,5 +183,4 @@
     <span class="kw">pub </span>governance_id: DigestIdentifier,
     <span class="kw">pub </span>from: <span class="prelude-ty">Option</span>&lt;String&gt;,
     <span class="kw">pub </span>quantity: <span class="prelude-ty">Option</span>&lt;i64&gt;,
-}
-</code></pre></div></section></main></body></html>
+}</code></pre></div></section></main></body></html>
