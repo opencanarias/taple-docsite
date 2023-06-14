@@ -209,7 +209,7 @@ module.exports = {
             {
               type: 'link',
               label: 'Documentation',
-              href: 'pathname:///crate-doc/next/core/',
+              href: 'pathname:///crate-doc/next/taple_core/',
             },
           ]
         },
