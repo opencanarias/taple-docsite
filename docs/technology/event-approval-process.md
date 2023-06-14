@@ -53,6 +53,6 @@ sequenceDiagram
 
 :::info
 
-The information of the votes cast is stored within the [event metadata](./events.md)
+The information of the votes cast is stored within the [event metadata](./events.md).
 
 :::

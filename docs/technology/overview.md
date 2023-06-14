@@ -5,8 +5,8 @@ The following diagram shows the usual elements of a TAPLE network. A brief descr
 
 ## TAPLE Core
 It is the library that implements most of the TAPLE functionality. Any application that wants to be part of a TAPLE network must make use of this library from the API it exposes. Some of its functions are:
-- Creation and management of [subjects](./subjects) and their associated [microledgers](./subjects#microledger) 
-- Implementation of the [P2P](./glossary#p2p) protocol for communication between nodes.
+- Creation and management of [subjects](./subjects.md) and their associated [microledgers](./subjects.md#microledger) 
+- Implementation of the [P2P](./glossary.md#p2p) protocol for communication between nodes.
 - Database persistence
 
 :::caution Important
@@ -23,7 +23,7 @@ Each TAPLE node is associated with **a unique identity** representing its owner.
 
 :::info
 
-To learn more about identity visit this page: [Identity](identity).
+To learn more about identity visit this page: [Identity](./identity.md).
 
 :::
 
@@ -35,16 +35,16 @@ Official client to create a TAPLE Node. It is the easiest way to work with TAPLE
 
 :::info
 
-To learn more about TAPLE Core and TAPLE Client visit those pages: [TAPLE Core](../develop/taple-core), [TAPLE Client](./../develop/taple-client-config.md).
+To learn more about TAPLE Core and TAPLE Client visit those pages: [TAPLE Core](../develop/taple-core.md), [TAPLE Client](./../develop/taple-client-config.md).
 
 :::
 
 ## Subjects
-TAPLE implements a ledger partitioning mechanism based on subjects. Subjects are logical entities that represent an asset or process within a TAPLE network. In this way, instead of all participants having the same string, each participant stores only the subjects in which it is interested. Each subject stores the information in a small ledger, known as [microledger](./subjects#microledger). 
+TAPLE implements a ledger partitioning mechanism based on subjects. Subjects are logical entities that represent an asset or process within a TAPLE network. In this way, instead of all participants having the same string, each participant stores only the subjects in which it is interested. Each subject stores the information in a small ledger, known as [microledger](./subjects.md#microledger). 
 
 :::info
 
-To learn more about subjects visit this page: [Subjects](./subjects).
+To learn more about subjects visit this page: [Subjects](./subjects.md).
 
 :::
 
@@ -56,7 +56,7 @@ The microledger is a structure of chained events. Each of these events models an
 
 :::info
 
-To learn more about the events visit these pages: [Events](./events) and [Events lifecycle](./event-life-cycle).
+To learn more about the events visit these pages: [Events](./events.md) and [Events lifecycle](./event-life-cycle.md).
 
 :::
 
@@ -68,6 +68,6 @@ Within the TAPLE network, governance is managed as a special type of subject. Th
 
 :::info
 
-To learn more about structure and functionality of the governances visit this page: [Governance](./governance).
+To learn more about structure and functionality of the governances visit this page: [Governance](./governance.md).
 
 :::

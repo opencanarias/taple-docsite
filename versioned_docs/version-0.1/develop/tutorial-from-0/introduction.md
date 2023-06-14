@@ -10,9 +10,9 @@ In this tutorial we are going, step by step, learn how to:
 
 :::caution
 
-Consult the [requirements](./../requirements) before continuing this tutorial.
+Consult the [requirements](./../requirements.md) before continuing this tutorial.
 
 :::
 
 ## Case of use
-In this tutorial, we will do the same use case as in the Quickstart **[section](../quickstart#description)** but unlike the Quickstart, in this tutorial we will directly attack the REST API of the **taple-client**.
+In this tutorial, we will do the same use case as in the Quickstart **[section](../quickstart.md#description)** but unlike the Quickstart, in this tutorial we will directly attack the REST API of the **taple-client**.

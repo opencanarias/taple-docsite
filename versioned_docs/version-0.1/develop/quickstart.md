@@ -7,7 +7,7 @@ In this section, you will find a tutorial on how to set up a simple case of use 
 
 Before we begin, let's prepare the environment:
 
-1. Revise that you meet the [requirements](./requirements).
+1. Revise that you meet the [requirements](./requirements.md).
 2. Let's clone the **Taple Client** repository where the scripts we will use later are stored:
     ```bash
     $ git clone https://github.com/opencanarias/taple-client.git ~/taple-client
@@ -80,7 +80,7 @@ CONTROLLER ID ED25519: EJbgafSSzx3QZwem79ypwxp8P4Q2kcrMZtdpzgPF1d3E
 PeerID: 12D3KooWCMc5Lp51YC9chjJ47b6P7puc5pXjKhqKAZpWHtQ9agvk
 ```
 
-Later, following the same pattern described [before](./quickstart#launching-first-node), we will launch the second node, with the difference that now the address to the known node is to the first one deployed:
+Later, following the same pattern described [before](./quickstart.md#launching-first-node), we will launch the second node, with the difference that now the address to the known node is to the first one deployed:
 
 ```bash title="Node 0 Address"
 ...
@@ -153,7 +153,7 @@ We can check everything is working fine by checking that our three terminals are
 
 ## Create a governance and scheme
 ---
-The next step would be to create a governance. Since we are working with three nodes, we will define three members inside the governance. Each one being a validator of the subject , because of that, in policies, we are assigning them as validators with a [quorum](../technology/governance) of 50% so we only need the signature of two of the three nodes to accept it inside the ledger. Also, to model the use case, we are defining an schema so our subject will store three properties: `temperature`, `location` and `batch` . 
+The next step would be to create a governance. Since we are working with three nodes, we will define three members inside the governance. Each one being a validator of the subject , because of that, in policies, we are assigning them as validators with a [quorum](../technology/governance.md) of 50% so we only need the signature of two of the three nodes to accept it inside the ledger. Also, to model the use case, we are defining an schema so our subject will store three properties: `temperature`, `location` and `batch` . 
 
 In the next code block we can see our governance :
 <details>
@@ -462,7 +462,7 @@ If everything went correctly, you will have an output similar to the following i
 ```
 ## Create more subjects
 
-Until now we have created a subject that model a food batch . TAPLE allows us to create more subjects dynamically. Lets create more subjects by repeating steps from ["Create a subject"](./quickstart#create-a-subject):
+Until now we have created a subject that model a food batch . TAPLE allows us to create more subjects dynamically. Lets create more subjects by repeating steps from ["Create a subject"](./quickstart.md#create-a-subject):
 
 1. Create subject:
     ```bash title="Creating subject from Node 1"
@@ -534,7 +534,6 @@ Until now we have created a subject that model a food batch . TAPLE allows us to
     [2023-01-17T16:35:39Z INFO  protocol::command_head_manager::inner_manager] Subject J1_Uw6dWAMmOpK6uJxJ0gmXpr8x-v6Of6tFDxQUX5Eu4 event 0 signed
     [2023-01-17T16:36:35Z INFO  protocol::command_head_manager::inner_manager] Subject J1_Uw6dWAMmOpK6uJxJ0gmXpr8x-v6Of6tFDxQUX5Eu4 event 1 signed
     ```
-4. Display subjects:
 
 ## Display subjects of a node
 ---

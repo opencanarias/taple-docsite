@@ -1,6 +1,6 @@
 # Defining the governance
 
-Once the two nodes are up, the first thing we need to do is to create a governance, since it is the definition of the rules by which the members of the network interact. Initially, we will create a basic governance that will include the two existing nodes and a simple schema. For more information about governance and schemas, please visit the following sections:  **[Governance configuration](../operational-guides/governance-configuration)** and **[Creating a JSON-Schema](../operational-guides/creating-a-json-schema.md)**.
+Once the two nodes are up, the first thing we need to do is to create a governance, since it is the definition of the rules by which the members of the network interact. Initially, we will create a basic governance that will include the two existing nodes and a simple schema. For more information about governance and schemas, please visit the following sections:  **[Governance configuration](../operational-guides/governance-configuration.md)** and **[Creating a JSON-Schema](../operational-guides/creating-a-json-schema.md)**.
 
 ## Create a governance
 

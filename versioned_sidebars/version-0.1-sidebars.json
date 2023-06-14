@@ -205,6 +205,11 @@
           "collapsed": true,
           "items": [
             {
+              "type": "doc",
+              "label": "Description",
+              "id": "develop/taple-core"
+            },
+            {
               "type": "link",
               "label": "Documentation",
               "href": "pathname:///crate-doc/0.1/core/index.html"

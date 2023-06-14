@@ -40,7 +40,7 @@ CONTROLLER ID ED25519: E5jAfbyK8sdmeCgXoDtRYdO2MJDwKd1_EN6aKbMEiJzw
 PeerID: 12D3KooWRJvVv1oXdJxCNn6j5hsNSWs5zgDDt3Rq7yneouf1UdYo
 ```
 
-In order to raise the first node, we must make use of some environment variables which you can find explained in detail in this **[section](../taple-client-config/#environment-variables)**. Also we will use the **PRIVATE KEY ED25519 (HEX)** that we got with the keygen tool in the **TAPLE_NODE_SECRETKEY** env variable. To raise the first node, we must execute the following command:
+In order to raise the first node, we must make use of some environment variables which you can find explained in detail in this **[section](../taple-client-config.md#environment-variables)**. Also we will use the **PRIVATE KEY ED25519 (HEX)** that we got with the keygen tool in the **TAPLE_NODE_SECRETKEY** env variable. To raise the first node, we must execute the following command:
 
 ```bash
     docker run -d --rm -e TAPLE_HTTPPORT=3000 \
@@ -91,7 +91,7 @@ Usually Docker uses the default 172.17. 0.0/16 subnet for container networking. 
 
 ## Runing the second node
 
-To raise a second node, we must follow the same steps as in previous **[section](#runing-the-first-node)** but with some small variations which are shown below:
+To raise a second node, we must follow the same steps as in previous **[section](#running-the-first-node)** but with some small variations which are shown below:
 
 ```bash
     docker run -d --rm -e TAPLE_HTTPPORT=3001 \
@@ -106,4 +106,4 @@ To raise a second node, we must follow the same steps as in previous **[section]
         opencanarias/taple-client:latest
 ```
 
-As we can see, it has been necessary to change the ports and we have also added a new integer variable called **TAPLE_NETWORK_KNOWNODES** in which we must specify the address of the bootstrap node that we previously raised in **[Multiaddr](../../technology/glossary#multiaddr)** (/ip4/172.17.0.2/tcp/40000/p2p/12D3KooWRJvVv1oXdJxCNn6j5hsNSWs5zgDDt3Rq7yneouf1UdYo). This address is the one we have displayed in the previous step. This address can be generated from the information provided by the **taple-keygen** (through the PeerID) and then we compose the address according to our use case or we can see it as output when starting the node, as we have seen in this tutorial.
+As we can see, it has been necessary to change the ports and we have also added a new integer variable called **TAPLE_NETWORK_KNOWNODES** in which we must specify the address of the bootstrap node that we previously raised in **[Multiaddr](../../technology/glossary.md#multiaddr)** (/ip4/172.17.0.2/tcp/40000/p2p/12D3KooWRJvVv1oXdJxCNn6j5hsNSWs5zgDDt3Rq7yneouf1UdYo). This address is the one we have displayed in the previous step. This address can be generated from the information provided by the **taple-keygen** (through the PeerID) and then we compose the address according to our use case or we can see it as output when starting the node, as we have seen in this tutorial.

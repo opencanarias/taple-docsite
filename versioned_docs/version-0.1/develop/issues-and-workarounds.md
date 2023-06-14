@@ -29,7 +29,7 @@ or
     taple-sign: command not found
 ```
 
-The first thing you need to check is that you have installed the [TAPLE-Tools](taple-tools.md#installation). If the problem persists, you may not have the tools in the PATH. Possible solutions:
+The first thing you need to check is that you have installed the [TAPLE-Tools](./taple-tools.md#installation). If the problem persists, you may not have the tools in the PATH. Possible solutions:
 1. Add the ``taple-keygen`` and ``taple-sign`` tools to the PATH. Refer to your operating system documentation.
 2. Go to the directory of the scripts to run them. Example:
 
@@ -50,7 +50,7 @@ The most frequent reason is not having sufficient permissions to run docker. Pos
 2. Configure Docker to run as a non-root user. Refer to the [Docker documentation](https://docs.docker.com/engine/install/linux-postinstall/)
 
 ## Network issues with docker
-While following [QuickStart tutorial](quickstart) some users reports having issues when trying to access localhost on their network. This issue happens when you try to run docker containers using **Docker Desktop** for Mac, for Windows or **Docker EE** for Windows server. This issue happens because scripts used in tutorial use the flag `--network=host` and this flag is not supported outside of Linux System according to [official documentation](https://docs.docker.com/network/host/):
+While following [QuickStart tutorial](./quickstart.md) some users reports having issues when trying to access localhost on their network. This issue happens when you try to run docker containers using **Docker Desktop** for Mac, for Windows or **Docker EE** for Windows server. This issue happens because scripts used in tutorial use the flag `--network=host` and this flag is not supported outside of Linux System according to [official documentation](https://docs.docker.com/network/host/):
 ```
 The host networking driver only works on Linux hosts, and is not supported on Docker Desktop for Mac, Docker Desktop for Windows, or Docker EE for Windows Server.
 ```

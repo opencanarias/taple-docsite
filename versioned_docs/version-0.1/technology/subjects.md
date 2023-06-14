@@ -44,7 +44,7 @@ Any subject has a single owner, this being the only participant in the network t
 
 :::info
 
-To learn more about invokers visit the [Event Life Cycle page](./event-life-cycle.md#event-request) page. 
+To learn more about invokers visit the [Event Life Cycle](./event-life-cycle.md#event-request) page. 
 
 :::
 <!--
@@ -66,6 +66,6 @@ A subject always exists within a use case. Governance is the definition of the r
 
 :::info
 
-To learn more about governance and its structure visit the page [Governance](./governance).
+To learn more about governance and its structure visit the page [Governance](./governance.md).
 
 :::

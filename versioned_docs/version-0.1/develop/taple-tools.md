@@ -36,7 +36,7 @@ These utilities may be used relatively frequently, so we recommend that you incl
 
 ## TAPLE Keygen
 
-Any TAPLE node needs cryptographic material to function. To do so, it is necessary to generate it externally and then indicate it to the node, either by means of environment variables or through input parameters. The TAPLE Keygen utility satisfies this need by allowing, in a simple way, the generation of this cryptographic material. Specifically, its execution allows to obtain a ***private key*** in hexadecimal format, as well as the ***identifier (controller ID)*** which is the identifier at TAPLE level in which its format includes the public key, plus information of the cryptographic scheme used (you can obtain more information in the following **[link](../technology/identity)**). Finally, we can find the Peer ID that the node using the generated private key would have, which is what allows us to identify ourselves within the TAPLE network.
+Any TAPLE node needs cryptographic material to function. To do so, it is necessary to generate it externally and then indicate it to the node, either by means of environment variables or through input parameters. The TAPLE Keygen utility satisfies this need by allowing, in a simple way, the generation of this cryptographic material. Specifically, its execution allows to obtain a ***private key*** in hexadecimal format, as well as the ***identifier (controller ID)*** which is the identifier at TAPLE level in which its format includes the public key, plus information of the cryptographic scheme used (you can obtain more information in the following **[link](../technology/identity.md)**). Finally, we can find the Peer ID that the node using the generated private key would have, which is what allows us to identify ourselves within the TAPLE network.
 
 To use this utility:
 ```
@@ -63,7 +63,7 @@ PeerID: 12D3KooWBXD44QCJEes2199hTGeutyG3a2cmv2YG1Y3Fi8By12fv
 ```
 
 :::info
-It should be noted that currently only two algorithms are supported but TAPLE is intended to add new algorithms (more information can be found in the following **[link](../technology/what-is-taple#objectives)**).
+It should be noted that currently only two algorithms are supported but TAPLE is intended to add new algorithms (more information can be found in the following **[link](../technology/what-is-taple.md#objectives)**).
 :::
 
 ## TAPLE Sign

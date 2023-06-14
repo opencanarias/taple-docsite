@@ -113,7 +113,7 @@ In JSON Schema terms, we update our schema to add:
 
 ## Going deeper with properties
 
-According to the car registry, they cannot have negative mileage. ;)
+According to the car registry, they cannot have negative mileage.
 
 * The `mileage` key is added with the usual `description` schema annotation and `type` validation keywords covered previously. It is also included in the array of keys defined by the `required` validation keyword.
 * We specify that the value of `mileage` must be greater than or equal to zero using the [`minimum`](https://json-schema.org/draft/2020-12/json-schema-validation.html#section-6.2.5) validation keyword.
