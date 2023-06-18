@@ -43,7 +43,9 @@
 <a href="#43" id="43">43</a>
 <a href="#44" id="44">44</a>
 <a href="#45" id="45">45</a>
-</pre></div><pre class="rust"><code><span class="kw">use </span>serde::{Deserialize, Serialize};
+<a href="#46" id="46">46</a>
+</pre></div><pre class="rust"><code><span class="kw">use </span>borsh::{BorshSerialize, BorshDeserialize};
+<span class="kw">use </span>serde::{Deserialize, Serialize};
 
 <span class="kw">use crate</span>::{
     commons::models::{approval::Approval, event_proposal::Evaluation},
@@ -59,7 +61,7 @@
 <span class="kw">pub mod </span>event_completer;
 <span class="kw">pub mod </span>manager;
 
-<span class="attr">#[derive(Debug, Clone, Serialize, Deserialize)]
+<span class="attr">#[derive(Debug, Clone, Serialize, Deserialize, BorshSerialize, BorshDeserialize)]
 </span><span class="kw">pub enum </span>EventCommand {
     Event {
         event_request: EventRequest,

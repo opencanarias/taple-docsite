@@ -59,8 +59,10 @@
 <a href="#59" id="59">59</a>
 <a href="#60" id="60">60</a>
 <a href="#61" id="61">61</a>
+<a href="#62" id="62">62</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>std::collections::HashSet;
 
+<span class="kw">use </span>borsh::{BorshDeserialize, BorshSerialize};
 <span class="kw">use </span>serde::{Deserialize, Serialize};
 
 <span class="kw">use crate</span>::{
@@ -72,7 +74,7 @@
 <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">mod </span>inner_manager;
 <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">mod </span>manager;
 
-<span class="attr">#[derive(Clone, Serialize, Deserialize, Debug)]
+<span class="attr">#[derive(Clone, Serialize, Deserialize, Debug, BorshSerialize, BorshDeserialize)]
 </span><span class="kw">pub enum </span>DistributionMessagesNew {
     ProvideSignatures(AskForSignatures),
     SignaturesReceived(SignaturesReceived),
@@ -82,7 +84,7 @@
     },
 }
 
-<span class="attr">#[derive(Clone, Serialize, Deserialize, Debug)]
+<span class="attr">#[derive(Clone, Serialize, Deserialize, Debug, BorshSerialize, BorshDeserialize)]
 </span><span class="kw">pub struct </span>AskForSignatures {
     <span class="kw">pub </span>subject_id: DigestIdentifier,
     <span class="kw">pub </span>sn: u64,
@@ -90,7 +92,7 @@
     <span class="kw">pub </span>sender_id: KeyIdentifier,
 }
 
-<span class="attr">#[derive(Clone, Serialize, Deserialize, Debug)]
+<span class="attr">#[derive(Clone, Serialize, Deserialize, Debug, BorshSerialize, BorshDeserialize)]
 </span><span class="kw">pub struct </span>SignaturesReceived {
     <span class="kw">pub </span>subject_id: DigestIdentifier,
     <span class="kw">pub </span>sn: u64,

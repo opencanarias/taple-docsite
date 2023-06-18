@@ -698,20 +698,61 @@
 <a href="#698" id="698">698</a>
 <a href="#699" id="699">699</a>
 <a href="#700" id="700">700</a>
+<a href="#701" id="701">701</a>
+<a href="#702" id="702">702</a>
+<a href="#703" id="703">703</a>
+<a href="#704" id="704">704</a>
+<a href="#705" id="705">705</a>
+<a href="#706" id="706">706</a>
+<a href="#707" id="707">707</a>
+<a href="#708" id="708">708</a>
+<a href="#709" id="709">709</a>
+<a href="#710" id="710">710</a>
+<a href="#711" id="711">711</a>
+<a href="#712" id="712">712</a>
+<a href="#713" id="713">713</a>
+<a href="#714" id="714">714</a>
+<a href="#715" id="715">715</a>
+<a href="#716" id="716">716</a>
+<a href="#717" id="717">717</a>
+<a href="#718" id="718">718</a>
+<a href="#719" id="719">719</a>
+<a href="#720" id="720">720</a>
+<a href="#721" id="721">721</a>
+<a href="#722" id="722">722</a>
+<a href="#723" id="723">723</a>
+<a href="#724" id="724">724</a>
+<a href="#725" id="725">725</a>
+<a href="#726" id="726">726</a>
+<a href="#727" id="727">727</a>
+<a href="#728" id="728">728</a>
+<a href="#729" id="729">729</a>
+<a href="#730" id="730">730</a>
+<a href="#731" id="731">731</a>
+<a href="#732" id="732">732</a>
+<a href="#733" id="733">733</a>
+<a href="#734" id="734">734</a>
+<a href="#735" id="735">735</a>
+<a href="#736" id="736">736</a>
+<a href="#737" id="737">737</a>
+<a href="#738" id="738">738</a>
+<a href="#739" id="739">739</a>
+<a href="#740" id="740">740</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>std::collections::HashSet;
 
-<span class="kw">use super</span>::{GetEventsOfSubject, GetGovernanceSubjects};
 <span class="kw">use super</span>::{
     error::{APIInternalError, ApiError},
     inner_api::InnerAPI,
     APICommands, ApiResponses,
 };
+<span class="kw">use super</span>::{GetEventsOfSubject, GetGovernanceSubjects};
 <span class="attr">#[cfg(feature = <span class="string">&quot;aproval&quot;</span>)]
 </span><span class="kw">use </span><span class="kw">crate</span>::approval::manager::ApprovalAPI;
 <span class="kw">use </span><span class="kw">crate</span>::authorized_subjecs::manager::AuthorizedSubjectsAPI;
 <span class="kw">use </span><span class="kw">crate</span>::commons::models::approval::ApprovalStatus;
 <span class="kw">use </span><span class="kw">crate</span>::commons::models::event::Event;
 <span class="kw">use </span><span class="kw">crate</span>::commons::models::event_request::EventRequest;
+<span class="kw">use </span><span class="kw">crate</span>::commons::models::request::TapleRequest;
 <span class="kw">use </span><span class="kw">crate</span>::commons::models::state::SubjectData;
 <span class="kw">use </span><span class="kw">crate</span>::commons::{
     channel::{ChannelData, MpscChannel, SenderEnd},
@@ -720,12 +761,12 @@
 };
 <span class="kw">use </span><span class="kw">crate</span>::event::manager::EventAPI;
 <span class="kw">use </span><span class="kw">crate</span>::ledger::manager::EventManagerAPI;
-<span class="kw">use </span><span class="kw">crate</span>::KeyIdentifier;
 <span class="kw">use </span><span class="kw">crate</span>::signature::Signature;
+<span class="kw">use </span><span class="kw">crate</span>::KeyIdentifier;
 <span class="kw">use crate</span>::{
     approval::ApprovalPetitionData,
     commons::models::Acceptance,
-    event_request::{CreateRequest, EventRequestType, StateRequest},
+    event_request::{CreateRequest, EventRequestType, FactRequest},
     identifier::DigestIdentifier,
     DatabaseCollection, DB,
 };
@@ -807,6 +848,8 @@
         from: <span class="prelude-ty">Option</span>&lt;i64&gt;,
         quantity: <span class="prelude-ty">Option</span>&lt;i64&gt;,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;Vec&lt;Event&gt;, ApiError&gt;;
+
+    <span class="kw">async fn </span>get_event(<span class="kw-2">&amp;</span><span class="self">self</span>, subject_id: DigestIdentifier, sn: u64) -&gt; <span class="prelude-ty">Result</span>&lt;Event, ApiError&gt;;
     <span class="doccomment">/// Allows to create a new subject in the node, being its owner the node in question.
     /// # Possible errors
     /// • [ApiError::InternalError] if an internal error occurred during the execution of the operation.&lt;br /&gt;
@@ -820,6 +863,8 @@
         governance_id: DigestIdentifier,
         schema_id: String,
         namespace: String,
+        name: String,
+        public_key: KeyIdentifier,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;DigestIdentifier, ApiError&gt;;
     <span class="doccomment">/// Allows to obtain a specified subject by specifying its identifier.
     /// # Possible errors
@@ -832,7 +877,11 @@
     /// • [ApiError::SignError] if it has not been possible to create the signature that accompanies
     /// the creation of the event with the identity of the node.&lt;br /&gt;
     /// • [ApiError::EventCreationError] if it has not been possible to create the governance.
-    </span><span class="kw">async fn </span>create_governance(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;DigestIdentifier, ApiError&gt;;
+    </span><span class="kw">async fn </span>create_governance(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        name: String,
+        public_key: KeyIdentifier,
+    ) -&gt; <span class="prelude-ty">Result</span>&lt;DigestIdentifier, ApiError&gt;;
     <span class="doccomment">/// Stops the node, consuming the instance on the fly. This implies that any previously created API
     /// or [NotificationHandler] instances will no longer be functional.
     </span><span class="kw">async fn </span>shutdown(<span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;(), ApiError&gt;;
@@ -875,14 +924,12 @@
         subject_id: <span class="kw-2">&amp;</span>DigestIdentifier,
         providers: <span class="kw-2">&amp;</span>HashSet&lt;KeyIdentifier&gt;,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;(), ApiError&gt;;
-    <span class="kw">async fn </span>expecting_transfer(
-        <span class="kw-2">&amp;</span><span class="self">self</span>,
-        subject_id: DigestIdentifier,
-    ) -&gt; <span class="prelude-ty">Result</span>&lt;KeyIdentifier, ApiError&gt;;
+    <span class="kw">async fn </span>generate_keys(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;KeyIdentifier, ApiError&gt;;
     <span class="kw">async fn </span>get_validation_proof(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        subject_id: DigestIdentifier
-    ) -&gt;  <span class="prelude-ty">Result</span>&lt;HashSet&lt;Signature&gt;, ApiError&gt;;
+        subject_id: DigestIdentifier,
+    ) -&gt; <span class="prelude-ty">Result</span>&lt;HashSet&lt;Signature&gt;, ApiError&gt;;
+    <span class="kw">async fn </span>get_request(<span class="kw-2">&amp;</span><span class="self">self</span>, request_id: DigestIdentifier) -&gt; <span class="prelude-ty">Result</span>&lt;TapleRequest, ApiError&gt;;
     <span class="kw">async fn </span>get_governance_subjects(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         governance_id: DigestIdentifier,
@@ -924,6 +971,19 @@
             .<span class="kw">await
             </span>.unwrap();
         <span class="kw">if let </span>ApiResponses::HandleRequest(data) = response {
+            data
+        } <span class="kw">else </span>{
+            <span class="macro">unreachable!</span>()
+        }
+    }
+
+    <span class="kw">async fn </span>get_request(<span class="kw-2">&amp;</span><span class="self">self</span>, request_id: DigestIdentifier) -&gt; <span class="prelude-ty">Result</span>&lt;TapleRequest, ApiError&gt; {
+        <span class="kw">let </span>response = <span class="self">self
+            </span>.sender
+            .ask(APICommands::GetRequest(request_id))
+            .<span class="kw">await
+            </span>.unwrap();
+        <span class="kw">if let </span>ApiResponses::GetRequest(data) = response {
             data
         } <span class="kw">else </span>{
             <span class="macro">unreachable!</span>()
@@ -982,9 +1042,9 @@
         subject_id: DigestIdentifier,
         payload: String,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;DigestIdentifier, ApiError&gt; {
-        <span class="kw">let </span>request = EventRequestType::State(StateRequest {
+        <span class="kw">let </span>request = EventRequestType::Fact(FactRequest {
             subject_id,
-            invokation: payload,
+            payload: payload,
         });
         <span class="kw">let </span>response = <span class="self">self
             </span>.sender
@@ -1039,6 +1099,20 @@
             <span class="macro">unreachable!</span>()
         }
     }
+
+    <span class="kw">async fn </span>get_event(<span class="kw-2">&amp;</span><span class="self">self</span>, subject_id: DigestIdentifier, sn: u64) -&gt; <span class="prelude-ty">Result</span>&lt;Event, ApiError&gt; {
+        <span class="kw">let </span>response = <span class="self">self
+            </span>.sender
+            .ask(APICommands::GetEvent(subject_id, sn))
+            .<span class="kw">await
+            </span>.unwrap();
+        <span class="kw">if let </span>ApiResponses::GetEvent(data) = response {
+            data
+        } <span class="kw">else </span>{
+            <span class="macro">unreachable!</span>()
+        }
+    }
+
     <span class="kw">async fn </span>get_event_of_subject(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         subject_id: DigestIdentifier,
@@ -1065,11 +1139,15 @@
         governance_id: DigestIdentifier,
         schema_id: String,
         namespace: String,
+        name: String,
+        public_key: KeyIdentifier,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;DigestIdentifier, ApiError&gt; {
         <span class="kw">let </span>request = EventRequestType::Create(CreateRequest {
             governance_id,
             schema_id,
             namespace,
+            name,
+            public_key,
         });
         <span class="kw">let </span>response = <span class="self">self
             </span>.sender
@@ -1096,11 +1174,17 @@
             <span class="macro">unreachable!</span>()
         }
     }
-    <span class="kw">async fn </span>create_governance(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;DigestIdentifier, ApiError&gt; {
+    <span class="kw">async fn </span>create_governance(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        name: String,
+        public_key: KeyIdentifier,
+    ) -&gt; <span class="prelude-ty">Result</span>&lt;DigestIdentifier, ApiError&gt; {
         <span class="kw">let </span>request = EventRequestType::Create(CreateRequest {
             governance_id: DigestIdentifier::default(),
-            schema_id: <span class="string">&quot;&quot;</span>.into(),
+            schema_id: <span class="string">&quot;governance&quot;</span>.into(),
             namespace: <span class="string">&quot;&quot;</span>.into(),
+            name,
+            public_key,
         });
         <span class="kw">let </span>response = <span class="self">self
             </span>.sender
@@ -1161,16 +1245,9 @@
         }
     }
 
-    <span class="kw">async fn </span>expecting_transfer(
-        <span class="kw-2">&amp;</span><span class="self">self</span>,
-        subject_id: DigestIdentifier,
-    ) -&gt; <span class="prelude-ty">Result</span>&lt;KeyIdentifier, ApiError&gt; {
-        <span class="kw">let </span>response = <span class="self">self
-            </span>.sender
-            .ask(APICommands::ExpectingTransfer(subject_id))
-            .<span class="kw">await
-            </span>.unwrap();
-        <span class="kw">if let </span>ApiResponses::ExpectingTransfer(data) = response {
+    <span class="kw">async fn </span>generate_keys(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;KeyIdentifier, ApiError&gt; {
+        <span class="kw">let </span>response = <span class="self">self</span>.sender.ask(APICommands::GenerateKeys).<span class="kw">await</span>.unwrap();
+        <span class="kw">if let </span>ApiResponses::GenerateKeys(data) = response {
             data
         } <span class="kw">else </span>{
             <span class="macro">unreachable!</span>()
@@ -1179,10 +1256,10 @@
 
     <span class="kw">async fn </span>get_validation_proof(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        subject_id: DigestIdentifier
+        subject_id: DigestIdentifier,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;HashSet&lt;Signature&gt;, ApiError&gt; {
-        <span class="kw">let </span>response = <span class="self">self</span>.
-            sender
+        <span class="kw">let </span>response = <span class="self">self
+            </span>.sender
             .ask(APICommands::GetValidationProof(subject_id))
             .<span class="kw">await
             </span>.unwrap();
@@ -1199,12 +1276,12 @@
         from: <span class="prelude-ty">Option</span>&lt;String&gt;,
         quantity: <span class="prelude-ty">Option</span>&lt;i64&gt;,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;Vec&lt;SubjectData&gt;, ApiError&gt; {
-        <span class="kw">let </span>response = <span class="self">self</span>.
-            sender
+        <span class="kw">let </span>response = <span class="self">self
+            </span>.sender
             .ask(APICommands::GetGovernanceSubjects(GetGovernanceSubjects {
                 governance_id,
                 from,
-                quantity
+                quantity,
             }))
             .<span class="kw">await
             </span>.unwrap();
@@ -1260,8 +1337,7 @@
     <span class="kw">pub fn </span>new(
         input: MpscChannel&lt;APICommands, ApiResponses&gt;,
         event_api: EventAPI,
-        <span class="attr">#[cfg(feature = <span class="string">&quot;aproval&quot;</span>)]
-        </span>approval_api: ApprovalAPI,
+        <span class="attr">#[cfg(feature = <span class="string">&quot;aproval&quot;</span>)] </span>approval_api: ApprovalAPI,
         authorized_subjects_api: AuthorizedSubjectsAPI,
         ledger_api: EventManagerAPI,
         settings_sender: Sender&lt;TapleSettings&gt;,
@@ -1352,6 +1428,12 @@
                     APICommands::GetSingleSubject(data) =&gt; {
                         <span class="self">self</span>.inner_api.get_single_subject(data).<span class="kw">await
                     </span>}
+                    APICommands::GetRequest(request_id) =&gt; {
+                        <span class="self">self</span>.inner_api.get_request(request_id).<span class="kw">await
+                    </span>}
+                    APICommands::GetEvent(subject_id, sn) =&gt; {
+                        <span class="self">self</span>.inner_api.get_event(subject_id, sn)
+                    }
                     <span class="attr">#[cfg(feature = <span class="string">&quot;aproval&quot;</span>)]
                     </span>APICommands::VoteResolve(acceptance, id) =&gt; {
                         <span class="self">self</span>.inner_api.emit_vote(id, acceptance).<span class="kw">await</span><span class="question-mark">?
@@ -1372,9 +1454,7 @@
                             .set_preauthorized_subject(subject_id, providers)
                             .<span class="kw">await</span><span class="question-mark">?
                     </span>}
-                    APICommands::ExpectingTransfer(subject_id) =&gt; {
-                        <span class="self">self</span>.inner_api.expecting_transfer(subject_id).<span class="kw">await</span><span class="question-mark">?
-                    </span>}
+                    APICommands::GenerateKeys =&gt; <span class="self">self</span>.inner_api.generate_keys().<span class="kw">await</span><span class="question-mark">?</span>,
                     APICommands::GetValidationProof(subject_id) =&gt; {
                         <span class="self">self</span>.inner_api.get_validation_proof(subject_id).<span class="kw">await
                     </span>}

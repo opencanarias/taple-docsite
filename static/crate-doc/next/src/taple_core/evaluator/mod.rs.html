@@ -35,7 +35,9 @@
 <a href="#35" id="35">35</a>
 <a href="#36" id="36">36</a>
 <a href="#37" id="37">37</a>
-</pre></div><pre class="rust"><code><span class="kw">use </span>serde::{Deserialize, Serialize};
+<a href="#38" id="38">38</a>
+</pre></div><pre class="rust"><code><span class="kw">use </span>borsh::{BorshSerialize, BorshDeserialize};
+<span class="kw">use </span>serde::{Deserialize, Serialize};
 
 <span class="kw">use crate</span>::{
     commons::models::event_preevaluation::EventPreEvaluation, identifier::DigestIdentifier,
@@ -50,11 +52,11 @@
 <span class="attr">#[cfg(feature = <span class="string">&quot;evaluation&quot;</span>)]
 </span><span class="kw">mod </span>manager;
 <span class="attr">#[cfg(feature = <span class="string">&quot;evaluation&quot;</span>)]
-</span><span class="kw">pub use </span>manager::{EvaluatorAPI, EvaluatorManager};
+</span><span class="kw">pub use </span>manager::{EvaluatorManager};
 <span class="attr">#[cfg(feature = <span class="string">&quot;evaluation&quot;</span>)]
 </span><span class="kw">mod </span>runner;
 
-<span class="attr">#[derive(Clone, Debug, Serialize, Deserialize)]
+<span class="attr">#[derive(Clone, Debug, Serialize, Deserialize, BorshSerialize, BorshDeserialize)]
 </span><span class="kw">pub enum </span>EvaluatorMessage {
     AskForEvaluation(EventPreEvaluation),
 }

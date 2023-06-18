@@ -707,6 +707,14 @@
 <a href="#707" id="707">707</a>
 <a href="#708" id="708">708</a>
 <a href="#709" id="709">709</a>
+<a href="#710" id="710">710</a>
+<a href="#711" id="711">711</a>
+<a href="#712" id="712">712</a>
+<a href="#713" id="713">713</a>
+<a href="#714" id="714">714</a>
+<a href="#715" id="715">715</a>
+<a href="#716" id="716">716</a>
+<a href="#717" id="717">717</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>jsonschema::JSONSchema;
 <span class="kw">use </span>serde_json::{json, Value};
 <span class="kw">use </span>std::str::FromStr;
@@ -735,7 +743,12 @@
     <span class="kw">pub fn </span>validate(<span class="kw-2">&amp;</span><span class="self">self</span>, value: <span class="kw-2">&amp;</span>Value) -&gt; bool {
         <span class="kw">match </span><span class="self">self</span>.json_schema.validate(value) {
             <span class="prelude-val">Ok</span>(<span class="kw">_</span>) =&gt; <span class="bool-val">true</span>,
-            <span class="prelude-val">Err</span>(<span class="kw">_</span>) =&gt; <span class="bool-val">false</span>,
+            <span class="prelude-val">Err</span>(e) =&gt; {
+                <span class="kw">for </span>error <span class="kw">in </span>e {
+                    <span class="macro">println!</span>(<span class="string">&quot;schema validation error: {:?}&quot;</span>, error);
+                }
+                <span class="bool-val">false
+            </span>}
         }
     }
 }
@@ -750,39 +763,38 @@
 <span class="kw">pub fn </span>get_governance_schema() -&gt; Value {
     <span class="macro">json!</span>({
       <span class="string">&quot;$defs&quot;</span>: {
-        <span class="string">&quot;roles&quot;</span>: {
-          <span class="string">&quot;type&quot;</span>: <span class="string">&quot;array&quot;</span>,
-          <span class="string">&quot;items&quot;</span>: {
-            <span class="string">&quot;type&quot;</span>: <span class="string">&quot;string&quot;
-          </span>}
+        <span class="string">&quot;role&quot;</span>: {
+          <span class="string">&quot;type&quot;</span>: <span class="string">&quot;string&quot;</span>,
+          <span class="string">&quot;enum&quot;</span>: [<span class="string">&quot;VALIDATOR&quot;</span>, <span class="string">&quot;CREATOR&quot;</span>, <span class="string">&quot;INVOKER&quot;</span>, <span class="string">&quot;WITNESS&quot;</span>, <span class="string">&quot;APPROVER&quot;</span>, <span class="string">&quot;EVALUATOR&quot;</span>]
         },
         <span class="string">&quot;quorum&quot;</span>: {
           <span class="string">&quot;oneOf&quot;</span>: [
             {
-              <span class="string">&quot;const&quot;</span>: <span class="string">&quot;majority&quot;
-            </span>},
+              <span class="string">&quot;type&quot;</span>: <span class="string">&quot;string&quot;</span>,
+              <span class="string">&quot;enum&quot;</span>: [<span class="string">&quot;MAJORITY&quot;</span>]
+            },
             {
               <span class="string">&quot;type&quot;</span>: <span class="string">&quot;object&quot;</span>,
               <span class="string">&quot;properties&quot;</span>: {
-                <span class="string">&quot;fixed&quot;</span>: {
+                <span class="string">&quot;FIXED&quot;</span>: {
                   <span class="string">&quot;type&quot;</span>: <span class="string">&quot;number&quot;</span>,
                   <span class="string">&quot;minimum&quot;</span>: <span class="number">1</span>,
                   <span class="string">&quot;multipleOf&quot;</span>: <span class="number">1
                 </span>}
               },
-              <span class="string">&quot;required&quot;</span>: [<span class="string">&quot;Fixed&quot;</span>],
+              <span class="string">&quot;required&quot;</span>: [<span class="string">&quot;FIXED&quot;</span>],
               <span class="string">&quot;additionalProperties&quot;</span>: <span class="bool-val">false
             </span>},
             {
               <span class="string">&quot;type&quot;</span>: <span class="string">&quot;object&quot;</span>,
               <span class="string">&quot;properties&quot;</span>: {
-                <span class="string">&quot;porcentaje&quot;</span>: {
+                <span class="string">&quot;PORCENTAJE&quot;</span>: {
                   <span class="string">&quot;type&quot;</span>: <span class="string">&quot;number&quot;</span>,
                   <span class="string">&quot;minimum&quot;</span>: <span class="number">0</span>,
                   <span class="string">&quot;maximum&quot;</span>: <span class="number">1
                 </span>}
               },
-              <span class="string">&quot;required&quot;</span>: [<span class="string">&quot;Porcentaje&quot;</span>],
+              <span class="string">&quot;required&quot;</span>: [<span class="string">&quot;PORCENTAJE&quot;</span>],
               <span class="string">&quot;additionalProperties&quot;</span>: <span class="bool-val">false
             </span>},
             {
@@ -798,17 +810,6 @@
               <span class="string">&quot;additionalProperties&quot;</span>: <span class="bool-val">false
             </span>}
           ]
-        },
-        <span class="string">&quot;validation&quot;</span>: {
-          <span class="string">&quot;type&quot;</span>: <span class="string">&quot;object&quot;</span>,
-                <span class="string">&quot;additionalProperties&quot;</span>: <span class="bool-val">false</span>,
-                <span class="string">&quot;required&quot;</span>: [<span class="string">&quot;roles&quot;</span>, <span class="string">&quot;quorum&quot;</span>],
-                <span class="string">&quot;roles&quot;</span>: {
-                  <span class="string">&quot;$ref&quot;</span>: <span class="string">&quot;#/$defs/roles&quot;
-                </span>},
-                <span class="string">&quot;quorum&quot;</span>: {
-                  <span class="string">&quot;$ref&quot;</span>: <span class="string">&quot;#/$defs/quorum&quot;
-                </span>}
         }
       },
       <span class="string">&quot;type&quot;</span>: <span class="string">&quot;object&quot;</span>,
@@ -825,20 +826,17 @@
           <span class="string">&quot;items&quot;</span>: {
             <span class="string">&quot;type&quot;</span>: <span class="string">&quot;object&quot;</span>,
             <span class="string">&quot;properties&quot;</span>: {
+              <span class="string">&quot;name&quot;</span>: {
+                <span class="string">&quot;type&quot;</span>: <span class="string">&quot;string&quot;
+              </span>},
               <span class="string">&quot;id&quot;</span>: {
-                <span class="string">&quot;type&quot;</span>: <span class="string">&quot;string&quot;
-              </span>},
-              <span class="string">&quot;description&quot;</span>: {
-                <span class="string">&quot;type&quot;</span>: <span class="string">&quot;string&quot;
-              </span>},
-              <span class="string">&quot;key&quot;</span>: {
                 <span class="string">&quot;type&quot;</span>: <span class="string">&quot;string&quot;</span>,
                 <span class="string">&quot;format&quot;</span>: <span class="string">&quot;keyidentifier&quot;
               </span>}
             },
             <span class="string">&quot;required&quot;</span>: [
               <span class="string">&quot;id&quot;</span>,
-              <span class="string">&quot;key&quot;
+              <span class="string">&quot;name&quot;
             </span>],
             <span class="string">&quot;additionalProperties&quot;</span>: <span class="bool-val">false
           </span>}
@@ -853,49 +851,59 @@
                 {
                   <span class="string">&quot;type&quot;</span>: <span class="string">&quot;object&quot;</span>,
                   <span class="string">&quot;properties&quot;</span>: {
-                    <span class="string">&quot;id&quot;</span>: {
+                    <span class="string">&quot;ID&quot;</span>: {
                       <span class="string">&quot;type&quot;</span>: <span class="string">&quot;string&quot;
                     </span>}
                   },
-                  <span class="string">&quot;required&quot;</span>: [<span class="string">&quot;id&quot;</span>],
+                  <span class="string">&quot;required&quot;</span>: [<span class="string">&quot;ID&quot;</span>],
                   <span class="string">&quot;additionalProperties&quot;</span>: <span class="bool-val">false
                 </span>},
                 {
-                  <span class="string">&quot;const&quot;</span>: <span class="string">&quot;members&quot;
+                  <span class="string">&quot;type&quot;</span>: <span class="string">&quot;object&quot;</span>,
+                  <span class="string">&quot;properties&quot;</span>: {
+                    <span class="string">&quot;NAME&quot;</span>: {
+                      <span class="string">&quot;type&quot;</span>: <span class="string">&quot;string&quot;
+                    </span>}
+                  },
+                  <span class="string">&quot;required&quot;</span>: [<span class="string">&quot;NAME&quot;</span>],
+                  <span class="string">&quot;additionalProperties&quot;</span>: <span class="bool-val">false
                 </span>},
                 {
-                  <span class="string">&quot;const&quot;</span>: <span class="string">&quot;all&quot;
+                  <span class="string">&quot;const&quot;</span>: <span class="string">&quot;MEMBERS&quot;
                 </span>},
                 {
-                  <span class="string">&quot;const&quot;</span>: <span class="string">&quot;external&quot;
+                  <span class="string">&quot;const&quot;</span>: <span class="string">&quot;ALL&quot;
+                </span>},
+                {
+                  <span class="string">&quot;const&quot;</span>: <span class="string">&quot;NOT_MEMBERS&quot;
                 </span>}
               ]
             },
             <span class="string">&quot;namespace&quot;</span>: {
               <span class="string">&quot;type&quot;</span>: <span class="string">&quot;string&quot;
             </span>},
-            <span class="string">&quot;roles&quot;</span>: {
-              <span class="string">&quot;$ref&quot;</span>: <span class="string">&quot;#/$defs/roles&quot;
+            <span class="string">&quot;role&quot;</span>: {
+              <span class="string">&quot;$ref&quot;</span>: <span class="string">&quot;#/$defs/role&quot;
             </span>},
             <span class="string">&quot;schema&quot;</span>: {
               <span class="string">&quot;oneOf&quot;</span>: [
                 {
                   <span class="string">&quot;type&quot;</span>: <span class="string">&quot;object&quot;</span>,
                   <span class="string">&quot;properties&quot;</span>: {
-                    <span class="string">&quot;id&quot;</span>: {
+                    <span class="string">&quot;ID&quot;</span>: {
                       <span class="string">&quot;type&quot;</span>: <span class="string">&quot;string&quot;
                     </span>}
                   },
-                  <span class="string">&quot;required&quot;</span>: [<span class="string">&quot;id&quot;</span>],
+                  <span class="string">&quot;required&quot;</span>: [<span class="string">&quot;ID&quot;</span>],
                   <span class="string">&quot;additionalProperties&quot;</span>: <span class="bool-val">false
                 </span>},
                 {
-                  <span class="string">&quot;const&quot;</span>: <span class="string">&quot;all_schemas&quot;
+                  <span class="string">&quot;const&quot;</span>: <span class="string">&quot;ALL&quot;
                 </span>}
                 ]
               }
             },
-            <span class="string">&quot;required&quot;</span>: [<span class="string">&quot;who&quot;</span>, <span class="string">&quot;roles&quot;</span>, <span class="string">&quot;schema&quot;</span>, <span class="string">&quot;namespace&quot;</span>],
+            <span class="string">&quot;required&quot;</span>: [<span class="string">&quot;who&quot;</span>, <span class="string">&quot;role&quot;</span>, <span class="string">&quot;schema&quot;</span>, <span class="string">&quot;namespace&quot;</span>],
             <span class="string">&quot;additionalProperties&quot;</span>: <span class="bool-val">false
           </span>}
         },
@@ -908,7 +916,7 @@
               <span class="string">&quot;id&quot;</span>: {
                 <span class="string">&quot;type&quot;</span>: <span class="string">&quot;string&quot;
               </span>},
-              <span class="string">&quot;state_schema&quot;</span>: {
+              <span class="string">&quot;schema&quot;</span>: {
                 <span class="string">&quot;$schema&quot;</span>: <span class="string">&quot;http://json-schema.org/draft/2020-12/schema&quot;</span>,
                 <span class="string">&quot;$id&quot;</span>: <span class="string">&quot;http://json-schema.org/draft/2020-12/schema&quot;</span>,
                 <span class="string">&quot;$vocabulary&quot;</span>: {
@@ -1355,27 +1363,12 @@
                 <span class="string">&quot;additionalProperties&quot;</span>: <span class="bool-val">false</span>,
                 <span class="string">&quot;required&quot;</span>: [<span class="string">&quot;name&quot;</span>, <span class="string">&quot;content&quot;</span>]
               },
-              <span class="string">&quot;facts&quot;</span>: {
-                <span class="string">&quot;type&quot;</span>: <span class="string">&quot;object&quot;</span>,
-                <span class="string">&quot;properties&quot;</span>: {
-                  <span class="string">&quot;name&quot;</span>: {
-                    <span class="string">&quot;type&quot;</span>: <span class="string">&quot;string&quot;
-                  </span>},
-                  <span class="string">&quot;description&quot;</span>: {
-                    <span class="string">&quot;type&quot;</span>: <span class="string">&quot;string&quot;
-                  </span>},
-                  <span class="string">&quot;schema&quot;</span>:{}
-                },
-                <span class="string">&quot;additionalProperties&quot;</span>: <span class="bool-val">false</span>,
-                <span class="string">&quot;required&quot;</span>: [<span class="string">&quot;name&quot;</span>, <span class="string">&quot;schema&quot;</span>]
-              }
             },
             <span class="string">&quot;required&quot;</span>: [
               <span class="string">&quot;id&quot;</span>,
-              <span class="string">&quot;state_schema&quot;</span>,
+              <span class="string">&quot;schema&quot;</span>,
               <span class="string">&quot;initial_value&quot;</span>,
-              <span class="string">&quot;contract&quot;</span>,
-              <span class="string">&quot;facts&quot;
+              <span class="string">&quot;contract&quot;
             </span>],
             <span class="string">&quot;additionalProperties&quot;</span>: <span class="bool-val">false
           </span>}
@@ -1386,34 +1379,57 @@
             <span class="string">&quot;type&quot;</span>: <span class="string">&quot;object&quot;</span>,
             <span class="string">&quot;additionalProperties&quot;</span>: <span class="bool-val">false</span>,
             <span class="string">&quot;required&quot;</span>: [
-              <span class="string">&quot;id&quot;</span>, <span class="string">&quot;approve&quot;</span>, <span class="string">&quot;evaluate&quot;</span>, <span class="string">&quot;validate&quot;</span>, <span class="string">&quot;create&quot;</span>, <span class="string">&quot;witness&quot;</span>, <span class="string">&quot;close&quot;
+              <span class="string">&quot;id&quot;</span>, <span class="string">&quot;approve&quot;</span>, <span class="string">&quot;evaluate&quot;</span>, <span class="string">&quot;validate&quot;
             </span>],
             <span class="string">&quot;properties&quot;</span>: {
               <span class="string">&quot;id&quot;</span>: {
                 <span class="string">&quot;type&quot;</span>: <span class="string">&quot;string&quot;
               </span>},
               <span class="string">&quot;approve&quot;</span>: {
-                <span class="string">&quot;$ref&quot;</span>: <span class="string">&quot;#/$defs/validation&quot;
-              </span>},
+                <span class="string">&quot;type&quot;</span>: <span class="string">&quot;object&quot;</span>,
+                <span class="string">&quot;additionalProperties&quot;</span>: <span class="bool-val">false</span>,
+                <span class="string">&quot;required&quot;</span>: [<span class="string">&quot;quorum&quot;</span>],
+                <span class="string">&quot;properties&quot;</span>: {
+                  <span class="string">&quot;quorum&quot;</span>: {
+                    <span class="string">&quot;$ref&quot;</span>: <span class="string">&quot;#/$defs/quorum&quot;
+                  </span>}
+                }
+              },
               <span class="string">&quot;evaluate&quot;</span>: {
-                <span class="string">&quot;$ref&quot;</span>: <span class="string">&quot;#/$defs/validation&quot;
-              </span>},
+                <span class="string">&quot;type&quot;</span>: <span class="string">&quot;object&quot;</span>,
+                <span class="string">&quot;additionalProperties&quot;</span>: <span class="bool-val">false</span>,
+                <span class="string">&quot;required&quot;</span>: [<span class="string">&quot;quorum&quot;</span>],
+                <span class="string">&quot;properties&quot;</span>: {
+                  <span class="string">&quot;quorum&quot;</span>: {
+                    <span class="string">&quot;$ref&quot;</span>: <span class="string">&quot;#/$defs/quorum&quot;
+                  </span>}
+                }
+              },
               <span class="string">&quot;validate&quot;</span>: {
-                <span class="string">&quot;$ref&quot;</span>: <span class="string">&quot;#/$defs/validation&quot;
-              </span>},
-              <span class="string">&quot;create&quot;</span>: {
-                <span class="string">&quot;$ref&quot;</span>: <span class="string">&quot;#/$defs/roles&quot;
-              </span>},
-              <span class="string">&quot;witness&quot;</span>: {
-                <span class="string">&quot;$ref&quot;</span>: <span class="string">&quot;#/$defs/roles&quot;
-              </span>},
-              <span class="string">&quot;close&quot;</span>: {
-                <span class="string">&quot;$ref&quot;</span>: <span class="string">&quot;#/$defs/roles&quot;
-              </span>}
+                <span class="string">&quot;type&quot;</span>: <span class="string">&quot;object&quot;</span>,
+                <span class="string">&quot;additionalProperties&quot;</span>: <span class="bool-val">false</span>,
+                <span class="string">&quot;required&quot;</span>: [<span class="string">&quot;quorum&quot;</span>],
+                <span class="string">&quot;properties&quot;</span>: {
+                  <span class="string">&quot;quorum&quot;</span>: {
+                    <span class="string">&quot;$ref&quot;</span>: <span class="string">&quot;#/$defs/quorum&quot;
+                  </span>}
+                }
+              }
             }
           }
-        }
+        }        
       }
     })
+}
+
+<span class="attr">#[cfg(test)]
+</span><span class="kw">mod </span>test {
+    <span class="kw">use </span><span class="kw">super</span>::Schema;
+
+    <span class="attr">#[test]
+    </span><span class="kw">fn </span>compile_gov_schema() {
+        <span class="kw">let </span>gov_schema = <span class="kw">super</span>::get_governance_schema();
+        <span class="kw">let </span>schema = Schema::compile(<span class="kw-2">&amp;</span>gov_schema).expect(<span class="string">&quot;gov schema compiles&quot;</span>);
+    }
 }
 </code></pre></div></section></main></body></html>

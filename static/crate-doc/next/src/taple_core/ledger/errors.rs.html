@@ -75,6 +75,8 @@
 <a href="#75" id="75">75</a>
 <a href="#76" id="76">76</a>
 <a href="#77" id="77">77</a>
+<a href="#78" id="78">78</a>
+<a href="#79" id="79">79</a>
 </pre></div><pre class="rust"><code><span class="kw">use crate</span>::{commons::errors::SubjectError, governance::error::RequestError};
 <span class="kw">use </span>thiserror::Error;
 <span class="kw">use </span><span class="kw">crate</span>::database::Error <span class="kw">as </span>DbError;
@@ -151,5 +153,7 @@
     </span>IntermediateEOL(String),
     <span class="attr">#[error(<span class="string">&quot;Subject Life Ended: {0}&quot;</span>)]
     </span>SubjectLifeEnd(String),
+    <span class="attr">#[error(<span class="string">&quot;Repeated Request ID: {0}&quot;</span>)]
+    </span>RepeatedRequestId(String),
 }
 </code></pre></div></section></main></body></html>

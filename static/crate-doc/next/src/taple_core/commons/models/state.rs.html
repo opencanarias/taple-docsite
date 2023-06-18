@@ -226,13 +226,30 @@
 <a href="#226" id="226">226</a>
 <a href="#227" id="227">227</a>
 <a href="#228" id="228">228</a>
+<a href="#229" id="229">229</a>
+<a href="#230" id="230">230</a>
+<a href="#231" id="231">231</a>
+<a href="#232" id="232">232</a>
+<a href="#233" id="233">233</a>
+<a href="#234" id="234">234</a>
+<a href="#235" id="235">235</a>
+<a href="#236" id="236">236</a>
+<a href="#237" id="237">237</a>
+<a href="#238" id="238">238</a>
+<a href="#239" id="239">239</a>
+<a href="#240" id="240">240</a>
+<a href="#241" id="241">241</a>
+<a href="#242" id="242">242</a>
+<a href="#243" id="243">243</a>
+<a href="#244" id="244">244</a>
+<a href="#245" id="245">245</a>
 </pre></div><pre class="rust"><code><span class="kw">use crate</span>::{
     commons::{
-        crypto::{Ed25519KeyPair, KeyGenerator, KeyMaterial, KeyPair},
+        crypto::{KeyPair},
         errors::SubjectError,
         identifier::{DigestIdentifier, KeyIdentifier},
     },
-    event_request::EventRequest,
+    Derivable,
 };
 <span class="kw">use </span>json_patch::{patch, Patch};
 <span class="kw">use </span>serde::{Deserialize, Serialize};
@@ -249,9 +266,11 @@
     </span><span class="kw">pub </span>governance_id: DigestIdentifier,
     <span class="doccomment">/// Current sequence number of the subject
     </span><span class="kw">pub </span>sn: u64,
+    <span class="kw">pub </span>genesis_gov_version: u64,
     <span class="doccomment">/// Public key of the subject
     </span><span class="kw">pub </span>public_key: KeyIdentifier,
     <span class="kw">pub </span>namespace: String,
+    <span class="kw">pub </span>name: String,
     <span class="doccomment">/// Identifier of the schema used by the subject and defined in associated governance
     </span><span class="kw">pub </span>schema_id: String,
     <span class="doccomment">/// Subject owner identifier
@@ -305,62 +324,57 @@
 }
 
 <span class="kw">impl </span>Subject {
-    <span class="kw">pub fn </span>from_genesis_request(
-        event_request: EventRequest,
-        init_state: String,
-    ) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>, SubjectError&gt; {
-        <span class="kw">let </span>EventRequestType::Create(create_request) = event_request.request.clone() <span class="kw">else </span>{
-            <span class="kw">return </span><span class="prelude-val">Err</span>(SubjectError::NotCreateEvent)
-        };
-        <span class="comment">// TODO: Pasar que tipo de esquema criptográfico se quiere usar por parametros
-        </span><span class="kw">let </span>keys = KeyPair::Ed25519(Ed25519KeyPair::new());
-        <span class="kw">let </span>public_key = KeyIdentifier::new(keys.get_key_derivator(), <span class="kw-2">&amp;</span>keys.public_key_bytes());
-        <span class="kw">let </span>subject_id = <span class="kw">match </span>DigestIdentifier::from_serializable_borsh((
-            <span class="kw-2">&amp;</span>event_request.signature.content.event_content_hash,
-            <span class="kw-2">&amp;</span>public_key.public_key,
-        )) {
-            <span class="prelude-val">Ok</span>(subject_id) =&gt; subject_id,
-            <span class="prelude-val">Err</span>(<span class="kw">_</span>) =&gt; <span class="kw">return </span><span class="prelude-val">Err</span>(SubjectError::ErrorCreatingSubjectId),
-        };
-        <span class="prelude-val">Ok</span>(Subject {
-            keys: <span class="prelude-val">Some</span>(keys),
-            subject_id,
-            governance_id: create_request.governance_id.clone(),
-            sn: <span class="number">0</span>,
-            public_key,
-            namespace: create_request.namespace.clone(),
-            schema_id: create_request.schema_id.clone(),
-            owner: event_request.signature.content.signer.clone(),
-            creator: event_request.signature.content.signer.clone(),
-            properties: init_state,
-            active: <span class="bool-val">true</span>,
-        })
-    }
+    <span class="comment">// // TODO: Probablemente borrar
+    // pub fn from_genesis_request(
+    //     event_request: EventRequest,
+    //     init_state: String,
+    // ) -&gt; Result&lt;Self, SubjectError&gt; {
+    //     let EventRequestType::Create(create_request) = event_request.request.clone() else {
+    //         return Err(SubjectError::NotCreateEvent)
+    //     };
+    //     // TODO: Pasar que tipo de esquema criptográfico se quiere usar por parametros
+    //     let keys = KeyPair::Ed25519(Ed25519KeyPair::new());
+    //     let public_key = KeyIdentifier::new(keys.get_key_derivator(), &amp;keys.public_key_bytes());
+    //     let subject_id = generate_subject_id(
+    //         &amp;create_request.namespace,
+    //         &amp;create_request.schema_id,
+    //         create_request.public_key.to_str(),
+    //         create_request.governance_id.to_str(),
+    //         0, // Ta mal
+    //     )?;
+    //     Ok(Subject {
+    //         keys: Some(keys),
+    //         subject_id,
+    //         governance_id: create_request.governance_id.clone(),
+    //         sn: 0,
+    //         public_key,
+    //         namespace: create_request.namespace.clone(),
+    //         schema_id: create_request.schema_id.clone(),
+    //         owner: event_request.signature.content.signer.clone(),
+    //         creator: event_request.signature.content.signer.clone(),
+    //         properties: init_state,
+    //         active: true,
+    //         name: create_request.name,
+    //     })
+    // }
 
-    <span class="kw">pub fn </span>from_genesis_event(event: Event, init_state: String) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>, SubjectError&gt; {
+    </span><span class="kw">pub fn </span>from_genesis_event(event: Event, init_state: String) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>, SubjectError&gt; {
         <span class="kw">let </span>EventRequestType::Create(create_request) = event.content.event_proposal.proposal.event_request.request.clone() <span class="kw">else </span>{
             <span class="kw">return </span><span class="prelude-val">Err</span>(SubjectError::NotCreateEvent)
         };
-        <span class="kw">let </span>subject_id = <span class="kw">match </span>DigestIdentifier::from_serializable_borsh((
-            <span class="kw-2">&amp;</span>event
-                .content
-                .event_proposal
-                .proposal
-                .event_request
-                .signature
-                .content
-                .event_content_hash,
-            <span class="kw-2">&amp;</span>event.signature.content.signer.public_key,
-        )) {
-            <span class="prelude-val">Ok</span>(subject_id) =&gt; subject_id,
-            <span class="prelude-val">Err</span>(<span class="kw">_</span>) =&gt; <span class="kw">return </span><span class="prelude-val">Err</span>(SubjectError::ErrorCreatingSubjectId),
-        };
+        <span class="kw">let </span>subject_id = generate_subject_id(
+            <span class="kw-2">&amp;</span>create_request.namespace,
+            <span class="kw-2">&amp;</span>create_request.schema_id,
+            create_request.public_key.to_str(),
+            create_request.governance_id.to_str(),
+            event.content.event_proposal.proposal.gov_version,
+        )<span class="question-mark">?</span>;
         <span class="prelude-val">Ok</span>(Subject {
             keys: <span class="prelude-val">None</span>,
             subject_id,
             governance_id: create_request.governance_id.clone(),
             sn: <span class="number">0</span>,
-            public_key: event.signature.content.signer,
+            public_key: create_request.public_key,
             namespace: create_request.namespace.clone(),
             schema_id: create_request.schema_id.clone(),
             owner: event
@@ -383,6 +397,8 @@
                 .clone(),
             properties: init_state,
             active: <span class="bool-val">true</span>,
+            name: create_request.name,
+            genesis_gov_version: event.content.event_proposal.proposal.gov_version,
         })
     }
 
@@ -419,7 +435,7 @@
     }
 
     <span class="kw">pub fn </span>get_state_hash(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;DigestIdentifier, SubjectError&gt; {
-        <span class="kw">let </span><span class="kw-2">mut </span>subject_properties = serde_json::from_str::&lt;Value&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>.properties)
+        <span class="kw">let </span>subject_properties = serde_json::from_str::&lt;Value&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>.properties)
             .map_err(|<span class="kw">_</span>| SubjectError::CryptoError(String::from(<span class="string">&quot;Error parsing the state&quot;</span>)))<span class="question-mark">?</span>;
         <span class="kw">let </span>subject_properties_str = serde_json::to_string(<span class="kw-2">&amp;</span>subject_properties)
             .map_err(|<span class="kw">_</span>| SubjectError::CryptoError(String::from(<span class="string">&quot;Error serializing the state&quot;</span>)))<span class="question-mark">?</span>;
@@ -453,5 +469,23 @@
             })<span class="question-mark">?</span>,
         )
     }
+}
+
+<span class="kw">pub fn </span>generate_subject_id(
+    namespace: <span class="kw-2">&amp;</span>str,
+    schema_id: <span class="kw-2">&amp;</span>str,
+    public_key: String,
+    governance_id: String,
+    governance_version: u64,
+) -&gt; <span class="prelude-ty">Result</span>&lt;DigestIdentifier, SubjectError&gt; {
+    <span class="kw">let </span>subject_id = DigestIdentifier::from_serializable_borsh((
+        namespace,
+        schema_id,
+        public_key,
+        governance_id,
+        governance_version,
+    ))
+    .map_err(|<span class="kw">_</span>| SubjectError::ErrorCreatingSubjectId)<span class="question-mark">?</span>;
+    <span class="prelude-val">Ok</span>(subject_id)
 }
 </code></pre></div></section></main></body></html>

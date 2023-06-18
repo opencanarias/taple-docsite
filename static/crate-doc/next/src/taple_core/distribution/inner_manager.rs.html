@@ -511,7 +511,6 @@
 <a href="#511" id="511">511</a>
 <a href="#512" id="512">512</a>
 <a href="#513" id="513">513</a>
-<a href="#514" id="514">514</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>std::collections::{HashMap, HashSet};
 
 <span class="kw">use </span><span class="kw">crate</span>::commons::channel::SenderEnd;
@@ -532,7 +531,7 @@
 <span class="kw">use crate</span>::{
     database::{Error <span class="kw">as </span>DbError, DB},
     governance::GovernanceInterface,
-    DatabaseCollection
+    DatabaseCollection,
 };
 
 <span class="kw">use </span><span class="kw">super</span>::error::{DistributionErrorResponses, DistributionManagerError};
@@ -584,7 +583,7 @@
                 .map_err(|error| DistributionManagerError::DatabaseError(error.to_string()))<span class="question-mark">?</span>;
             <span class="kw">let </span>owner = subject.owner.clone();
             <span class="kw">let </span>metadata = build_metadata(<span class="kw-2">&amp;</span>subject, governance.sn);
-            <span class="kw">let </span><span class="kw-2">mut </span>witnesses = <span class="self">self</span>.get_targets(metadata).<span class="kw">await</span><span class="question-mark">?</span>;
+            <span class="kw">let </span><span class="kw-2">mut </span>witnesses = <span class="self">self</span>.get_targets(metadata, <span class="kw-2">&amp;</span>subject).<span class="kw">await</span><span class="question-mark">?</span>;
             <span class="kw">if </span>!witnesses.contains(<span class="kw-2">&amp;</span><span class="self">self</span>.signature_manager.get_own_identifier()) {
                 <span class="comment">// Ya no somos testigos
                 </span><span class="self">self</span>.db
@@ -714,7 +713,7 @@
             };
             <span class="comment">// Comprobamos si seguimos siendo testigos para los sujetos de esta gobernanza
             </span><span class="kw">let </span><span class="kw-2">mut </span>witnesses = <span class="self">self
-                </span>.get_targets(build_metadata(<span class="kw-2">&amp;</span>subject, governance_version))
+                </span>.get_targets(build_metadata(<span class="kw-2">&amp;</span>subject, governance_version), <span class="kw-2">&amp;</span>subject)
                 .<span class="kw">await</span><span class="question-mark">?</span>;
             <span class="kw">if </span>witnesses.contains(<span class="kw-2">&amp;</span><span class="self">self</span>.signature_manager.get_own_identifier()) {
                 <span class="comment">// Seguimos siendo testigos
@@ -773,7 +772,7 @@
             </span>.map_err(|<span class="kw">_</span>| DistributionManagerError::GovernanceChannelNotAvailable)<span class="question-mark">?</span>;
         <span class="comment">// Empezamos la distribución
         </span><span class="kw">let </span>metadata = build_metadata(<span class="kw-2">&amp;</span>subject, governance_version);
-        <span class="kw">let </span><span class="kw-2">mut </span>targets = <span class="self">self</span>.get_targets(metadata).<span class="kw">await</span><span class="question-mark">?</span>;
+        <span class="kw">let </span><span class="kw-2">mut </span>targets = <span class="self">self</span>.get_targets(metadata, <span class="kw-2">&amp;</span>subject).<span class="kw">await</span><span class="question-mark">?</span>;
         <span class="macro">log::warn!</span>(<span class="string">&quot;REMAIMING SIGNATURES: {}&quot;</span>, targets.len());
         <span class="kw">for </span>signer <span class="kw">in </span>targets.iter() {
             <span class="macro">log::warn!</span>(<span class="string">&quot;REMAIMING SIGNER: {}&quot;</span>, signer.to_str());
@@ -834,9 +833,10 @@
     <span class="kw">async fn </span>get_targets(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         metadata: Metadata,
+        subject: <span class="kw-2">&amp;</span>Subject,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;HashSet&lt;KeyIdentifier&gt;, DistributionManagerError&gt; {
         <span class="comment">// Owner of subject must be included
-        </span><span class="kw">let </span>owner = metadata.owner.clone();
+        </span><span class="kw">let </span>owner = subject.owner.clone();
         <span class="kw">let </span><span class="kw-2">mut </span>targets = <span class="self">self
             </span>.governance
             .get_signers(metadata, ValidationStage::Witness)
@@ -965,7 +965,7 @@
                     .<span class="kw">await
                     </span>.map_err(|<span class="kw">_</span>| DistributionManagerError::GovernanceChannelNotAvailable)<span class="question-mark">?</span>;
                 <span class="kw">let </span>metadata = build_metadata(<span class="kw-2">&amp;</span>subject, governance_version);
-                <span class="kw">let </span><span class="kw-2">mut </span>targets = <span class="self">self</span>.get_targets(metadata).<span class="kw">await</span><span class="question-mark">?</span>;
+                <span class="kw">let </span><span class="kw-2">mut </span>targets = <span class="self">self</span>.get_targets(metadata, <span class="kw-2">&amp;</span>subject).<span class="kw">await</span><span class="question-mark">?</span>;
                 <span class="kw">let </span>hash_signed = DigestIdentifier::from_serializable_borsh(<span class="kw-2">&amp;</span>event)
                     .map_err(|<span class="kw">_</span>| DistributionManagerError::HashGenerationFailed)<span class="question-mark">?</span>;
                 <span class="kw">for </span>signature <span class="kw">in </span>msg.signatures.iter() {
@@ -1022,8 +1022,6 @@
         governance_id: subject.governance_id.clone(),
         governance_version: governance_version,
         schema_id: subject.schema_id.clone(),
-        owner: subject.owner.clone(),
-        creator: subject.creator.clone(),
     }
 }
 </code></pre></div></section></main></body></html>

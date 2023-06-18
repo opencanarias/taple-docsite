@@ -32,13 +32,21 @@
 <a href="#32" id="32">32</a>
 <a href="#33" id="33">33</a>
 <a href="#34" id="34">34</a>
+<a href="#35" id="35">35</a>
+<a href="#36" id="36">36</a>
+<a href="#37" id="37">37</a>
+<a href="#38" id="38">38</a>
+<a href="#39" id="39">39</a>
+<a href="#40" id="40">40</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>std::collections::HashSet;
 
+<span class="kw">use </span>borsh::{BorshDeserialize, BorshSerialize};
 <span class="kw">use </span>serde::{Deserialize, Serialize};
 
 <span class="kw">use crate</span>::{
     commons::models::{event::ValidationProof, notary::NotaryEventResponse},
     signature::Signature,
+    KeyIdentifier,
 };
 
 <span class="kw">use </span><span class="self">self</span>::errors::NotaryError;
@@ -49,9 +57,13 @@
 <span class="attr">#[cfg(feature = <span class="string">&quot;validation&quot;</span>)]
 </span><span class="kw">pub mod </span>notary;
 
-<span class="attr">#[derive(Debug, Clone, Serialize, Deserialize)]
+<span class="attr">#[derive(Debug, Clone, Serialize, Deserialize, BorshSerialize, BorshDeserialize)]
 </span><span class="kw">pub enum </span>NotaryCommand {
-    NotaryEvent(NotaryEvent),
+    NotaryEvent {
+        notary_event: NotaryEvent,
+        sender: KeyIdentifier,
+    },
+    AskForNotary(NotaryEvent),
 }
 
 <span class="attr">#[derive(Debug, Clone)]
@@ -59,7 +71,7 @@
     NotaryEventResponse(<span class="prelude-ty">Result</span>&lt;NotaryEventResponse, NotaryError&gt;),
 }
 
-<span class="attr">#[derive(Debug, Clone, Serialize, Deserialize)]
+<span class="attr">#[derive(Debug, Clone, Serialize, Deserialize, BorshSerialize, BorshDeserialize)]
 </span><span class="kw">pub struct </span>NotaryEvent {
     <span class="kw">pub </span>proof: ValidationProof,
     <span class="kw">pub </span>subject_signature: Signature,

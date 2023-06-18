@@ -58,21 +58,9 @@
 <a href="#58" id="58">58</a>
 <a href="#59" id="59">59</a>
 <a href="#60" id="60">60</a>
-<a href="#61" id="61">61</a>
-<a href="#62" id="62">62</a>
-<a href="#63" id="63">63</a>
-<a href="#64" id="64">64</a>
-<a href="#65" id="65">65</a>
-<a href="#66" id="66">66</a>
-<a href="#67" id="67">67</a>
-<a href="#68" id="68">68</a>
-<a href="#69" id="69">69</a>
-<a href="#70" id="70">70</a>
-<a href="#71" id="71">71</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>std::collections::HashSet;
 
-<span class="kw">use </span><span class="kw">super</span>::errors::ProtocolErrors;
-<span class="kw">use </span>borsh::BorshSerialize;
+<span class="kw">use super</span>::{errors::ProtocolErrors, models::timestamp};
 <span class="kw">use </span><span class="kw">crate</span>::commons::{
     config::TapleSettings,
     crypto::{KeyMaterial, KeyPair, Payload, DSA},
@@ -80,8 +68,12 @@
         derive::digest::DigestDerivator, Derivable, DigestIdentifier, KeyIdentifier,
         SignatureIdentifier,
     },
-    models::{signature::{Signature, SignatureContent}, timestamp::TimeStamp},
+    models::{
+        signature::{Signature, SignatureContent},
+        timestamp::TimeStamp,
+    },
 };
+<span class="kw">use </span>borsh::BorshSerialize;
 
 <span class="kw">pub trait </span>SelfSignatureInterface {
     <span class="kw">fn </span>change_settings(<span class="kw-2">&amp;mut </span><span class="self">self</span>, settings: <span class="kw-2">&amp;</span>TapleSettings);
@@ -118,22 +110,8 @@
     }
 
     <span class="kw">fn </span>sign&lt;T: BorshSerialize&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, content: <span class="kw-2">&amp;</span>T) -&gt; <span class="prelude-ty">Result</span>&lt;Signature, ProtocolErrors&gt; {
-        <span class="kw">let </span>hash = DigestIdentifier::from_serializable_borsh(content).expect(<span class="string">&quot;Serialización falla&quot;</span>);
-        <span class="kw">let </span>signature = <span class="self">self
-            </span>.keys
-            .sign(Payload::Buffer(hash.derivative()))
-            .map_err(|<span class="kw">_</span>| ProtocolErrors::SignatureError)<span class="question-mark">?</span>;
-        <span class="prelude-val">Ok</span>(Signature {
-            content: SignatureContent {
-                signer: <span class="self">self</span>.identifier.clone(),
-                event_content_hash: hash,
-                timestamp: TimeStamp::now(),
-            },
-            signature: SignatureIdentifier::new(
-                <span class="self">self</span>.identifier.to_signature_derivator(),
-                <span class="kw-2">&amp;</span>signature,
-            ),
-        })
+        <span class="prelude-val">Ok</span>(Signature::new(content, <span class="self">self</span>.identifier.clone(), <span class="kw-2">&amp;</span><span class="self">self</span>.keys)
+            .map_err(|<span class="kw">_</span>| ProtocolErrors::SignatureError)<span class="question-mark">?</span>)
     }
 
     <span class="kw">fn </span>check_if_signature_present(<span class="kw-2">&amp;</span><span class="self">self</span>, signers: <span class="kw-2">&amp;</span>HashSet&lt;KeyIdentifier&gt;) -&gt; bool {

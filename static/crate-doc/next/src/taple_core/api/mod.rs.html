@@ -91,7 +91,13 @@
 <a href="#91" id="91">91</a>
 <a href="#92" id="92">92</a>
 <a href="#93" id="93">93</a>
+<a href="#94" id="94">94</a>
+<a href="#95" id="95">95</a>
+<a href="#96" id="96">96</a>
+<a href="#97" id="97">97</a>
+<a href="#98" id="98">98</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>std::collections::HashSet;
+<span class="kw">use </span><span class="kw">crate</span>::commons::models::request::TapleRequest;
 <span class="kw">use </span><span class="kw">crate</span>::commons::models::approval::ApprovalStatus;
 <span class="kw">use </span><span class="kw">crate</span>::signature::Signature;
 <span class="attr">#[cfg(feature = <span class="string">&quot;aproval&quot;</span>)]
@@ -118,6 +124,7 @@
     GetAllSubjects(GetAllSubjects),
     GetAllGovernances(GetAllSubjects),
     GetSingleSubject(GetSingleSubject),
+    GetEvent(DigestIdentifier, u64),
     GetEventsOfSubject(GetEventsOfSubject),
     <span class="attr">#[cfg(feature = <span class="string">&quot;aproval&quot;</span>)]
     </span>VoteResolve(Acceptance, DigestIdentifier),
@@ -128,8 +135,9 @@
     <span class="attr">#[cfg(feature = <span class="string">&quot;aproval&quot;</span>)]
     </span>GetSingleRequest(DigestIdentifier),
     SetPreauthorizedSubject(DigestIdentifier, HashSet&lt;KeyIdentifier&gt;),
-    ExpectingTransfer(DigestIdentifier),
+    GenerateKeys,
     GetValidationProof(DigestIdentifier),
+    GetRequest(DigestIdentifier),
     GetGovernanceSubjects(GetGovernanceSubjects),
     GetApproval(DigestIdentifier),
     GetApprovals(<span class="prelude-ty">Option</span>&lt;String&gt;),
@@ -150,8 +158,10 @@
     </span>GetPendingRequests(<span class="prelude-ty">Result</span>&lt;Vec&lt;ApprovalPetitionData&gt;, ApiError&gt;),
     <span class="attr">#[cfg(feature = <span class="string">&quot;aproval&quot;</span>)]
     </span>GetSingleRequest(<span class="prelude-ty">Result</span>&lt;ApprovalPetitionData, ApiError&gt;),
-    ExpectingTransfer(<span class="prelude-ty">Result</span>&lt;KeyIdentifier, ApiError&gt;),
+    GetEvent(<span class="prelude-ty">Result</span>&lt;Event, ApiError&gt;),
+    GenerateKeys(<span class="prelude-ty">Result</span>&lt;KeyIdentifier, ApiError&gt;),
     GetValidationProof(<span class="prelude-ty">Result</span>&lt;HashSet&lt;Signature&gt;, ApiError&gt;),
+    GetRequest(<span class="prelude-ty">Result</span>&lt;TapleRequest, ApiError&gt;),
     GetGovernanceSubjects(<span class="prelude-ty">Result</span>&lt;Vec&lt;SubjectData&gt;, ApiError&gt;),
     GetApproval(<span class="prelude-ty">Result</span>&lt;(ApprovalPetitionData, ApprovalStatus), ApiError&gt;),
     GetApprovals(<span class="prelude-ty">Result</span>&lt;Vec&lt;ApprovalPetitionData&gt;, ApiError&gt;),

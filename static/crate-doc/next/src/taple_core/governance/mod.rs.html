@@ -101,16 +101,12 @@
 <a href="#101" id="101">101</a>
 <a href="#102" id="102">102</a>
 <a href="#103" id="103">103</a>
-<a href="#104" id="104">104</a>
-<a href="#105" id="105">105</a>
-<a href="#106" id="106">106</a>
-<a href="#107" id="107">107</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>std::collections::HashSet;
 
 <span class="kw">use </span><span class="kw">crate</span>::commons::{
     identifier::{DigestIdentifier, KeyIdentifier},
     models::event_content::Metadata,
-    schema_handler::gov_models::{Contract, Invoke},
+    schema_handler::gov_models::{Contract},
 };
 <span class="kw">pub mod </span>error;
 <span class="kw">pub mod </span>governance;
@@ -168,7 +164,8 @@
     },
     GetInvokeInfo {
         metadata: Metadata,
-        fact: String,
+        stage: ValidationStage,
+        invoker: KeyIdentifier,
     },
     GetContracts {
         governance_id: DigestIdentifier,
@@ -180,10 +177,6 @@
     },
     IsGovernance {
         subject_id: DigestIdentifier,
-    },
-    GetRolesOfInvokator {
-        invokator: KeyIdentifier,
-        metadata: Metadata,
     },
     GovernanceUpdated {
         governance_id: DigestIdentifier,
@@ -197,11 +190,10 @@
     GetSchema(<span class="prelude-ty">Result</span>&lt;Value, RequestError&gt;),
     GetSigners(<span class="prelude-ty">Result</span>&lt;HashSet&lt;KeyIdentifier&gt;, RequestError&gt;),
     GetQuorum(<span class="prelude-ty">Result</span>&lt;u32, RequestError&gt;),
-    GetInvokeInfo(<span class="prelude-ty">Result</span>&lt;<span class="prelude-ty">Option</span>&lt;Invoke&gt;, RequestError&gt;),
+    GetInvokeInfo(<span class="prelude-ty">Result</span>&lt;bool, RequestError&gt;),
     GetContracts(<span class="prelude-ty">Result</span>&lt;Vec&lt;Contract&gt;, RequestError&gt;),
     GetGovernanceVersion(<span class="prelude-ty">Result</span>&lt;u64, RequestError&gt;),
     IsGovernance(<span class="prelude-ty">Result</span>&lt;bool, RequestError&gt;),
-    GetRolesOfInvokator(<span class="prelude-ty">Result</span>&lt;Vec&lt;String&gt;, RequestError&gt;),
     NoResponse,
 }
 

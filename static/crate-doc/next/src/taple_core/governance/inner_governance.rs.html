@@ -614,73 +614,18 @@
 <a href="#614" id="614">614</a>
 <a href="#615" id="615">615</a>
 <a href="#616" id="616">616</a>
-<a href="#617" id="617">617</a>
-<a href="#618" id="618">618</a>
-<a href="#619" id="619">619</a>
-<a href="#620" id="620">620</a>
-<a href="#621" id="621">621</a>
-<a href="#622" id="622">622</a>
-<a href="#623" id="623">623</a>
-<a href="#624" id="624">624</a>
-<a href="#625" id="625">625</a>
-<a href="#626" id="626">626</a>
-<a href="#627" id="627">627</a>
-<a href="#628" id="628">628</a>
-<a href="#629" id="629">629</a>
-<a href="#630" id="630">630</a>
-<a href="#631" id="631">631</a>
-<a href="#632" id="632">632</a>
-<a href="#633" id="633">633</a>
-<a href="#634" id="634">634</a>
-<a href="#635" id="635">635</a>
-<a href="#636" id="636">636</a>
-<a href="#637" id="637">637</a>
-<a href="#638" id="638">638</a>
-<a href="#639" id="639">639</a>
-<a href="#640" id="640">640</a>
-<a href="#641" id="641">641</a>
-<a href="#642" id="642">642</a>
-<a href="#643" id="643">643</a>
-<a href="#644" id="644">644</a>
-<a href="#645" id="645">645</a>
-<a href="#646" id="646">646</a>
-<a href="#647" id="647">647</a>
-<a href="#648" id="648">648</a>
-<a href="#649" id="649">649</a>
-<a href="#650" id="650">650</a>
-<a href="#651" id="651">651</a>
-<a href="#652" id="652">652</a>
-<a href="#653" id="653">653</a>
-<a href="#654" id="654">654</a>
-<a href="#655" id="655">655</a>
-<a href="#656" id="656">656</a>
-<a href="#657" id="657">657</a>
-<a href="#658" id="658">658</a>
-<a href="#659" id="659">659</a>
-<a href="#660" id="660">660</a>
-<a href="#661" id="661">661</a>
-<a href="#662" id="662">662</a>
-<a href="#663" id="663">663</a>
-<a href="#664" id="664">664</a>
-<a href="#665" id="665">665</a>
-<a href="#666" id="666">666</a>
-<a href="#667" id="667">667</a>
-<a href="#668" id="668">668</a>
-<a href="#669" id="669">669</a>
-<a href="#670" id="670">670</a>
-<a href="#671" id="671">671</a>
-<a href="#672" id="672">672</a>
-<a href="#673" id="673">673</a>
-</pre></div><pre class="rust"><code><span class="kw">use </span>std::{collections::HashSet, str::FromStr};
+</pre></div><pre class="rust"><code><span class="kw">use </span>std::{
+    collections::{HashMap, HashSet},
+    str::FromStr,
+};
 
 <span class="kw">use crate</span>::{
     commons::{
-        <span class="self">self</span>,
         errors::ChannelErrors,
         identifier::{Derivable, DigestIdentifier, KeyIdentifier},
         models::{event_content::Metadata, state::Subject},
         schema_handler::{
-            gov_models::{Contract, Invoke, Quorum, Role, Schema},
+            gov_models::{Contract, Quorum, Role, Schema, Who},
             initial_state::get_governance_initial_state,
         },
     },
@@ -713,46 +658,6 @@
             governance_schema,
             update_channel,
         }
-    }
-
-    <span class="kw">pub fn </span>get_roles_of_invokator(
-        <span class="kw-2">&amp;</span><span class="self">self</span>,
-        invokator: KeyIdentifier,
-        metadata: Metadata,
-    ) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="prelude-ty">Result</span>&lt;Vec&lt;String&gt;, RequestError&gt;, InternalError&gt; {
-        <span class="kw">let </span><span class="kw-2">mut </span>governance_id = metadata.governance_id;
-        <span class="kw">if </span>governance_id.digest.is_empty() {
-            governance_id = metadata.subject_id;
-        }
-        <span class="kw">let </span>schema_id = metadata.schema_id;
-        <span class="kw">let </span>governance =
-            <span class="kw">match </span><span class="self">self</span>.governance_event_sourcing(<span class="kw-2">&amp;</span>governance_id, metadata.governance_version) {
-                <span class="prelude-val">Ok</span>(subject) =&gt; subject,
-                <span class="prelude-val">Err</span>(error) =&gt; <span class="kw">match </span>error {
-                    RequestError::DatabaseError(err) =&gt; {
-                        <span class="kw">return </span><span class="prelude-val">Err</span>(InternalError::DatabaseError { source: err })
-                    }
-                    err =&gt; <span class="kw">return </span><span class="prelude-val">Ok</span>(<span class="prelude-val">Err</span>(err)),
-                },
-            };
-        <span class="kw">let </span>properties: Value = serde_json::from_str(<span class="kw-2">&amp;</span>governance.properties)
-            .map_err(|<span class="kw">_</span>| InternalError::DeserializationError)<span class="question-mark">?</span>;
-        <span class="kw">let </span>policies = get_as_array(<span class="kw-2">&amp;</span>properties, <span class="string">&quot;policies&quot;</span>)<span class="question-mark">?</span>;
-        <span class="kw">let </span>schema_policy = get_schema_from_policies(policies, <span class="kw-2">&amp;</span>schema_id);
-        <span class="kw">let </span>roles_prop = properties[<span class="string">&quot;roles&quot;</span>]
-            .as_array()
-            .expect(<span class="string">&quot;Existe roles&quot;</span>)
-            .to_owned();
-        <span class="kw">let </span>roles = get_roles(<span class="kw-2">&amp;</span>schema_id, roles_prop, <span class="kw-2">&amp;</span>metadata.namespace)<span class="question-mark">?</span>;
-        <span class="kw">let </span>members = get_members_from_governance(<span class="kw-2">&amp;</span>properties)<span class="question-mark">?</span>;
-        <span class="kw">let </span><span class="kw-2">mut </span>invokator_roles = get_invokator_roles(<span class="kw-2">&amp;</span>invokator, <span class="kw-2">&amp;</span>members, roles)<span class="question-mark">?</span>;
-        <span class="kw">if </span>metadata.creator == invokator {
-            invokator_roles.push(<span class="string">&quot;Creator&quot;</span>.to_string());
-        }
-        <span class="kw">if </span>metadata.owner == invokator {
-            invokator_roles.push(<span class="string">&quot;Owner&quot;</span>.to_string());
-        }
-        <span class="prelude-val">Ok</span>(<span class="prelude-val">Ok</span>(invokator_roles))
     }
 
     <span class="comment">// NEW
@@ -811,30 +716,83 @@
         <span class="kw">for </span>schema <span class="kw">in </span>schemas {
             <span class="kw">let </span>tmp = get_as_str(schema, <span class="string">&quot;id&quot;</span>)<span class="question-mark">?</span>;
             <span class="kw">if </span>tmp == <span class="kw-2">&amp;</span>schema_id {
-                <span class="kw">return </span><span class="prelude-val">Ok</span>(<span class="prelude-val">Ok</span>(schema.get(<span class="string">&quot;state_schema&quot;</span>).unwrap().to_owned()));
+                <span class="kw">return </span><span class="prelude-val">Ok</span>(<span class="prelude-val">Ok</span>(schema.get(<span class="string">&quot;schema&quot;</span>).unwrap().to_owned()));
             }
         }
         <span class="kw">return </span><span class="prelude-val">Ok</span>(<span class="prelude-val">Err</span>(RequestError::SchemaNotFound(schema_id)));
     }
 
     <span class="kw">fn </span>get_signers_aux(
-        properties: <span class="kw-2">&amp;</span>Value,
+        roles: Vec&lt;Role&gt;,
         schema_id: <span class="kw-2">&amp;</span>str,
-        metadata: <span class="kw-2">&amp;</span>Metadata,
-        signers_roles: <span class="kw-2">&amp;</span>Vec&lt;String&gt;,
-    ) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="prelude-ty">Result</span>&lt;HashSet&lt;KeyIdentifier&gt;, RequestError&gt;, InternalError&gt; {
-        <span class="kw">let </span>members = get_members_from_governance(<span class="kw-2">&amp;</span>properties)<span class="question-mark">?</span>;
-        <span class="kw">let </span>roles_prop = properties[<span class="string">&quot;roles&quot;</span>]
-            .as_array()
-            .expect(<span class="string">&quot;Existe roles&quot;</span>)
-            .to_owned();
-        <span class="kw">let </span>roles = get_roles(<span class="kw-2">&amp;</span>schema_id, roles_prop, <span class="kw-2">&amp;</span>metadata.namespace)<span class="question-mark">?</span>;
-        <span class="kw">let </span><span class="kw-2">mut </span>signers = get_signers_from_roles(<span class="kw-2">&amp;</span>members, signers_roles, roles)<span class="question-mark">?</span>;
-        <span class="kw">if </span>signers_roles.contains(<span class="kw-2">&amp;</span>String::from(<span class="string">&quot;Owner&quot;</span>)) {
-            <span class="comment">// Añadimos al owner
-            </span>signers.insert(metadata.owner.clone());
+        namespace: <span class="kw-2">&amp;</span>str,
+        stage: ValidationStage,
+        members: (HashSet&lt;KeyIdentifier&gt;, HashMap&lt;String, KeyIdentifier&gt;),
+        is_gov: bool,
+    ) -&gt; <span class="prelude-ty">Result</span>&lt;HashSet&lt;KeyIdentifier&gt;, RequestError&gt; {
+        <span class="kw">let </span><span class="kw-2">mut </span>signers: HashSet&lt;KeyIdentifier&gt; = HashSet::new();
+        <span class="kw">for </span>role <span class="kw">in </span>roles {
+            <span class="kw">match </span>stage {
+                ValidationStage::Witness =&gt; {
+                    <span class="kw">if </span>role.role != stage.to_str()
+                        &amp;&amp; role.role != ValidationStage::Approve.to_role()
+                    {
+                        <span class="kw">continue</span>;
+                    }
+                }
+                ValidationStage::Create | ValidationStage::Invoke =&gt; {
+                    <span class="kw">return </span><span class="prelude-val">Err</span>(RequestError::SearchingSignersQuorumInWrongStage(
+                        stage.to_str().to_owned(),
+                    ))
+                }
+                <span class="kw">_ </span>=&gt; {
+                    <span class="kw">if </span>role.role != stage.to_str() {
+                        <span class="kw">continue</span>;
+                    }
+                }
+            }
+            <span class="kw">match </span>role.schema {
+                Schema::ID { ID } =&gt; {
+                    <span class="kw">if </span><span class="kw-2">&amp;</span>ID != schema_id {
+                        <span class="kw">continue</span>;
+                    }
+                }
+                Schema::NOT_GOVERNANCE =&gt; {
+                    <span class="kw">if </span>is_gov {
+                        <span class="kw">continue</span>;
+                    }
+                }
+                Schema::ALL =&gt; {}
+            }
+            <span class="kw">if </span>!namespace_contiene(<span class="kw-2">&amp;</span>role.namespace, namespace) {
+                <span class="kw">continue</span>;
+            }
+            <span class="kw">match </span>role.who {
+                Who::ID { ID } =&gt; {
+                    <span class="kw">let </span>id = KeyIdentifier::from_str(<span class="kw-2">&amp;</span>ID)
+                        .map_err(|<span class="kw">_</span>| RequestError::InvalidKeyIdentifier(ID))<span class="question-mark">?</span>;
+                    <span class="kw">if </span>!members.<span class="number">0</span>.contains(<span class="kw-2">&amp;</span>id) {
+                        <span class="kw">continue</span>;
+                    }
+                    signers.insert(id);
+                }
+                Who::NAME { NAME } =&gt; {
+                    <span class="kw">let </span>id = members.<span class="number">1</span>.get(<span class="kw-2">&amp;</span>NAME.to_owned()).ok_or_else(|| {
+                        RequestError::InvalidName(<span class="macro">format!</span>(
+                            <span class="string">&quot;Invalid Name in roles: {}&quot;</span>,
+                            NAME.to_owned()
+                        ))
+                    })<span class="question-mark">?</span>;
+                    signers.insert(id.clone());
+                }
+                Who::MEMBERS | Who::ALL =&gt; <span class="kw">return </span><span class="prelude-val">Ok</span>(members.<span class="number">0</span>),
+                Who::NOT_MEMBERS =&gt; <span class="kw">continue</span>,
+            }
         }
-        <span class="prelude-val">Ok</span>(<span class="prelude-val">Ok</span>(signers))
+        <span class="kw">for </span>signer <span class="kw">in </span>signers.iter() {
+            <span class="macro">log::warn!</span>(<span class="string">&quot;FINAL SIGNERS: {}&quot;</span>, signer.to_str());
+        }
+        <span class="prelude-val">Ok</span>(signers)
     }
 
     <span class="comment">// NEW
@@ -845,8 +803,12 @@
         stage: ValidationStage,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="prelude-ty">Result</span>&lt;HashSet&lt;KeyIdentifier&gt;, RequestError&gt;, InternalError&gt; {
         <span class="kw">let </span><span class="kw-2">mut </span>governance_id = metadata.governance_id.clone();
+        <span class="kw">let </span>is_gov: bool;
         <span class="kw">if </span>governance_id.digest.is_empty() {
+            is_gov = <span class="bool-val">true</span>;
             governance_id = metadata.subject_id.clone();
+        } <span class="kw">else </span>{
+            is_gov = <span class="bool-val">false</span>;
         }
         <span class="kw">let </span>schema_id = metadata.schema_id.clone();
         <span class="kw">let </span>governance =
@@ -861,74 +823,25 @@
             };
         <span class="kw">let </span>properties: Value = serde_json::from_str(<span class="kw-2">&amp;</span>governance.properties)
             .map_err(|<span class="kw">_</span>| InternalError::DeserializationError)<span class="question-mark">?</span>;
-        <span class="kw">let </span>policies = get_as_array(<span class="kw-2">&amp;</span>properties, <span class="string">&quot;policies&quot;</span>)<span class="question-mark">?</span>;
-        <span class="kw">let </span>schema_policy = get_schema_from_policies(policies, <span class="kw-2">&amp;</span>schema_id);
-        <span class="kw">let </span><span class="prelude-val">Ok</span>(schema_policy) = schema_policy <span class="kw">else </span>{
-            <span class="kw">return </span><span class="prelude-val">Ok</span>(<span class="prelude-val">Err</span>(schema_policy.unwrap_err()));
-        }; <span class="comment">// El return dentro de otro return es una **** que obliga a hacer cosas como esta
-        </span><span class="kw">match </span>stage {
-            ValidationStage::Approve | ValidationStage::Evaluate | ValidationStage::Validate =&gt; {
-                <span class="kw">let </span>stage_str = stage.to_str();
-                <span class="kw">let </span>roles: Vec&lt;String&gt; =
-                    get_as_array(<span class="kw-2">&amp;</span>schema_policy.get(stage_str).unwrap(), <span class="string">&quot;roles&quot;</span>)<span class="question-mark">?
-                        </span>.into_iter()
-                        .map(|role| {
-                            role.as_str()
-                                .ok_or(InternalError::InvalidGovernancePayload(<span class="string">&quot;0&quot;</span>.into()))
-                                .map(|s| s.to_owned())
-                                .expect(<span class="string">&quot;Invalid Governance Payload&quot;</span>)
-                        })
-                        .collect();
-                <span class="self">Self</span>::get_signers_aux(<span class="kw-2">&amp;</span>properties, <span class="kw-2">&amp;</span>schema_id, <span class="kw-2">&amp;</span>metadata, <span class="kw-2">&amp;</span>roles)
+        <span class="kw">let </span>roles: Vec&lt;Role&gt; = serde_json::from_value(properties.get(<span class="string">&quot;roles&quot;</span>).unwrap().to_owned())
+            .map_err(|<span class="kw">_</span>| InternalError::DeserializationError)<span class="question-mark">?</span>;
+        <span class="kw">let </span>members = get_members_from_governance(<span class="kw-2">&amp;</span>properties)<span class="question-mark">?</span>;
+        <span class="kw">let </span>get_signers_result = <span class="self">Self</span>::get_signers_aux(
+            roles,
+            <span class="kw-2">&amp;</span>schema_id,
+            <span class="kw-2">&amp;</span>metadata.namespace,
+            stage,
+            members,
+            is_gov,
+        );
+        <span class="kw">if </span>get_signers_result.is_err() {
+            <span class="prelude-val">Ok</span>(get_signers_result)
+        } <span class="kw">else </span>{
+            <span class="kw">let </span><span class="kw-2">mut </span>signers = get_signers_result.unwrap();
+            <span class="kw">if </span>signers.is_empty() {
+                signers.insert(governance.owner);
             }
-            ValidationStage::Witness =&gt; {
-                <span class="comment">// Todos los aprobadores son también testigos, así que deben traerse sus roles también
-                </span><span class="kw">let </span>stage_str = stage.to_str();
-                <span class="kw">let </span>approvers_roles: Vec&lt;String&gt; = get_as_array(<span class="kw-2">&amp;</span>schema_policy, stage_str)<span class="question-mark">?
-                    </span>.into_iter()
-                    .map(|role| {
-                        <span class="kw">let </span>a = role
-                            .as_str()
-                            .ok_or(InternalError::InvalidGovernancePayload(<span class="string">&quot;1&quot;</span>.into()))
-                            .map(|s| s.to_owned());
-                        a.expect(<span class="string">&quot;Invalid Governance Payload&quot;</span>)
-                    })
-                    .collect();
-                <span class="kw">let </span>witness_roles: Vec&lt;String&gt; = get_as_array(
-                    <span class="kw-2">&amp;</span>schema_policy
-                        .get(ValidationStage::Approve.to_str())
-                        .unwrap(),
-                    <span class="string">&quot;roles&quot;</span>,
-                )<span class="question-mark">?
-                </span>.into_iter()
-                .map(|role| {
-                    <span class="kw">let </span>a = role
-                        .as_str()
-                        .ok_or(InternalError::InvalidGovernancePayload(<span class="string">&quot;2&quot;</span>.into()))
-                        .map(|s| s.to_owned());
-                    a.expect(<span class="string">&quot;Invalid Governance Payload&quot;</span>)
-                })
-                .collect();
-                <span class="kw">let </span><span class="kw-2">mut </span>set: HashSet&lt;String&gt; = HashSet::new();
-                <span class="kw">for </span>s <span class="kw">in </span>approvers_roles.into_iter().chain(witness_roles.into_iter()) {
-                    set.insert(s);
-                }
-                <span class="kw">let </span>signers_roles: Vec&lt;String&gt; = set.into_iter().collect();
-                <span class="self">Self</span>::get_signers_aux(<span class="kw-2">&amp;</span>properties, <span class="kw-2">&amp;</span>schema_id, <span class="kw-2">&amp;</span>metadata, <span class="kw-2">&amp;</span>signers_roles)
-            }
-            ValidationStage::Close | ValidationStage::Create | ValidationStage::Invoke =&gt; {
-                <span class="kw">let </span>stage_str = stage.to_str();
-                <span class="kw">let </span>roles: Vec&lt;String&gt; = get_as_array(<span class="kw-2">&amp;</span>schema_policy, stage_str)<span class="question-mark">?
-                    </span>.into_iter()
-                    .map(|role| {
-                        role.as_str()
-                            .ok_or(InternalError::InvalidGovernancePayload(<span class="string">&quot;3&quot;</span>.into()))
-                            .map(|s| s.to_owned())
-                            .expect(<span class="string">&quot;Invalid Governance Payload&quot;</span>)
-                    })
-                    .collect();
-                <span class="self">Self</span>::get_signers_aux(<span class="kw-2">&amp;</span>properties, <span class="kw-2">&amp;</span>schema_id, <span class="kw-2">&amp;</span>metadata, <span class="kw-2">&amp;</span>roles)
-            }
+            <span class="prelude-val">Ok</span>(<span class="prelude-val">Ok</span>(signers))
         }
     }
 
@@ -938,12 +851,17 @@
         metadata: Metadata,
         stage: ValidationStage,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="prelude-ty">Result</span>&lt;u32, RequestError&gt;, InternalError&gt; {
-        <span class="kw">let </span><span class="kw-2">mut </span>governance_id = metadata.governance_id;
+        <span class="kw">if </span>ValidationStage::Witness == stage {
+            <span class="kw">return </span><span class="prelude-val">Ok</span>(<span class="prelude-val">Err</span>(RequestError::SearchingSignersQuorumInWrongStage(
+                stage.to_str().to_owned(),
+            )));
+        }
+        <span class="kw">let </span><span class="kw-2">mut </span>governance_id = metadata.governance_id.clone();
         <span class="macro">log::info!</span>(<span class="string">&quot;Quorum de: {}&quot;</span>, metadata.subject_id.to_str());
         <span class="kw">if </span>governance_id.digest.is_empty() {
-            governance_id = metadata.subject_id;
+            governance_id = metadata.subject_id.clone();
         }
-        <span class="kw">let </span>schema_id = metadata.schema_id;
+        <span class="kw">let </span>schema_id = <span class="kw-2">&amp;</span>metadata.schema_id;
         <span class="kw">let </span>governance =
             <span class="kw">match </span><span class="self">self</span>.governance_event_sourcing(<span class="kw-2">&amp;</span>governance_id, metadata.governance_version) {
                 <span class="prelude-val">Ok</span>(subject) =&gt; subject,
@@ -961,37 +879,22 @@
         <span class="kw">let </span><span class="prelude-val">Ok</span>(schema_policy) = schema_policy <span class="kw">else </span>{
             <span class="kw">return </span><span class="prelude-val">Ok</span>(<span class="prelude-val">Err</span>(schema_policy.unwrap_err()));
         }; <span class="comment">// El return dentro de otro return es una **** que obliga a hacer cosas como esta
-        </span><span class="kw">let </span>stage_str = stage.to_str();
-        <span class="kw">let </span>signers_roles: Vec&lt;String&gt; =
-            get_as_array(<span class="kw-2">&amp;</span>schema_policy.get(stage_str).unwrap(), <span class="string">&quot;roles&quot;</span>)<span class="question-mark">?
-                </span>.into_iter()
-                .map(|role| {
-                    <span class="kw">let </span>a = role
-                        .as_str()
-                        .ok_or(InternalError::InvalidGovernancePayload(<span class="string">&quot;4&quot;</span>.into()))
-                        .map(|s| s.to_owned());
-                    a.expect(<span class="string">&quot;Invalid Governance Payload&quot;</span>)
-                })
-                .collect();
-        <span class="kw">let </span>members = get_members_from_governance(<span class="kw-2">&amp;</span>properties)<span class="question-mark">?</span>;
-        <span class="kw">let </span>roles_prop = properties[<span class="string">&quot;roles&quot;</span>]
-            .as_array()
-            .expect(<span class="string">&quot;Existe roles&quot;</span>)
-            .to_owned();
-        <span class="kw">let </span>roles = get_roles(<span class="kw-2">&amp;</span>schema_id, roles_prop, <span class="kw-2">&amp;</span>metadata.namespace)<span class="question-mark">?</span>;
-        <span class="kw">let </span>signers = get_signers_from_roles(<span class="kw-2">&amp;</span>members, <span class="kw-2">&amp;</span>signers_roles, roles)<span class="question-mark">?</span>;
-        <span class="kw">let </span>quorum = get_quorum(<span class="kw-2">&amp;</span>schema_policy, stage_str)<span class="question-mark">?</span>;
+        </span><span class="kw">let </span>quorum = get_quorum(<span class="kw-2">&amp;</span>schema_policy, stage.to_str())<span class="question-mark">?</span>;
+        <span class="kw">let </span>signers = <span class="self">self</span>.get_signers(metadata, stage)<span class="question-mark">?</span>;
+        <span class="kw">let </span><span class="prelude-val">Ok</span>(signers) = signers <span class="kw">else </span>{
+            <span class="kw">return </span><span class="prelude-val">Ok</span>(<span class="prelude-val">Err</span>(signers.unwrap_err()));
+        };
         <span class="kw">match </span>quorum {
-            Quorum::Majority(<span class="kw">_</span>) =&gt; {
+            Quorum::MAJORITY(<span class="kw">_</span>) =&gt; {
                 <span class="macro">log::info!</span>(<span class="string">&quot;Quorum Majority&quot;</span>);
 
                 <span class="prelude-val">Ok</span>(<span class="prelude-val">Ok</span>((signers.len() <span class="kw">as </span>u32 / <span class="number">2</span>) + <span class="number">1</span>))
             }
-            Quorum::Fixed { fixed } =&gt; {
+            Quorum::FIXED { fixed } =&gt; {
                 <span class="macro">log::info!</span>(<span class="string">&quot;Quorum fijo: {}&quot;</span>, fixed);
                 <span class="prelude-val">Ok</span>(<span class="prelude-val">Ok</span>(fixed))
             }
-            Quorum::Porcentaje { porcentaje } =&gt; {
+            Quorum::PORCENTAJE { porcentaje } =&gt; {
                 <span class="kw">let </span>result = (signers.len() <span class="kw">as </span>f64 * porcentaje).ceil() <span class="kw">as </span>u32;
                 <span class="prelude-val">Ok</span>(<span class="prelude-val">Ok</span>(result))
             }
@@ -1000,14 +903,24 @@
     }
 
     <span class="comment">// NEW
-    </span><span class="kw">pub fn </span>get_invoke_info(
+    </span><span class="kw">pub fn </span>get_invoke_create_info(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         metadata: Metadata,
-        fact: <span class="kw-2">&amp;</span>str,
-    ) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="prelude-ty">Result</span>&lt;<span class="prelude-ty">Option</span>&lt;Invoke&gt;, RequestError&gt;, InternalError&gt; {
+        stage: ValidationStage,
+        invoker: KeyIdentifier,
+    ) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="prelude-ty">Result</span>&lt;bool, RequestError&gt;, InternalError&gt; {
+        <span class="kw">if </span>ValidationStage::Create != stage &amp;&amp; ValidationStage::Invoke != stage {
+            <span class="kw">return </span><span class="prelude-val">Ok</span>(<span class="prelude-val">Err</span>(RequestError::SearchingInvokeInfoInWrongStage(
+                stage.to_str().to_owned(),
+            )));
+        }
         <span class="kw">let </span><span class="kw-2">mut </span>governance_id = metadata.governance_id;
+        <span class="kw">let </span>is_gov: bool;
         <span class="kw">if </span>governance_id.digest.is_empty() {
             governance_id = metadata.subject_id;
+            is_gov = <span class="bool-val">true</span>;
+        } <span class="kw">else </span>{
+            is_gov = <span class="bool-val">false</span>;
         }
         <span class="kw">let </span>schema_id = metadata.schema_id;
         <span class="kw">let </span>governance =
@@ -1022,14 +935,77 @@
             };
         <span class="kw">let </span>properties: Value = serde_json::from_str(<span class="kw-2">&amp;</span>governance.properties)
             .map_err(|<span class="kw">_</span>| InternalError::DeserializationError)<span class="question-mark">?</span>;
-        <span class="kw">let </span>policies = get_as_array(<span class="kw-2">&amp;</span>properties, <span class="string">&quot;policies&quot;</span>)<span class="question-mark">?</span>;
-        <span class="kw">let </span>schema_policy = get_schema_from_policies(policies, <span class="kw-2">&amp;</span>schema_id);
-        <span class="kw">let </span><span class="prelude-val">Ok</span>(schema_policy) = schema_policy <span class="kw">else </span>{
-            <span class="kw">return </span><span class="prelude-val">Ok</span>(<span class="prelude-val">Err</span>(schema_policy.unwrap_err()));
-        }; <span class="comment">// El return dentro de otro return es una **** que obliga a hacer cosas como esta
-           // Se puede refactorizar lo de arriba de aquí y meter en una función porque es lo mismo en todos los métodos nuevos
-        </span><span class="kw">let </span>invoke = get_invoke_from_policy(schema_policy, fact)<span class="question-mark">?</span>;
-        <span class="prelude-val">Ok</span>(<span class="prelude-val">Ok</span>(invoke))
+        <span class="kw">let </span>roles: Vec&lt;Role&gt; = serde_json::from_value(properties.get(<span class="string">&quot;roles&quot;</span>).unwrap().to_owned())
+            .map_err(|<span class="kw">_</span>| InternalError::DeserializationError)<span class="question-mark">?</span>;
+        <span class="kw">let </span>members = get_members_from_governance(<span class="kw-2">&amp;</span>properties)<span class="question-mark">?</span>;
+        <span class="kw">let </span>invoke_create_info_result = <span class="self">Self</span>::invoke_create_info(
+            roles,
+            <span class="kw-2">&amp;</span>schema_id,
+            <span class="kw-2">&amp;</span>metadata.namespace,
+            stage,
+            members,
+            is_gov,
+            invoker,
+        );
+        <span class="prelude-val">Ok</span>(invoke_create_info_result)
+    }
+
+    <span class="kw">fn </span>invoke_create_info(
+        roles: Vec&lt;Role&gt;,
+        schema_id: <span class="kw-2">&amp;</span>str,
+        namespace: <span class="kw-2">&amp;</span>str,
+        stage: ValidationStage,
+        members: (HashSet&lt;KeyIdentifier&gt;, HashMap&lt;String, KeyIdentifier&gt;),
+        is_gov: bool,
+        invoker: KeyIdentifier,
+    ) -&gt; <span class="prelude-ty">Result</span>&lt;bool, RequestError&gt; {
+        <span class="kw">let </span>is_member = members.<span class="number">0</span>.contains(<span class="kw-2">&amp;</span>invoker);
+        <span class="kw">for </span>role <span class="kw">in </span>roles {
+            <span class="kw">if </span>role.role != stage.to_str() {
+                <span class="kw">continue</span>;
+            }
+            <span class="kw">match </span>role.schema {
+                Schema::ID { ID } =&gt; {
+                    <span class="kw">if </span><span class="kw-2">&amp;</span>ID != schema_id {
+                        <span class="kw">continue</span>;
+                    }
+                }
+                Schema::NOT_GOVERNANCE =&gt; {
+                    <span class="kw">if </span>is_gov {
+                        <span class="kw">continue</span>;
+                    }
+                }
+                Schema::ALL =&gt; {}
+            }
+            <span class="kw">if </span>!namespace_contiene(<span class="kw-2">&amp;</span>role.namespace, namespace) {
+                <span class="kw">continue</span>;
+            }
+            <span class="kw">match </span>role.who {
+                Who::ID { ID } =&gt; {
+                    <span class="kw">if </span>is_member &amp;&amp; ID == invoker.to_str() {
+                        <span class="kw">return </span><span class="prelude-val">Ok</span>(<span class="bool-val">true</span>);
+                    }
+                }
+                Who::NAME { NAME } =&gt; {
+                    <span class="kw">let </span>id = members.<span class="number">1</span>.get(<span class="kw-2">&amp;</span>NAME.to_owned()).ok_or_else(|| {
+                        RequestError::InvalidName(<span class="macro">format!</span>(
+                            <span class="string">&quot;Invalid Name in roles: {}&quot;</span>,
+                            NAME.to_owned()
+                        ))
+                    })<span class="question-mark">?</span>;
+                    <span class="kw">if </span>is_member &amp;&amp; id.to_str() == invoker.to_str() {
+                        <span class="kw">return </span><span class="prelude-val">Ok</span>(<span class="bool-val">true</span>);
+                    }
+                }
+                Who::MEMBERS | Who::ALL =&gt; <span class="kw">return </span><span class="prelude-val">Ok</span>(<span class="bool-val">true</span>),
+                Who::NOT_MEMBERS =&gt; {
+                    <span class="kw">if </span>!is_member {
+                        <span class="kw">return </span><span class="prelude-val">Ok</span>(<span class="bool-val">true</span>);
+                    }
+                }
+            }
+        }
+        <span class="prelude-val">Ok</span>(<span class="bool-val">false</span>)
     }
 
     <span class="comment">// NEW
@@ -1192,8 +1168,9 @@
 
 <span class="kw">fn </span>get_members_from_governance(
     properties: <span class="kw-2">&amp;</span>Value,
-) -&gt; <span class="prelude-ty">Result</span>&lt;HashSet&lt;KeyIdentifier&gt;, InternalError&gt; {
-    <span class="kw">let </span><span class="kw-2">mut </span>member_ids: HashSet&lt;KeyIdentifier&gt; = HashSet::new();
+) -&gt; <span class="prelude-ty">Result</span>&lt;(HashSet&lt;KeyIdentifier&gt;, HashMap&lt;String, KeyIdentifier&gt;), InternalError&gt; {
+    <span class="kw">let </span><span class="kw-2">mut </span>member_ids_names: (HashSet&lt;KeyIdentifier&gt;, HashMap&lt;String, KeyIdentifier&gt;) =
+        (HashSet::new(), HashMap::new());
     <span class="kw">let </span>members = properties
         .get(<span class="string">&quot;members&quot;</span>)
         .unwrap()
@@ -1202,122 +1179,31 @@
         .to_owned();
     <span class="kw">for </span>member <span class="kw">in </span>members.into_iter() {
         <span class="kw">let </span>member_id = member
-            .get(<span class="string">&quot;key&quot;</span>)
-            .expect(<span class="string">&quot;Se ha validado que tiene key&quot;</span>)
+            .get(<span class="string">&quot;id&quot;</span>)
+            .expect(<span class="string">&quot;Se ha validado que tiene id&quot;</span>)
             .as_str()
             .expect(<span class="string">&quot;Hay id y es str&quot;</span>);
-        <span class="kw">let </span>member_id = KeyIdentifier::from_str(member_id)
-            .map_err(|<span class="kw">_</span>| InternalError::InvalidGovernancePayload(<span class="string">&quot;12&quot;</span>.into()))<span class="question-mark">?</span>;
-        <span class="kw">let </span><span class="bool-val">true </span>= member_ids.insert(member_id) <span class="kw">else </span>{
-            <span class="kw">return </span><span class="prelude-val">Err</span>(InternalError::InvalidGovernancePayload(<span class="string">&quot;13&quot;</span>.into()));
+        <span class="kw">let </span>member_name = member
+            .get(<span class="string">&quot;name&quot;</span>)
+            .expect(<span class="string">&quot;Se ha validado que tiene name&quot;</span>)
+            .as_str()
+            .expect(<span class="string">&quot;Hay name y es str&quot;</span>)
+            .to_owned();
+        <span class="kw">let </span>member_id = KeyIdentifier::from_str(member_id).map_err(|<span class="kw">_</span>| {
+            InternalError::InvalidGovernancePayload(<span class="string">&quot;12: Invalid Keyidentifier in member&quot;</span>.into())
+        })<span class="question-mark">?</span>;
+        <span class="kw">let </span><span class="bool-val">true </span>= member_ids_names.<span class="number">0</span>.insert(member_id.clone()) <span class="kw">else </span>{
+            <span class="kw">return </span><span class="prelude-val">Err</span>(InternalError::InvalidGovernancePayload(<span class="string">&quot;13: Repeated Id in members&quot;</span>.into()));
+        };
+        <span class="kw">let </span><span class="prelude-val">None </span>= member_ids_names.<span class="number">1</span>.insert(member_name, member_id) <span class="kw">else </span>{
+            <span class="kw">return </span><span class="prelude-val">Err</span>(InternalError::InvalidGovernancePayload(<span class="string">&quot;14: Repeated Name in members&quot;</span>.into()));
         };
     }
-    <span class="prelude-val">Ok</span>(member_ids)
-}
-
-<span class="kw">fn </span>get_signers_from_roles(
-    members: <span class="kw-2">&amp;</span>HashSet&lt;KeyIdentifier&gt;,
-    roles: <span class="kw-2">&amp;</span>Vec&lt;String&gt;,
-    roles_schema: Vec&lt;Role&gt;,
-) -&gt; <span class="prelude-ty">Result</span>&lt;HashSet&lt;KeyIdentifier&gt;, InternalError&gt; {
-    <span class="kw">let </span><span class="kw-2">mut </span>signers: HashSet&lt;KeyIdentifier&gt; = HashSet::new();
-    <span class="kw">for </span>role <span class="kw">in </span>roles_schema {
-        <span class="kw">if </span>contains_common_element(<span class="kw-2">&amp;</span>role.roles, roles) {
-            <span class="kw">match </span>role.who {
-                <span class="kw">crate</span>::commons::schema_handler::gov_models::Who::Id { id } =&gt; {
-                    signers.insert(KeyIdentifier::from_str(<span class="kw-2">&amp;</span>id).map_err(|<span class="kw">_</span>| InternalError::InvalidGovernancePayload(<span class="string">&quot;14&quot;</span>.into()))<span class="question-mark">?</span>);
-                }
-                <span class="kw">crate</span>::commons::schema_handler::gov_models::Who::Members =&gt; {
-                    <span class="kw">return </span><span class="prelude-val">Ok</span>(members.clone())
-                }
-                <span class="kw">_ </span>=&gt; {
-                }
-                <span class="comment">// Entiendo que con esto no se hace nada de cara a validación
-                // crate::commons::schema_handler::gov_models::Who::All =&gt; todo!(),
-                // crate::commons::schema_handler::gov_models::Who::External =&gt; todo!(),
-            </span>}
-        }
-    }
-    <span class="kw">for </span>signer <span class="kw">in </span>signers.iter() {
-        <span class="macro">log::warn!</span>(<span class="string">&quot;FINAL SIGNERS: {}&quot;</span>, signer.to_str());
-    }
-    <span class="prelude-val">Ok</span>(signers)
-}
-
-<span class="kw">fn </span>get_roles(
-    schema_id: <span class="kw-2">&amp;</span>str,
-    roles_prop: Vec&lt;Value&gt;,
-    namespace: <span class="kw-2">&amp;</span>str,
-) -&gt; <span class="prelude-ty">Result</span>&lt;Vec&lt;Role&gt;, InternalError&gt; {
-    <span class="kw">let </span><span class="kw-2">mut </span>roles = Vec::new();
-    <span class="kw">for </span>role <span class="kw">in </span>roles_prop {
-        <span class="kw">let </span>role_data: Role = serde_json::from_value(role)
-            .map_err(|<span class="kw">_</span>| InternalError::InvalidGovernancePayload(<span class="string">&quot;15&quot;</span>.into()))<span class="question-mark">?</span>;
-        <span class="kw">if </span>!namespace_contiene(<span class="kw-2">&amp;</span>role_data.namespace, namespace) {
-            <span class="kw">continue</span>;
-        }
-        <span class="kw">match </span><span class="kw-2">&amp;</span>role_data.schema {
-            Schema::Id { id } =&gt; {
-                <span class="kw">if </span><span class="kw-2">&amp;</span>id == <span class="kw-2">&amp;</span>schema_id {
-                    roles.push(role_data)
-                }
-            }
-            Schema::AllSchemas =&gt; roles.push(role_data),
-        }
-    }
-    <span class="prelude-val">Ok</span>(roles)
-}
-
-<span class="kw">fn </span>get_invokator_roles(
-    invokator: <span class="kw-2">&amp;</span>KeyIdentifier,
-    members: <span class="kw-2">&amp;</span>HashSet&lt;KeyIdentifier&gt;,
-    roles_schema: Vec&lt;Role&gt;,
-) -&gt; <span class="prelude-ty">Result</span>&lt;Vec&lt;String&gt;, InternalError&gt; {
-    <span class="kw">let </span><span class="kw-2">mut </span>roles = Vec::new();
-    <span class="kw">let </span><span class="kw-2">mut </span>is_external = <span class="bool-val">false</span>;
-    <span class="kw">if </span>!members.contains(invokator) {
-        is_external = <span class="bool-val">true</span>;
-    }
-    <span class="kw">let </span>invokator_str = invokator.to_str();
-    <span class="kw">for </span>role <span class="kw">in </span>roles_schema {
-        <span class="kw">match </span>role.who {
-            <span class="kw">crate</span>::commons::schema_handler::gov_models::Who::Id { id } =&gt; {
-                <span class="kw">if </span>!is_external &amp;&amp; <span class="kw-2">&amp;</span>id == <span class="kw-2">&amp;</span>invokator_str {
-                    roles.extend(role.roles.into_iter());
-                }
-            }
-            <span class="kw">crate</span>::commons::schema_handler::gov_models::Who::Members =&gt; {
-                <span class="kw">if </span>!is_external {
-                    roles.extend(role.roles.into_iter());
-                }
-            }
-            <span class="kw">crate</span>::commons::schema_handler::gov_models::Who::All =&gt; {
-                roles.extend(role.roles.into_iter());
-            }
-            <span class="kw">crate</span>::commons::schema_handler::gov_models::Who::External =&gt; {
-                <span class="kw">if </span>is_external {
-                    roles.extend(role.roles.into_iter());
-                }
-            }
-        }
-    }
-    <span class="prelude-val">Ok</span>(roles)
+    <span class="prelude-val">Ok</span>(member_ids_names)
 }
 
 <span class="kw">fn </span>contains_common_element(set1: <span class="kw-2">&amp;</span>HashSet&lt;String&gt;, vec2: <span class="kw-2">&amp;</span>[String]) -&gt; bool {
     vec2.iter().any(|s| set1.contains(s))
-}
-
-<span class="kw">fn </span>get_invoke_from_policy(policy: <span class="kw-2">&amp;</span>Value, fact: <span class="kw-2">&amp;</span>str) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="prelude-ty">Option</span>&lt;Invoke&gt;, InternalError&gt; {
-    <span class="kw">let </span>invokes = policy[<span class="string">&quot;Invoke&quot;</span>].as_array().expect(<span class="string">&quot;Invoke Exists&quot;</span>);
-    <span class="kw">for </span>invoke <span class="kw">in </span>invokes {
-        <span class="kw">let </span>invoke: Invoke = serde_json::from_value(invoke.to_owned())
-            .map_err(|<span class="kw">_</span>| InternalError::InvalidGovernancePayload(<span class="string">&quot;16&quot;</span>.into()))<span class="question-mark">?</span>;
-        <span class="kw">if </span><span class="kw-2">&amp;</span>invoke.fact == fact {
-            <span class="kw">return </span><span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(invoke));
-        }
-    }
-    <span class="prelude-val">Ok</span>(<span class="prelude-val">None</span>)
 }
 
 <span class="kw">fn </span>namespace_contiene(namespace_padre: <span class="kw-2">&amp;</span>str, namespace_hijo: <span class="kw-2">&amp;</span>str) -&gt; bool {

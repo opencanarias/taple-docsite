@@ -57,6 +57,12 @@
 <a href="#57" id="57">57</a>
 <a href="#58" id="58">58</a>
 <a href="#59" id="59">59</a>
+<a href="#60" id="60">60</a>
+<a href="#61" id="61">61</a>
+<a href="#62" id="62">62</a>
+<a href="#63" id="63">63</a>
+<a href="#64" id="64">64</a>
+<a href="#65" id="65">65</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>thiserror::Error;
 
 <span class="kw">use crate</span>::{commons::errors::SubjectError, governance::error::RequestError};
@@ -115,5 +121,11 @@
     </span>SubjectLifeEnd(String),
     <span class="attr">#[error(<span class="string">&quot;Invoke permission denied for ID: {0}, Subject ID: {1}&quot;</span>)]
     </span>InvokePermissionDenied(String, String),
+    <span class="attr">#[error(<span class="string">&quot;Hash generation failed&quot;</span>)]
+    </span>HashGenerationFailed,
+    <span class="attr">#[error(<span class="string">&quot;Request already known&quot;</span>)]
+    </span>RequestAlreadyKnown,
+    <span class="attr">#[error(<span class="string">&quot;Subject Keys Not Found&quot;</span>)]
+    </span>SubjectKeysNotFound(String),
 }
 </code></pre></div></section></main></body></html>

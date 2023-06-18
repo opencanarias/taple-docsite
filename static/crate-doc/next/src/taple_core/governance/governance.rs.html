@@ -432,28 +432,6 @@
 <a href="#432" id="432">432</a>
 <a href="#433" id="433">433</a>
 <a href="#434" id="434">434</a>
-<a href="#435" id="435">435</a>
-<a href="#436" id="436">436</a>
-<a href="#437" id="437">437</a>
-<a href="#438" id="438">438</a>
-<a href="#439" id="439">439</a>
-<a href="#440" id="440">440</a>
-<a href="#441" id="441">441</a>
-<a href="#442" id="442">442</a>
-<a href="#443" id="443">443</a>
-<a href="#444" id="444">444</a>
-<a href="#445" id="445">445</a>
-<a href="#446" id="446">446</a>
-<a href="#447" id="447">447</a>
-<a href="#448" id="448">448</a>
-<a href="#449" id="449">449</a>
-<a href="#450" id="450">450</a>
-<a href="#451" id="451">451</a>
-<a href="#452" id="452">452</a>
-<a href="#453" id="453">453</a>
-<a href="#454" id="454">454</a>
-<a href="#455" id="455">455</a>
-<a href="#456" id="456">456</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>std::{collections::HashSet, marker::PhantomData};
 
 <span class="kw">use </span>async_trait::async_trait;
@@ -464,12 +442,9 @@
         channel::{ChannelData, MpscChannel, SenderEnd},
         identifier::{DigestIdentifier, KeyIdentifier},
         models::event_content::Metadata,
-        schema_handler::{
-            get_governance_schema,
-            gov_models::{Contract, Invoke},
-        },
+        schema_handler::{get_governance_schema, gov_models::Contract},
     },
-    DB, DatabaseCollection, DatabaseManager
+    DatabaseCollection, DatabaseManager, DB,
 };
 
 <span class="kw">use super</span>::{
@@ -484,7 +459,7 @@
     shutdown_sender: tokio::sync::broadcast::Sender&lt;()&gt;,
     shutdown_receiver: tokio::sync::broadcast::Receiver&lt;()&gt;,
     inner_governance: InnerGovernance&lt;C&gt;,
-    _m: PhantomData&lt;M&gt;
+    _m: PhantomData&lt;M&gt;,
 }
 
 <span class="kw">impl</span>&lt;M: DatabaseManager&lt;C&gt;, C: DatabaseCollection&gt; Governance&lt;M, C&gt; {
@@ -504,7 +479,7 @@
                 get_governance_schema(),
                 update_channel,
             ),
-            _m: PhantomData::default()
+            _m: PhantomData::default(),
         }
     }
 
@@ -566,7 +541,10 @@
                         <span class="kw">let </span>to_send = <span class="self">self</span>.inner_governance.get_quorum(metadata, stage)<span class="question-mark">?</span>;
                         <span class="prelude-val">Ok</span>(sender.send(GovernanceResponse::GetQuorum(to_send)).unwrap())
                     }
-                    GovernanceMessage::GetGovernanceVersion { governance_id, subject_id } =&gt; {
+                    GovernanceMessage::GetGovernanceVersion {
+                        governance_id,
+                        subject_id,
+                    } =&gt; {
                         <span class="kw">let </span>version = <span class="self">self
                             </span>.inner_governance
                             .get_governance_version(subject_id, governance_id)<span class="question-mark">?</span>;
@@ -580,8 +558,14 @@
                             .send(GovernanceResponse::IsGovernance(to_send))
                             .map_err(|<span class="kw">_</span>| InternalError::OneshotClosed)<span class="question-mark">?</span>)
                     }
-                    GovernanceMessage::GetInvokeInfo { fact, metadata } =&gt; {
-                        <span class="kw">let </span>to_send = <span class="self">self</span>.inner_governance.get_invoke_info(metadata, <span class="kw-2">&amp;</span>fact)<span class="question-mark">?</span>;
+                    GovernanceMessage::GetInvokeInfo {
+                        metadata,
+                        stage,
+                        invoker,
+                    } =&gt; {
+                        <span class="kw">let </span>to_send = <span class="self">self
+                            </span>.inner_governance
+                            .get_invoke_create_info(metadata, stage, invoker)<span class="question-mark">?</span>;
                         <span class="prelude-val">Ok</span>(sender
                             .send(GovernanceResponse::GetInvokeInfo(to_send))
                             .map_err(|<span class="kw">_</span>| InternalError::OneshotClosed)<span class="question-mark">?</span>)
@@ -609,17 +593,6 @@
                         )<span class="question-mark">?</span>;
                         <span class="prelude-val">Ok</span>(sender
                             .send(GovernanceResponse::GetInitState(to_send))
-                            .map_err(|<span class="kw">_</span>| InternalError::OneshotClosed)<span class="question-mark">?</span>)
-                    }
-                    GovernanceMessage::GetRolesOfInvokator {
-                        invokator,
-                        metadata,
-                    } =&gt; {
-                        <span class="kw">let </span>to_send = <span class="self">self
-                            </span>.inner_governance
-                            .get_roles_of_invokator(invokator, metadata)<span class="question-mark">?</span>;
-                        <span class="prelude-val">Ok</span>(sender
-                            .send(GovernanceResponse::GetRolesOfInvokator(to_send))
                             .map_err(|<span class="kw">_</span>| InternalError::OneshotClosed)<span class="question-mark">?</span>)
                     }
                     <span class="kw">_ </span>=&gt; <span class="macro">unreachable!</span>(),
@@ -682,8 +655,9 @@
     <span class="kw">async fn </span>get_invoke_info(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         metadata: Metadata,
-        fact: String,
-    ) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="prelude-ty">Option</span>&lt;Invoke&gt;, RequestError&gt;;
+        stage: ValidationStage,
+        invoker: KeyIdentifier,
+    ) -&gt; <span class="prelude-ty">Result</span>&lt;bool, RequestError&gt;;
 
     <span class="kw">async fn </span>get_contracts(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
@@ -698,12 +672,6 @@
     ) -&gt; <span class="prelude-ty">Result</span>&lt;u64, RequestError&gt;;
 
     <span class="kw">async fn </span>is_governance(<span class="kw-2">&amp;</span><span class="self">self</span>, subject_id: DigestIdentifier) -&gt; <span class="prelude-ty">Result</span>&lt;bool, RequestError&gt;;
-
-    <span class="kw">async fn </span>get_roles_of_invokator(
-        <span class="kw-2">&amp;</span><span class="self">self</span>,
-        invokator: KeyIdentifier,
-        metadata: Metadata,
-    ) -&gt; <span class="prelude-ty">Result</span>&lt;Vec&lt;String&gt;, RequestError&gt;;
 
     <span class="kw">async fn </span>governance_updated(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
@@ -812,11 +780,16 @@
     <span class="kw">async fn </span>get_invoke_info(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         metadata: Metadata,
-        fact: String,
-    ) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="prelude-ty">Option</span>&lt;Invoke&gt;, RequestError&gt; {
+        stage: ValidationStage,
+        invoker: KeyIdentifier,
+    ) -&gt; <span class="prelude-ty">Result</span>&lt;bool, RequestError&gt; {
         <span class="kw">let </span>response = <span class="self">self
             </span>.sender
-            .ask(GovernanceMessage::GetInvokeInfo { metadata, fact })
+            .ask(GovernanceMessage::GetInvokeInfo {
+                metadata,
+                stage,
+                invoker,
+            })
             .<span class="kw">await
             </span>.map_err(|<span class="kw">_</span>| RequestError::ChannelClosed)<span class="question-mark">?</span>;
         <span class="kw">if let </span>GovernanceResponse::GetInvokeInfo(invoke_info) = response {
@@ -849,11 +822,14 @@
     <span class="kw">async fn </span>get_governance_version(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         governance_id: DigestIdentifier,
-        subject_id: DigestIdentifier
+        subject_id: DigestIdentifier,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;u64, RequestError&gt; {
         <span class="kw">let </span>response = <span class="self">self
             </span>.sender
-            .ask(GovernanceMessage::GetGovernanceVersion { governance_id, subject_id })
+            .ask(GovernanceMessage::GetGovernanceVersion {
+                governance_id,
+                subject_id,
+            })
             .<span class="kw">await
             </span>.map_err(|<span class="kw">_</span>| RequestError::ChannelClosed)<span class="question-mark">?</span>;
         <span class="kw">if let </span>GovernanceResponse::GetGovernanceVersion(version) = response {
@@ -870,26 +846,6 @@
             .<span class="kw">await
             </span>.map_err(|<span class="kw">_</span>| RequestError::ChannelClosed)<span class="question-mark">?</span>;
         <span class="kw">if let </span>GovernanceResponse::IsGovernance(result) = response {
-            result
-        } <span class="kw">else </span>{
-            <span class="prelude-val">Err</span>(RequestError::UnexpectedResponse)
-        }
-    }
-
-    <span class="kw">async fn </span>get_roles_of_invokator(
-        <span class="kw-2">&amp;</span><span class="self">self</span>,
-        invokator: KeyIdentifier,
-        metadata: Metadata,
-    ) -&gt; <span class="prelude-ty">Result</span>&lt;Vec&lt;String&gt;, RequestError&gt; {
-        <span class="kw">let </span>response = <span class="self">self
-            </span>.sender
-            .ask(GovernanceMessage::GetRolesOfInvokator {
-                invokator,
-                metadata,
-            })
-            .<span class="kw">await
-            </span>.map_err(|<span class="kw">_</span>| RequestError::ChannelClosed)<span class="question-mark">?</span>;
-        <span class="kw">if let </span>GovernanceResponse::GetRolesOfInvokator(result) = response {
             result
         } <span class="kw">else </span>{
             <span class="prelude-val">Err</span>(RequestError::UnexpectedResponse)

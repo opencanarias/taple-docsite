@@ -79,6 +79,8 @@
 <a href="#79" id="79">79</a>
 <a href="#80" id="80">80</a>
 <a href="#81" id="81">81</a>
+<a href="#82" id="82">82</a>
+<a href="#83" id="83">83</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>thiserror::Error;
 
 <span class="kw">use crate</span>::{DigestIdentifier, KeyIdentifier};
@@ -99,6 +101,8 @@
     </span>HashGenerationFailed,
     <span class="attr">#[error(<span class="string">&quot;Sign process failed&quot;</span>)]
     </span>SignProcessFailed,
+    <span class="attr">#[error(<span class="string">&quot;Response channel closed&quot;</span>)]
+    </span>ResponseChannelClosed
 }
 
 <span class="attr">#[derive(Error, Debug, Clone)]

@@ -412,11 +412,37 @@
 <a href="#412" id="412">412</a>
 <a href="#413" id="413">413</a>
 <a href="#414" id="414">414</a>
+<a href="#415" id="415">415</a>
+<a href="#416" id="416">416</a>
+<a href="#417" id="417">417</a>
+<a href="#418" id="418">418</a>
+<a href="#419" id="419">419</a>
+<a href="#420" id="420">420</a>
+<a href="#421" id="421">421</a>
+<a href="#422" id="422">422</a>
+<a href="#423" id="423">423</a>
+<a href="#424" id="424">424</a>
+<a href="#425" id="425">425</a>
+<a href="#426" id="426">426</a>
+<a href="#427" id="427">427</a>
+<a href="#428" id="428">428</a>
+<a href="#429" id="429">429</a>
+<a href="#430" id="430">430</a>
+<a href="#431" id="431">431</a>
+<a href="#432" id="432">432</a>
+<a href="#433" id="433">433</a>
+<a href="#434" id="434">434</a>
+<a href="#435" id="435">435</a>
+<a href="#436" id="436">436</a>
+<a href="#437" id="437">437</a>
+<a href="#438" id="438">438</a>
+<a href="#439" id="439">439</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>std::collections::HashSet;
 <span class="kw">use </span>std::sync::Arc;
 
 <span class="kw">use </span><span class="kw">crate</span>::commons::models::approval::ApprovalStatus;
 <span class="kw">use </span><span class="kw">crate</span>::commons::models::event::ValidationProof;
+<span class="kw">use </span><span class="kw">crate</span>::commons::models::request::TapleRequest;
 <span class="kw">use </span><span class="kw">crate</span>::commons::models::state::Subject;
 <span class="kw">use </span><span class="kw">crate</span>::crypto::KeyPair;
 <span class="kw">use </span><span class="kw">crate</span>::event_request::EventRequest;
@@ -425,15 +451,16 @@
 <span class="kw">use crate</span>::{Event, ApprovalPetitionData};
 
 <span class="kw">use </span><span class="kw">super</span>::error::Error;
-<span class="kw">use </span><span class="kw">super</span>::layers::lce_validation_proofs::LceValidationProofs;
+<span class="kw">use </span><span class="kw">super</span>::layers::lce_validation_proofs::{LceValidationProofs};
+<span class="kw">use </span><span class="kw">super</span>::layers::request::RequestDb;
 <span class="kw">use super</span>::{
     layers::{
         approvals::ApprovalsDb, contract::ContractDb, controller_id::ControllerIdDb,
         event::EventDb, notary::NotaryDb,
         preauthorized_subjects_and_providers::PreauthorizedSbujectsAndProovidersDb,
-        prevalidated_event::PrevalidatedEventDb, request::RequestDb, signature::SignatureDb,
+        prevalidated_event::PrevalidatedEventDb, event_request::EventRequestDb, signature::SignatureDb,
         subject::SubjectDb, subject_by_governance::SubjectByGovernanceDb,
-        transfer_events::TransferEventsDb, witness_signatures::WitnessSignaturesDb,
+        keys::KeysDb, witness_signatures::WitnessSignaturesDb,
     },
     DatabaseCollection, DatabaseManager,
 };
@@ -443,13 +470,14 @@
     subject_db: SubjectDb&lt;C&gt;,
     event_db: EventDb&lt;C&gt;,
     prevalidated_event_db: PrevalidatedEventDb&lt;C&gt;,
+    event_request_db: EventRequestDb&lt;C&gt;,
     request_db: RequestDb&lt;C&gt;,
     controller_id_db: ControllerIdDb&lt;C&gt;,
     notary_db: NotaryDb&lt;C&gt;,
     contract_db: ContractDb&lt;C&gt;,
     witness_signatures_db: WitnessSignaturesDb&lt;C&gt;,
     subject_by_governance_db: SubjectByGovernanceDb&lt;C&gt;,
-    transfer_events_db: TransferEventsDb&lt;C&gt;,
+    keys_db: KeysDb&lt;C&gt;,
     preauthorized_subjects_and_providers_db: PreauthorizedSbujectsAndProovidersDb&lt;C&gt;,
     lce_validation_proofs_db: LceValidationProofs&lt;C&gt;,
     approvals_db: ApprovalsDb&lt;C&gt;,
@@ -461,13 +489,14 @@
         <span class="kw">let </span>subject_db = SubjectDb::new(<span class="kw-2">&amp;</span>manager);
         <span class="kw">let </span>event_db = EventDb::new(<span class="kw-2">&amp;</span>manager);
         <span class="kw">let </span>prevalidated_event_db = PrevalidatedEventDb::new(<span class="kw-2">&amp;</span>manager);
+        <span class="kw">let </span>event_request_db = EventRequestDb::new(<span class="kw-2">&amp;</span>manager);
         <span class="kw">let </span>request_db = RequestDb::new(<span class="kw-2">&amp;</span>manager);
         <span class="kw">let </span>controller_id_db = ControllerIdDb::new(<span class="kw-2">&amp;</span>manager);
         <span class="kw">let </span>notary_db = NotaryDb::new(<span class="kw-2">&amp;</span>manager);
         <span class="kw">let </span>contract_db = ContractDb::new(<span class="kw-2">&amp;</span>manager);
         <span class="kw">let </span>witness_signatures_db = WitnessSignaturesDb::new(<span class="kw-2">&amp;</span>manager);
         <span class="kw">let </span>subject_by_governance_db = SubjectByGovernanceDb::new(<span class="kw-2">&amp;</span>manager);
-        <span class="kw">let </span>transfer_events_db = TransferEventsDb::new(<span class="kw-2">&amp;</span>manager);
+        <span class="kw">let </span>transfer_events_db = KeysDb::new(<span class="kw-2">&amp;</span>manager);
         <span class="kw">let </span>preauthorized_subjects_and_providers_db =
             PreauthorizedSbujectsAndProovidersDb::new(<span class="kw-2">&amp;</span>manager);
         <span class="kw">let </span>lce_validation_proofs_db = LceValidationProofs::new(<span class="kw-2">&amp;</span>manager);
@@ -477,13 +506,14 @@
             subject_db,
             event_db,
             prevalidated_event_db,
+            event_request_db: event_request_db,
             request_db,
             controller_id_db,
             notary_db,
             contract_db,
             witness_signatures_db,
             subject_by_governance_db,
-            transfer_events_db,
+            keys_db: transfer_events_db,
             preauthorized_subjects_and_providers_db,
             lce_validation_proofs_db,
             approvals_db,
@@ -590,11 +620,11 @@
     }
 
     <span class="kw">pub fn </span>get_request(<span class="kw-2">&amp;</span><span class="self">self</span>, subject_id: <span class="kw-2">&amp;</span>DigestIdentifier) -&gt; <span class="prelude-ty">Result</span>&lt;EventRequest, Error&gt; {
-        <span class="self">self</span>.request_db.get_request(subject_id)
+        <span class="self">self</span>.event_request_db.get_request(subject_id)
     }
 
     <span class="kw">pub fn </span>get_all_request(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Vec&lt;EventRequest&gt; {
-        <span class="self">self</span>.request_db.get_all_request()
+        <span class="self">self</span>.event_request_db.get_all_request()
     }
 
     <span class="kw">pub fn </span>set_request(
@@ -602,11 +632,31 @@
         subject_id: <span class="kw-2">&amp;</span>DigestIdentifier,
         request: EventRequest,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;(), Error&gt; {
-        <span class="self">self</span>.request_db.set_request(subject_id, request)
+        <span class="self">self</span>.event_request_db.set_request(subject_id, request)
     }
 
     <span class="kw">pub fn </span>del_request(<span class="kw-2">&amp;</span><span class="self">self</span>, subject_id: <span class="kw-2">&amp;</span>DigestIdentifier) -&gt; <span class="prelude-ty">Result</span>&lt;(), Error&gt; {
-        <span class="self">self</span>.request_db.del_request(subject_id)
+        <span class="self">self</span>.event_request_db.del_request(subject_id)
+    }
+
+    <span class="kw">pub fn </span>get_taple_request(<span class="kw-2">&amp;</span><span class="self">self</span>, request_id: <span class="kw-2">&amp;</span>DigestIdentifier) -&gt; <span class="prelude-ty">Result</span>&lt;TapleRequest, Error&gt; {
+        <span class="self">self</span>.request_db.get_request(request_id)
+    }
+
+    <span class="kw">pub fn </span>get_taple_all_request(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Vec&lt;TapleRequest&gt; {
+        <span class="self">self</span>.request_db.get_all_request()
+    }
+
+    <span class="kw">pub fn </span>set_taple_request(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        request_id: <span class="kw-2">&amp;</span>DigestIdentifier,
+        request: <span class="kw-2">&amp;</span>TapleRequest,
+    ) -&gt; <span class="prelude-ty">Result</span>&lt;(), Error&gt; {
+        <span class="self">self</span>.request_db.set_request(request_id, request)
+    }
+
+    <span class="kw">pub fn </span>del_taple_request(<span class="kw-2">&amp;</span><span class="self">self</span>, request_id: <span class="kw-2">&amp;</span>DigestIdentifier) -&gt; <span class="prelude-ty">Result</span>&lt;(), Error&gt; {
+        <span class="self">self</span>.request_db.del_request(request_id)
     }
 
     <span class="kw">pub fn </span>get_controller_id(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;String, Error&gt; {
@@ -726,27 +776,27 @@
             .get_governance_subjects(governance_id, from, quantity)
     }
 
-    <span class="kw">pub fn </span>get_expecting_transfer(<span class="kw-2">&amp;</span><span class="self">self</span>, subject_id: <span class="kw-2">&amp;</span>DigestIdentifier) -&gt; <span class="prelude-ty">Result</span>&lt;KeyPair, Error&gt; {
-        <span class="self">self</span>.transfer_events_db.get_expecting_transfer(subject_id)
+    <span class="kw">pub fn </span>get_keys(<span class="kw-2">&amp;</span><span class="self">self</span>, public_key: <span class="kw-2">&amp;</span>KeyIdentifier) -&gt; <span class="prelude-ty">Result</span>&lt;KeyPair, Error&gt; {
+        <span class="self">self</span>.keys_db.get_keys(public_key)
     }
 
-    <span class="kw">pub fn </span>get_all_expecting_transfers(
+    <span class="kw">pub fn </span>get_all_keys(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-    ) -&gt; <span class="prelude-ty">Result</span>&lt;Vec&lt;(DigestIdentifier, HashSet&lt;KeyIdentifier&gt;)&gt;, Error&gt; {
-        <span class="self">self</span>.transfer_events_db.get_all_expecting_transfers()
+    ) -&gt; <span class="prelude-ty">Result</span>&lt;Vec&lt;KeyPair&gt;, Error&gt; {
+        <span class="self">self</span>.keys_db.get_all_keys()
     }
 
-    <span class="kw">pub fn </span>set_expecting_transfer(
+    <span class="kw">pub fn </span>set_keys(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        subject_id: <span class="kw-2">&amp;</span>DigestIdentifier,
+        public_key: <span class="kw-2">&amp;</span>KeyIdentifier,
         keypair: KeyPair,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;(), Error&gt; {
-        <span class="self">self</span>.transfer_events_db
-            .set_expecting_transfer(subject_id, keypair)
+        <span class="self">self</span>.keys_db
+            .set_keys(public_key, keypair)
     }
 
-    <span class="kw">pub fn </span>del_expecting_transfer(<span class="kw-2">&amp;</span><span class="self">self</span>, subject_id: <span class="kw-2">&amp;</span>DigestIdentifier) -&gt; <span class="prelude-ty">Result</span>&lt;(), Error&gt; {
-        <span class="self">self</span>.transfer_events_db.del_expecting_transfer(subject_id)
+    <span class="kw">pub fn </span>del_keys(<span class="kw-2">&amp;</span><span class="self">self</span>, public_key: <span class="kw-2">&amp;</span>KeyIdentifier) -&gt; <span class="prelude-ty">Result</span>&lt;(), Error&gt; {
+        <span class="self">self</span>.keys_db.del_keys(public_key)
     }
 
     <span class="kw">pub fn </span>get_preauthorized_subject_and_providers(

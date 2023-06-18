@@ -344,6 +344,18 @@
 <a href="#344" id="344">344</a>
 <a href="#345" id="345">345</a>
 <a href="#346" id="346">346</a>
+<a href="#347" id="347">347</a>
+<a href="#348" id="348">348</a>
+<a href="#349" id="349">349</a>
+<a href="#350" id="350">350</a>
+<a href="#351" id="351">351</a>
+<a href="#352" id="352">352</a>
+<a href="#353" id="353">353</a>
+<a href="#354" id="354">354</a>
+<a href="#355" id="355">355</a>
+<a href="#356" id="356">356</a>
+<a href="#357" id="357">357</a>
+<a href="#358" id="358">358</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>async_trait::async_trait;
 
 <span class="kw">use crate</span>::{
@@ -353,17 +365,14 @@
     governance::{error::RequestError, GovernanceAPI},
     message::MessageTaskCommand,
     protocol::protocol_message_manager::TapleMessages,
-    DatabaseCollection, DigestIdentifier, KeyIdentifier, Notification,
+    DatabaseCollection, KeyIdentifier, Notification,
 };
 
 <span class="kw">use super</span>::{errors::LedgerError, ledger::Ledger, LedgerCommand, LedgerResponse};
 
 <span class="attr">#[async_trait]
 </span><span class="kw">pub trait </span>EventManagerInterface {
-    <span class="kw">async fn </span>expecting_transfer(
-        <span class="kw-2">&amp;</span><span class="self">self</span>,
-        subject_id: DigestIdentifier,
-    ) -&gt; <span class="prelude-ty">Result</span>&lt;KeyIdentifier, LedgerError&gt;;
+    <span class="kw">async fn </span>generate_keys(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;KeyIdentifier, LedgerError&gt;;
 }
 
 <span class="attr">#[derive(Debug, Clone)]
@@ -379,16 +388,13 @@
 
 <span class="attr">#[async_trait]
 </span><span class="kw">impl </span>EventManagerInterface <span class="kw">for </span>EventManagerAPI {
-    <span class="kw">async fn </span>expecting_transfer(
-        <span class="kw-2">&amp;</span><span class="self">self</span>,
-        subject_id: DigestIdentifier,
-    ) -&gt; <span class="prelude-ty">Result</span>&lt;KeyIdentifier, LedgerError&gt; {
+    <span class="kw">async fn </span>generate_keys(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;KeyIdentifier, LedgerError&gt; {
         <span class="kw">let </span>response = <span class="self">self
             </span>.sender
-            .ask(LedgerCommand::ExpectingTransfer { subject_id })
+            .ask(LedgerCommand::GenerateKey)
             .<span class="kw">await
             </span>.map_err(|<span class="kw">_</span>| LedgerError::ChannelClosed)<span class="question-mark">?</span>;
-        <span class="kw">if let </span>LedgerResponse::ExpectingTransfer(public_key) = response {
+        <span class="kw">if let </span>LedgerResponse::GenerateKey(public_key) = response {
             public_key
         } <span class="kw">else </span>{
             <span class="prelude-val">Err</span>(LedgerError::UnexpectedResponse)
@@ -484,11 +490,11 @@
                 (<span class="prelude-val">None</span>, data)
             }
         };
-        <span class="macro">log::error!</span>(<span class="string">&quot;MENSAJE RECIBIDO EN EL LEDGER: {:?}&quot;</span>, data);
-        <span class="kw">let </span>response = {
+        <span class="comment">// log::error!(&quot;MENSAJE RECIBIDO EN EL LEDGER: {:?}&quot;, data);
+        </span><span class="kw">let </span>response = {
             <span class="kw">match </span>data {
-                LedgerCommand::ExpectingTransfer { subject_id } =&gt; {
-                    <span class="kw">let </span>response = <span class="self">self</span>.inner_ledger.expecting_transfer(subject_id).<span class="kw">await</span>;
+                LedgerCommand::GenerateKey =&gt; {
+                    <span class="kw">let </span>response = <span class="self">self</span>.inner_ledger.generate_key().<span class="kw">await</span>;
                     <span class="kw">match </span><span class="kw-2">&amp;</span>response {
                         <span class="prelude-val">Err</span>(error) =&gt; <span class="kw">match </span>error {
                             LedgerError::ChannelClosed =&gt; {
@@ -507,10 +513,17 @@
                         },
                         <span class="kw">_ </span>=&gt; {}
                     }
-                    LedgerResponse::ExpectingTransfer(response)
+                    LedgerResponse::GenerateKey(response)
                 }
-                LedgerCommand::OwnEvent { event, signatures, validation_proof } =&gt; {
-                    <span class="kw">let </span>response = <span class="self">self</span>.inner_ledger.event_validated(event, signatures, validation_proof).<span class="kw">await</span>;
+                LedgerCommand::OwnEvent {
+                    event,
+                    signatures,
+                    validation_proof,
+                } =&gt; {
+                    <span class="kw">let </span>response = <span class="self">self
+                        </span>.inner_ledger
+                        .event_validated(event, signatures, validation_proof)
+                        .<span class="kw">await</span>;
                     <span class="kw">match </span>response {
                         <span class="prelude-val">Err</span>(error) =&gt; <span class="kw">match </span>error {
                             LedgerError::ChannelClosed =&gt; {
@@ -533,8 +546,15 @@
                     }
                     LedgerResponse::NoResponse
                 }
-                LedgerCommand::Genesis { event_request } =&gt; {
-                    <span class="kw">let </span>response = <span class="self">self</span>.inner_ledger.genesis(event_request).<span class="kw">await</span>;
+                LedgerCommand::Genesis {
+                    event,
+                    signatures,
+                    validation_proof,
+                } =&gt; {
+                    <span class="kw">let </span>response = <span class="self">self
+                        </span>.inner_ledger
+                        .genesis(event, signatures, validation_proof)
+                        .<span class="kw">await</span>;
                     <span class="kw">match </span>response {
                         <span class="prelude-val">Err</span>(error) =&gt; <span class="kw">match </span>error {
                             LedgerError::ChannelClosed =&gt; {
@@ -562,6 +582,7 @@
                     validation_proof,
                 } =&gt; {
                     <span class="macro">log::error!</span>(<span class="string">&quot;EXTERNAL EVENT RECIVED&quot;</span>);
+                    <span class="macro">log::warn!</span>(<span class="string">&quot;LLEGA EVENTO CON SN {}&quot;</span>, event.content.event_proposal.proposal.sn);
                     <span class="kw">let </span>response = <span class="self">self
                         </span>.inner_ledger
                         .external_event(event, signatures, sender, validation_proof)
@@ -678,7 +699,10 @@
                             },
                             <span class="kw">_ </span>=&gt; <span class="prelude-val">Err</span>(error),
                         },
-                        <span class="prelude-val">Ok</span>(event) =&gt; <span class="prelude-val">Ok</span>(event),
+                        <span class="prelude-val">Ok</span>(event) =&gt; {
+                            <span class="macro">log::warn!</span>(<span class="string">&quot;LLEGA EVENTO CON SN {}&quot;</span>, event.<span class="number">0</span>.content.event_proposal.proposal.sn);
+                            <span class="prelude-val">Ok</span>(event)
+                        },
                     };
                     LedgerResponse::GetNextGov(response)
                 }

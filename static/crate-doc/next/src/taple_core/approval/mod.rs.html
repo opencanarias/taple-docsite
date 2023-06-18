@@ -62,7 +62,9 @@
 <a href="#62" id="62">62</a>
 <a href="#63" id="63">63</a>
 <a href="#64" id="64">64</a>
-</pre></div><pre class="rust"><code><span class="kw">use </span>serde::{Deserialize, Serialize};
+<a href="#65" id="65">65</a>
+</pre></div><pre class="rust"><code><span class="kw">use </span>borsh::{BorshSerialize, BorshDeserialize};
+<span class="kw">use </span>serde::{Deserialize, Serialize};
 
 <span class="kw">use crate</span>::{
     commons::models::{event_proposal::EventProposal, Acceptance},
@@ -79,7 +81,7 @@
 <span class="attr">#[cfg(feature = <span class="string">&quot;aproval&quot;</span>)]
 </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">mod </span>manager;
 
-<span class="attr">#[derive(Clone, Serialize, Deserialize, Debug)]
+<span class="attr">#[derive(Clone, Serialize, Deserialize, Debug, BorshSerialize, BorshDeserialize)]
 </span><span class="kw">pub enum </span>ApprovalMessages {
     RequestApproval(EventProposal),
     EmitVote(EmitVote),
@@ -121,7 +123,7 @@
     subject_signature: Signature,
 }
 
-<span class="attr">#[derive(Clone, Serialize, Deserialize, Debug)]
+<span class="attr">#[derive(Clone, Serialize, Deserialize, Debug, BorshSerialize, BorshDeserialize)]
 </span><span class="kw">pub struct </span>EmitVote {
     request_id: DigestIdentifier,
     acceptance: Acceptance,

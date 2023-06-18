@@ -96,25 +96,11 @@
 <a href="#96" id="96">96</a>
 <a href="#97" id="97">97</a>
 <a href="#98" id="98">98</a>
-<a href="#99" id="99">99</a>
-<a href="#100" id="100">100</a>
-<a href="#101" id="101">101</a>
-<a href="#102" id="102">102</a>
-<a href="#103" id="103">103</a>
-<a href="#104" id="104">104</a>
-<a href="#105" id="105">105</a>
-<a href="#106" id="106">106</a>
-<a href="#107" id="107">107</a>
-<a href="#108" id="108">108</a>
-<a href="#109" id="109">109</a>
-<a href="#110" id="110">110</a>
-<a href="#111" id="111">111</a>
-<a href="#112" id="112">112</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::commons::identifier::{Derivable, KeyIdentifier};
 <span class="kw">use </span>futures::{future::BoxFuture, prelude::<span class="kw-2">*</span>};
 <span class="kw">use </span>log::debug;
 
-<span class="kw">use </span><span class="kw">super</span>::<span class="kw">super</span>::{error::Error, Message, MessageConfig, MessageSender, TaskCommandContent};
+<span class="kw">use </span><span class="kw">super</span>::<span class="kw">super</span>::{error::Error, MessageConfig, MessageSender, TaskCommandContent};
 <span class="kw">use </span>std::time::Duration;
 
 <span class="kw">use </span>rand::Rng;
@@ -146,13 +132,7 @@
                 <span class="kw">for </span>target <span class="kw">in </span>targets_selected {
                     <span class="macro">debug!</span>(<span class="string">&quot;Message sent to {}&quot;</span>, target.to_str());
                     sender
-                        .send_message(
-                            target,
-                            Message::&lt;T&gt; {
-                                content: request.clone(),
-                                sender_id: <span class="prelude-val">None</span>,
-                            },
-                        )
+                        .send_message(target, request.clone())
                         .<span class="kw">await
                         </span>.map_err(|<span class="kw">_</span>| Error::SenderChannelError)<span class="question-mark">?</span>;
                 }
@@ -171,15 +151,7 @@
             <span class="comment">// Targets are selected
             </span><span class="kw">let </span>targets_selected = Algorithm::get_targets(targets, config.replication_factor());
             <span class="kw">for </span>target <span class="kw">in </span>targets_selected {
-                <span class="kw">let </span>result_sending = sender
-                    .send_message(
-                        target,
-                        Message::&lt;T&gt; {
-                            content: request.clone(),
-                            sender_id: <span class="prelude-val">None</span>,
-                        },
-                    )
-                    .<span class="kw">await</span>;
+                <span class="kw">let </span>result_sending = sender.send_message(target, request.clone()).<span class="kw">await</span>;
                 <span class="macro">log::warn!</span>(<span class="string">&quot;RESULT SENDING: {:?}&quot;</span>, result_sending);
                 result_sending.map_err(|<span class="kw">_</span>| Error::SenderChannelError)<span class="question-mark">?</span>;
             }

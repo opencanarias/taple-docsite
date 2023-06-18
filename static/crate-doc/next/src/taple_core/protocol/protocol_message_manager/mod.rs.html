@@ -169,7 +169,23 @@
 <a href="#169" id="169">169</a>
 <a href="#170" id="170">170</a>
 <a href="#171" id="171">171</a>
-</pre></div><pre class="rust"><code><span class="kw">use </span>serde::{Deserialize, Serialize};
+<a href="#172" id="172">172</a>
+<a href="#173" id="173">173</a>
+<a href="#174" id="174">174</a>
+<a href="#175" id="175">175</a>
+<a href="#176" id="176">176</a>
+<a href="#177" id="177">177</a>
+<a href="#178" id="178">178</a>
+<a href="#179" id="179">179</a>
+<a href="#180" id="180">180</a>
+<a href="#181" id="181">181</a>
+<a href="#182" id="182">182</a>
+<a href="#183" id="183">183</a>
+<a href="#184" id="184">184</a>
+<a href="#185" id="185">185</a>
+<a href="#186" id="186">186</a>
+</pre></div><pre class="rust"><code><span class="kw">use </span>borsh::{BorshDeserialize, BorshSerialize};
+<span class="kw">use </span>serde::{Deserialize, Serialize};
 
 <span class="kw">use crate</span>::{
     approval::{error::ApprovalErrorResponse, ApprovalMessages, ApprovalResponses},
@@ -177,14 +193,15 @@
     distribution::{error::DistributionErrorResponses, DistributionMessagesNew, LedgerMessages},
     evaluator::{EvaluatorMessage, EvaluatorResponse},
     event::{EventCommand, EventResponse},
+    ledger::{LedgerCommand, LedgerResponse},
     message::{Message, TaskCommandContent},
-    notary::{NotaryCommand, NotaryResponse}, ledger::{LedgerCommand, LedgerResponse},
+    notary::{NotaryCommand, NotaryResponse},
 };
 
 <span class="kw">mod </span>error;
 <span class="kw">use </span>error::ProtocolErrors;
 
-<span class="attr">#[derive(Debug, Clone, Serialize, Deserialize)]
+<span class="attr">#[derive(Debug, Clone, Serialize, Deserialize, BorshSerialize, BorshDeserialize)]
 </span><span class="kw">pub enum </span>TapleMessages {
     DistributionMessage(DistributionMessagesNew),
     EvaluationMessage(EvaluatorMessage),
@@ -215,13 +232,13 @@
     <span class="kw">pub fn </span>new(
         input: MpscChannel&lt;Message&lt;TapleMessages&gt;, ()&gt;,
         distribution_sx: SenderEnd&lt;DistributionMessagesNew, <span class="prelude-ty">Result</span>&lt;(), DistributionErrorResponses&gt;&gt;,
-        <span class="attr">#[cfg(feature = <span class="string">&quot;evaluation&quot;</span>)]
-        </span>evaluation_sx: SenderEnd&lt;EvaluatorMessage, EvaluatorResponse&gt;,
-        <span class="attr">#[cfg(feature = <span class="string">&quot;validation&quot;</span>)]
-        </span>validation_sx: SenderEnd&lt;NotaryCommand, NotaryResponse&gt;,
+        <span class="attr">#[cfg(feature = <span class="string">&quot;evaluation&quot;</span>)] </span>evaluation_sx: SenderEnd&lt;
+            EvaluatorMessage,
+            EvaluatorResponse,
+        &gt;,
+        <span class="attr">#[cfg(feature = <span class="string">&quot;validation&quot;</span>)] </span>validation_sx: SenderEnd&lt;NotaryCommand, NotaryResponse&gt;,
         event_sx: SenderEnd&lt;EventCommand, EventResponse&gt;,
-        <span class="attr">#[cfg(feature = <span class="string">&quot;aproval&quot;</span>)]
-        </span>approval_sx: SenderEnd&lt;ApprovalMessages, ApprovalResponses&gt;,
+        <span class="attr">#[cfg(feature = <span class="string">&quot;aproval&quot;</span>)] </span>approval_sx: SenderEnd&lt;ApprovalMessages, ApprovalResponses&gt;,
         ledger_sx: SenderEnd&lt;LedgerCommand, LedgerResponse&gt;,
         shutdown_sender: tokio::sync::broadcast::Sender&lt;()&gt;,
     ) -&gt; <span class="self">Self </span>{
@@ -271,7 +288,7 @@
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         command: ChannelData&lt;Message&lt;TapleMessages&gt;, ()&gt;,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;(), ProtocolErrors&gt; {
-        <span class="kw">let </span>msg = <span class="kw">match </span>command {
+        <span class="kw">let </span>message = <span class="kw">match </span>command {
             ChannelData::AskData(_data) =&gt; {
                 <span class="kw">return </span><span class="prelude-val">Err</span>(ProtocolErrors::AskCommandDetected);
             }
@@ -280,9 +297,9 @@
                 data
             }
         };
-        <span class="kw">let </span>msg = msg.content;
-        <span class="comment">//println!(&quot;MSG PROTOCOL {:?}&quot;, msg);
-        </span><span class="kw">match </span>msg {
+        <span class="kw">let </span>msg = message.content.content;
+        <span class="kw">let </span>sender = message.content.sender_id;
+        <span class="kw">match </span>msg {
             TapleMessages::DistributionMessage(data) =&gt; {
                 <span class="self">self</span>.distribution_sx
                     .tell(data)
@@ -310,11 +327,24 @@
             TapleMessages::ValidationMessage(data) =&gt; {
                 <span class="attr">#[cfg(feature = <span class="string">&quot;validation&quot;</span>)]
                 </span>{
+                    <span class="kw">let </span>notary_command = <span class="kw">match </span>data {
+                        NotaryCommand::NotaryEvent {
+                            notary_event,
+                            sender,
+                        } =&gt; {
+                            <span class="macro">log::error!</span>(<span class="string">&quot;Notary Event Received in protocol manager&quot;</span>);
+                            <span class="kw">return </span><span class="prelude-val">Ok</span>(());
+                        }
+                        NotaryCommand::AskForNotary(notary_event) =&gt; NotaryCommand::NotaryEvent {
+                            notary_event,
+                            sender,
+                        },
+                    };
                     <span class="kw">return </span><span class="prelude-val">Ok</span>(<span class="self">self
-                    </span>.validation_sx
-                    .tell(data)
-                    .<span class="kw">await
-                    </span>.map_err(|<span class="kw">_</span>| ProtocolErrors::ChannelClosed)<span class="question-mark">?</span>);
+                        </span>.validation_sx
+                        .tell(notary_command)
+                        .<span class="kw">await
+                        </span>.map_err(|<span class="kw">_</span>| ProtocolErrors::ChannelClosed)<span class="question-mark">?</span>);
                 }
                 <span class="attr">#[cfg(not(feature = <span class="string">&quot;validation&quot;</span>))]
                 </span><span class="macro">log::trace!</span>(<span class="string">&quot;Validation Message received. Current node is not able to validate&quot;</span>);
@@ -332,11 +362,12 @@
                 </span><span class="macro">log::trace!</span>(<span class="string">&quot;Aproval Message received. Current node is not able to aprove&quot;</span>);
             }
             TapleMessages::LedgerMessages(data) =&gt; <span class="self">self
-            </span>.ledger_sx
-            .tell(data)
-            .<span class="kw">await
-            </span>.map_err(|<span class="kw">_</span>| ProtocolErrors::ChannelClosed)<span class="question-mark">?</span>,
+                </span>.ledger_sx
+                .tell(data)
+                .<span class="kw">await
+                </span>.map_err(|<span class="kw">_</span>| ProtocolErrors::ChannelClosed)<span class="question-mark">?</span>,
         }
         <span class="prelude-val">Ok</span>(())
     }
-}</code></pre></div></section></main></body></html>
+}
+</code></pre></div></section></main></body></html>

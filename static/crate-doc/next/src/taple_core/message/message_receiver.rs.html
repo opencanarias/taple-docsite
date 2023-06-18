@@ -58,6 +58,16 @@
 <a href="#58" id="58">58</a>
 <a href="#59" id="59">59</a>
 <a href="#60" id="60">60</a>
+<a href="#61" id="61">61</a>
+<a href="#62" id="62">62</a>
+<a href="#63" id="63">63</a>
+<a href="#64" id="64">64</a>
+<a href="#65" id="65">65</a>
+<a href="#66" id="66">66</a>
+<a href="#67" id="67">67</a>
+<a href="#68" id="68">68</a>
+<a href="#69" id="69">69</a>
+<a href="#70" id="70">70</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>futures::StreamExt;
 <span class="kw">use </span>rmp_serde::Deserializer;
 <span class="kw">use </span>serde::{de::DeserializeOwned, Deserialize, Serialize};
@@ -65,7 +75,7 @@
 <span class="kw">use </span>tokio::sync::mpsc::{<span class="self">self</span>};
 <span class="kw">use </span>tokio_stream::wrappers::ReceiverStream;
 
-<span class="kw">use </span><span class="kw">crate</span>::commons::channel::SenderEnd;
+<span class="kw">use crate</span>::{commons::channel::SenderEnd, KeyIdentifier};
 
 <span class="kw">use super</span>::{Message, TaskCommandContent};
 
@@ -81,6 +91,7 @@
     receiver: ReceiverStream&lt;NetworkEvent&gt;,
     sender: SenderEnd&lt;Message&lt;T&gt;, ()&gt;,
     shutdown_receiver: tokio::sync::broadcast::Receiver&lt;()&gt;,
+    own_id: KeyIdentifier,
 }
 
 <span class="kw">impl</span>&lt;T: TaskCommandContent + Serialize + DeserializeOwned + <span class="lifetime">&#39;static</span>&gt; MessageReceiver&lt;T&gt; {
@@ -88,12 +99,14 @@
         receiver: mpsc::Receiver&lt;NetworkEvent&gt;,
         sender: SenderEnd&lt;Message&lt;T&gt;, ()&gt;,
         shutdown_receiver: tokio::sync::broadcast::Receiver&lt;()&gt;,
+        own_id: KeyIdentifier,
     ) -&gt; <span class="self">Self </span>{
         <span class="kw">let </span>receiver = ReceiverStream::new(receiver);
         <span class="self">Self </span>{
             receiver,
             sender,
             shutdown_receiver,
+            own_id,
         }
     }
 
@@ -107,7 +120,14 @@
                         </span><span class="kw">let </span>cur = Cursor::new(message);
                         <span class="kw">let </span><span class="kw-2">mut </span>de = Deserializer::new(cur);
                         <span class="kw">let </span>message: Message&lt;T&gt; = Deserialize::deserialize(<span class="kw-2">&amp;mut </span>de).expect(<span class="string">&quot;Fallo de deserialización&quot;</span>);
-                        <span class="self">self</span>.sender.tell(message).<span class="kw">await</span>.expect(<span class="string">&quot;Channel Error&quot;</span>);
+                        <span class="comment">// Check message signature
+                        </span><span class="kw">if </span>message.signature.verify().is_err() || message.content.sender_id != message.signature.content.signer {
+                            <span class="macro">log::error!</span>(<span class="string">&quot;Invalid signature in message&quot;</span>);
+                        } <span class="kw">else if </span>message.content.receiver != <span class="self">self</span>.own_id {
+                            <span class="macro">log::error!</span>(<span class="string">&quot;Message not for me&quot;</span>);
+                        } <span class="kw">else </span>{
+                            <span class="self">self</span>.sender.tell(message).<span class="kw">await</span>.expect(<span class="string">&quot;Channel Error&quot;</span>);
+                        }
                     },
                     <span class="prelude-val">None </span>=&gt; {}
                 },

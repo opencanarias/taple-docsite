@@ -65,6 +65,7 @@
 <a href="#65" id="65">65</a>
 <a href="#66" id="66">66</a>
 <a href="#67" id="67">67</a>
+<a href="#68" id="68">68</a>
 </pre></div><pre class="rust"><code><span class="doccomment">//! Contains the data structures related to event  to send to approvers, or to validators if approval is not required.
 </span><span class="kw">use </span>std::hash::Hasher;
 
@@ -131,5 +132,6 @@
 </span><span class="kw">pub enum </span>ApprovalStatus {
     Pending,
     Voted,
+    Finished,
 }
 </code></pre></div></section></main></body></html>

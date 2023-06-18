@@ -63,8 +63,12 @@
 <a href="#63" id="63">63</a>
 <a href="#64" id="64">64</a>
 <a href="#65" id="65">65</a>
+<a href="#66" id="66">66</a>
+<a href="#67" id="67">67</a>
+<a href="#68" id="68">68</a>
+<a href="#69" id="69">69</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">super</span>::utils::{get_key, Element};
-<span class="kw">use </span><span class="kw">crate</span>::event_request::EventRequest;
+<span class="kw">use </span><span class="kw">crate</span>::commons::models::request::TapleRequest;
 <span class="kw">use </span><span class="kw">crate</span>::DbError;
 <span class="kw">use crate</span>::{DatabaseCollection, DatabaseManager, Derivable, DigestIdentifier};
 <span class="kw">use </span>std::sync::Arc;
@@ -77,27 +81,31 @@
 <span class="kw">impl</span>&lt;C: DatabaseCollection&gt; RequestDb&lt;C&gt; {
     <span class="kw">pub fn </span>new&lt;M: DatabaseManager&lt;C&gt;&gt;(manager: <span class="kw-2">&amp;</span>Arc&lt;M&gt;) -&gt; <span class="self">Self </span>{
         <span class="self">Self </span>{
-            collection: manager.create_collection(<span class="string">&quot;request&quot;</span>),
-            prefix: <span class="string">&quot;request&quot;</span>.to_string(),
+            collection: manager.create_collection(<span class="string">&quot;taple-request&quot;</span>),
+            prefix: <span class="string">&quot;taple-request&quot;</span>.to_string(),
         }
     }
 
-    <span class="kw">pub fn </span>get_request(<span class="kw-2">&amp;</span><span class="self">self</span>, subject_id: <span class="kw-2">&amp;</span>DigestIdentifier) -&gt; <span class="prelude-ty">Result</span>&lt;EventRequest, DbError&gt; {
+    <span class="kw">pub fn </span>get_request(<span class="kw-2">&amp;</span><span class="self">self</span>, request_id: <span class="kw-2">&amp;</span>DigestIdentifier) -&gt; <span class="prelude-ty">Result</span>&lt;TapleRequest, DbError&gt; {
         <span class="kw">let </span>key_elements: Vec&lt;Element&gt; = <span class="macro">vec!</span>[
             Element::S(<span class="self">self</span>.prefix.clone()),
-            Element::S(subject_id.to_str()),
+            Element::S(request_id.to_str()),
         ];
         <span class="kw">let </span>key = get_key(key_elements)<span class="question-mark">?</span>;
         <span class="kw">let </span>request = <span class="self">self</span>.collection.get(<span class="kw-2">&amp;</span>key)<span class="question-mark">?</span>;
-        <span class="prelude-val">Ok</span>(bincode::deserialize::&lt;EventRequest&gt;(<span class="kw-2">&amp;</span>request).map_err(|<span class="kw">_</span>| {
-            DbError::DeserializeError
-        })<span class="question-mark">?</span>)
+        <span class="prelude-val">Ok</span>(
+            bincode::deserialize::&lt;TapleRequest&gt;(<span class="kw-2">&amp;</span>request)
+                .map_err(|<span class="kw">_</span>| DbError::DeserializeError)<span class="question-mark">?</span>,
+        )
     }
 
-    <span class="kw">pub fn </span>get_all_request(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Vec&lt;EventRequest&gt; {
+    <span class="kw">pub fn </span>get_all_request(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Vec&lt;TapleRequest&gt; {
         <span class="kw">let </span><span class="kw-2">mut </span>result = Vec::new();
-        <span class="kw">for </span>(<span class="kw">_</span>, request) <span class="kw">in </span><span class="self">self</span>.collection.iter(<span class="bool-val">false</span>, <span class="macro">format!</span>(<span class="string">&quot;{}{}&quot;</span>, <span class="self">self</span>.prefix, char::MAX)) {
-            <span class="kw">let </span>request = bincode::deserialize::&lt;EventRequest&gt;(<span class="kw-2">&amp;</span>request).unwrap();
+        <span class="kw">for </span>(<span class="kw">_</span>, request) <span class="kw">in </span><span class="self">self
+            </span>.collection
+            .iter(<span class="bool-val">false</span>, <span class="macro">format!</span>(<span class="string">&quot;{}{}&quot;</span>, <span class="self">self</span>.prefix, char::MAX))
+        {
+            <span class="kw">let </span>request = bincode::deserialize::&lt;TapleRequest&gt;(<span class="kw-2">&amp;</span>request).unwrap();
             result.push(request);
         }
         result
@@ -105,24 +113,24 @@
 
     <span class="kw">pub fn </span>set_request(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        subject_id: <span class="kw-2">&amp;</span>DigestIdentifier,
-        request: EventRequest,
+        request_id: <span class="kw-2">&amp;</span>DigestIdentifier,
+        request: <span class="kw-2">&amp;</span>TapleRequest,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;(), DbError&gt; {
         <span class="kw">let </span>key_elements: Vec&lt;Element&gt; = <span class="macro">vec!</span>[
             Element::S(<span class="self">self</span>.prefix.clone()),
-            Element::S(subject_id.to_str()),
+            Element::S(request_id.to_str()),
         ];
         <span class="kw">let </span>key = get_key(key_elements)<span class="question-mark">?</span>;
-        <span class="kw">let </span><span class="prelude-val">Ok</span>(data) = bincode::serialize::&lt;EventRequest&gt;(<span class="kw-2">&amp;</span>request) <span class="kw">else </span>{
+        <span class="kw">let </span><span class="prelude-val">Ok</span>(data) = bincode::serialize::&lt;TapleRequest&gt;(request) <span class="kw">else </span>{
             <span class="kw">return </span><span class="prelude-val">Err</span>(DbError::SerializeError);
         };
         <span class="self">self</span>.collection.put(<span class="kw-2">&amp;</span>key, data)
     }
 
-    <span class="kw">pub fn </span>del_request(<span class="kw-2">&amp;</span><span class="self">self</span>, subject_id: <span class="kw-2">&amp;</span>DigestIdentifier) -&gt; <span class="prelude-ty">Result</span>&lt;(), DbError&gt; {
+    <span class="kw">pub fn </span>del_request(<span class="kw-2">&amp;</span><span class="self">self</span>, request_id: <span class="kw-2">&amp;</span>DigestIdentifier) -&gt; <span class="prelude-ty">Result</span>&lt;(), DbError&gt; {
         <span class="kw">let </span>key_elements: Vec&lt;Element&gt; = <span class="macro">vec!</span>[
             Element::S(<span class="self">self</span>.prefix.clone()),
-            Element::S(subject_id.to_str()),
+            Element::S(request_id.to_str()),
         ];
         <span class="kw">let </span>key = get_key(key_elements)<span class="question-mark">?</span>;
         <span class="self">self</span>.collection.del(<span class="kw-2">&amp;</span>key)

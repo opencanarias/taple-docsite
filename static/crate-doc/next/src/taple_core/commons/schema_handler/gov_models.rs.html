@@ -153,28 +153,41 @@
 <a href="#153" id="153">153</a>
 <a href="#154" id="154">154</a>
 <a href="#155" id="155">155</a>
+<a href="#156" id="156">156</a>
+<a href="#157" id="157">157</a>
+<a href="#158" id="158">158</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>std::collections::HashSet;
 
 <span class="kw">use </span>serde::{de::Visitor, Deserialize, Serialize};
 
 <span class="attr">#[derive(Debug, Serialize, Deserialize)]
 #[serde(untagged)]
+#[allow(non_snake_case)]
 </span><span class="kw">pub enum </span>Quorum {
-    Majority(String),
+    MAJORITY(String),
     <span class="attr">#[serde(rename_all = <span class="string">&quot;PascalCase&quot;</span>)]
-    </span>Fixed { fixed: u32 },
+    </span>FIXED {
+        fixed: u32,
+    },
     <span class="attr">#[serde(rename_all = <span class="string">&quot;PascalCase&quot;</span>)]
-    </span>Porcentaje { porcentaje: f64 },
+    </span>PORCENTAJE {
+        porcentaje: f64,
+    },
     <span class="attr">#[serde(rename_all = <span class="string">&quot;PascalCase&quot;</span>)]
-    </span>BFT { BFT: f64 },
+    </span>BFT {
+        BFT: f64,
+    },
 }
 
 <span class="attr">#[derive(Debug)]
+#[allow(non_snake_case)]
+#[allow(non_camel_case_types)]
 </span><span class="kw">pub enum </span>Who {
-    Id { id: String },
-    Members,
-    All,
-    External,
+    ID { ID: String },
+    NAME { NAME: String },
+    MEMBERS,
+    ALL,
+    NOT_MEMBERS,
 }
 
 <span class="kw">impl </span>Serialize <span class="kw">for </span>Who {
@@ -183,10 +196,11 @@
         </span>S: serde::Serializer,
     {
         <span class="kw">match </span><span class="self">self </span>{
-            Who::Id { id } =&gt; serializer.serialize_str(<span class="kw-2">&amp;</span>id),
-            Who::Members =&gt; serializer.serialize_str(<span class="string">&quot;Members&quot;</span>),
-            Who::All =&gt; serializer.serialize_str(<span class="string">&quot;All&quot;</span>),
-            Who::External =&gt; serializer.serialize_str(<span class="string">&quot;External&quot;</span>),
+            Who::ID { ID } =&gt; serializer.serialize_str(<span class="kw-2">&amp;</span>ID),
+            Who::NAME { NAME } =&gt; serializer.serialize_str(<span class="kw-2">&amp;</span>NAME),
+            Who::MEMBERS =&gt; serializer.serialize_str(<span class="string">&quot;MEMBERS&quot;</span>),
+            Who::ALL =&gt; serializer.serialize_str(<span class="string">&quot;ALL&quot;</span>),
+            Who::NOT_MEMBERS =&gt; serializer.serialize_str(<span class="string">&quot;NOT_MEMBERS&quot;</span>),
         }
     }
 }
@@ -207,10 +221,10 @@
                 </span>E: serde::de::Error,
             {
                 <span class="kw">match </span>v.as_str() {
-                    <span class="string">&quot;Members&quot; </span>=&gt; <span class="prelude-val">Ok</span>(Who::Members),
-                    <span class="string">&quot;All&quot; </span>=&gt; <span class="prelude-val">Ok</span>(Who::All),
-                    <span class="string">&quot;External&quot; </span>=&gt; <span class="prelude-val">Ok</span>(Who::External),
-                    <span class="kw-2">&amp;</span><span class="kw">_ </span>=&gt; <span class="prelude-val">Ok</span>(<span class="self">Self</span>::Value::Id { id: v }),
+                    <span class="string">&quot;MEMBERS&quot; </span>=&gt; <span class="prelude-val">Ok</span>(Who::MEMBERS),
+                    <span class="string">&quot;All&quot; </span>=&gt; <span class="prelude-val">Ok</span>(Who::ALL),
+                    <span class="string">&quot;NOT_MEMBERS&quot; </span>=&gt; <span class="prelude-val">Ok</span>(Who::NOT_MEMBERS),
+                    <span class="kw-2">&amp;</span><span class="kw">_ </span>=&gt; <span class="prelude-val">Ok</span>(<span class="self">Self</span>::Value::ID { ID: v }),
                 }
             }
             <span class="kw">fn </span>visit_borrowed_str&lt;E&gt;(<span class="self">self</span>, v: <span class="kw-2">&amp;</span><span class="lifetime">&#39;de </span>str) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>::Value, E&gt;
@@ -218,10 +232,10 @@
                 </span>E: serde::de::Error,
             {
                 <span class="kw">match </span>v {
-                    <span class="string">&quot;Members&quot; </span>=&gt; <span class="prelude-val">Ok</span>(Who::Members),
-                    <span class="string">&quot;All&quot; </span>=&gt; <span class="prelude-val">Ok</span>(Who::All),
-                    <span class="string">&quot;External&quot; </span>=&gt; <span class="prelude-val">Ok</span>(Who::External),
-                    <span class="kw-2">&amp;</span><span class="kw">_ </span>=&gt; <span class="prelude-val">Ok</span>(<span class="self">Self</span>::Value::Id { id: v.to_string() }),
+                    <span class="string">&quot;MEMBERS&quot; </span>=&gt; <span class="prelude-val">Ok</span>(Who::MEMBERS),
+                    <span class="string">&quot;ALL&quot; </span>=&gt; <span class="prelude-val">Ok</span>(Who::ALL),
+                    <span class="string">&quot;NOT_MEMBERS&quot; </span>=&gt; <span class="prelude-val">Ok</span>(Who::NOT_MEMBERS),
+                    <span class="kw-2">&amp;</span><span class="kw">_ </span>=&gt; <span class="prelude-val">Ok</span>(<span class="self">Self</span>::Value::ID { ID: v.to_string() }),
                 }
             }
         }
@@ -230,9 +244,12 @@
 }
 
 <span class="attr">#[derive(Debug)]
+#[allow(non_snake_case)]
+#[allow(non_camel_case_types)]
 </span><span class="kw">pub enum </span>Schema {
-    Id { id: String },
-    AllSchemas,
+    ID { ID: String },
+    NOT_GOVERNANCE,
+    ALL,
 }
 
 <span class="kw">impl </span>Serialize <span class="kw">for </span>Schema {
@@ -241,8 +258,9 @@
         </span>S: serde::Serializer,
     {
         <span class="kw">match </span><span class="self">self </span>{
-            Schema::Id { id } =&gt; serializer.serialize_str(<span class="kw-2">&amp;</span>id),
-            Schema::AllSchemas =&gt; serializer.serialize_str(<span class="string">&quot;all_schemas&quot;</span>),
+            Schema::ID { ID } =&gt; serializer.serialize_str(<span class="kw-2">&amp;</span>ID),
+            Schema::NOT_GOVERNANCE =&gt; serializer.serialize_str(<span class="string">&quot;NOT_GOVERNANCE&quot;</span>),
+            Schema::ALL =&gt; serializer.serialize_str(<span class="string">&quot;ALL&quot;</span>),
         }
     }
 }
@@ -263,8 +281,9 @@
                 </span>E: serde::de::Error,
             {
                 <span class="kw">match </span>v.as_str() {
-                    <span class="string">&quot;all_schemas&quot; </span>=&gt; <span class="prelude-val">Ok</span>(<span class="self">Self</span>::Value::AllSchemas),
-                    <span class="kw-2">&amp;</span><span class="kw">_ </span>=&gt; <span class="prelude-val">Ok</span>(<span class="self">Self</span>::Value::Id { id: v }),
+                    <span class="string">&quot;ALL&quot; </span>=&gt; <span class="prelude-val">Ok</span>(<span class="self">Self</span>::Value::ALL),
+                    <span class="string">&quot;NOT_GOVERNANCE&quot; </span>=&gt; <span class="prelude-val">Ok</span>(<span class="self">Self</span>::Value::NOT_GOVERNANCE),
+                    <span class="kw-2">&amp;</span><span class="kw">_ </span>=&gt; <span class="prelude-val">Ok</span>(<span class="self">Self</span>::Value::ID { ID: v }),
                 }
             }
             <span class="kw">fn </span>visit_borrowed_str&lt;E&gt;(<span class="self">self</span>, v: <span class="kw-2">&amp;</span><span class="lifetime">&#39;de </span>str) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>::Value, E&gt;
@@ -272,8 +291,9 @@
                 </span>E: serde::de::Error,
             {
                 <span class="kw">match </span>v {
-                    <span class="string">&quot;all_schemas&quot; </span>=&gt; <span class="prelude-val">Ok</span>(<span class="self">Self</span>::Value::AllSchemas),
-                    <span class="kw-2">&amp;</span><span class="kw">_ </span>=&gt; <span class="prelude-val">Ok</span>(<span class="self">Self</span>::Value::Id { id: v.to_string() }),
+                    <span class="string">&quot;ALL&quot; </span>=&gt; <span class="prelude-val">Ok</span>(<span class="self">Self</span>::Value::ALL),
+                    <span class="string">&quot;NOT_GOVERNANCE&quot; </span>=&gt; <span class="prelude-val">Ok</span>(<span class="self">Self</span>::Value::NOT_GOVERNANCE),
+                    <span class="kw-2">&amp;</span><span class="kw">_ </span>=&gt; <span class="prelude-val">Ok</span>(<span class="self">Self</span>::Value::ID { ID: v.to_string() }),
                 }
             }
         }
@@ -285,27 +305,13 @@
 </span><span class="kw">pub struct </span>Role {
     <span class="kw">pub </span>who: Who,
     <span class="kw">pub </span>namespace: String,
-    <span class="kw">pub </span>roles: HashSet&lt;String&gt;,
+    <span class="kw">pub </span>role: String,
     <span class="kw">pub </span>schema: Schema,
-}
-
-<span class="attr">#[derive(Debug, Clone, Serialize, Deserialize)]
-</span><span class="kw">pub struct </span>Invoke {
-    <span class="kw">pub </span>fact: String,
-    <span class="kw">pub </span>approval_required: bool,
-    <span class="kw">pub </span>roles: HashSet&lt;String&gt;,
 }
 
 <span class="attr">#[derive(Debug, Clone, Serialize, Deserialize)]
 </span><span class="kw">pub struct </span>Contract {
     <span class="kw">pub </span>name: String,
     <span class="kw">pub </span>content: String,
-}
-
-<span class="attr">#[derive(Debug, Serialize, Deserialize)]
-</span><span class="kw">pub struct </span>Facts {
-    name: String,
-    description: <span class="prelude-ty">Option</span>&lt;String&gt;,
-    schema: serde_json::Value,
 }
 </code></pre></div></section></main></body></html>
