@@ -138,9 +138,15 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
           },
           {
             type: 'doc',
-            docId: 'develop/quickstart',
+            docId: 'build/quickstart',
             position: 'left',
-            label: 'Develop',
+            label: 'Build',
+          },
+          {
+            type: 'doc',
+            docId: 'reference/architecture',
+            position: 'left',
+            label: 'Reference',
           },
           {
             to: '/community/DISCLAIMER',

@@ -1,5 +1,5 @@
 # Governance
-In this page we will describe the governance functionally. If you want to know how to define a governance to adapt it to your needs visit the [governance configuration](../develop/operational-guides/governance-configuration.md) page. 
+In this page we will describe the governance functionally. If you want to know how to define a governance to adapt it to your needs visit the [governance configuration](../build/operational-guides/governance-configuration.md) page. 
 
 A TAPLE network does not consist of a single ledger, but potentially multiple [microledgers](./subjects.md#microledger) stored within subjects. The management of these subjects requires the definition of mechanisms to facilitate this task in batch, not individually for each one, which can be created dynamically.
 

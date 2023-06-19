@@ -98,7 +98,7 @@
       ]
     }
   ],
-  "developSidebar": [
+  "buildSidebar": [
     {
       "type": "category",
       "label": "Getting started",
@@ -109,12 +109,12 @@
         {
           "type": "doc",
           "label": "Requirements",
-          "id": "develop/requirements"
+          "id": "build/requirements"
         },
         {
           "type": "doc",
           "label": "Quickstart",
-          "id": "develop/quickstart"
+          "id": "build/quickstart"
         },
         {
           "type": "category",
@@ -129,47 +129,47 @@
               "label": "TAPLE from 0",
               "link": {
                 "type": "doc",
-                "id": "develop/tutorial-from-0/introduction"
+                "id": "build/tutorial-from-0/introduction"
               },
               "items": [
                 {
                   "type": "doc",
                   "label": "Running nodes",
-                  "id": "develop/tutorial-from-0/running-nodes"
+                  "id": "build/tutorial-from-0/running-nodes"
                 },
                 {
                   "type": "doc",
                   "label": "Defining the governance",
-                  "id": "develop/tutorial-from-0/governance-operations"
+                  "id": "build/tutorial-from-0/governance-operations"
                 },
                 {
                   "type": "doc",
                   "label": "Creating subjects",
-                  "id": "develop/tutorial-from-0/subject-operations"
+                  "id": "build/tutorial-from-0/subject-operations"
                 },
                 {
                   "type": "doc",
                   "label": "Adding events",
-                  "id": "develop/tutorial-from-0/event-operations"
+                  "id": "build/tutorial-from-0/event-operations"
                 },
                 {
                   "type": "doc",
                   "label": "Adding a new node",
-                  "id": "develop/tutorial-from-0/updating-governance"
+                  "id": "build/tutorial-from-0/updating-governance"
                 }
               ]
             },
             {
               "type": "doc",
               "label": "Access control",
-              "id": "develop/uc-hotel-access-control"
+              "id": "build/uc-hotel-access-control"
             }
           ]
         },
         {
           "type": "doc",
           "label": "Issues and Workarounds",
-          "id": "develop/issues-and-workarounds"
+          "id": "build/issues-and-workarounds"
         }
       ]
     },
@@ -183,15 +183,17 @@
         {
           "type": "doc",
           "label": "Governance configuration",
-          "id": "develop/operational-guides/governance-configuration"
+          "id": "build/operational-guides/governance-configuration"
         },
         {
           "type": "doc",
           "label": "Creating a JSON-Schema",
-          "id": "develop/operational-guides/creating-a-json-schema"
+          "id": "build/operational-guides/creating-a-json-schema"
         }
       ]
-    },
+    }
+  ],
+  "referenceSidebar": [
     {
       "type": "category",
       "label": "Reference",
@@ -200,6 +202,11 @@
       "collapsed": false,
       "items": [
         {
+          "type": "doc",
+          "label": "Architecture",
+          "id": "reference/architecture"
+        },
+        {
           "type": "category",
           "label": "TAPLE Core",
           "collapsed": true,
@@ -207,7 +214,7 @@
             {
               "type": "doc",
               "label": "Description",
-              "id": "develop/taple-core"
+              "id": "reference/taple-core"
             },
             {
               "type": "link",
@@ -224,12 +231,12 @@
             {
               "type": "doc",
               "label": "Configuration",
-              "id": "develop/taple-client-config"
+              "id": "reference/taple-client-config"
             },
             {
               "type": "doc",
               "label": "Backups",
-              "id": "develop/backups"
+              "id": "reference/backups"
             },
             {
               "type": "category",
@@ -359,7 +366,7 @@
         {
           "type": "doc",
           "label": "TAPLE Tools",
-          "id": "develop/taple-tools"
+          "id": "reference/taple-tools"
         }
       ]
     }
