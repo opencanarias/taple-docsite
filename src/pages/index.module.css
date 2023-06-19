@@ -103,3 +103,8 @@ hr {
     padding-left: 2rem;
   }
 }
+
+div .container {
+  display: table;
+  margin: 0 auto;
+}

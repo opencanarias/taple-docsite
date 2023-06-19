@@ -5,26 +5,7 @@ import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import styles from './index.module.css';
 import HomepageFeatures from '../components/HomepageFeatures';
 import Translate from '@docusaurus/Translate';
-import DocSidebar from '@theme/DocSidebar';
-import { ThemeClassNames } from '@docusaurus/theme-common';
 import DocPageStyles from '@docusaurus/theme-classic/lib/theme/DocPage/Layout/styles.module.css';
-import SidebarStyles from '@docusaurus/theme-classic/lib/theme/DocPage/Layout/Sidebar/styles.module.css';
-import sidebar from '@site/sidebars';
-
-function customizesitebar() {
-  let customize_sitebar = sidebar.mainSidebar;
-  for (let category of customize_sitebar) {
-    for (let item of category.items) {
-      if (item.link) {
-        item.href = `/docs/${item.link.id}`;
-        item.items = [];
-      } else if (item.id) {
-        item.href = `/docs/${item.id}`;
-      }
-    }
-  }
-  return customize_sitebar;
-}
 
 function HomepageHeader() {
   const {siteConfig} = useDocusaurusContext();
@@ -54,10 +35,7 @@ export default function Home(): JSX.Element {
   return (
     <Layout title={`${siteConfig.title}`} description="Description will go into a meta tag in <head />"> 
       <div className={DocPageStyles.docPage}>
-        <aside className={clsx(ThemeClassNames.docs.docSidebarContainer, SidebarStyles.docSidebarContainer)}>
-          <DocSidebar sidebar={customizesitebar()}></DocSidebar>
-        </aside>
-        <div>
+        <div className={clsx(styles.container)}>
           <HomepageHeader />
         </div>
         <br/>
