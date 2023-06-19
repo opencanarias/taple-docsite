@@ -74,7 +74,18 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
           }
         }
       },
-    ]
+    ],
+    [
+      'content-docs',
+      /** @type {import('@docusaurus/plugin-content-docs').Options} */
+      ({
+        id: 'community',
+        path: 'community',
+        routeBasePath: 'community',
+        sidebarPath: require.resolve('./sidebarsCommunity.js'),
+        showLastUpdateTime: true,
+      }),
+    ],
   ],
 
   markdown: {
@@ -132,43 +143,9 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
             label: 'Develop',
           },
           {
-            type: 'dropdown',
-            position: 'left',
+            to: '/community/DISCLAIMER',
             label: 'Community',
-            items: [
-              {
-                label: 'Disclaimer',
-                href: '/community/DISCLAIMER',
-              },
-              {
-                label: 'Repositories',
-                href: '/community/repositories',
-              },
-              {
-                label: 'Licenses',
-                href: '/community/licenses',
-              },
-              {
-                label: 'Support',
-                href: '/community/SUPPORT',
-              },
-              {
-                label: 'Contributing',
-                href: '/community/CONTRIBUTING',
-              },
-              {
-                label: 'Security',
-                href: '/community/SECURITY',
-              },
-              {
-                label: 'Code of conduct',
-                href: '/community/CODE_OF_CONDUCT',
-              },
-              {
-                label: 'European Funding',
-                href: '/community/european-funding',
-              },
-            ]
+            position: 'left',
           },
           {
             type: 'docsVersionDropdown',
