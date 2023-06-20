@@ -6,7 +6,7 @@ The minimum requirements for running the tutorials are as follows:
 * Internet connection
 * [cURL](https://curl.se/)
 * [Docker](https://www.docker.com)
-* [TAPLE Tools](./taple-tools)
+* [TAPLE Tools](../reference/taple-tools.md)
 * [Git](https://git-scm.com/)
 
 :::caution IMPORTANT

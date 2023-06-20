@@ -40,7 +40,7 @@ CONTROLLER ID ED25519: E5jAfbyK8sdmeCgXoDtRYdO2MJDwKd1_EN6aKbMEiJzw
 PeerID: 12D3KooWRJvVv1oXdJxCNn6j5hsNSWs5zgDDt3Rq7yneouf1UdYo
 ```
 
-In order to raise the first node, we must make use of some environment variables which you can find explained in detail in this **[section](../taple-client-config.md#environment-variables)**. Also we will use the **PRIVATE KEY ED25519 (HEX)** that we got with the keygen tool in the **TAPLE_NODE_SECRETKEY** env variable. To raise the first node, we must execute the following command:
+In order to raise the first node, we must make use of some environment variables which you can find explained in detail in this **[section](../../reference/taple-client-config.md#environment-variables)**. Also we will use the **PRIVATE KEY ED25519 (HEX)** that we got with the keygen tool in the **TAPLE_NODE_SECRETKEY** env variable. To raise the first node, we must execute the following command:
 
 ```bash
     docker run -d --rm -e TAPLE_HTTPPORT=3000 \
