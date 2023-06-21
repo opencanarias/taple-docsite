@@ -88,6 +88,29 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
         showLastUpdateTime: true,
       }),
     ],
+    [
+      '@docusaurus/plugin-client-redirects',
+      {
+        redirects: [
+          {
+            to: '/docs/technology/what-is-taple',
+            from: ['/technology']
+          },
+          {
+            to: '/docs/build/quickstart',
+            from: ['/build']
+          },
+          {
+            to: '/docs/reference/architecture',
+            from: ['/reference']
+          },
+          {
+            to: '/community/DISCLAIMER',
+            from: ['/community']
+          }
+        ],
+      },
+    ],
   ],
 
   markdown: {
