@@ -74,7 +74,7 @@ const FeatureList: FeatureItem[] = [
           Whitepaper
         </Translate>
       </>,
-    href: '/whitepaper/0.2/taple-whitepaper.pdf',
+    href: '/whitepaper/taple-whitepaper.pdf',
     image: (
       <>
         <svg className={styles.featureSvg} version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 511 511" enableBackground="new 0 0 511 511">
