@@ -51,14 +51,17 @@ Subject owner participant, who owns one or several subjects. They have total con
 Subject ownership can be obtained by creating it or receiving it from the previous owner.
 :::
 
+### Evaluator
+Evaluators assume a crucial role within the governance framework, being accountable for conducting the evaluation process. This process entails the execution of a smart contract, aimed at validating a targeted state change.
+
 ### Approver 
-Some event requests require a series of signatures to be approved and become part of a subject's microledger. This signature collection is a voting process where participants can vote in favor or against. These participants, defined in governance, are the approvers.
+In order for certain event requests to obtain approval and be appended to a subject's micro-logger, a series of signatures is necessary. The acquisition of these signatures is contingent upon the evaluation's outcome. During the assessment of a contract, a decision is made regarding the need for approval, which may be influenced by the roles of the requesting issuer.
 
 ### Validator
-Validators are the participants who provide the [security signatures](./events.md#validators-signature) to the subject. Validators maintain a full copy of the subjects they validate and commit to the network not to accept more than one version of the same event. That is, in the event of a malicious attempt by the subject owner to overwrite an event, the validator will not sign the second event again.
+Validators are nodes that ensure the uniqueness of the chain without actually possessing a copy of it. They accomplish this by providing their [security signature](./events.md#validators-signature). A validator commits to generating different hashes for the same subject ID and sequence number (SN), thus guaranteeing the uniqueness of each entry in the chain.
 
 ### Witness
-Participant interested in having a copy of the subject and the information it stores.
+Participant interested in having a copy of the subject and the information it stores. While the existence of witnesses is not strictly necessary, it is the only means to ensure network copies of the subject beyond the owner.
 
-### Invoker
+### Issuer
 Participant who initiates a request to modify a subject. It can be the owner or another participant with sufficient permissions.
