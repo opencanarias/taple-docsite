@@ -61,7 +61,7 @@ To learn more about the events visit these pages: [Events](./events.md) and [Eve
 :::
 
 ## Governances
-Governance is the definition of the rules of cooperation of the different network participants within the same use case. It defines the participants of the use case, the types of subjects and their structure, and the rules that define the permissions and roles of the different participants. The same node, and therefore the same identity, can act with different roles in different governance but also within the same governance.
+Governance is the definition of the rules of cooperation of the different network participants within the same use case. It defines the participants of the use case, the types of subjects and their structure, the smart contracts that will be in charge of modifying the states of these subjects, and the rules that define the permissions and roles of the different participants. The same node, and therefore the same identity, can act with different roles in different governance, but also within the same governance.
 
 ### Owned governances
 Within the TAPLE network, governance is managed as a special type of subject. Therefore, like any other subject, they have a single owner.
