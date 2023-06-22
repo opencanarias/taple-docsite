@@ -40,7 +40,7 @@ To learn more about TAPLE Core and TAPLE Client visit those pages: [TAPLE Core](
 :::
 
 ## Subjects
-TAPLE implements a ledger partitioning mechanism based on subjects. Subjects are logical entities that represent an asset or process within a TAPLE network. In this way, instead of all participants having the same string, each participant stores only the subjects in which it is interested. Each subject stores the information in a small ledger, known as [microledger](./subjects.md#microledger). 
+TAPLE implements a ledger partitioning mechanism based on subjects. Subjects are logical entities that represent an asset or process within a TAPLE network. In this way, instead of all participants having the same ledger, each participant stores only the subjects in which it is interested. Each subject stores the information in a small ledger, known as [microledger](./subjects.md#microledger). 
 
 :::info
 
