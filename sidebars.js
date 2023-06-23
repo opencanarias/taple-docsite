@@ -76,6 +76,11 @@ module.exports = {
           label: 'Governance',
           id: 'technology/governance',
         },
+        {
+          type: 'doc',
+          label: 'Smart Contracts',
+          id: 'technology/smart-contracts',
+        }
       ],
     },
     {
