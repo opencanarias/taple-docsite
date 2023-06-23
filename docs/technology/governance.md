@@ -39,7 +39,7 @@ Schemas are the data structures that model the information stored in the subject
 Policies are the rules by which we define permissions and roles, i.e. who is allowed to do what things in a TAPLE network.
 
 ### Smart Contracts
-Un [smart contract](./smart-contracts.md) es un programa autoejecutable diseñado para automatizar, verificar y emitir eventos de actulización de sujetos de forma segura y transparente sin la necesidad de intermediarios.
+Los [smart contract](./smart-contracts.md) son programas autoejecutables que permiten automatizar, verificar y emitir eventos de actulización de sujetos de forma segura y transparente sin la necesidad de intermediarios.
 
 :::caution
 
