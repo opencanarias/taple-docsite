@@ -62,7 +62,7 @@ Para lograr estas características, el identificador del sujeto se deriva a part
 
 
 ## Belonging to a governance
-A subject always exists within a use case. Governance is the definition of the rules by which the use case is governed. What types of subjects can be created or who can create them are some of the rules that are defined in the governance. Although a subject can only belong to one governance, a TAPLE node can manage subjects of different governance, so that the same node can participate simultaneously in different use cases. 
+A subject always exists within a use case, initially these are associated with a namespace that cannot be altered, allowing governance to segment the stakeholders. Governance is the definition of the rules by which the use case is governed. What types of subjects can be created or who can create them are some of the rules that are defined in the governance. Although a subject can only belong to one governance, a TAPLE node can manage subjects of different governance, so that the same node can participate simultaneously in different use cases.
 
 :::info
 
