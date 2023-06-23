@@ -11,12 +11,6 @@ Governance is responsible for defining: 
 - the permissions that each participant has to operate in the network;
 - and the roles that they will have over each subject.  
 
-:::caution Important
-
-TAPLE governance is under active development. The current release does not include all planned functionality, for example, the definition of rules based on namespaces of interest. Future versions will include these capabilities.
-
-:::
-
 ## Subjects, nodes and governances
 
 Governance defines the rules to be followed in a use case. However, a holder of a TAPLE node is not limited to participate in a single use case. For this reason, the following hierarchy of relationships appears:
@@ -42,7 +36,10 @@ These are the persons, entities or organizations that participate in the governa
 Schemas are the data structures that model the information stored in the subjects. Within a governance, different schemas can be defined to support different use cases. When a subject is created, it defines which governance it is associated with and which schema it will use. 
 
 ### Policies
-Policies are the rules by which we define permissions and roles, i.e. who is allowed to do what things in a TAPLE network. 
+Policies are the rules by which we define permissions and roles, i.e. who is allowed to do what things in a TAPLE network.
+
+### Smart Contracts
+Un [smart contract](./smart-contracts.md) es un programa autoejecutable diseñado para automatizar, verificar y emitir eventos de actulización de sujetos de forma segura y transparente sin la necesidad de intermediarios.
 
 :::caution
 
