@@ -2,7 +2,7 @@
 
 The approval process consists of the following steps:
 
-- An event request is generated, either by the subject owner or by another network member.
+- After the evaluation phase, the metadata for an event request is generated.
 - The subject owner checks whether the event request requires approval by looking at the rules defined in the governance.
 - If the request requires it, an approval request is sent to the different approvers.
 - Once each approver has the request, they will be able to vote, both for and against, and will send it back to the owner of the subject.
@@ -23,11 +23,12 @@ sequenceDiagram
     %% Comentarios pendientes a que este la invocación externa
     %% actor Invocador
     actor Owner
+    actor Evaluator
     actor Approver 1
     actor Approver 2
     actor Approver 3
     %% Invocador->>Owner: Submit an event request
-    Note over Owner: Receive event request
+    Note over Evaluator: Evaluation phase
     alt Need for approval detected
       Owner->Approver 3: Transmit approval request to all approvers
       Approver 1-->>Owner: Receive
