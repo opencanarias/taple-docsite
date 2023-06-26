@@ -46,17 +46,15 @@ The validation signatures are not part of the chain, but give guarantees to the 
 Within TAPLE, there are different types of events when operating with a subject.
 
 ### Genesis Event
-It is the starting event from which subjects are created. Each subject has a unique genesis event. In it, the subject's identifier, its owner, and the schema that will model the subject's state are defined.
+Es el evento inicial a partir del cual se crean los sujetos. Cada sujeto tiene un único evento de génesis en el cual se definen su identificador, propietario y el esquema que modelará su estado. Este evento proporciona un estado inicial por defecto al sujeto, estableciendo su valor dentro del marco de gobernanza.
 
-### State Event
-Events that modify the subject's state, that is, the data structure stored within the subject.
+Otras características importantes de este evento son que el namespace se especifica en él y no puede cambiar a lo largo del ciclo de vida del sujeto. Además, el evento de génesis no requiere ser evaluado, ya que no implica la ejecución de un contrato, ni necesita ser aprobado, ya que cualquier entidad puede generar un sujeto con estas características. Sin embargo, si no cumple con alguna regla de distribución, el sujeto será rechazado.
+
+### Fact Event
+Estos son los eventos de ejecución de algunos de los métodos que posee el contrato inteligente. Estos eventos requieren evaluación (ejecución del contrato) y, opcionalmente, aprobación por parte de los nodos correspondientes.
 
 ### Transfer Event 
 Events that allow the owner of a subject to be modified. A subject has a single owner at any given time. However, thanks to this event, that owner can be changed, transferring ownership to a new member.
 
 ### End of Life Event (EOL)
 End-of-life events are used when the subject has reached the end of its useful life and should no longer receive any more events, whether for functional, legal, or any other reasons. Once a subject successfully includes an end-of-life event in its microledger, the TAPLE protocol will reject any attempts to generate a new event.
-
-:::caution
-Transfer and end-of-life events are currently under development and are not available in the current version.
-:::
