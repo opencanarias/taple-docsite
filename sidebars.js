@@ -100,6 +100,16 @@ module.exports = {
           id: 'technology/event-approval-process',
           label: 'Event approval process',
         },
+        {
+          type: 'doc',
+          id: 'technology/event-evaluation-process',
+          label: 'Event evaluation process',
+        },
+        {
+          type: 'doc',
+          id: 'technology/event-validation-process',
+          label: 'Event validation process',
+        }
       ]
     },
   ],
