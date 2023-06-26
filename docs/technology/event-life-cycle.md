@@ -1,6 +1,6 @@
 # Event life cycle
 
-The event life cycle is composed of 5 stages, from its request for generation to its distribution.
+The event life cycle is composed of 6 stages, from its request for generation to its distribution.
 
 ![Event Lifecycle](../img/event-life-cycle.png)
 
@@ -24,6 +24,14 @@ Currently the TAPLE P2P protocol does not support sending event requests to the 
 
 :::
 
+
+## Event evaluation
+Fase cuya característica principal y fundamental es la ejecución de contratos inteligentes para modificar el estado de un sujeto.
+
+Se ha diseñado con el objetivo de optimizar el funcionamiento de la red, estableciendo que sea sin estado. Esto implica que los evaluadores no necesitan tener una copia de la cadena para ejecutar el contrato, sino que el propietario de un sujeto envía al evaluador su estado actual, así como la invocación correspondiente, y el evaluador se encarga de generar la salida.
+
+Además, el propietario también es responsable de proporcionar al evaluador un contexto que pueda resultar necesario para la evaluación del contrato. Este contexto puede incluir, por ejemplo, la identidad del propietario actual del sujeto.
+
 ## Event approval
 Some types of events, in order to be accepted by the other participants, need to include a number of additional signatures from other participants, the approvers. These approvers sign for or against an event petition. The rules defined in the governance indicate which signatures are necessary for an event petition to be approved and, therefore, for an event to be generated from this petition. 
 
@@ -41,7 +49,7 @@ If you want to know more details about the event approval process visit [this pa
 
 :::
 
-## Event generation
+## Event composition
 The next step is the effective generation of the event. The event is composed including the request, the signatures of the approvers, the hash of the previous event and a series of metadata associated with the event. The event is signed then with the subject's cryptographic material, providing assurance that only the owner of the subject was able to generate the event.
 
 ![Event Generation](../img/elc-generation.png)
