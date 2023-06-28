@@ -39,8 +39,8 @@ module.exports = {
         },
         {
           type: 'link',
-          label: 'Whitepaper (DRAFT)',
-          href: 'pathname:///whitepaper/0.2/taple-whitepaper.pdf',
+          label: 'Whitepaper',
+          href: 'pathname:///whitepaper/taple-whitepaper.pdf',
         },
       ],
     },

@@ -39,8 +39,8 @@
         },
         {
           "type": "link",
-          "label": "Whitepaper (DRAFT)",
-          "href": "pathname:///whitepaper/0.1/taple-whitepaper.pdf"
+          "label": "Whitepaper",
+          "href": "pathname:///whitepaper/taple-whitepaper.pdf"
         }
       ]
     },

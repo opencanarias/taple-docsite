@@ -14,7 +14,6 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
   organizationName: 'opencanarias', // Usually your GitHub org/user name.
   projectName: 'taple', // Usually your repo name.
   customFields: {
-    latestVersionWhitePaper: 0.2 // To get the last version of whitePaper
   },
   // Even if you don't use internalization, you can use this field to set useful
   // metadata like html lang. For example, if your site is Chinese, you may want
