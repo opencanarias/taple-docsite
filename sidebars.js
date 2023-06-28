@@ -141,6 +141,65 @@ module.exports = {
               type: 'category',
               collapsible: true,
               collapsed: true,
+              label: 'Wine track',
+              link: { type: 'doc', id: 'build/wine-track/use-case-definition' },
+              items: [
+                {
+                  type: 'doc',
+                  label: 'Creating governance',
+                  id: 'build/wine-track/creating-governance',
+                },
+                {
+                  type: 'doc',
+                  label: 'First schema and smart contract',
+                  id: 'build/wine-track/first-schema-and-smart-contract',
+                },
+                {
+                  type: 'doc',
+                  label: 'Inclusion producer node',
+                  id: 'build/wine-track/inclusion-producer-node',
+                },
+                {
+                  type: 'doc',
+                  label: 'Updating scheme and smart contract',
+                  id: 'build/wine-track/updating-scheme-and-smart-contract',
+                },
+                {
+                  type: 'doc',
+                  label: 'External invocations',
+                  id: 'build/wine-track/external-invocations',
+                },
+                {
+                  type: 'doc',
+                  label: 'Inclusion approving node',
+                  id: 'build/wine-track/inclusion-approving-node',
+                },
+                {
+                  type: 'doc',
+                  label: 'Transfer to external node',
+                  id: 'build/wine-track/transfer-to-external-node',
+                },
+                {
+                  type: 'doc',
+                  label: 'Namespace segmentation',
+                  id: 'build/wine-track/namespace-segmentation',
+                },
+                {
+                  type: 'doc',
+                  label: 'End of life',
+                  id: 'build/wine-track/eol',
+                },
+                {
+                  type: 'doc',
+                  label: 'Quorum',
+                  id: 'build/wine-track/quorum',
+                },
+              ],
+            },
+            {
+              type: 'category',
+              collapsible: true,
+              collapsed: true,
               label: 'TAPLE from 0',
               link: { type: 'doc', id: 'build/tutorial-from-0/introduction' },
               items: [
