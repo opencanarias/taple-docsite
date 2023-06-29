@@ -78,7 +78,7 @@ Ethereum 2 intends to increase its scalability by introducing numerous changes t
 
 :::
 
-Each use case is unique and it is necessary to assess your specific needs to determine whether it is appropriate to use a blockchain technology, which one, and if not, what alternatives are available, e.g. within other DLTs, for instance [TAPLE](what-is-taple.md).
+Each use case is unique and it is necessary to assess your specific needs to determine whether it is appropriate to use a blockchain technology, which one, and if not, what alternatives are available, e.g. within other DLTs, for instance [TAPLE](taple.md).
 
 
 

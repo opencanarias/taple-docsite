@@ -1,41 +1,36 @@
 module.exports = {
-  mainSidebar: [
+  discoverSidebar: [
     {
       type: 'category',
-      label: 'TAPLE Technology',
+      label: 'Overview',
       className: 'sidebar-section',
       collapsible: false,
       collapsed: false,
       items: [
         {
           type: 'doc',
-          label: 'DLT & Blockchain',
-          id: 'technology/dlt-blockchain',
+          label: 'What is TAPLE',
+          id: 'discover/taple',
         },
         {
           type: 'doc',
-          label: 'What is TAPLE',
-          id: 'technology/what-is-taple',
+          label: 'DLT & Blockchain',
+          id: 'discover/dlt-blockchain',
         },
         {
           type: 'doc',
           label: 'When to use it',
-          id: 'technology/when-to-use-taple',
+          id: 'discover/when-to-use-taple',
         },
         {
           type: 'doc',
           label: 'Overview',
-          id: 'technology/overview',
+          id: 'discover/overview',
         },
         {
           type: 'doc',
           label: 'Under the Hood',
-          id: "technology/under-the-hood"
-        },
-        {
-          type: 'doc',
-          label: 'Glossary',
-          id: 'technology/glossary',
+          id: "discover/under-the-hood"
         },
         {
           type: 'link',
@@ -54,32 +49,32 @@ module.exports = {
         {
           type: 'doc',
           label: 'Subjects',
-          id: 'technology/subjects',
+          id: 'discover/subjects',
         },
         {
           type: 'doc',
           label: 'Schemas',
-          id: 'technology/schemas',
+          id: 'discover/schemas',
         },
         {
           type: 'doc',
           label: 'Events',
-          id: 'technology/events',
+          id: 'discover/events',
         },
         {
           type: 'doc',
           label: 'Identity',
-          id: 'technology/identity',
+          id: 'discover/identity',
         },
         {
           type: 'doc',
           label: 'Governance',
-          id: 'technology/governance',
+          id: 'discover/governance',
         },
         {
           type: 'doc',
           label: 'Smart Contracts',
-          id: 'technology/smart-contracts',
+          id: 'discover/smart-contracts',
         }
       ],
     },
@@ -92,22 +87,22 @@ module.exports = {
       items: [
         {
           type: 'doc',
-          id: 'technology/event-life-cycle',
+          id: 'discover/event-life-cycle',
           label: 'Event life cycle',
         },
         {
           type: 'doc',
-          id: 'technology/event-evaluation-process',
+          id: 'discover/event-evaluation-process',
           label: 'Event evaluation process',
         },
         {
           type: 'doc',
-          id: 'technology/event-approval-process',
+          id: 'discover/event-approval-process',
           label: 'Event approval process',
         },
         {
           type: 'doc',
-          id: 'technology/event-validation-process',
+          id: 'discover/event-validation-process',
           label: 'Event validation process',
         }
       ]
@@ -219,7 +214,7 @@ module.exports = {
   referenceSidebar: [
     {
       type: 'category',
-      label: 'Reference',
+      label: 'Components',
       className: 'sidebar-section',
       collapsible: false,
       collapsed: false,
@@ -317,6 +312,11 @@ module.exports = {
           id: 'reference/operational-guides/creating-a-json-schema',
         }
       ]
+    },        
+    {
+      type: 'doc',
+      label: 'Glossary',
+      id: 'reference/glossary',
     },
   ]
 };

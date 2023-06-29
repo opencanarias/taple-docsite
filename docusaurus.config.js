@@ -92,24 +92,16 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
       {
         redirects: [
           {
-            to: '/docs/technology/what-is-taple',
-            from: ['/technology']
-          },
-          {
-            to: '/docs/technology/what-is-taple',
-            from: ['/discover']
+            to: '/docs/discover/taple',
+            from: ['/technology', '/docs/discover/what-is-taple', '/discover']
           },
           {
             to: '/docs/tutorials/first-steps',
-            from: ['/build']
-          },
-          {
-            to: '/docs/tutorials/first-steps',
-            from: ['/tutorials']
+            from: ['/build', '/tutorials']
           },
           {
             to: '/docs/reference/architecture',
-            from: ['/reference']
+            from: ['/reference', '/docs/develop']
           },
           {
             to: '/community/DISCLAIMER',
@@ -164,7 +156,7 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
         items: [
           {
             type: 'doc',
-            docId: 'technology/what-is-taple',
+            docId: 'discover/taple',
             position: 'left',
             label: 'Discover',
           },
@@ -190,9 +182,11 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
             position: 'right',
           },
           {
-            href: '/community/repositories',
-            label: 'GitHub',
+            href: 'https://github.com/search?q=topic%3Ataple+org%3Aopencanarias++fork%3Atrue&type=repositories',
+            //label: 'GitHub',
             position: 'right',
+            className: 'header-github-link',
+            'aria-label': 'GitHub repository',
           },
         ],
       },

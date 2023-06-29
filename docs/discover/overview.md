@@ -6,7 +6,7 @@ The following diagram shows the usual elements of a TAPLE network. A brief descr
 ## TAPLE Core
 It is the library that implements most of the TAPLE functionality. Any application that wants to be part of a TAPLE network must make use of this library from the API it exposes. Some of its functions are:
 - Creation and management of [subjects](./subjects.md) and their associated [microledgers](./subjects.md#microledger) 
-- Implementation of the [P2P](./glossary.md#p2p) protocol for communication between nodes.
+- Implementation of the [P2P](../reference/glossary.md#p2p) protocol for communication between nodes.
 - Database persistence
 
 :::caution Important

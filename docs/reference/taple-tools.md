@@ -36,7 +36,7 @@ These utilities may be used relatively frequently, so we recommend that you incl
 
 ## TAPLE Keygen
 
-Any TAPLE node needs cryptographic material to function. To do so, it is necessary to generate it externally and then indicate it to the node, either by means of environment variables or through input parameters. The TAPLE Keygen utility satisfies this need by allowing, in a simple way, the generation of this cryptographic material. Specifically, its execution allows to obtain a ***private key*** in hexadecimal format, as well as the ***identifier (controller ID)*** which is the identifier at TAPLE level in which its format includes the public key, plus information of the cryptographic scheme used (you can obtain more information in the following **[link](../technology/identity.md)**). Finally, we can find the Peer ID that the node using the generated private key would have, which is what allows us to identify ourselves within the TAPLE network.
+Any TAPLE node needs cryptographic material to function. To do so, it is necessary to generate it externally and then indicate it to the node, either by means of environment variables or through input parameters. The TAPLE Keygen utility satisfies this need by allowing, in a simple way, the generation of this cryptographic material. Specifically, its execution allows to obtain a ***private key*** in hexadecimal format, as well as the ***identifier (controller ID)*** which is the identifier at TAPLE level in which its format includes the public key, plus information of the cryptographic scheme used (you can obtain more information in the following **[link](../discover/identity.md)**). Finally, we can find the Peer ID that the node using the generated private key would have, which is what allows us to identify ourselves within the TAPLE network.
 
 To use this utility:
 ```
@@ -63,12 +63,12 @@ PeerID: 12D3KooWBXD44QCJEes2199hTGeutyG3a2cmv2YG1Y3Fi8By12fv
 ```
 
 :::info
-It should be noted that currently only two algorithms are supported but TAPLE is intended to add new algorithms (more information can be found in the following **[link](../technology/what-is-taple.md#objectives)**).
+It should be noted that currently only two algorithms are supported but TAPLE is intended to add new algorithms (more information can be found in the following **[link](../discover/taple.md#objectives)**).
 :::
 
 ## TAPLE Sign
 
-This is an utility that is intended to facilitate the execution of external invocations. In order to provide context, [an external invocation](../technology/event-life-cycle.md) is the process by which a node proposes a change to a network subject that it does not control, i.e., of which it is not the owner. There are also a number of rules that regulate which network users have the ability to perform these operations. In either case, the invoking node must present, in addition to the changes it wishes to suggest, a valid signature to prove its identity.
+This is an utility that is intended to facilitate the execution of external invocations. In order to provide context, [an external invocation](../discover/event-life-cycle.md) is the process by which a node proposes a change to a network subject that it does not control, i.e., of which it is not the owner. There are also a number of rules that regulate which network users have the ability to perform these operations. In either case, the invoking node must present, in addition to the changes it wishes to suggest, a valid signature to prove its identity.
 
 TAPLE Sign allows precisely the latter, generating the necessary signature to accompany the request for changes. Additionally, as the utility is strictly intended for such a scenario, what is actually returned by its execution is the entire data structure (in JSON format) that must be delivered to other nodes in the network for them to consider the request.
 

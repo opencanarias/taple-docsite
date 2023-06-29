@@ -8,22 +8,21 @@ import Translate from '@docusaurus/Translate';
 import DocPageStyles from '@docusaurus/theme-classic/lib/theme/DocPage/Layout/styles.module.css';
 
 function HomepageHeader() {
-  const {siteConfig} = useDocusaurusContext();
+  const { siteConfig } = useDocusaurusContext();
   return (
     <header className={clsx('hero', styles.heroBanner)}>
       <div className="container">
         <img className={styles.icon} src="img/logo-taple-icon.svg"></img>
         <img className={styles.logo_taple} src="img/logo-taple.svg"></img>
-          <div className={styles.boxText}>
-            <h1><Translate>Tracking (Autonomous) of Provenance and Lifecycle Events</Translate></h1>
-            <br/>
-            <p>
-              <Translate>
-              Discover TAPLE technology, a DLT solution for the traceability of the life cycle of different elements. It promises to be more efficient, 
-              scalable and environmentally sustainable than any other solution of its kind.
-              </Translate>
-            </p>
-          </div>
+        <div className={styles.boxText}>
+          <h1><Translate>Tracking (Autonomous) of Provenance and Lifecycle Events</Translate></h1>
+          <br />
+          <p>
+            <Translate>
+              Discover TAPLE technology, a DLT solution for the traceability of the life cycle of different elements in an efficient, scalable and environmentally sustainable way.
+            </Translate>
+          </p>
+        </div>
         <HomepageFeatures />
       </div>
     </header>
@@ -31,14 +30,14 @@ function HomepageHeader() {
 }
 
 export default function Home(): JSX.Element {
-  const {siteConfig} = useDocusaurusContext();
+  const { siteConfig } = useDocusaurusContext();
   return (
-    <Layout title={`${siteConfig.title}`} description="Description will go into a meta tag in <head />"> 
+    <Layout title={`${siteConfig.title}`} description="Description will go into a meta tag in <head />">
       <div className={DocPageStyles.docPage}>
         <div className={clsx(styles.container)}>
           <HomepageHeader />
         </div>
-        <br/>
+        <br />
       </div>
     </Layout>
   );

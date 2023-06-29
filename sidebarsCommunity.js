@@ -7,11 +7,6 @@ module.exports = {
         },
         {
             type: 'doc',
-            label: 'Repositories',
-            id: 'repositories',
-        },
-        {
-            type: 'doc',
             label: 'Licenses',
             id: 'licenses',
         },

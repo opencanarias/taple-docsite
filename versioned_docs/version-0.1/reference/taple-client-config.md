@@ -52,8 +52,8 @@ Bear in mind that any configuration through these variables will overwrite the o
 - **TAPLE_SWAGGERUI**: Specifies whether swagger-ui is activated.
 - **TAPLE_APIKEY**: Specifies the API KEY for the rest api server.
 - **TAPLE_NETWORK_P2PPORT**: Port for the transmission and reception of TAPLE protocol messages. Default is ***50000***.
-- **TAPLE_NETWORK_ADDR**: Listening address for TAPLE protocol messages in **[Multiaddr](../technology/glossary.md#multiaddr)** format. Default, ***/ip4/0.0.0.0.0/tcp***.
-- **TAPLE_NETWORK_KNOWNODES**: List of bootstrap nodes available in the network. Each item in the list must be a **[Multiaddr](../technology/glossary.md#multiaddr)** address that also specifies the PeerID of the node via the ***/p2p*** parameter. The elements are separated from each other by ***"; "***. By default no bootstrap node is specified.
+- **TAPLE_NETWORK_ADDR**: Listening address for TAPLE protocol messages in **[Multiaddr](../discover/glossary.md#multiaddr)** format. Default, ***/ip4/0.0.0.0.0/tcp***.
+- **TAPLE_NETWORK_KNOWNODES**: List of bootstrap nodes available in the network. Each item in the list must be a **[Multiaddr](../discover/glossary.md#multiaddr)** address that also specifies the PeerID of the node via the ***/p2p*** parameter. The elements are separated from each other by ***"; "***. By default no bootstrap node is specified.
 - **TAPLE_NODE_SEED**: Allows to specify a seed for the generation of the node's internal cryptographic material. Note that, once a cryptographic material is generated, the node will not admit any other and will load it from its database. This is an optional configuration parameter. If neither this nor a private key to be imported is specified, a random cryptographic material shall be generated.
 - **TAPLE_NODE_SECRETKEY**: Allows to specify a private key to import. This must be in hexadecimal format. It cannot be specified at the same time as a seed.
 - **TAPLE_NODE_KEYDERIVATOR**: Specifies the cryptographic algorithm to be used for private key generation. Supported: Ed25519 (default) and Secp256k1.

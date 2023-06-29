@@ -153,7 +153,7 @@ We can check everything is working fine by checking that our three terminals are
 
 ## Create a governance and scheme
 ---
-The next step would be to create a governance. Since we are working with three nodes, we will define three members inside the governance. Each one being a validator of the subject , because of that, in policies, we are assigning them as validators with a [quorum](../technology/governance.md) of 50% so we only need the signature of two of the three nodes to accept it inside the ledger. Also, to model the use case, we are defining an schema so our subject will store three properties: `temperature`, `location` and `batch` . 
+The next step would be to create a governance. Since we are working with three nodes, we will define three members inside the governance. Each one being a validator of the subject , because of that, in policies, we are assigning them as validators with a [quorum](../discover/governance.md) of 50% so we only need the signature of two of the three nodes to accept it inside the ledger. Also, to model the use case, we are defining an schema so our subject will store three properties: `temperature`, `location` and `batch` . 
 
 In the next code block we can see our governance :
 <details>

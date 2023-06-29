@@ -8,7 +8,7 @@
 ## Security
 
 ### Que algoritmo de consenso usamos?
-hacer referencia a technology/what-is-taple#ledger-single-ownership-model
+hacer referencia a discover/taple#ledger-single-ownership-model
 -->
 
 ## 51% Attack

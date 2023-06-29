@@ -1,6 +1,6 @@
 # Subjects
 
-The TAPLE network performs [ledger partitioning](./what-is-taple.md#partitioning-of-the-ledger-by-assets) on a per-subject basis. Instead of having a single ledger shared by all participants, the information is structured on a subject-by-subject basis. Subjects are logical entities that represent an asset or process within a TAPLE network. 
+The TAPLE network performs [ledger partitioning](./taple.md#partitioning-of-the-ledger-by-assets) on a per-subject basis. Instead of having a single ledger shared by all participants, the information is structured on a subject-by-subject basis. Subjects are logical entities that represent an asset or process within a TAPLE network. 
 
 Each subject complies with the following: 
 
@@ -23,7 +23,7 @@ To learn more about the microledger structure visit the [Events](./events.md) pa
 
 ## Subject state
 
-The state is the representation of the information stored by a subject at a given instant, usually the current moment. It is a data structure, stored with the microledger, which contains the information stored in a subject. The state is obtained by applying, one after the other, the different microledger events on the initial state of the subject defined in its [genesis-event](/docs/technology/events#evento-de-g%C3%A9nesis-genesis-event). 
+The state is the representation of the information stored by a subject at a given instant, usually the current moment. It is a data structure, stored with the microledger, which contains the information stored in a subject. The state is obtained by applying, one after the other, the different microledger events on the initial state of the subject defined in its [genesis-event](/docs/discover/events#evento-de-g%C3%A9nesis-genesis-event). 
 
 ![Subjects](../img/subject-state.png)
 
@@ -62,7 +62,7 @@ Para lograr estas características, el identificador del sujeto se deriva a part
 
 
 ## Belonging to a governance
-A subject always exists within a use case. Governance is the definition of the rules by which the use case is governed. What types of subjects can be created or who can create them are some of the rules that are defined in the governance. Although a subject can only belong to one governance, a TAPLE node can manage subjects of different governance, so that the same node can participate simultaneously in different use cases. 
+A subject always exists within a use case, initially these are associated with a namespace that cannot be altered, allowing governance to segment the stakeholders. Governance is the definition of the rules by which the use case is governed. What types of subjects can be created or who can create them are some of the rules that are defined in the governance. Although a subject can only belong to one governance, a TAPLE node can manage subjects of different governance, so that the same node can participate simultaneously in different use cases.
 
 :::info
 

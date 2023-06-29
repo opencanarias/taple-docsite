@@ -1,5 +1,5 @@
 {
-  "mainSidebar": [
+  "discoverSidebar": [
     {
       "type": "category",
       "label": "TAPLE Technology",
@@ -9,33 +9,33 @@
       "items": [
         {
           "type": "doc",
-          "label": "DLT & Blockchain",
-          "id": "technology/dlt-blockchain"
+          "label": "What is TAPLE",
+          "id": "discover/taple"
         },
         {
           "type": "doc",
-          "label": "What is TAPLE",
-          "id": "technology/what-is-taple"
+          "label": "DLT & Blockchain",
+          "id": "discover/dlt-blockchain"
         },
         {
           "type": "doc",
           "label": "When to use it",
-          "id": "technology/when-to-use-taple"
+          "id": "discover/when-to-use-taple"
         },
         {
           "type": "doc",
           "label": "Overview",
-          "id": "technology/overview"
+          "id": "discover/overview"
         },
         {
           "type": "doc",
           "label": "Under the Hood",
-          "id": "technology/under-the-hood"
+          "id": "discover/under-the-hood"
         },
         {
           "type": "doc",
           "label": "Glossary",
-          "id": "technology/glossary"
+          "id": "discover/glossary"
         },
         {
           "type": "link",
@@ -54,27 +54,27 @@
         {
           "type": "doc",
           "label": "Subjects",
-          "id": "technology/subjects"
+          "id": "discover/subjects"
         },
         {
           "type": "doc",
           "label": "Schemas",
-          "id": "technology/schemas"
+          "id": "discover/schemas"
         },
         {
           "type": "doc",
           "label": "Events",
-          "id": "technology/events"
+          "id": "discover/events"
         },
         {
           "type": "doc",
           "label": "Identity",
-          "id": "technology/identity"
+          "id": "discover/identity"
         },
         {
           "type": "doc",
           "label": "Governance",
-          "id": "technology/governance"
+          "id": "discover/governance"
         }
       ]
     },
@@ -87,18 +87,18 @@
       "items": [
         {
           "type": "doc",
-          "id": "technology/event-life-cycle",
+          "id": "discover/event-life-cycle",
           "label": "Event life cycle"
         },
         {
           "type": "doc",
-          "id": "technology/event-approval-process",
+          "id": "discover/event-approval-process",
           "label": "Event approval process"
         }
       ]
     }
   ],
-  "buildSidebar": [
+  "tutorialsSidebar": [
     {
       "type": "category",
       "label": "Getting started",
@@ -108,7 +108,7 @@
       "items": [
         {
           "type": "doc",
-          "label": "Requirements",
+          "label": "First steps",
           "id": "tutorials/first-steps"
         },
         {
@@ -348,25 +348,25 @@
           "type": "doc",
           "label": "TAPLE Tools",
           "id": "reference/taple-tools"
+        }
+      ]
+    },
+    {
+      "type": "category",
+      "label": "Operational guides",
+      "className": "sidebar-section",
+      "collapsible": false,
+      "collapsed": false,
+      "items": [
+        {
+          "type": "doc",
+          "label": "Governance configuration",
+          "id": "reference/operational-guides/governance-configuration"
         },
         {
-          "type": "category",
-          "label": "Operational guides",
-          "className": "sidebar-section",
-          "collapsible": false,
-          "collapsed": false,
-          "items": [
-            {
-              "type": "doc",
-              "label": "Governance configuration",
-              "id": "reference/operational-guides/governance-configuration"
-            },
-            {
-              "type": "doc",
-              "label": "Creating a JSON-Schema",
-              "id": "reference/operational-guides/creating-a-json-schema"
-            }
-          ]
+          "type": "doc",
+          "label": "Creating a JSON-Schema",
+          "id": "reference/operational-guides/creating-a-json-schema"
         }
       ]
     }

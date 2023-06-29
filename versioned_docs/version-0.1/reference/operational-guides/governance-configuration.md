@@ -1,8 +1,8 @@
 # Governance configuration
-In this page we will describe the governance structure and configuration. If you want to know more about what governance visit the [Governance](../../technology/governance.md) page. 
+In this page we will describe the governance structure and configuration. If you want to know more about what governance visit the [Governance](../../discover/governance.md) page. 
 
 ## Governance scheme
-The governance in TAPLE is [modeled as a subject](../../technology/governance.md#governance-as-a-subject). Governance is a special type of subject where the schema is not specified in the creation request. Instead, an internal TAPLE schema describing governance is implicitly applied. The governance schema has 3 sections: members, schemas and policies.
+The governance in TAPLE is [modeled as a subject](../../discover/governance.md#governance-as-a-subject). Governance is a special type of subject where the schema is not specified in the creation request. Instead, an internal TAPLE schema describing governance is implicitly applied. The governance schema has 3 sections: members, schemas and policies.
 
 :::info Governance Schema
 
@@ -737,7 +737,7 @@ The governance in TAPLE is [modeled as a subject](../../technology/governance.md
 This property defines the list of members in the network, meaning, users that have the right to participate in the network, and each member has the following properties:
 - **id**. A short, colloquial name by which the node is known in the network. It serves no functionality other than being descriptive. It does not act as a unique identifier within the network.
 - **description**. A longer text that serves to further define the subject. It serves no functionality other than being descriptive.
-- **key**. Corresponds to the controller-id of the node. Acts as a unique [identifier](../../technology/identity.md#identifiers) within the network and corresponds to the node's cryptographic public key.
+- **key**. Corresponds to the controller-id of the node. Acts as a unique [identifier](../../discover/identity.md#identifiers) within the network and corresponds to the node's cryptographic public key.
 
 ```json title="Members section example"
 {
