@@ -1,4 +1,4 @@
-# First schema and smart contract
+# Adding a schema
 
 - Explicar el esquema que vamos a emplear y sus diferentes campos (hacer referencia a la página de declaración de los esquemas).
 - Desarrollar el esquema versión 1 para taple.

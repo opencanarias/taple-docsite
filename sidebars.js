@@ -146,23 +146,38 @@ module.exports = {
               items: [
                 {
                   type: 'doc',
-                  label: 'Creating governance',
+                  label: 'Running a node',
+                  id: 'build/wine-track/running-node',
+                },
+                {
+                  type: 'doc',
+                  label: 'Creating a governance',
                   id: 'build/wine-track/creating-governance',
                 },
                 {
                   type: 'doc',
-                  label: 'First schema and smart contract',
-                  id: 'build/wine-track/first-schema-and-smart-contract',
+                  label: 'Creating an event',
+                  id: 'build/wine-track/creating-event',
                 },
                 {
                   type: 'doc',
-                  label: 'Inclusion producer node',
-                  id: 'build/wine-track/inclusion-producer-node',
+                  label: 'Adding a schema',
+                  id: 'build/wine-track/adding-schema',
                 },
                 {
                   type: 'doc',
-                  label: 'Updating scheme and smart contract',
-                  id: 'build/wine-track/updating-scheme-and-smart-contract',
+                  label: 'Adding participants',
+                  id: 'build/wine-track/adding-participants',
+                },
+                {
+                  type: 'doc',
+                  label: 'Creating a subject',
+                  id: 'build/wine-track/creating-subject',
+                },
+                {
+                  type: 'doc',
+                  label: 'Updating schema',
+                  id: 'build/wine-track/updating-schema',
                 },
                 {
                   type: 'doc',
@@ -171,28 +186,28 @@ module.exports = {
                 },
                 {
                   type: 'doc',
-                  label: 'Inclusion approving node',
-                  id: 'build/wine-track/inclusion-approving-node',
+                  label: 'Approvals',
+                  id: 'build/wine-track/approvals',
                 },
                 {
                   type: 'doc',
-                  label: 'Transfer to external node',
-                  id: 'build/wine-track/transfer-to-external-node',
+                  label: 'Transfers',
+                  id: 'build/wine-track/transfers',
                 },
                 {
                   type: 'doc',
-                  label: 'Namespace segmentation',
-                  id: 'build/wine-track/namespace-segmentation',
+                  label: 'Segmentation',
+                  id: 'build/wine-track/segmentation',
+                },
+                {
+                  type: 'doc',
+                  label: 'Changing policies',
+                  id: 'build/wine-track/changing-policies',
                 },
                 {
                   type: 'doc',
                   label: 'End of life',
                   id: 'build/wine-track/eol',
-                },
-                {
-                  type: 'doc',
-                  label: 'Quorum',
-                  id: 'build/wine-track/quorum',
                 },
               ],
             },

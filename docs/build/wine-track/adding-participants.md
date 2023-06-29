@@ -1,4 +1,4 @@
-# Inclusion of producer node
+# Adding participants
 
 - Creamos el nuevo nodo(con su material criptográfico correspondiente).
 - Modificamos la gobernanza para incluir tanto el miembro como el nuevo rol que ejerce en la red.
