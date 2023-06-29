@@ -96,8 +96,16 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
             from: ['/technology']
           },
           {
-            to: '/docs/tutorials/quickstart',
+            to: '/docs/technology/what-is-taple',
+            from: ['/discover']
+          },
+          {
+            to: '/docs/tutorials/first-steps',
             from: ['/build']
+          },
+          {
+            to: '/docs/tutorials/first-steps',
+            from: ['/tutorials']
           },
           {
             to: '/docs/reference/architecture',
@@ -142,12 +150,12 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
         disableSwitch: false,
         respectPrefersColorScheme: true,
       },
-      announcementBar: {
+      /*announcementBar: {
         id: 'announcementBar',
         content:
           '⚠️ TAPLE is in early development and <a href="/community/DISCLAIMER"> should not be used in production!</a> ⚠️',
         isCloseable: false,
-      },
+      },*/
       navbar: {
         logo: {
           alt: 'TAPLE',
