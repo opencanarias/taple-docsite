@@ -171,11 +171,6 @@ module.exports = {
                 },
                 {
                   type: 'doc',
-                  label: 'Updating schema',
-                  id: 'tutorials/wine-track/updating-schema',
-                },
-                {
-                  type: 'doc',
                   label: 'External invocations',
                   id: 'tutorials/wine-track/external-invocations',
                 },
