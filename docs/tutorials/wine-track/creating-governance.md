@@ -1,6 +1,4 @@
-# Creating governance
+# Creating a governance
 
-Página en la que se describirá lo siguiente
-
-- Creación de un nodo (material criptográfico necesario y obtención de su dirección de red)
-- Crear una gobernanza mínima (incluya únicamente al propietario).
+- Crear una gobernanza mínima.
+- Hacer referencia en doc donde se dice que la gobernanza es un sujeto más dentro de la red de Taple.

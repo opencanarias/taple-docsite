@@ -113,7 +113,7 @@ module.exports = {
       ]
     },
   ],
-  buildSidebar: [
+  tutorialsSidebar: [
     {
       type: 'category',
       label: 'Using TAPLE-Client',
@@ -141,23 +141,38 @@ module.exports = {
               items: [
                 {
                   type: 'doc',
-                  label: 'Creating governance',
+                  label: 'Running a node',
+                  id: 'tutorials/wine-track/running-node',
+                },
+                {
+                  type: 'doc',
+                  label: 'Creating a governance',
                   id: 'tutorials/wine-track/creating-governance',
                 },
                 {
                   type: 'doc',
-                  label: 'First schema and smart contract',
-                  id: 'tutorials/wine-track/first-schema-and-smart-contract',
+                  label: 'Creating an event',
+                  id: 'tutorials/wine-track/creating-event',
                 },
                 {
                   type: 'doc',
-                  label: 'Inclusion producer node',
-                  id: 'tutorials/wine-track/inclusion-producer-node',
+                  label: 'Adding a schema',
+                  id: 'tutorials/wine-track/adding-schema',
                 },
                 {
                   type: 'doc',
-                  label: 'Updating scheme and smart contract',
-                  id: 'tutorials/wine-track/updating-scheme-and-smart-contract',
+                  label: 'Adding participants',
+                  id: 'tutorials/wine-track/adding-participants',
+                },
+                {
+                  type: 'doc',
+                  label: 'Creating a subject',
+                  id: 'tutorials/wine-track/creating-subject',
+                },
+                {
+                  type: 'doc',
+                  label: 'Updating schema',
+                  id: 'tutorials/wine-track/updating-schema',
                 },
                 {
                   type: 'doc',
@@ -166,28 +181,28 @@ module.exports = {
                 },
                 {
                   type: 'doc',
-                  label: 'Inclusion approving node',
-                  id: 'tutorials/wine-track/inclusion-approving-node',
+                  label: 'Approvals',
+                  id: 'tutorials/wine-track/approvals',
                 },
                 {
                   type: 'doc',
-                  label: 'Transfer to external node',
-                  id: 'tutorials/wine-track/transfer-to-external-node',
+                  label: 'Transfers',
+                  id: 'tutorials/wine-track/transfers',
                 },
                 {
                   type: 'doc',
-                  label: 'Namespace segmentation',
-                  id: 'tutorials/wine-track/namespace-segmentation',
+                  label: 'Segmentation',
+                  id: 'tutorials/wine-track/segmentation',
+                },
+                {
+                  type: 'doc',
+                  label: 'Changing policies',
+                  id: 'tutorials/wine-track/changing-policies',
                 },
                 {
                   type: 'doc',
                   label: 'End of life',
                   id: 'tutorials/wine-track/eol',
-                },
-                {
-                  type: 'doc',
-                  label: 'Quorum',
-                  id: 'tutorials/wine-track/quorum',
                 },
               ],
             },

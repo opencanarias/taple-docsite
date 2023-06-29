@@ -1,4 +1,4 @@
-# Inclusion approving node
+# Approvals
 
 - Explicamos el porque hace falta un nodo aprobador (básicamente sin este los invocadores externos no tendrían ningun tipo de control y podrían no ser fiables a ojos del caso de uso).
 - Creamos el nodo con su material criptográfico correspondiente.

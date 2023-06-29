@@ -1,4 +1,4 @@
-# Updating scheme and smart contract
+# Updating schema
 
 - Explicar el porque de la modificación del esquema.
 - Desarrollar el esquema versión 2 para taple.
