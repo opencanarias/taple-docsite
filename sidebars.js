@@ -113,23 +113,18 @@ module.exports = {
       ]
     },
   ],
-  buildSidebar: [
+  tutorialsSidebar: [
     {
       type: 'category',
-      label: 'Getting started',
+      label: 'Using TAPLE-Client',
       className: 'sidebar-section',
       collapsible: false,
       collapsed: false,
       items: [
         {
           type: 'doc',
-          label: 'Requirements',
-          id: 'build/requirements'
-        },
-        {
-          type: 'doc',
-          label: 'Quickstart',
-          id: 'build/quickstart',
+          label: 'First steps',
+          id: 'tutorials/first-steps'
         },
         {
           type: 'category',
@@ -140,143 +135,90 @@ module.exports = {
             {
               type: 'category',
               collapsible: true,
-              collapsed: true,
-              label: 'Wine track',
-              link: { type: 'doc', id: 'build/wine-track/use-case-definition' },
+              collapsed: false,
+              label: 'Asset traceability',
+              link: { type: 'doc', id: 'tutorials/wine-track/use-case-definition' },
               items: [
                 {
                   type: 'doc',
                   label: 'Running a node',
-                  id: 'build/wine-track/running-node',
+                  id: 'tutorials/wine-track/running-node',
                 },
                 {
                   type: 'doc',
                   label: 'Creating a governance',
-                  id: 'build/wine-track/creating-governance',
+                  id: 'tutorials/wine-track/creating-governance',
                 },
                 {
                   type: 'doc',
                   label: 'Creating an event',
-                  id: 'build/wine-track/creating-event',
+                  id: 'tutorials/wine-track/creating-event',
                 },
                 {
                   type: 'doc',
                   label: 'Adding a schema',
-                  id: 'build/wine-track/adding-schema',
+                  id: 'tutorials/wine-track/adding-schema',
                 },
                 {
                   type: 'doc',
                   label: 'Adding participants',
-                  id: 'build/wine-track/adding-participants',
+                  id: 'tutorials/wine-track/adding-participants',
                 },
                 {
                   type: 'doc',
                   label: 'Creating a subject',
-                  id: 'build/wine-track/creating-subject',
+                  id: 'tutorials/wine-track/creating-subject',
                 },
                 {
                   type: 'doc',
                   label: 'Updating schema',
-                  id: 'build/wine-track/updating-schema',
+                  id: 'tutorials/wine-track/updating-schema',
                 },
                 {
                   type: 'doc',
                   label: 'External invocations',
-                  id: 'build/wine-track/external-invocations',
+                  id: 'tutorials/wine-track/external-invocations',
                 },
                 {
                   type: 'doc',
                   label: 'Approvals',
-                  id: 'build/wine-track/approvals',
+                  id: 'tutorials/wine-track/approvals',
                 },
                 {
                   type: 'doc',
                   label: 'Transfers',
-                  id: 'build/wine-track/transfers',
+                  id: 'tutorials/wine-track/transfers',
                 },
                 {
                   type: 'doc',
                   label: 'Segmentation',
-                  id: 'build/wine-track/segmentation',
+                  id: 'tutorials/wine-track/segmentation',
                 },
                 {
                   type: 'doc',
                   label: 'Changing policies',
-                  id: 'build/wine-track/changing-policies',
+                  id: 'tutorials/wine-track/changing-policies',
                 },
                 {
                   type: 'doc',
                   label: 'End of life',
-                  id: 'build/wine-track/eol',
+                  id: 'tutorials/wine-track/eol',
                 },
               ],
             },
             {
-              type: 'category',
-              collapsible: true,
-              collapsed: true,
-              label: 'TAPLE from 0',
-              link: { type: 'doc', id: 'build/tutorial-from-0/introduction' },
-              items: [
-                {
-                  type: 'doc',
-                  label: 'Running nodes',
-                  id: 'build/tutorial-from-0/running-nodes',
-                },
-                {
-                  type: 'doc',
-                  label: 'Defining the governance',
-                  id: 'build/tutorial-from-0/governance-operations',
-                },
-                {
-                  type: 'doc',
-                  label: 'Creating subjects',
-                  id: 'build/tutorial-from-0/subject-operations',
-                },
-                {
-                  type: 'doc',
-                  label: 'Adding events',
-                  id: 'build/tutorial-from-0/event-operations',
-                },
-                {
-                  type: 'doc',
-                  label: 'Adding a new node',
-                  id: 'build/tutorial-from-0/updating-governance',
-                }
-              ]
-            },
-            {
               type: 'doc',
               label: 'Access control',
-              id: 'build/uc-hotel-access-control',
+              id: 'tutorials/uc-hotel-access-control',
             },
           ]
         },
         {
           type: 'doc',
           label: 'Issues and Workarounds',
-          id: 'build/issues-and-workarounds',
+          id: 'tutorials/issues-and-workarounds',
         },
       ],
-    },
-    {
-      type: 'category',
-      label: 'Operational guides',
-      className: 'sidebar-section',
-      collapsible: false,
-      collapsed: false,
-      items: [
-        {
-          type: 'doc',
-          label: 'Governance configuration',
-          id: 'build/operational-guides/governance-configuration',
-        },
-        {
-          type: 'doc',
-          label: 'Creating a JSON-Schema',
-          id: 'build/operational-guides/creating-a-json-schema',
-        }
-      ]
     },
   ],
   referenceSidebar: [
@@ -294,7 +236,7 @@ module.exports = {
         },
         {
           type: 'category',
-          label: 'TAPLE Core',
+          label: 'Core library',
           collapsed: true,
           items: [
             {
@@ -310,10 +252,33 @@ module.exports = {
           ]
         },
         {
+          type: 'doc',
+          label: 'Network',
+          id: 'reference/taple-client-config',
+        },            {
+          type: 'doc',
+          label: 'Database',
+          id: 'reference/taple-client-config',
+        },
+      ]
+    },
+    {
+      type: 'category',
+      label: 'Tools',
+      className: 'sidebar-section',
+      collapsible: false,
+      collapsed: false,
+      items: [
+        {
           type: 'category',
           label: 'TAPLE Client',
           collapsed: true,
           items: [
+            {
+              type: 'doc',
+              label: 'Basic usage',
+              id: 'reference/taple-client-config',
+            },
             {
               type: 'doc',
               label: 'Configuration',
@@ -338,6 +303,25 @@ module.exports = {
           id: 'reference/taple-tools',
         },
       ],
+    },
+    {
+      type: 'category',
+      label: 'Operational guides',
+      className: 'sidebar-section',
+      collapsible: false,
+      collapsed: false,
+      items: [
+        {
+          type: 'doc',
+          label: 'Governance configuration',
+          id: 'reference/operational-guides/governance-configuration',
+        },
+        {
+          type: 'doc',
+          label: 'Creating a JSON-Schema',
+          id: 'reference/operational-guides/creating-a-json-schema',
+        }
+      ]
     },
   ]
 };
