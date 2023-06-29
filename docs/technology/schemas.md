@@ -71,7 +71,7 @@ You can test this behavior using this [online and interactive JSON Schema valida
 
 :::
 
-If you want to learn how to define a a JSON-Schema visit the [Creating a JSON-Schema](../build/operational-guides/creating-a-json-schema.md) page.
+If you want to learn how to define a a JSON-Schema visit the [Creating a JSON-Schema](../reference/operational-guides/creating-a-json-schema.md) page.
 
 
 

@@ -1,4 +1,4 @@
-# Requirements
+# First steps
 
 The minimum requirements for running the tutorials are as follows:
 
