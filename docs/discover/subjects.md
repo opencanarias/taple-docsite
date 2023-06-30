@@ -35,7 +35,7 @@ The state structure must correspond to a valid schema. To learn more about schem
 
 :::caution Important
 
-Unlike other DLTs, TAPLE does not have data tables. The information is stored in a single entity, the subject state. Use cases that require storing a large amount of information have to be approached by partitioning the information into different subjects. 
+Unlike other DLTs, TAPLE does not have data tables. The information is stored in a single entity, the subject state. This entity must represent only the final state of our subject, while the details of the different events will be stored in the chain.
 
 :::
 
