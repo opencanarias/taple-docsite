@@ -1,15 +1,14 @@
 # Architecture
 
-Actualmente, la arquitectura de *Taple* se divide en varias herramientas que permiten obtener una funcionalidad completa para nuestra red. Entre ellas, podemos identificar las siguientes:
+*TAPLE* architecture is divided into several tools that allow us to obtain a complete functionality for our network. Among them, we can identify the following:
 
-* [Taple Core](https://github.com/opencanarias/taple-core): Este es el núcleo de la tecnología *Taple* y contiene elementos como:
-  * Protocolo de comunicación de la red.
-  * Métodos de codificación de la información.
-  * Forma de almacenar la información.
-  * Métodos expuestos de la API REST para comunicación externa.
-* [Taple Client](https://github.com/opencanarias/taple-client): Este es el método más sencillo para generar nuestros propios nodos *Taple* sin necesidad de codificar nuestro propio cliente para este propósito. Pone a nuestra disposición:
-  * Un gran número de variables de configuración para adaptarse a nuestras necesidades.
-  * Una API REST que nos permite interactuar con el estado de la red.
-* [Taple Tools](https://github.com/opencanarias/taple-tools): Este es un conjunto de utilidades destinadas a facilitar la interacción con la tecnología Taple, que se dividen en dos:
-  * **Taple keygen**: Es una herramienta que permite la generación de material criptográfico necesario para el correcto funcionamiento de Taple. Debe generarse externamente y luego proporcionarse al nodo.
-  * **Taple Sign**: Es una herramienta destinada a facilitar la ejecución de invocaciones externas (aquellas que implican un cambio en un sujeto de la red que no controlamos).
+* [TAPLE Core](https://github.com/opencanarias/taple-core): This is the core of the *TAPLE* technology and contains elements such as:
+  * Network communication protocol.
+  * Information encoding methods.
+  * Way of storing the information.
+* [TAPLE Client](https://github.com/opencanarias/taple-client): This is the simplest method to generate our own *TAPLE* nodes without the need to code our own application. It puts at our disposal:
+  * A large number of configuration variables to suit our needs.
+  * A REST API that allows us to interact with the TAPLE network.
+* [TAPLE Tools](https://github.com/opencanarias/taple-tools): This is a set of utilities designed to facilitate interaction with TAPLE technology, which are divided into two:
+  * **Taple keygen**: This is a tool that allows the generation of cryptographic material necessary for the correct functioning of TAPLE. It must be generated externally and then provided to the node.
+  * **Taple Sign**: This is a tool designed to facilitate the execution of external invocations (those that involve a change in a network subject that we do not control).
