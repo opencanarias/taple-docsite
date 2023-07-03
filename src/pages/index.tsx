@@ -16,7 +16,6 @@ function HomepageHeader() {
         <img className={styles.logo_taple} src="img/logo-taple.svg"></img>
         <div className={styles.boxText}>
           <h1><Translate>Tracking (Autonomous) of Provenance and Lifecycle Events</Translate></h1>
-          <br />
           <p>
             <Translate>
               Discover TAPLE technology, a DLT solution for the traceability of the life cycle of different elements in an efficient, scalable and environmentally sustainable way.

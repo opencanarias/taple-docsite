@@ -182,7 +182,7 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
             position: 'right',
           },
           {
-            href: 'https://github.com/search?q=topic%3Ataple+org%3Aopencanarias++fork%3Atrue&type=repositories',
+            href: 'https://github.com/search?q=topic%3Ataple+org%3Aopencanarias++fork%3Atrue+archived%3Afalse&type=repositories',
             //label: 'GitHub',
             position: 'right',
             className: 'header-github-link',
