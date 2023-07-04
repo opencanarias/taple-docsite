@@ -40,11 +40,11 @@ Unlike other DLTs, TAPLE does not have data tables. The information is stored in
 :::
 
 ## Ownership model
-Any subject has a single owner, this being the only participant in the network that can make effective modifications to the subject, i.e., enter events in the micro-ledger. However, other participants can generate event requests. These event requests are signed by the invoker and sent to the owner of the subject.
+Any subject has a single owner, this being the only participant in the network that can make effective modifications to the subject, i.e., enter events in the micro-ledger. However, other participants, the issuers, can generate event requests. These event requests are signed by the issuer and sent to the owner of the subject.
 
 :::info
 
-To learn more about invokers visit the [Event Life Cycle](./event-life-cycle.md#event-request) page. 
+To learn more about issuers visit the [Event Life Cycle](./event-life-cycle.md#event-request) page. 
 
 :::
 <!--

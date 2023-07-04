@@ -1,34 +1,15 @@
-# TAPLE Network
+# TAPLE Components
+TAPLE is designed, not as a single application, but also as a set of specifications, libraries and utilities. The aim is to enable integration and interoperability with different applications, devices and architectures. 
+
 The following diagram shows the usual elements of a TAPLE network. A brief description of each of them is given below so that we can obtain an overview before going into more detail.
 
 ![Net overview](../img/net-overview.png)
 
-## TAPLE Core
-It is the library that implements most of the TAPLE functionality. Any application that wants to be part of a TAPLE network must make use of this library from the API it exposes. Some of its functions are:
-- Creation and management of [subjects](./subjects.md) and their associated [microledgers](./subjects.md#microledger) 
-- Implementation of the [P2P](../reference/glossary.md#p2p) protocol for communication between nodes.
-- Database persistence
-
-:::caution Important
-
-TAPLE Core is not a stand-alone application that can be run directly, but a library that has to be used from some application. See [TAPLE Client](#taple-client).
-
-:::
-
 ## TAPLE Node
-Running instance of an application that uses the TAPLE Core and therefore implements the TAPLE communication protocol and can be part of a TAPLE network and exchange information with other nodes. 
-
-### Identity
-Each TAPLE node is associated with **a unique identity** representing its owner. However, the same identity can be associated with different governance in order to participate in different use cases. Based on the owner's needs and level of commitment, the identity can act in different roles within the network. 
-
-:::info
-
-To learn more about identity visit this page: [Identity](./identity.md).
-
-:::
+Running instance of a TAPLE compliant application and therefore implementing the TAPLE communication protocol, it can be part of a TAPLE network and can exchange information with other nodes. A TAPLE node can be an application running on a server, an app on a user's mobile phone or a small service on an IoT device with limited connectivity.
 
 ## TAPLE Client
-Official client to create a TAPLE Node. It is the easiest way to work with TAPLE as it is a simple console application that provides everything needed to build a node. Some of its functions are:
+Reference application to create a TAPLE Node. It is the easiest way to work with TAPLE as it is a simple console application that provides everything needed to build a node. Some of its functions are:
 - Use the TAPLE Core 
 - Implements a Rest API to interact with the TAPLE network in a simple way
 - Allows configuration by different mechanisms: configuration files, start-up parameters and environment variables
@@ -36,6 +17,18 @@ Official client to create a TAPLE Node. It is the easiest way to work with TAPLE
 :::info
 
 To learn more about TAPLE Core and TAPLE Client visit those pages: [TAPLE Core](../reference/taple-core.md), [TAPLE Client](./../reference/taple-client-config.md).
+
+:::
+
+## TAPLE Core
+Reference library that implements most of the TAPLE functionality. An application that wants to be part of a TAPLE network can make use of this library from the API it exposes. Some of its functions are:
+- Creation and management of [subjects](./subjects.md) and their associated [microledgers](./subjects.md#microledger) 
+- Implementation of the [P2P](../reference/glossary.md#p2p) protocol for communication between nodes.
+- Database persistence
+
+:::caution Important
+
+TAPLE Core is not a stand-alone application that can be run directly, but a library that has to be used from some application. See [TAPLE Client](#taple-client).
 
 :::
 
@@ -51,7 +44,7 @@ To learn more about subjects visit this page: [Subjects](./subjects.md).
 ### Owned subjects
 There is only one owner for each subject, being the only one with the effective capacity to make changes to the subject. All other participants wishing to make a change in a subject must send the owner an event request. 
 
-## Events 
+### Events 
 The microledger is a structure of chained events. Each of these events models any fact that we want to store associated with that subject, such as a modification of its properties or even its creation. 
 
 :::info
@@ -69,5 +62,14 @@ Within the TAPLE network, governance is managed as a special type of subject. Th
 :::info
 
 To learn more about structure and functionality of the governances visit this page: [Governance](./governance.md).
+
+:::
+
+## Identity
+Each TAPLE node is associated with **a unique identity** representing its owner. However, the same identity can be associated with different governances in order to participate in different use cases. Based on the owner's needs and level of commitment, the identity can act in different roles within the network. 
+
+:::info
+
+To learn more about identity visit this page: [Identity](./identity.md).
 
 :::

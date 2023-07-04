@@ -11,7 +11,7 @@ Events are the data structures that make up the microledger, i.e., the chain of 
 Events are initially generated from an event request. This request contains the following:
 - The type of event to generate;
 - The information to include in the microledger, for example, to modify the subject's state;
-- The signature of the invoker, which can be the subject's owner or another participant with sufficient permissions.
+- The signature of the issuer, which can be the subject's owner or another participant with sufficient permissions.
 
 After generating an event request, it is sent to the subject's owner for approval and, if correct, it is converted into an event and becomes part of the subject's microledger.
 
@@ -23,7 +23,7 @@ Visit the [Event Life Cycle](./event-life-cycle.md) page for more details on how
 Each event includes a series of signatures that provide different guarantees.
 
 ### Issuer signature
-As explained, each event is generated from an event request. This request is signed by the participant who generates it, the invoker, providing assurance of who originated it. Additionally, it's the way that the network participants, at different stages of the event life cycle, can verify if the invoker had permission to make the request.
+As explained, each event is generated from an event request. This request is signed by the participant who generates it, the isuer, providing assurance of who originated it. Additionally, it's the way that the network participants, at different stages of the event life cycle, can verify if the issuer had permission to make the request.
 
 ### Approvers signature
 Depending on the use case, governance may specify that certain event requests must be approved. This means that, for an request to be transformed into an event, it must provide a series of additional signatures that give agreement on the request's content.

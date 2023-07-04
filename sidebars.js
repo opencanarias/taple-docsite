@@ -14,13 +14,13 @@ module.exports = {
         },
         {
           type: 'doc',
-          label: 'Technology',
+          label: 'Fundamentals',
           id: 'discover/taple',
         },
         {
           type: 'doc',
-          label: 'Network',
-          id: 'discover/network',
+          label: 'Components',
+          id: 'discover/components',
         },
         {
           type: 'link',
@@ -29,13 +29,8 @@ module.exports = {
         },
         {
           type: 'doc',
-          label: 'Release notes',
-          id: 'discover/release-notes',
-        },
-        {
-          type: 'doc',
-          label: 'Under the Hood',
-          id: "discover/under-the-hood"
+          label: 'What\'s new',
+          id: 'discover/whats-new',
         },
         {
           type: 'doc',
@@ -73,6 +68,11 @@ module.exports = {
         },
         {
           type: 'doc',
+          label: 'Roles',
+          id: 'discover/roles',
+        },
+        {
+          type: 'doc',
           label: 'Governance',
           id: 'discover/governance',
         },
@@ -84,7 +84,107 @@ module.exports = {
       ],
     },
   ],
-  tutorialsSidebar: [
+  learnSidebar: [
+    {
+      type: 'category',
+      label: 'Architecture',
+      className: 'sidebar-section',
+      collapsible: false,
+      collapsed: false,
+      items: [
+        {
+          type: 'doc',
+          label: 'Components',
+          id: 'reference/architecture',
+        },
+        {
+          type: 'category',
+          label: 'Core library',
+          collapsed: true,
+          items: [
+            {
+              type: 'doc',
+              label: 'Description',
+              id: 'reference/taple-core',
+            },
+            {
+              type: 'link',
+              label: 'Documentation',
+              href: 'pathname:///crate-doc/next/taple_core/',
+            },
+          ]
+        },
+        {
+          type: 'doc',
+          label: 'Network',
+          id: 'reference/taple-client-config',
+        }, {
+          type: 'doc',
+          label: 'Database',
+          id: 'reference/taple-client-config',
+        },
+        {
+          type: 'doc',
+          label: 'Under the Hood',
+          id: "discover/under-the-hood"
+        },
+      ]
+    },
+    {
+      type: 'category',
+      label: 'Governance',
+      className: 'sidebar-section',
+      collapsible: false,
+      collapsed: false,
+      items: [
+        {
+          type: 'doc',
+          label: 'Governance configuration',
+          id: 'reference/operational-guides/governance-configuration',
+        },
+        {
+          type: 'doc',
+          label: 'Creating a JSON-Schema',
+          id: 'reference/operational-guides/creating-a-json-schema',
+        },
+      ]
+    },
+    {
+
+      type: 'category',
+      label: 'Advanced',
+      className: 'sidebar-section',
+      collapsible: false,
+      collapsed: false,
+      items: [
+        {
+          type: 'category',
+          collapsible: true,
+          collapsed: false,
+          label: 'Event life cycle',
+          link: { type: 'doc', id: 'discover/event-life-cycle' },
+          items: [
+            {
+              type: 'doc',
+              id: 'discover/event-evaluation-process',
+              label: 'Event evaluation process',
+            },
+            {
+              type: 'doc',
+              id: 'discover/event-approval-process',
+              label: 'Event approval process',
+            },
+            {
+              type: 'doc',
+              id: 'discover/event-validation-process',
+              label: 'Event validation process',
+            }
+          ]
+        },
+      ]
+    },
+  ],
+  buildSidebar: [
     {
       type: 'category',
       label: 'TAPLE Client',
@@ -232,99 +332,4 @@ module.exports = {
       ]
     },
   ],
-  referenceSidebar: [
-    {
-      type: 'category',
-      label: 'Architecture',
-      className: 'sidebar-section',
-      collapsible: false,
-      collapsed: false,
-      items: [
-        {
-          type: 'doc',
-          label: 'Components',
-          id: 'reference/architecture',
-        },
-        {
-          type: 'category',
-          label: 'Core library',
-          collapsed: true,
-          items: [
-            {
-              type: 'doc',
-              label: 'Description',
-              id: 'reference/taple-core',
-            },
-            {
-              type: 'link',
-              label: 'Documentation',
-              href: 'pathname:///crate-doc/next/taple_core/',
-            },
-          ]
-        },
-        {
-          type: 'doc',
-          label: 'Network',
-          id: 'reference/taple-client-config',
-        }, {
-          type: 'doc',
-          label: 'Database',
-          id: 'reference/taple-client-config',
-        },
-      ]
-    },
-    {
-      type: 'category',
-      label: 'Governance',
-      className: 'sidebar-section',
-      collapsible: false,
-      collapsed: false,
-      items: [
-        {
-          type: 'doc',
-          label: 'Governance configuration',
-          id: 'reference/operational-guides/governance-configuration',
-        },
-        {
-          type: 'doc',
-          label: 'Creating a JSON-Schema',
-          id: 'reference/operational-guides/creating-a-json-schema',
-        },
-      ]
-    },
-    {
-
-      type: 'category',
-      label: 'Advanced',
-      className: 'sidebar-section',
-      collapsible: false,
-      collapsed: false,
-      items: [
-        {
-          type: 'category',
-          collapsible: true,
-          collapsed: false,
-          label: 'Event life cycle',
-          link: { type: 'doc', id: 'discover/event-life-cycle' },
-          items: [
-            {
-              type: 'doc',
-              id: 'discover/event-evaluation-process',
-              label: 'Event evaluation process',
-            },
-            {
-              type: 'doc',
-              id: 'discover/event-approval-process',
-              label: 'Event approval process',
-            },
-            {
-              type: 'doc',
-              id: 'discover/event-validation-process',
-              label: 'Event validation process',
-            }
-          ]
-        },
-      ]
-    },
-  ]
 };
