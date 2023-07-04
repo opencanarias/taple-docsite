@@ -14,8 +14,6 @@ LibP2P also places special emphasis on modularity, in such a way that each and e
 
 LibP2P was chosen for TAPLE because of its innovative approach to the creation of P2P applications through its tools and utilities that greatly facilitate development. It was also influenced by the fact that it is a technology with a background in the Web3 sector, as it was originally part of [IPFS](https://docs.ipfs.tech/concepts/libp2p/) and has been used in [Polkadot and Substrate](https://www.parity.io/blog/why-libp2p) as well as [Ethereum 2.0](https://ethereum.org/es/developers/docs/networking-layer/).
 
-![LibP2P](../img/Libp2p.png)
-
 ## Tokio
 [Tokio](https://tokio.rs/#tk-lib-tokio) is a library for Rust aimed at facilitating the creation of [asynchronous](https://rust-lang.github.io/async-book/01_getting_started/01_chapter.html) and [concurrent](https://doc.rust-lang.org/book/ch16-00-concurrency.html#:~:text=Concurrent%20programming%2C%20where%20different%20parts%20of%20a%20program%20execute%20independently) applications. It provides the necessary elements for the creation of an execution environment for task management, internally interpreted as ["green threads"](https://en.wikipedia.org/wiki/Green_thread) (which Rust does not natively support). As well, as channels for communication between them among. It is also quite easy to use thanks to its syntax focused on "async / await" and has high scalability thanks to the reduced cost of creating and deleting tasks.
 

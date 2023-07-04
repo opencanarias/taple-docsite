@@ -10,7 +10,7 @@ Before we begin, let's prepare the environment:
 1. Revise that you meet the [requirements](./first-steps.md).
 2. Let's clone the **Taple Client** repository where the scripts we will use later are stored:
     ```bash
-    $ git clone https://github.com/opencanarias/taple-client.git ~/taple-client
+    $ git clone -b release-0.2 https://github.com/opencanarias/taple-client.git ~/taple-client
     ```
 3. We move to the folder where the scripts are located:
     ```

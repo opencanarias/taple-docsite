@@ -8,7 +8,7 @@ There are different ways in which the user can acquire these tools. The first an
 
 
 ```bash
-  git clone https://github.com/opencanarias/taple-tools.git
+  git clone -b release-0.1 https://github.com/opencanarias/taple-tools.git
   cd taple-tools
   chmod +x ./scripts/taple-keygen
   chmod +x ./scripts/taple-sign
@@ -19,8 +19,8 @@ There are different ways in which the user can acquire these tools. The first an
 If you prefer to compile the code and work with the resulting binaries:
 
 ```bash
-  git clone https://github.com/opencanarias/taple-core.git
-  git clone https://github.com/opencanarias/taple-tools.git
+  git clone -b release-0.1 https://github.com/opencanarias/taple-core.git
+  git clone -b release-0.1 https://github.com/opencanarias/taple-tools.git
   cd taple-tools
   cargo install --path taple-keygen
   cargo install --path taple-sign

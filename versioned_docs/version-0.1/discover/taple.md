@@ -1,6 +1,6 @@
 # TAPLE​
 
-TAPLE (pronounced T+🍎 ['tapəl]​) stands for *Tracking (Autonomous) of Provenance and Lifecycle Events​*. TAPLE is a permissioned [DLT](./dlt-blockchain.md#what-is-a-dlt) solution for traceability of assets and processes.
+TAPLE (pronounced T+🍎 ['tapəl]​) stands for *Tracking (Autonomous) of Provenance and Lifecycle Events​*. TAPLE is a permissioned [DLT](./introduction.md#what-is-a-dlt) solution for traceability of assets and processes.
 
 ## Objectives
 Using Blockchain to try to provide solutions to traceability problems is complex. The number of participants, the heterogeneity of the use cases, the hardware limitations of the devices (IoT) or the difficulty of managing them are some of the challenges to be faced. 

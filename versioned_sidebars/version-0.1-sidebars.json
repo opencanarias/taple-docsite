@@ -9,13 +9,13 @@
       "items": [
         {
           "type": "doc",
-          "label": "What is TAPLE",
-          "id": "discover/taple"
+          "label": "DLT & Blockchain",
+          "id": "discover/introduction"
         },
         {
           "type": "doc",
-          "label": "DLT & Blockchain",
-          "id": "discover/dlt-blockchain"
+          "label": "What is TAPLE",
+          "id": "discover/taple"
         },
         {
           "type": "doc",

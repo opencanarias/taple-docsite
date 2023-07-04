@@ -1,4 +1,4 @@
-# Overview
+# TAPLE Network
 The following diagram shows the usual elements of a TAPLE network. A brief description of each of them is given below so that we can obtain an overview before going into more detail.
 
 ![Net overview](../img/net-overview.png)

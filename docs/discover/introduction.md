@@ -1,10 +1,8 @@
-# DLT and Blockchain
+# Introduction
 
-## What is a DLT?
+## DLT
 
-DLT stands for *Distributed Ledger Technology*, but, ¿what is really a DLT?. There are many definitions of DLT, but let's try to explain it in a simple way.
-A [ledger](https://en.wikipedia.org/wiki/Ledger) is an accounting concept that basically defines a ledger in which information is always being added, usually in the form of transactions. These transactions are never deleted or modified, however, the result of these transactions can be modified by adding new transactions.
-A DLT is nothing more than a database that acts as such a ledger but also has, to a greater or lesser extent, the following characteristics:
+DLT stands for *Distributed Ledger Technology*, but, ¿what is really a DLT?. There are many definitions of DLT, but let's try to explain it in a simple way. Generally speaking, a [ledger](https://en.wikipedia.org/wiki/Ledger) is an accounting concept that basically defines a document in which information is always being added, usually in the form of transactions. These transactions are never deleted or modified, however, the result of these transactions can be modified by adding new transactions. A DLT is nothing more than a database that acts as such a ledger but also has, to a greater or lesser extent, the following characteristics:
 - It is distributed and decentralised. The information is not located at a single point, but is distributed in a network of nodes in which there is usually no established hierarchy, all nodes being equal, or at least capable of offering the same capabilities to the network. Therefore, any node could talk to any other node.
 - Shared. Usually not all nodes are under the control of the same organisation. This makes it necessary to assume that there could be malicious nodes within the network and, therefore, to establish security mechanisms. Moreover, not all nodes would have to have exactly the same information, as there could be private transactions, or simply different interest groups.
 - Immutable and tamper-resistant. It implements cryptographic security mechanisms that prevent its content from being altered, or at least, if any node tries to modify the information, it can be easily detected and blocked.
@@ -20,8 +18,10 @@ What do some international organizations understand by DLT:
 
 :::
 
-### Types of DLT networks
-DLT networks can be classified according to the type of access to the network itself and its information. Thus, according to the type of access we find: 
+### Types of DLT
+DLT networks can be classified according to the type of access to the network itself and its information. 
+
+Thus, according to the type of access we find: 
 - Public networks. Those in which anyone can join and participate.
 - Private networks. With the same elements as a public network, but one or several organisations are in charge of administering the network and controlling who is allowed to participate.
 
@@ -29,12 +29,9 @@ On the other hand, depending on the access to the information, we find:
 - Permissionless networks. These are networks where anyone can request modifications or queries on the information stored in the block.
 - Permissioned networks. These are networks where modifications and queries on the information stored in the block of the network members are limited and controlled by a series of permissions that the network administrators (people or organisations) must grant.
 
-## What is a Blockchain?
-Blockchain is a subtype of DLT, and therefore we can say that it is fundamentally a distributed, decentralized, shared, and immutable database. 
+## Blockchain
 
-![dlt-types](../img/dlt-types.png)
-
-But blockchain is also characterized by the following:
+Blockchain is a subtype of DLT, and therefore we can say that it is fundamentally a distributed, decentralized, shared, and immutable database. But blockchain is also characterized by the following:
 - It has a data structure in the form of a chain. The information is stored by grouping blocks linked by their cryptographic fingerprints, thus giving rise to a chain system, where a given block stores the reference to its predecessor. This information is encrypted using advanced cryptographic methods, resulting in a block with unique and unambiguous information (the slightest change in any aspect of the block will result in a completely different chain, which will be invalidated by the system).
 - The blocks include multiple transactions. As a measure to increase the capacity of networks, blocks typically group different transactions together. Moreover, these transactions do not necessarily belong to the same participant.  
 - There is usually a single chain shared by all participants in the network. As it is shared by all participants, the degree of trust in the stored data is very high, giving rise to the concept of *single source of truth* . However, this is associated with very high and equal requirements for all nodes, even if they do not participate actively in the network or do so very little. Some blockchains are trying to solve this problem through partitioning techniques, such as the sharding proposed for Ethereum 2.
@@ -74,12 +71,14 @@ According to this trilemma, it is very difficult to satisfy all three concepts s
 
 :::info
 
-Ethereum 2 intends to increase its scalability by introducing numerous changes to its architecture, for example migration to PoS and Sharding, the partitioning of the chain into 64 shards. However, there are concerns in the community about its possible effects on the security and decentralisation of the network. 
+For instance, Ethereum 2 intends to increase its scalability by introducing numerous changes to its architecture, for example:
+- migrating the consensus protocol from PoW to PoS
+- and Sharding, the partitioning of the chain into 64 shards
 
 :::
 
+![dlt-types](../img/dlt-types.png)
+
 Each use case is unique and it is necessary to assess your specific needs to determine whether it is appropriate to use a blockchain technology, which one, and if not, what alternatives are available, e.g. within other DLTs, for instance [TAPLE](taple.md).
-
-
 
 

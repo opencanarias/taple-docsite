@@ -9,23 +9,28 @@ module.exports = {
       items: [
         {
           type: 'doc',
-          label: 'What is TAPLE',
+          label: 'Introduction',
+          id: 'discover/introduction',
+        },
+        {
+          type: 'doc',
+          label: 'Technology',
           id: 'discover/taple',
         },
         {
           type: 'doc',
-          label: 'DLT & Blockchain',
-          id: 'discover/dlt-blockchain',
+          label: 'Network',
+          id: 'discover/network',
+        },
+        {
+          type: 'link',
+          label: 'Whitepaper',
+          href: 'pathname:///whitepaper/taple-whitepaper.pdf',
         },
         {
           type: 'doc',
-          label: 'When to use it',
-          id: 'discover/when-to-use-taple',
-        },
-        {
-          type: 'doc',
-          label: 'Overview',
-          id: 'discover/overview',
+          label: 'Release notes',
+          id: 'discover/release-notes',
         },
         {
           type: 'doc',
@@ -33,10 +38,10 @@ module.exports = {
           id: "discover/under-the-hood"
         },
         {
-          type: 'link',
-          label: 'Whitepaper',
-          href: 'pathname:///whitepaper/taple-whitepaper.pdf',
-        },
+          type: 'doc',
+          label: 'Glossary',
+          id: 'reference/glossary',
+        }
       ],
     },
     {
@@ -78,40 +83,11 @@ module.exports = {
         }
       ],
     },
-    {
-      type: 'category',
-      label: 'Advanced concepts',
-      className: 'sidebar-section',
-      collapsible: false,
-      collapsed: false,
-      items: [
-        {
-          type: 'doc',
-          id: 'discover/event-life-cycle',
-          label: 'Event life cycle',
-        },
-        {
-          type: 'doc',
-          id: 'discover/event-evaluation-process',
-          label: 'Event evaluation process',
-        },
-        {
-          type: 'doc',
-          id: 'discover/event-approval-process',
-          label: 'Event approval process',
-        },
-        {
-          type: 'doc',
-          id: 'discover/event-validation-process',
-          label: 'Event validation process',
-        }
-      ]
-    },
   ],
   tutorialsSidebar: [
     {
       type: 'category',
-      label: 'Using TAPLE-Client',
+      label: 'TAPLE Client',
       className: 'sidebar-section',
       collapsible: false,
       collapsed: false,
@@ -122,6 +98,32 @@ module.exports = {
           id: 'tutorials/first-steps'
         },
         {
+          type: 'doc',
+          label: 'Basic usage',
+          id: 'reference/taple-client-config',
+        },
+        {
+          type: 'doc',
+          label: 'Configuration',
+          id: 'reference/taple-client-config',
+        },
+        {
+          type: 'doc',
+          label: 'Backups',
+          id: 'reference/backups',
+        },
+        {
+          type: "category",
+          label: "REST API",
+          collapsed: true,
+          items: require("./docs/api-rest/sidebar.js"),
+        },
+        {
+          type: 'doc',
+          label: 'Tools',
+          id: 'reference/taple-tools',
+        },
+        {
           type: 'category',
           label: 'Tutorials',
           collapsed: false,
@@ -130,7 +132,7 @@ module.exports = {
             {
               type: 'category',
               collapsible: true,
-              collapsed: false,
+              collapsed: true,
               label: 'Asset traceability',
               link: { type: 'doc', id: 'tutorials/wine-track/use-case-definition' },
               items: [
@@ -210,18 +212,37 @@ module.exports = {
         },
       ],
     },
-  ],
-  referenceSidebar: [
     {
       type: 'category',
-      label: 'Components',
+      label: 'Smart contracts',
       className: 'sidebar-section',
       collapsible: false,
       collapsed: false,
       items: [
         {
           type: 'doc',
-          label: 'Architecture',
+          label: 'SDK',
+          id: 'reference/operational-guides/creating-a-json-schema',
+        },
+        {
+          type: 'doc',
+          label: 'Programming smart contracts',
+          id: 'reference/operational-guides/programming-smart-contracts',
+        },
+      ]
+    },
+  ],
+  referenceSidebar: [
+    {
+      type: 'category',
+      label: 'Architecture',
+      className: 'sidebar-section',
+      collapsible: false,
+      collapsed: false,
+      items: [
+        {
+          type: 'doc',
+          label: 'Components',
           id: 'reference/architecture',
         },
         {
@@ -245,7 +266,7 @@ module.exports = {
           type: 'doc',
           label: 'Network',
           id: 'reference/taple-client-config',
-        },            {
+        }, {
           type: 'doc',
           label: 'Database',
           id: 'reference/taple-client-config',
@@ -254,49 +275,7 @@ module.exports = {
     },
     {
       type: 'category',
-      label: 'Tools',
-      className: 'sidebar-section',
-      collapsible: false,
-      collapsed: false,
-      items: [
-        {
-          type: 'category',
-          label: 'TAPLE Client',
-          collapsed: true,
-          items: [
-            {
-              type: 'doc',
-              label: 'Basic usage',
-              id: 'reference/taple-client-config',
-            },
-            {
-              type: 'doc',
-              label: 'Configuration',
-              id: 'reference/taple-client-config',
-            },
-            {
-              type: 'doc',
-              label: 'Backups',
-              id: 'reference/backups',
-            },
-            {
-              type: "category",
-              label: "REST API",
-              collapsed: true,
-              items: require("./docs/api-rest/sidebar.js"),
-            },
-          ]
-        },
-        {
-          type: 'doc',
-          label: 'TAPLE Tools',
-          id: 'reference/taple-tools',
-        },
-      ],
-    },
-    {
-      type: 'category',
-      label: 'Operational guides',
+      label: 'Governance',
       className: 'sidebar-section',
       collapsible: false,
       collapsed: false,
@@ -310,13 +289,42 @@ module.exports = {
           type: 'doc',
           label: 'Creating a JSON-Schema',
           id: 'reference/operational-guides/creating-a-json-schema',
-        }
+        },
       ]
-    },        
+    },
     {
-      type: 'doc',
-      label: 'Glossary',
-      id: 'reference/glossary',
+
+      type: 'category',
+      label: 'Advanced',
+      className: 'sidebar-section',
+      collapsible: false,
+      collapsed: false,
+      items: [
+        {
+          type: 'category',
+          collapsible: true,
+          collapsed: false,
+          label: 'Event life cycle',
+          link: { type: 'doc', id: 'discover/event-life-cycle' },
+          items: [
+            {
+              type: 'doc',
+              id: 'discover/event-evaluation-process',
+              label: 'Event evaluation process',
+            },
+            {
+              type: 'doc',
+              id: 'discover/event-approval-process',
+              label: 'Event approval process',
+            },
+            {
+              type: 'doc',
+              id: 'discover/event-validation-process',
+              label: 'Event validation process',
+            }
+          ]
+        },
+      ]
     },
   ]
 };
