@@ -47,7 +47,7 @@ const FeatureList: FeatureItem[] = [
         Start using it
         </Translate>
       </>,
-    href: '/docs/tutorials/first-steps',
+    href: '/docs/build/first-steps',
     image: (
       <svg className={styles.featureSvg} version="1.0" xmlns="http://www.w3.org/2000/svg" width="1280.000000pt" height="1112.000000pt" viewBox="0 0 1280.000000 1112.000000" preserveAspectRatio="xMidYMid meet">
         <metadata>

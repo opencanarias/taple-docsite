@@ -96,7 +96,7 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
             from: ['/technology', '/docs/discover/what-is-taple', '/docs/technology/what-is-taple', '/discover']
           },
           {
-            to: '/docs/tutorials/first-steps',
+            to: '/docs/build/first-steps',
             from: ['/build', '/tutorials']
           },
           {
@@ -164,11 +164,11 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
             type: 'doc',
             docId: 'reference/architecture',
             position: 'left',
-            label: 'Learn',
+            label: 'Reference',
           },
           {
             type: 'doc',
-            docId: 'tutorials/first-steps',
+            docId: 'build/first-steps',
             position: 'left',
             label: 'Build',
           },

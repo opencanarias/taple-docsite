@@ -44,7 +44,7 @@ Any subject has a single owner, this being the only participant in the network t
 
 :::info
 
-To learn more about issuers visit the [Event Life Cycle](./event-life-cycle.md#event-request) page. 
+To learn more about issuers visit the [Event Life Cycle](./events.md#event-life-cycle) page. 
 
 :::
 <!--

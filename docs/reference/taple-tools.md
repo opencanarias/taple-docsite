@@ -68,7 +68,7 @@ It should be noted that currently only two algorithms are supported but TAPLE is
 
 ## TAPLE Sign
 
-This is an utility that is intended to facilitate the execution of external invocations. In order to provide context, [an external invocation](../discover/event-life-cycle.md) is the process by which a node proposes a change to a network subject that it does not control, i.e., of which it is not the owner. There are also a number of rules that regulate which network users have the ability to perform these operations. In either case, the invoking node must present, in addition to the changes it wishes to suggest, a valid signature to prove its identity.
+This is an utility that is intended to facilitate the execution of external invocations. In order to provide context, [an external invocation](../discover/events.md#event-life-cycle) is the process by which a node proposes a change to a network subject that it does not control, i.e., of which it is not the owner. There are also a number of rules that regulate which network users have the ability to perform these operations. In either case, the invoking node must present, in addition to the changes it wishes to suggest, a valid signature to prove its identity.
 
 TAPLE Sign allows precisely the latter, generating the necessary signature to accompany the request for changes. Additionally, as the utility is strictly intended for such a scenario, what is actually returned by its execution is the entire data structure (in JSON format) that must be delivered to other nodes in the network for them to consider the request.
 

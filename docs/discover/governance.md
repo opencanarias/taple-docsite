@@ -48,6 +48,6 @@ As we know, the owner of a subject [is the only one who can act on it](./subject
 :::
 
 ## Governance as a subject
-Within the TAPLE network, the governance that governs it is managed as a subject, using the same protocol as the rest of the subjects for its [generation, approval, validation and distribution](../discover/event-life-cycle.md). The subjects modeling governance meet the following conditions: 
+Within the TAPLE network, the governance that governs it is managed as a subject, using the same protocol as the rest of the subjects for its [generation, approval, validation and distribution](../discover/events.md#event-life-cycle). The subjects modeling governance meet the following conditions: 
 - Are created using the governance scheme. This schema does not belong to any member of the network and is defined internally in TAPLE protocol.
 - When a generic subject is created, the associated governance is specified. Conversely, when creating a subject intended to model a governance, no value is specified.

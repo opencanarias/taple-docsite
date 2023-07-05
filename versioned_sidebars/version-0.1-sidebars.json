@@ -109,12 +109,12 @@
         {
           "type": "doc",
           "label": "First steps",
-          "id": "tutorials/first-steps"
+          "id": "build/first-steps"
         },
         {
           "type": "doc",
           "label": "Quickstart",
-          "id": "tutorials/quickstart"
+          "id": "build/quickstart"
         },
         {
           "type": "category",
@@ -129,47 +129,47 @@
               "label": "TAPLE from 0",
               "link": {
                 "type": "doc",
-                "id": "tutorials/tutorial-from-0/introduction"
+                "id": "build/tutorial-from-0/introduction"
               },
               "items": [
                 {
                   "type": "doc",
                   "label": "Running nodes",
-                  "id": "tutorials/tutorial-from-0/running-nodes"
+                  "id": "build/tutorial-from-0/running-nodes"
                 },
                 {
                   "type": "doc",
                   "label": "Defining the governance",
-                  "id": "tutorials/tutorial-from-0/governance-operations"
+                  "id": "build/tutorial-from-0/governance-operations"
                 },
                 {
                   "type": "doc",
                   "label": "Creating subjects",
-                  "id": "tutorials/tutorial-from-0/subject-operations"
+                  "id": "build/tutorial-from-0/subject-operations"
                 },
                 {
                   "type": "doc",
                   "label": "Adding events",
-                  "id": "tutorials/tutorial-from-0/event-operations"
+                  "id": "build/tutorial-from-0/event-operations"
                 },
                 {
                   "type": "doc",
                   "label": "Adding a new node",
-                  "id": "tutorials/tutorial-from-0/updating-governance"
+                  "id": "build/tutorial-from-0/updating-governance"
                 }
               ]
             },
             {
               "type": "doc",
               "label": "Access control",
-              "id": "tutorials/uc-hotel-access-control"
+              "id": "build/uc-hotel-access-control"
             }
           ]
         },
         {
           "type": "doc",
           "label": "Issues and Workarounds",
-          "id": "tutorials/issues-and-workarounds"
+          "id": "build/issues-and-workarounds"
         }
       ]
     }

@@ -33,7 +33,7 @@ Each subject consists of 2 elementos:
 - a small ledger, known as [microledger](./subjects.md#microledger). The microledger is a structure of chained [events](./events.md). Each of these events models any fact that we want to store associated with that subject, such as a modification of its properties or even its creation. 
 - a [subject state](./subjects.md#subject-state), the representation of the information stored by a subject at a given instant, usually the current moment.
 
-There is only one owner for each subject, being the only one with the effective capacity to make changes to the subject. All other participants wishing to make a change in a subject must send the owner an [event request](./event-life-cycle.md#event-request). 
+There is only one owner for each subject, being the only one with the effective capacity to make changes to the subject. All other participants wishing to make a change in a subject must send the owner an [event request](./events.md#event-life-cycle). 
 
 ## Governances
 Governance is the definition of the rules of cooperation of the different network participants within the same use case. It defines the participants of the use case, the types of subjects and their structure, the smart contracts that will be in charge of modifying the states of these subjects, and the rules that define the permissions and roles of the different participants. The same node, and therefore the same identity, can act with different roles in different governance, but also within the same governance.

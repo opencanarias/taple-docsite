@@ -83,8 +83,32 @@ module.exports = {
         }
       ],
     },
+    {
+      type: 'category',
+      label: 'Advanced',
+      className: 'sidebar-section',
+      collapsible: false,
+      collapsed: false,
+      items: [
+        {
+          type: 'doc',
+          id: 'discover/event-evaluation-process',
+          label: 'Evaluation process',
+        },
+        {
+          type: 'doc',
+          id: 'discover/event-approval-process',
+          label: 'Approval process',
+        },
+        {
+          type: 'doc',
+          id: 'discover/event-validation-process',
+          label: 'Validation process',
+        }
+      ]
+    },
   ],
-  learnSidebar: [
+  referenceSidebar: [
     {
       type: 'category',
       label: 'Architecture',
@@ -139,47 +163,27 @@ module.exports = {
       items: [
         {
           type: 'doc',
-          label: 'Governance configuration',
-          id: 'reference/operational-guides/governance-configuration',
+          label: 'Structure',
+          id: 'reference/governance-structure',
         },
         {
           type: 'doc',
-          label: 'Creating a JSON-Schema',
-          id: 'reference/operational-guides/creating-a-json-schema',
+          label: 'Schema and contract',
+          id: 'reference/governance-schema-and-contract',
         },
       ]
     },
     {
-
       type: 'category',
-      label: 'Advanced',
+      label: 'Other resources',
       className: 'sidebar-section',
       collapsible: false,
       collapsed: false,
       items: [
         {
-          type: 'category',
-          collapsible: true,
-          collapsed: false,
-          label: 'Event life cycle',
-          link: { type: 'doc', id: 'discover/event-life-cycle' },
-          items: [
-            {
-              type: 'doc',
-              id: 'discover/event-evaluation-process',
-              label: 'Event evaluation process',
-            },
-            {
-              type: 'doc',
-              id: 'discover/event-approval-process',
-              label: 'Event approval process',
-            },
-            {
-              type: 'doc',
-              id: 'discover/event-validation-process',
-              label: 'Event validation process',
-            }
-          ]
+          type: 'doc',
+          label: 'Creating a JSON-Schema',
+          id: 'reference/creating-a-json-schema',
         },
       ]
     },
@@ -195,7 +199,7 @@ module.exports = {
         {
           type: 'doc',
           label: 'First steps',
-          id: 'tutorials/first-steps'
+          id: 'build/first-steps'
         },
         {
           type: 'doc',
@@ -234,81 +238,81 @@ module.exports = {
               collapsible: true,
               collapsed: true,
               label: 'Asset traceability',
-              link: { type: 'doc', id: 'tutorials/wine-track/use-case-definition' },
+              link: { type: 'doc', id: 'build/wine-track/use-case-definition' },
               items: [
                 {
                   type: 'doc',
                   label: 'Running a node',
-                  id: 'tutorials/wine-track/running-node',
+                  id: 'build/wine-track/running-node',
                 },
                 {
                   type: 'doc',
                   label: 'Creating a governance',
-                  id: 'tutorials/wine-track/creating-governance',
+                  id: 'build/wine-track/creating-governance',
                 },
                 {
                   type: 'doc',
                   label: 'Creating an event',
-                  id: 'tutorials/wine-track/creating-event',
+                  id: 'build/wine-track/creating-event',
                 },
                 {
                   type: 'doc',
                   label: 'Adding a schema',
-                  id: 'tutorials/wine-track/adding-schema',
+                  id: 'build/wine-track/adding-schema',
                 },
                 {
                   type: 'doc',
                   label: 'Adding participants',
-                  id: 'tutorials/wine-track/adding-participants',
+                  id: 'build/wine-track/adding-participants',
                 },
                 {
                   type: 'doc',
                   label: 'Creating a subject',
-                  id: 'tutorials/wine-track/creating-subject',
+                  id: 'build/wine-track/creating-subject',
                 },
                 {
                   type: 'doc',
                   label: 'External invocations',
-                  id: 'tutorials/wine-track/external-invocations',
+                  id: 'build/wine-track/external-invocations',
                 },
                 {
                   type: 'doc',
                   label: 'Approvals',
-                  id: 'tutorials/wine-track/approvals',
+                  id: 'build/wine-track/approvals',
                 },
                 {
                   type: 'doc',
                   label: 'Transfers',
-                  id: 'tutorials/wine-track/transfers',
+                  id: 'build/wine-track/transfers',
                 },
                 {
                   type: 'doc',
                   label: 'Segmentation',
-                  id: 'tutorials/wine-track/segmentation',
+                  id: 'build/wine-track/segmentation',
                 },
                 {
                   type: 'doc',
                   label: 'Changing policies',
-                  id: 'tutorials/wine-track/changing-policies',
+                  id: 'build/wine-track/changing-policies',
                 },
                 {
                   type: 'doc',
                   label: 'End of life',
-                  id: 'tutorials/wine-track/eol',
+                  id: 'build/wine-track/eol',
                 },
               ],
             },
             {
               type: 'doc',
               label: 'Access control',
-              id: 'tutorials/uc-hotel-access-control',
+              id: 'build/uc-hotel-access-control',
             },
           ]
         },
         {
           type: 'doc',
           label: 'Issues and Workarounds',
-          id: 'tutorials/issues-and-workarounds',
+          id: 'build/issues-and-workarounds',
         },
       ],
     },
@@ -322,12 +326,12 @@ module.exports = {
         {
           type: 'doc',
           label: 'SDK',
-          id: 'reference/operational-guides/creating-a-json-schema',
+          id: 'reference/creating-a-json-schema',
         },
         {
           type: 'doc',
           label: 'Programming smart contracts',
-          id: 'reference/operational-guides/programming-smart-contracts',
+          id: 'reference/programming-smart-contracts',
         },
       ]
     },
