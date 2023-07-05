@@ -51,7 +51,7 @@ If everything went correctly, you will get an output similar to the following:
 }
 ```
 
-We will need to accept the request of the event in order for it to be created and modify the state of the subject. As our governance specifies that all the subjects with that schema need to approve the request of events when the invoker is the owner of the subjects we have to accept the request. One thing that it is interesting is that we specified that the approvers are both nodes and the quorum is 0.5, so you can approve the request sending the approval from the node_1, the node that didn't create the event.
+We will need to accept the request of the event in order for it to be created and modify the state of the subject. As our governance specifies that all the subjects with that schema need to approve the request of events when the issuer is the owner of the subjects we have to accept the request. One thing that it is interesting is that we specified that the approvers are both nodes and the quorum is 0.5, so you can approve the request sending the approval from the node_1, the node that didn't create the event.
 
 ```bash
 curl --silent --location --request PUT 'http://localhost:3001/api/approvals/JsMLjcmxqk1kHoENQJsX5iXnNzUCgkgfiUu1djaoTRow' \
