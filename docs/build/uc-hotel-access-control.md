@@ -107,7 +107,7 @@ Finally, it is necessary to define the validation, approval and invocation permi
 Note that these permissions establish, in particular, which users of the TAPLE network have the capacity and/or responsibility to perform the indicated actions.
 
 :::info
-For more information on how to define **policies** in governance, see the [Policies](../reference/operational-guides/governance-configuration.md) page.
+For more information on how to define **policies** in governance, see the [Policies](../reference/governance-structure.md) page.
 :::
 
 The permits to be defined must guarantee that:

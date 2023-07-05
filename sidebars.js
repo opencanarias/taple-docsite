@@ -9,18 +9,18 @@ module.exports = {
       items: [
         {
           type: 'doc',
-          label: 'Introduction',
-          id: 'discover/introduction',
+          label: 'Background',
+          id: 'discover/background',
         },
         {
           type: 'doc',
-          label: 'Fundamentals',
+          label: 'TAPLE',
           id: 'discover/taple',
         },
         {
           type: 'doc',
-          label: 'Overview',
-          id: 'discover/overview',
+          label: 'Use cases',
+          id: 'discover/use-cases',
         },
         {
           type: 'link',
@@ -35,7 +35,7 @@ module.exports = {
         {
           type: 'doc',
           label: 'Glossary',
-          id: 'reference/glossary',
+          id: 'discover/glossary',
         }
       ],
     },
@@ -46,6 +46,11 @@ module.exports = {
       collapsible: false,
       collapsed: false,
       items: [
+        {
+          type: 'doc',
+          label: 'Overview',
+          id: 'discover/overview',
+        },
         {
           type: 'doc',
           label: 'Subjects',
