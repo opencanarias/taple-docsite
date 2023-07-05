@@ -1,6 +1,6 @@
 # TAPLE Tools
 
-A set of tools and utilities aimed at facilitating interaction with TAPLE technology is available to the user. In this section we will go deeper into them and how they can be obtained and used.
+TAPLE Tools are a group of utilities developed to facilitate the use of TAPLE Client, especially during testing and prototyping. In this section we will go deeper into them and how they can be obtained and used.
 
 ## Installation
 

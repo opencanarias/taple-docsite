@@ -6,7 +6,7 @@ The following diagram shows the usual elements of a TAPLE network. A brief descr
 ![Net overview](../img/net-overview.png)
 
 ## TAPLE Node
-Running instance of a TAPLE compliant application and therefore implementing the TAPLE communication protocol, it can be part of a TAPLE network and can exchange information with other TAPLE nodes. A TAPLE node can be an standalone application running on a server, an app on a user's mobile phone, or a service on an IoT device.
+Running instance of a TAPLE compliant application and therefore implementing the TAPLE communication protocol, it can be part of a TAPLE network and can exchange information with other TAPLE nodes. A TAPLE node can be an standalone application running on a server, an app on a user's mobile phone, or a service on an IoT gateway.
 
 ## TAPLE Core
 Reference library that implements most of the TAPLE functionality. An application that wants to be part of a TAPLE network can make use of this library from the API it exposes. Some of its functions are:
