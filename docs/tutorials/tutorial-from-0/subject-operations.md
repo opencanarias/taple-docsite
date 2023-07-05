@@ -6,7 +6,6 @@ To create a subject in the first node, you must execute the following command:
 
 ```bash
     curl --silent --location --request POST 'http://localhost:3000/api/requests' \
---header 'X-API-KEY: 1234' \
 --header 'Content-Type: application/json' \
 --data-raw '{
     "request": {
@@ -99,7 +98,6 @@ To perform this step, we follow the same procedure and recommendations as in thi
 
 ```bash
    curl --silent --location --request POST 'http://localhost:3001/api/requests' \
---header 'X-API-KEY: 1234' \
 --header 'Content-Type: application/json' \
 --data-raw '{
     "request": {

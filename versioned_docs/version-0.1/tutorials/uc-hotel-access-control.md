@@ -354,7 +354,7 @@ We will proceed to raise the four TAPLE nodes required for the system. For this 
       -e TAPLE_NODE_SECRETKEY=eabb6556b95dd3e8c623e2609f05199d3297988e9f2f15034554351f8cccd0bd \
       -e RUST_LOG=info \
       --name="hotel_node" \
-      opencanarias/taple-client:latest
+      opencanarias/taple-client:0.1
   ```
 
     </details>
@@ -371,7 +371,7 @@ We will proceed to raise the four TAPLE nodes required for the system. For this 
       -e RUST_LOG=info \
       -e TAPLE_NETWORK_KNOWNNODES=/ip4/127.0.0.1/tcp/40000/p2p/12D3KooWEWhaP2pYWoQ9qmWvLNas5tia2ytKriNYMHV5k6DrVR77 \
       --name="cleaning_node" \
-      opencanarias/taple-client:latest
+      opencanarias/taple-client:0.1
   ```
 
     </details>
@@ -388,7 +388,7 @@ We will proceed to raise the four TAPLE nodes required for the system. For this 
       -e RUST_LOG=info \
       -e TAPLE_NETWORK_KNOWNNODES=/ip4/127.0.0.1/tcp/40000/p2p/12D3KooWEWhaP2pYWoQ9qmWvLNas5tia2ytKriNYMHV5k6DrVR77 \
       --name="security_node" \
-      opencanarias/taple-client:latest
+      opencanarias/taple-client:0.1
   ```
 
     </details>
@@ -405,7 +405,7 @@ We will proceed to raise the four TAPLE nodes required for the system. For this 
       -e RUST_LOG=info \
       -e TAPLE_NETWORK_KNOWNNODES=/ip4/127.0.0.1/tcp/40000/p2p/12D3KooWEWhaP2pYWoQ9qmWvLNas5tia2ytKriNYMHV5k6DrVR77 \
       --name="lock_node" \
-      opencanarias/taple-client:latest
+      opencanarias/taple-client:0.1
   ```
 
     </details>

@@ -8,7 +8,6 @@ Below you can find an example of how to create a governance and schema by node_0
 
 ```bash
     curl --silent --location --request POST 'http://localhost:3000/api/requests' \
---header 'X-API-KEY;' \
 --header 'Content-Type: application/json' \
 --data-raw '{
     "request": {
@@ -206,7 +205,6 @@ To add a node to the governance we must execute the following command:
 
 ```bash
     curl --silent --location --request POST 'http://localhost:3000/api/requests' \
---header 'X-API-KEY;' \
 --header 'Content-Type: application/json' \
 --data-raw '{
     "request": {
@@ -394,7 +392,6 @@ This hash identifier will be used to perform the approval system in which 50% of
 
 ```bash
     curl --silent --location --request PUT 'http://localhost:3000/api/approvals/JKDhdco-Bg7Ecbip15q1x61CqbXqdIUeQ1TeYBzqdwhI' \
---header 'X-API-KEY;' \
 --header 'Content-Type: application/json' \
 --data-raw '{
     "approvalType": "Accept"

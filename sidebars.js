@@ -2,7 +2,7 @@ module.exports = {
   discoverSidebar: [
     {
       type: 'category',
-      label: 'Overview',
+      label: 'Basics',
       className: 'sidebar-section',
       collapsible: false,
       collapsed: false,
@@ -19,8 +19,8 @@ module.exports = {
         },
         {
           type: 'doc',
-          label: 'Components',
-          id: 'discover/components',
+          label: 'Overview',
+          id: 'discover/overview',
         },
         {
           type: 'link',

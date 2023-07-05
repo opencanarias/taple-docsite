@@ -18,7 +18,7 @@ Where you should see an output similar to the following:
 
 ```bash
     REPOSITORY           TAG       IMAGE ID       CREATED        SIZE
-    opencanarias/taple-client   latest    c89c1118b5aa   20 hours ago   94.4MB
+    opencanarias/taple-client   0.1    c89c1118b5aa   20 hours ago   94.4MB
 ```
 
 :::info
@@ -51,7 +51,7 @@ In order to raise the first node, we must make use of some environment variables
         -p 3000:3000 \
         -p 40000:40000 \
         --name="node_0" \
-        opencanarias/taple-client:latest
+        opencanarias/taple-client:0.1
 ```
 
 To check that the first node has been successfully lifted, run the following command:
@@ -64,7 +64,7 @@ Where you should see an output similar to the following:
 
 ```bash
     CONTAINER ID   IMAGE                       COMMAND   CREATED         STATUS        PORTS                                                                                      NAMES
-    4b968e1fad34   opencanarias/taple:latest   "taple"   4 seconds ago   Up 3 seconds   0.0.0.0:3000->3000/tcp,:::3000->3000/tcp, 0.0.0.0:40000->40000/tcp, :::40000->40000/tcp   node_0
+    4b968e1fad34   opencanarias/taple:0.2   "taple"   4 seconds ago   Up 3 seconds   0.0.0.0:3000->3000/tcp,:::3000->3000/tcp, 0.0.0.0:40000->40000/tcp, :::40000->40000/tcp   node_0
 ```
 
 :::info
@@ -103,7 +103,7 @@ To raise a second node, we must follow the same steps as in previous **[section]
         -p 3001:3001 \
         -p 40001:40001 \
         --name="node_1" \
-        opencanarias/taple-client:latest
+        opencanarias/taple-client:0.1
 ```
 
 As we can see, it has been necessary to change the ports and we have also added a new integer variable called **TAPLE_NETWORK_KNOWNODES** in which we must specify the address of the bootstrap node that we previously raised in **[Multiaddr](../../discover/glossary.md#multiaddr)** (/ip4/172.17.0.2/tcp/40000/p2p/12D3KooWRJvVv1oXdJxCNn6j5hsNSWs5zgDDt3Rq7yneouf1UdYo). This address is the one we have displayed in the previous step. This address can be generated from the information provided by the **taple-keygen** (through the PeerID) and then we compose the address according to our use case or we can see it as output when starting the node, as we have seen in this tutorial.

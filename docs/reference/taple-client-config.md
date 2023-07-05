@@ -15,7 +15,6 @@ Below is an example of these files with all possible parameters:
 ```toml
     httpport = 3000
     httpaddr = "0.0.0.0"
-    # apikey = "foo"
     # swaggerui = true
     # devmode = false
 
@@ -50,7 +49,6 @@ Bear in mind that any configuration through these variables will overwrite the o
 - **TAPLE_HTTPPORT**: Port on which the REST API of the TAPLE node will be executed. Port 3000 is used by default.
 - **TAPLE_HTTPADDR**: Listening address of the REST API of the TAPLE node. By default ***0.0.0.0.0***, which implies listening for requests from all available interfaces.
 - **TAPLE_SWAGGERUI**: Specifies whether swagger-ui is activated.
-- **TAPLE_APIKEY**: Specifies the API KEY for the rest api server.
 - **TAPLE_NETWORK_P2PPORT**: Port for the transmission and reception of TAPLE protocol messages. Default is ***50000***.
 - **TAPLE_NETWORK_ADDR**: Listening address for TAPLE protocol messages in **[Multiaddr](./glossary.md#multiaddr)** format. Default, ***/ip4/0.0.0.0.0/tcp***.
 - **TAPLE_NETWORK_KNOWNODES**: List of bootstrap nodes available in the network. Each item in the list must be a **[Multiaddr](./glossary.md#multiaddr)** address that also specifies the PeerID of the node via the ***/p2p*** parameter. The elements are separated from each other by ***"; "***. By default no bootstrap node is specified.
@@ -80,7 +78,6 @@ The list of input parameters is given below. The same list can be obtained throu
 
     Options:
           --hp <httpport>    Port HTTP for the API REST
-          --apikey <apikey>  API KEY for the api rest server
           --ui               Flag to activate swagger-ui
           --ha <httpaddr>    Listening ADDR for the API REST
       -h, --help             Print help

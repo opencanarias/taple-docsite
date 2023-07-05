@@ -14,7 +14,7 @@ To set up a new node, we will follow the steps of this **[section](./governance-
         -p 3002:3002 \
         -p 40002:40002 \
         --name="node_2" \
-        opencanarias/taple-client:latest
+        opencanarias/taple-client:0.1
 ```
 
 ## Adding the third node to governance

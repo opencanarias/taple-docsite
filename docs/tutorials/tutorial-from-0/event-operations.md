@@ -6,7 +6,6 @@ To create an event in the first node we must execute the following command:
 
 ```bash
 curl --silent --location --request POST 'http://localhost:3000/api/requests' \
---header 'X-API-KEY: 1234' \
 --header 'Content-Type: application/json' \
 --data-raw '{
     "request": {
@@ -56,7 +55,6 @@ We will need to accept the request of the event in order for it to be created an
 
 ```bash
 curl --silent --location --request PUT 'http://localhost:3001/api/approvals/JsMLjcmxqk1kHoENQJsX5iXnNzUCgkgfiUu1djaoTRow' \
---header 'X-API-KEY: 1234' \
 --header 'Content-Type: application/json' \
 --data-raw '{
     "approvalType": "Accept"
