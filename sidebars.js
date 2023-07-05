@@ -19,6 +19,11 @@ module.exports = {
         },
         {
           type: 'doc',
+          label: 'Overview',
+          id: 'discover/overview',
+        },
+        {
+          type: 'doc',
           label: 'Use cases',
           id: 'discover/use-cases',
         },
@@ -46,11 +51,6 @@ module.exports = {
       collapsible: false,
       collapsed: false,
       items: [
-        {
-          type: 'doc',
-          label: 'Overview',
-          id: 'discover/overview',
-        },
         {
           type: 'doc',
           label: 'Subjects',
