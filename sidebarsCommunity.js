@@ -35,12 +35,7 @@ module.exports = {
                     type: 'doc',
                     label: 'Code of conduct',
                     id: 'CODE_OF_CONDUCT',
-                },
-                {
-                    type: 'doc',
-                    label: 'European Funding',
-                    id: 'european-funding',
-                },
+                }
             ]
         }
     ],
