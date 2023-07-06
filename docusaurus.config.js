@@ -93,15 +93,15 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
         redirects: [
           {
             to: '/docs/discover/background',
-            from: ['/technology', '/docs/discover/what-is-taple', '/docs/technology/what-is-taple', '/discover']
+            from: ['/technology', '/docs/technology/what-is-taple', '/docs', '/discover']
           },
           {
             to: '/docs/build/first-steps',
-            from: ['/build', '/tutorials']
+            from: ['/build', '/tutorials', '/docs/develop', '/develop']
           },
           {
             to: '/docs/reference/architecture',
-            from: ['/reference', '/docs/develop']
+            from: ['/reference', '/learn', ]
           },
           {
             to: '/community/DISCLAIMER',
@@ -164,7 +164,7 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
             type: 'doc',
             docId: 'reference/architecture',
             position: 'left',
-            label: 'Reference',
+            label: 'Learn',
           },
           {
             type: 'doc',
