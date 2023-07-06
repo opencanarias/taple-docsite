@@ -1,850 +1,407 @@
-# Governance configuration
-In this page we will describe the governance structure and configuration. If you want to know more about what governance visit the [Governance](../discover/governance.md) page. 
+# Governance schema and contract
 
-## Governance scheme
-The governance in TAPLE is [modeled as a subject](../discover/governance.md#governance-as-a-subject). Governance is a special type of subject where the schema is not specified in the creation request. Instead, an internal TAPLE schema describing governance is implicitly applied. The governance schema has 3 sections: members, schemas and policies.
+Governances have a specific schema and contract defined within the TAPLE code. This is the case because prior configuration is necessary. This schema and contract must be the same for all participants in a network, otherwise failures can occur because a different result is expected, or the schema is valid for one participant but not for another.
 
-:::info Governance Schema
+The governance schema can be seen in the [governance-structure](./governance-structure.md) section.
 
-<details>
- <summary>Click to look at the full governance schema.</summary>
+The governance contract is:
 
-```json
-{
-  "type": "object",
-  "additionalProperties": false,
-  "required": ["members", "schemas", "policies"],
-  "properties": {
-    "members": {
-      "type": "array",
-      "minItems": 1 /* There must be a minimum of one member*/,
-      "items": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string"
-          },
-          "tags": {
-            "type": "object",
-            "patternProperties": {
-              "^.*$": {
-                "anyOf": [
-                  {
-                    "type": "string"
-                  },
-                  {
-                    "type": "null"
-                  }
-                ]
-              }
-            },
-            "additionalProperties": false
-          },
-          "description": {
-            "type": "string"
-          },
-          "key": {
-            "type": "string"
-          }
-        },
-        "required": ["id", "tags", "key"],
-        "additionalProperties": false
-      }
-    },
-    "schemas": {
-      "type": "array",
-      "minItems": 0,
-      "items": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string"
-          },
-          "tags": {
-            "type": "object",
-            "patternProperties": {
-              "^.*$": {
-                "anyOf": [
-                  {
-                    "type": "string"
-                  },
-                  {
-                    "type": "null"
-                  }
-                ]
-              }
-            },
-            "additionalProperties": false
-          },
-          "content": {
-            "$schema": "http://json-schema.org/draft/2020-12/schema",
-            "$id": "http://json-schema.org/draft/2020-12/schema",
-            "$vocabulary": {
-              "http://json-schema.org/draft/2020-12/vocab/core": true,
-              "http://json-schema.org/draft/2020-12/vocab/applicator": true,
-              "http://json-schema.org/draft/2020-12/vocab/unevaluated": true,
-              "http://json-schema.org/draft/2020-12/vocab/validation": true,
-              "http://json-schema.org/draft/2020-12/vocab/meta-data": true,
-              "http://json-schema.org/draft/2020-12/vocab/format-annotation": true,
-              "http://json-schema.org/draft/2020-12/vocab/content": true
-            },
-            "$dynamicAnchor": "meta",
-            "title": "Core and Validation specifications meta-schema",
-            "allOf": [
-              {
-                "$schema": "https://json-schema.org/draft/2020-12/schema",
-                "$id": "https://json-schema.org/draft/2020-12/meta/core",
-                "$vocabulary": {
-                  "https://json-schema.org/draft/2020-12/vocab/core": true
-                },
-                "$dynamicAnchor": "meta",
-                "title": "Core vocabulary meta-schema",
-                "type": ["object", "boolean"],
-                "properties": {
-                  "$id": {
-                    "$ref": "#/$defs/uriReferenceString",
-                    "$comment": "Non-empty fragments not allowed.",
-                    "pattern": "^[^#]*#?$"
-                  },
-                  "$schema": {
-                    "$ref": "#/$defs/uriString"
-                  },
-                  "$ref": {
-                    "$ref": "#/$defs/uriReferenceString"
-                  },
-                  "$anchor": {
-                    "$ref": "#/$defs/anchorString"
-                  },
-                  "$dynamicRef": {
-                    "$ref": "#/$defs/uriReferenceString"
-                  },
-                  "$dynamicAnchor": {
-                    "$ref": "#/$defs/anchorString"
-                  },
-                  "$vocabulary": {
-                    "type": "object",
-                    "propertyNames": {
-                      "$ref": "#/$defs/uriString"
-                    },
-                    "additionalProperties": {
-                      "type": "boolean"
-                    }
-                  },
-                  "$comment": {
-                    "type": "string"
-                  },
-                  "$defs": {
-                    "type": "object",
-                    "additionalProperties": {
-                      "$dynamicRef": "#meta"
-                    }
-                  }
-                },
-                "$defs": {
-                  "anchorString": {
-                    "type": "string",
-                    "pattern": "^[A-Za-z_][-A-Za-z0-9._]*$"
-                  },
-                  "uriString": {
-                    "type": "string",
-                    "format": "uri"
-                  },
-                  "uriReferenceString": {
-                    "type": "string",
-                    "format": "uri-reference"
-                  }
-                }
-              },
-              {
-                "$schema": "https://json-schema.org/draft/2020-12/schema",
-                "$id": "https://json-schema.org/draft/2020-12/meta/applicator",
-                "$vocabulary": {
-                  "https://json-schema.org/draft/2020-12/vocab/applicator": true
-                },
-                "$dynamicAnchor": "meta",
-                "title": "Applicator vocabulary meta-schema",
-                "type": ["object", "boolean"],
-                "properties": {
-                  "prefixItems": {
-                    "$ref": "#/$defs/schemaArray"
-                  },
-                  "items": {
-                    "$dynamicRef": "#meta"
-                  },
-                  "contains": {
-                    "$dynamicRef": "#meta"
-                  },
-                  "additionalProperties": {
-                    "$dynamicRef": "#meta"
-                  },
-                  "properties": {
-                    "type": "object",
-                    "additionalProperties": {
-                      "$dynamicRef": "#meta"
-                    },
-                    "default": {}
-                  },
-                  "patternProperties": {
-                    "type": "object",
-                    "additionalProperties": {
-                      "$dynamicRef": "#meta"
-                    },
-                    "propertyNames": {
-                      "format": "regex"
-                    },
-                    "default": {}
-                  },
-                  "dependentSchemas": {
-                    "type": "object",
-                    "additionalProperties": {
-                      "$dynamicRef": "#meta"
-                    },
-                    "default": {}
-                  },
-                  "propertyNames": {
-                    "$dynamicRef": "#meta"
-                  },
-                  "if": {
-                    "$dynamicRef": "#meta"
-                  },
-                  "then": {
-                    "$dynamicRef": "#meta"
-                  },
-                  "else": {
-                    "$dynamicRef": "#meta"
-                  },
-                  "allOf": {
-                    "$ref": "#/$defs/schemaArray"
-                  },
-                  "anyOf": {
-                    "$ref": "#/$defs/schemaArray"
-                  },
-                  "oneOf": {
-                    "$ref": "#/$defs/schemaArray"
-                  },
-                  "not": {
-                    "$dynamicRef": "#meta"
-                  }
-                },
-                "$defs": {
-                  "schemaArray": {
-                    "type": "array",
-                    "minItems": 1,
-                    "items": {
-                      "$dynamicRef": "#meta"
-                    }
-                  }
-                }
-              },
-              {
-                "$schema": "https://json-schema.org/draft/2020-12/schema",
-                "$id": "https://json-schema.org/draft/2020-12/meta/unevaluated",
-                "$vocabulary": {
-                  "https://json-schema.org/draft/2020-12/vocab/unevaluated": true
-                },
-                "$dynamicAnchor": "meta",
-                "title": "Unevaluated applicator vocabulary meta-schema",
-                "type": ["object", "boolean"],
-                "properties": {
-                  "unevaluatedItems": {
-                    "$dynamicRef": "#meta"
-                  },
-                  "unevaluatedProperties": {
-                    "$dynamicRef": "#meta"
-                  }
-                }
-              },
-              {
-                "$schema": "https://json-schema.org/draft/2020-12/schema",
-                "$id": "https://json-schema.org/draft/2020-12/meta/validation",
-                "$vocabulary": {
-                  "https://json-schema.org/draft/2020-12/vocab/validation": true
-                },
-                "$dynamicAnchor": "meta",
-                "title": "Validation vocabulary meta-schema",
-                "type": ["object", "boolean"],
-                "properties": {
-                  "type": {
-                    "anyOf": [
-                      {
-                        "$ref": "#/$defs/simpleTypes"
-                      },
-                      {
-                        "type": "array",
-                        "items": {
-                          "$ref": "#/$defs/simpleTypes"
-                        },
-                        "minItems": 1,
-                        "uniqueItems": true
-                      }
-                    ]
-                  },
-                  "const": true,
-                  "enum": {
-                    "type": "array",
-                    "items": true
-                  },
-                  "multipleOf": {
-                    "type": "number",
-                    "exclusiveMinimum": 0
-                  },
-                  "maximum": {
-                    "type": "number"
-                  },
-                  "exclusiveMaximum": {
-                    "type": "number"
-                  },
-                  "minimum": {
-                    "type": "number"
-                  },
-                  "exclusiveMinimum": {
-                    "type": "number"
-                  },
-                  "maxLength": {
-                    "$ref": "#/$defs/nonNegativeInteger"
-                  },
-                  "minLength": {
-                    "$ref": "#/$defs/nonNegativeIntegerDefault0"
-                  },
-                  "pattern": {
-                    "type": "string",
-                    "format": "regex"
-                  },
-                  "maxItems": {
-                    "$ref": "#/$defs/nonNegativeInteger"
-                  },
-                  "minItems": {
-                    "$ref": "#/$defs/nonNegativeIntegerDefault0"
-                  },
-                  "uniqueItems": {
-                    "type": "boolean",
-                    "default": false
-                  },
-                  "maxContains": {
-                    "$ref": "#/$defs/nonNegativeInteger"
-                  },
-                  "minContains": {
-                    "$ref": "#/$defs/nonNegativeInteger",
-                    "default": 1
-                  },
-                  "maxProperties": {
-                    "$ref": "#/$defs/nonNegativeInteger"
-                  },
-                  "minProperties": {
-                    "$ref": "#/$defs/nonNegativeIntegerDefault0"
-                  },
-                  "required": {
-                    "$ref": "#/$defs/stringArray"
-                  },
-                  "dependentRequired": {
-                    "type": "object",
-                    "additionalProperties": {
-                      "$ref": "#/$defs/stringArray"
-                    }
-                  }
-                },
-                "$defs": {
-                  "nonNegativeInteger": {
-                    "type": "integer",
-                    "minimum": 0
-                  },
-                  "nonNegativeIntegerDefault0": {
-                    "$ref": "#/$defs/nonNegativeInteger",
-                    "default": 0
-                  },
-                  "simpleTypes": {
-                    "enum": [
-                      "array",
-                      "boolean",
-                      "integer",
-                      "null",
-                      "number",
-                      "object",
-                      "string"
-                    ]
-                  },
-                  "stringArray": {
-                    "type": "array",
-                    "items": {
-                      "type": "string"
-                    },
-                    "uniqueItems": true,
-                    "default": []
-                  }
-                }
-              },
-              {
-                "$schema": "https://json-schema.org/draft/2020-12/schema",
-                "$id": "https://json-schema.org/draft/2020-12/meta/meta-data",
-                "$vocabulary": {
-                  "https://json-schema.org/draft/2020-12/vocab/meta-data": true
-                },
-                "$dynamicAnchor": "meta",
-                "title": "Meta-data vocabulary meta-schema",
-                "type": ["object", "boolean"],
-                "properties": {
-                  "title": {
-                    "type": "string"
-                  },
-                  "description": {
-                    "type": "string"
-                  },
-                  "default": true,
-                  "deprecated": {
-                    "type": "boolean",
-                    "default": false
-                  },
-                  "readOnly": {
-                    "type": "boolean",
-                    "default": false
-                  },
-                  "writeOnly": {
-                    "type": "boolean",
-                    "default": false
-                  },
-                  "examples": {
-                    "type": "array",
-                    "items": true
-                  }
-                }
-              },
-              {
-                "$schema": "https://json-schema.org/draft/2020-12/schema",
-                "$id": "https://json-schema.org/draft/2020-12/meta/format-annotation",
-                "$vocabulary": {
-                  "https://json-schema.org/draft/2020-12/vocab/format-annotation": true
-                },
-                "$dynamicAnchor": "meta",
-                "title": "Format vocabulary meta-schema for annotation results",
-                "type": ["object", "boolean"],
-                "properties": {
-                  "format": {
-                    "type": "string"
-                  }
-                }
-              },
-              {
-                "$schema": "https://json-schema.org/draft/2020-12/schema",
-                "$id": "https://json-schema.org/draft/2020-12/meta/content",
-                "$vocabulary": {
-                  "https://json-schema.org/draft/2020-12/vocab/content": true
-                },
-                "$dynamicAnchor": "meta",
-                "title": "Content vocabulary meta-schema",
-                "type": ["object", "boolean"],
-                "properties": {
-                  "contentEncoding": {
-                    "type": "string"
-                  },
-                  "contentMediaType": {
-                    "type": "string"
-                  },
-                  "contentSchema": {
-                    "$dynamicRef": "#meta"
-                  }
-                }
-              }
-            ],
-            "type": ["object", "boolean"],
-            "$comment": "This meta-schema also defines keywords that have appeared in previous drafts in order to prevent incompatible extensions as they remain in common use.",
-            "properties": {
-              "definitions": {
-                "$comment": "\"definitions\" has been replaced by \"$defs\".",
-                "type": "object",
-                "additionalProperties": {
-                  "$dynamicRef": "#meta"
-                },
-                "deprecated": true,
-                "default": {}
-              },
-              "dependencies": {
-                "$comment": "\"dependencies\" has been split and replaced by \"dependentSchemas\" and \"dependentRequired\" in order to serve their differing semantics.",
-                "type": "object",
-                "additionalProperties": {
-                  "anyOf": [
-                    {
-                      "$dynamicRef": "#meta"
-                    },
-                    {
-                      "$ref": "meta/validation#/$defs/stringArray"
-                    }
-                  ]
-                },
-                "deprecated": true,
-                "default": {}
-              },
-              "$recursiveAnchor": {
-                "$comment": "\"$recursiveAnchor\" has been replaced by \"$dynamicAnchor\".",
-                "$ref": "meta/core#/$defs/anchorString",
-                "deprecated": true
-              },
-              "$recursiveRef": {
-                "$comment": "\"$recursiveRef\" has been replaced by \"$dynamicRef\".",
-                "$ref": "meta/core#/$defs/uriReferenceString",
-                "deprecated": true
-              }
+```rust title="Governance Contract"
+mod sdk;
+use std::collections::HashSet;
+use thiserror::Error;
+use sdk::ValueWrapper;
+use serde::{de::Visitor, ser::SerializeMap, Deserialize, Serialize};
+
+#[derive(Clone)]
+#[allow(non_snake_case)]
+#[allow(non_camel_case_types)]
+pub enum Who {
+    ID { ID: String },
+    NAME { NAME: String },
+    MEMBERS,
+    ALL,
+    NOT_MEMBERS,
+}
+
+impl Serialize for Who {
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        match self {
+            Who::ID { ID } => {
+                let mut map = serializer.serialize_map(Some(1))?;
+                map.serialize_entry("ID", ID)?;
+                map.end()
             }
-          }
-        },
-        "required": ["id", "tags", "content"],
-        "additionalProperties": false
-      }
-    },
-    "policies": {
-      "type": "array",
-      "items": {
-        "type": "object",
-        "additionalProperties": false,
-        "required": ["validation", "id", "approval", "invokation"],
-        "properties": {
-          "id": {
-            "type": "string"
-          },
-          "validation": {
-            "type": "object",
-            "additionalProperties": false,
-            "required": ["quorum", "validators"],
-            "properties": {
-              "quorum": {
-                "type": "number",
-                "minimum": 0,
-                "maximum": 1.0
-              },
-              "validators": {
-                "type": "array",
-                "items": {
-                  "type": "string"
-                }
-              }
+            Who::NAME { NAME } => {
+                let mut map = serializer.serialize_map(Some(1))?;
+                map.serialize_entry("NAME", NAME)?;
+                map.end()
             }
-          },
-          "approval": {
-            "type": "object",
-            "additionalProperties": false,
-            "required": ["quorum", "approvers"],
-            "properties": {
-              "quorum": {
-                "type": "number",
-                "minimum": 0,
-                "maximum": 1.0
-              },
-              "approvers": {
-                "type": "array",
-                "items": {
-                  "type": "string"
-                }
-              }
+            Who::MEMBERS => serializer.serialize_str("MEMBERS"),
+            Who::ALL => serializer.serialize_str("ALL"),
+            Who::NOT_MEMBERS => serializer.serialize_str("NOT_MEMBERS"),
+        }
+    }
+}
+
+impl<'de> Deserialize<'de> for Who {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        struct WhoVisitor;
+        impl<'de> Visitor<'de> for WhoVisitor {
+            type Value = Who;
+            fn expecting(&self, formatter: &mut std::fmt::Formatter) -> std::fmt::Result {
+                formatter.write_str("Who")
             }
-          },
-          "invokation": {
-            "type": "object",
-            "additionalProperties": false,
-            "required": ["owner", "set", "all", "external"],
-            "properties": {
-              "owner": {
-                "type": "object",
-                "properties": {
-                  "allowance": {
-                    "type": "boolean"
-                  },
-                  "approvalRequired": {
-                    "type": "boolean"
-                  }
-                },
-                "additionalProperties": false,
-                "required": ["allowance", "approvalRequired"]
-              },
-              "set": {
-                "type": "object",
-                "properties": {
-                  "allowance": {
-                    "type": "boolean"
-                  },
-                  "approvalRequired": {
-                    "type": "boolean"
-                  },
-                  "invokers": {
-                    "type": "array",
-                    "items": {
-                      "type": "string"
+            fn visit_map<A>(self, mut map: A) -> Result<Self::Value, A::Error>
+            where
+                A: serde::de::MapAccess<'de>,
+            {
+                // Solo deberían tener una entrada
+                let Some(key) = map.next_key::<String>()? else {
+                    return Err(serde::de::Error::missing_field("ID or NAME"))
+                };
+                println!("KEY {}", key);
+                let result = match key.as_str() {
+                    "ID" => {
+                        let id: String = map.next_value()?;
+                        Who::ID { ID: id }
                     }
-                  }
-                },
-                "additionalProperties": false,
-                "required": ["allowance", "approvalRequired", "invokers"]
-              },
-              "all": {
-                "type": "object",
-                "properties": {
-                  "allowance": {
-                    "type": "boolean"
-                  },
-                  "approvalRequired": {
-                    "type": "boolean"
-                  }
-                },
-                "additionalProperties": false,
-                "required": ["allowance", "approvalRequired"]
-              },
-              "external": {
-                "type": "object",
-                "properties": {
-                  "allowance": {
-                    "type": "boolean"
-                  },
-                  "approvalRequired": {
-                    "type": "boolean"
-                  }
-                },
-                "additionalProperties": false,
-                "required": ["allowance", "approvalRequired"]
-              }
+                    "NAME" => {
+                        let name: String = map.next_value()?;
+                        Who::NAME { NAME: name }
+                    }
+                    _ => return Err(serde::de::Error::unknown_field(&key, &["ID", "NAME"])),
+                };
+                let None = map.next_key::<String>()? else {
+                    return Err(serde::de::Error::custom("Input data is not valid. The data contains unkown entries"));
+                };
+                Ok(result)
             }
-          }
+            fn visit_string<E>(self, v: String) -> Result<Self::Value, E>
+            where
+                E: serde::de::Error,
+            {
+                println!("STR");
+                match v.as_str() {
+                    "MEMBERS" => Ok(Who::MEMBERS),
+                    "ALL" => Ok(Who::ALL),
+                    "NOT_MEMBERS" => Ok(Who::NOT_MEMBERS),
+                    other => Err(serde::de::Error::unknown_variant(
+                        other,
+                        &["MEMBERS", "ALL", "NOT_MEMBERS"],
+                    )),
+                }
+            }
+            fn visit_borrowed_str<E>(self, v: &'de str) -> Result<Self::Value, E>
+            where
+                E: serde::de::Error,
+            {
+                println!("BORR STR");
+                match v {
+                    "MEMBERS" => Ok(Who::MEMBERS),
+                    "ALL" => Ok(Who::ALL),
+                    "NOT_MEMBERS" => Ok(Who::NOT_MEMBERS),
+                    other => Err(serde::de::Error::unknown_variant(
+                        other,
+                        &["MEMBERS", "ALL", "NOT_MEMBERS"],
+                    )),
+                }
+            }
         }
-      }
+        deserializer.deserialize_any(WhoVisitor {})
     }
-  }
+}
+
+#[derive(Clone)]
+#[allow(non_snake_case)]
+#[allow(non_camel_case_types)]
+pub enum SchemaEnum {
+    ID { ID: String },
+    NOT_GOVERNANCE,
+    ALL,
+}
+
+impl Serialize for SchemaEnum {
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        match self {
+            SchemaEnum::ID { ID } => {
+                let mut map = serializer.serialize_map(Some(1))?;
+                map.serialize_entry("ID", ID)?;
+                map.end()
+            }
+            SchemaEnum::NOT_GOVERNANCE => serializer.serialize_str("NOT_GOVERNANCE"),
+            SchemaEnum::ALL => serializer.serialize_str("ALL"),
+        }
+    }
+}
+
+impl<'de> Deserialize<'de> for SchemaEnum {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        struct SchemaEnumVisitor;
+        impl<'de> Visitor<'de> for SchemaEnumVisitor {
+            type Value = SchemaEnum;
+            fn expecting(&self, formatter: &mut std::fmt::Formatter) -> std::fmt::Result {
+                formatter.write_str("Schema")
+            }
+            fn visit_map<A>(self, mut map: A) -> Result<Self::Value, A::Error>
+            where
+                A: serde::de::MapAccess<'de>,
+            {
+                // Solo deberían tener una entrada
+                let Some(key) = map.next_key::<String>()? else {
+                    return Err(serde::de::Error::missing_field("ID"))
+                };
+                let result = match key.as_str() {
+                    "ID" => {
+                        let id: String = map.next_value()?;
+                        SchemaEnum::ID { ID: id }
+                    }
+                    _ => return Err(serde::de::Error::unknown_field(&key, &["ID", "NAME"])),
+                };
+                let None = map.next_key::<String>()? else {
+                    return Err(serde::de::Error::custom("Input data is not valid. The data contains unkown entries"));
+                };
+                Ok(result)
+            }
+            fn visit_string<E>(self, v: String) -> Result<Self::Value, E>
+            where
+                E: serde::de::Error,
+            {
+                match v.as_str() {
+                    "ALL" => Ok(Self::Value::ALL),
+                    "NOT_GOVERNANCE" => Ok(Self::Value::NOT_GOVERNANCE),
+                    other => Err(serde::de::Error::unknown_variant(
+                        other,
+                        &["ALL", "NOT_GOVERNANCE"],
+                    )),
+                }
+            }
+            fn visit_borrowed_str<E>(self, v: &'de str) -> Result<Self::Value, E>
+            where
+                E: serde::de::Error,
+            {
+                match v {
+                    "ALL" => Ok(Self::Value::ALL),
+                    "NOT_GOVERNANCE" => Ok(Self::Value::NOT_GOVERNANCE),
+                    other => Err(serde::de::Error::unknown_variant(
+                        other,
+                        &["ALL", "NOT_GOVERNANCE"],
+                    )),
+                }
+            }
+        }
+        deserializer.deserialize_any(SchemaEnumVisitor {})
+    }
+}
+
+#[derive(Serialize, Deserialize, Clone)]
+pub struct Role {
+    who: Who,
+    namespace: String,
+    role: RoleEnum,
+    schema: SchemaEnum,
+}
+
+#[derive(Serialize, Deserialize, Clone)]
+pub enum RoleEnum {
+    VALIDATOR,
+    CREATOR,
+    ISSUER,
+    WITNESS,
+    APPROVER,
+    EVALUATOR,
+}
+
+#[derive(Serialize, Deserialize, Clone)]
+pub struct Member {
+    id: String,
+    name: String,
+}
+
+#[derive(Serialize, Deserialize, Clone)]
+pub struct Contract {
+    raw: String,
+}
+
+#[derive(Serialize, Deserialize, Clone)]
+#[allow(non_snake_case)]
+#[allow(non_camel_case_types)]
+pub enum Quorum {
+    MAJORITY,
+    FIXED(u64), // TODO: Es posible que tenga que ser estructura vacía
+    PORCENTAJE(f64),
+    BFT(f64),
+}
+
+#[derive(Serialize, Deserialize, Clone)]
+pub struct Validation {
+    quorum: Quorum,
+}
+
+#[derive(Serialize, Deserialize, Clone)]
+pub struct Policy {
+    id: String,
+    approve: Validation,
+    evaluate: Validation,
+    validate: Validation,
+}
+
+#[derive(Serialize, Deserialize, Clone)]
+pub struct Schema {
+    id: String,
+    schema: serde_json::Value, // TODO: QUIZÁS STRING
+    // #[serde(rename = "Initial-Value")]
+    initial_value: serde_json::Value,
+    contract: Contract,
+}
+
+#[repr(C)]
+#[derive(Serialize, Deserialize, Clone)]
+pub struct Governance {
+    members: Vec<Member>,
+    roles: Vec<Role>,
+    schemas: Vec<Schema>,
+    policies: Vec<Policy>,
+}
+
+// Definir "Familia de eventos"
+#[derive(Serialize, Deserialize, Debug)]
+pub enum GovernanceEvent {
+    Patch { data: ValueWrapper },
+}
+
+#[no_mangle]
+pub unsafe fn main_function(state_ptr: i32, event_ptr: i32, is_owner: i32) -> u32 {
+    sdk::execute_contract(state_ptr, event_ptr, is_owner, contract_logic)
+}
+
+// Lógica del contrato con los tipos de datos esperados
+// Devuelve el puntero a los datos escritos con el estado modificado
+fn contract_logic(
+    context: &sdk::Context<Governance, GovernanceEvent>,
+    contract_result: &mut sdk::ContractResult<Governance>,
+) {
+    // Sería posible añadir gestión de errores
+    // Podría ser interesante hacer las operaciones directamente como serde_json:Value en lugar de "Custom Data"
+    let state = &mut contract_result.final_state;
+    let _is_owner = &context.is_owner;
+    match &context.event {
+        GovernanceEvent::Patch { data } => {
+            // Se recibe un JSON PATCH
+            // Se aplica directamente al estado
+            let patched_state = sdk::apply_patch(data.0.clone(), &context.initial_state).unwrap();
+            if let Ok(_) = check_governance_state(&patched_state) {
+                *state = patched_state;
+                contract_result.success = true;
+                contract_result.approval_required = true;
+            } else {
+                contract_result.success = false;
+            }
+        }
+    }
+}
+
+#[derive(Error, Debug)]
+enum StateError {
+    #[error("A member's name is duplicated")]
+    DuplicatedMemberName,
+    #[error("A member's ID is duplicated")]
+    DuplicatedMemberID,
+    #[error("A policy identifier is duplicated")]
+    DuplicatedPolicyID,
+    #[error("No governace policy detected")]
+    NoGvernancePolicy,
+    #[error("It is not allowed to specify a different schema for the governnace")]
+    GovernanceShchemaIDDetected,
+    #[error("Schema ID is does not have a policy")]
+    NoCorrelationSchemaPolicy,
+    #[error("There are policies not correlated to any schema")]
+    PoliciesWithoutSchema,
+}
+
+fn check_governance_state(state: &Governance) -> Result<(), StateError> {
+    // Debemos comprobar varios aspectos del estado.
+    // No pueden haber miembros duplicados, ya sean en name o en ID
+    check_members(&state.members)?;
+    // No pueden haber policies duplicadas y la asociada a la propia gobernanza debe estar presente
+    let policies_names = check_policies(&state.policies)?;
+    // No se pueden indicar policies de schema que no existen. Así mismo, no pueden haber
+    // schemas sin policies. La correlación debe ser uno-uno
+    check_schemas(&state.schemas, policies_names)
+}
+
+fn check_members(members: &Vec<Member>) -> Result<(), StateError> {
+    let mut name_set = HashSet::new();
+    let mut id_set = HashSet::new();
+    for member in members {
+        if name_set.contains(&member.name) {
+            return Err(StateError::DuplicatedMemberName);
+        }
+        name_set.insert(&member.name);
+        if id_set.contains(&member.id) {
+            return Err(StateError::DuplicatedMemberID);
+        }
+        id_set.insert(&member.id);
+    }
+    Ok(())
+}
+
+fn check_policies(policies: &Vec<Policy>) -> Result<HashSet<String>, StateError> {
+    // Se comprueban de que no hayan policies duplicadas y de que se incluya la de gobernanza
+    let mut is_governance_present = false;
+    let mut id_set = HashSet::new();
+    for policy in policies {
+        if id_set.contains(&policy.id) {
+            return Err(StateError::DuplicatedPolicyID);
+        }
+        id_set.insert(&policy.id);
+        if &policy.id == "governance" {
+            is_governance_present = true
+        }
+    }
+    if !is_governance_present {
+        return Err(StateError::NoGvernancePolicy);
+    }
+    id_set.remove(&String::from("governance"));
+    Ok(id_set.into_iter().cloned().collect())
+}
+
+fn check_schemas(
+    schemas: &Vec<Schema>,
+    mut policies_names: HashSet<String>,
+) -> Result<(), StateError> {
+    // Comprobamos que no hayan esquemas duplicados
+    // También se tiene que comprobar que los estados iniciales sean válidos según el json_schema
+    // Así mismo no puede haber un schema con id "governance"
+    for schema in schemas {
+        if &schema.id == "governance" {
+            return Err(StateError::GovernanceShchemaIDDetected);
+        }
+        // No pueden haber duplicados y tienen que tener correspondencia con policies_names
+        if !policies_names.remove(&schema.id) {
+            // No tiene relación con policies_names
+            return Err(StateError::NoCorrelationSchemaPolicy);
+        }
+    }
+    if !policies_names.is_empty() {
+        return Err(StateError::PoliciesWithoutSchema);
+    }
+    Ok(())
 }
 ```
 
-</details>
+El contrato tiene una estrecha relación con el esquema, ya que tienen en cuenta su definición para obtener el estado antes de la ejecución del contrato y validarlo al final de dicha ejecución.
 
-:::
-
-:::info Governance example
-
-<details>
-    <summary> Click to look a full governance example. Each section will be discussed separately in the following sections. </summary>
-
-```json
-{
-"members": [
-  {
-    "id": "Company1",
-    "tags": {},
-    "description": "Headquarters in Spain",
-    "key": "ED8MpwKh3OjPEw_hQdqJixrXlKzpVzdvHf2DqrPvdz7Y"
-  },
-  {
-    "id": "Company2",
-    "tags": {},
-    "description": "Headquarters in United Kingdom",
-    "key": "EXjEOmKsvlXvQdEz1Z6uuDO_zJJ8LNDuPi6qPGuAwePU"
-  }
-],
-"schemas": [
-  {
-    "id": "Test",
-    "tags": {},
-    "content": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": ["temperature", "location"],
-      "properties": {
-        "temperatura": {
-          "type": "integer"
-        },
-        "localizacion": {
-          "type": "string"
-        }
-      }
-    }
-  }
-],
-  "policies": [
-    {
-      "id": "Test",
-      "validation": {
-        "quorum": 0.5,
-        "validators": [
-          "ED8MpwKh3OjPEw_hQdqJixrXlKzpVzdvHf2DqrPvdz7Y",
-          "EXjEOmKsvlXvQdEz1Z6uuDO_zJJ8LNDuPi6qPGuAwePU"
-        ]
-      },
-      "approval": {
-        "quorum": 1.0,
-        "approvers": [
-          "ED8MpwKh3OjPEw_hQdqJixrXlKzpVzdvHf2DqrPvdz7Y",
-          "EXjEOmKsvlXvQdEz1Z6uuDO_zJJ8LNDuPi6qPGuAwePU"
-        ]
-      },
-      "invokation": {
-        "owner": {
-          "allowance": true,
-          "approvalRequired": false
-        },
-        "set": {
-          "allowance": true,
-          "approvalRequired": true,
-          "invokers": ["EXjEOmKsvlXvQdEz1Z6uuDO_zJJ8LNDuPi6qPGuAwePU"]
-        },
-        "all": {
-          "allowance": true,
-          "approvalRequired": true
-        },
-        "external": {
-          "allowance": false,
-          "approvalRequired": false
-        }
-      }
-    },
-    {
-      "id": "governance",
-      "validation": {
-        "quorum": 0.5,
-        "validators": [
-          "ED8MpwKh3OjPEw_hQdqJixrXlKzpVzdvHf2DqrPvdz7Y",
-          "EXjEOmKsvlXvQdEz1Z6uuDO_zJJ8LNDuPi6qPGuAwePU"
-        ]
-      },
-      "approval": {
-        "quorum": 0.5,
-        "approvers": [
-          "ED8MpwKh3OjPEw_hQdqJixrXlKzpVzdvHf2DqrPvdz7Y",
-          "EXjEOmKsvlXvQdEz1Z6uuDO_zJJ8LNDuPi6qPGuAwePU"
-        ]
-      },
-      "invokation": {
-        "owner": {
-          "allowance": true,
-          "approvalRequired": true
-        },
-        "set": {
-          "allowance": true,
-          "approvalRequired": false,
-          "invokers": []
-        },
-        "all": {
-          "allowance": false,
-          "approvalRequired": false
-        },
-        "external": {
-          "allowance": false,
-          "approvalRequired": false
-        }
-      }
-    }
-  ]
-}
-```
-
-</details>
-
-:::
-
-### Members
-This property defines the list of members in the network, meaning, users that have the right to participate in the network, and each member has the following properties:
-- **id**. A short, colloquial name by which the node is known in the network. It serves no functionality other than being descriptive. It does not act as a unique identifier within the network.
-- **description**. A longer text that serves to further define the subject. It serves no functionality other than being descriptive.
-- **key**. Corresponds to the controller-id of the node. Acts as a unique [identifier](../discover/identity.md#identifiers) within the network and corresponds to the node's cryptographic public key.
-
-```json title="Members section example"
-{
-  "members": [
-    {
-      "id": "Company1",
-      "tags": {},
-      "description": "Headquarters in Spain",
-      "key": "ED8MpwKh3OjPEw_hQdqJixrXlKzpVzdvHf2DqrPvdz7Y"
-    },
-    {
-      "id": "Company2",
-      "tags": {},
-      "description": "Headquarters in United Kingdom",
-      "key": "EXjEOmKsvlXvQdEz1Z6uuDO_zJJ8LNDuPi6qPGuAwePU"
-    }
-  ]
-}
-```
-
-### Schemas
-Defines the list of schemas that are allowed to be used in the subjects associated with governance. Each scheme includes the following properties:
-- **id**. Schema unique identifier.
-- **content**. Schema description in JSON-Schema format. 
-
-```json title="Schemas section example"
-{
-  "schemas": [
-    {
-      "id": "Test",
-      "tags": {},
-      "content": {
-        "type": "object",
-        "additionalProperties": false,
-        "required": ["temperature", "location"],
-        "properties": {
-          "temperature": {
-            "type": "integer"
-          },
-          "location": {
-            "type": "string"
-          }
-        }
-      }
-    }
-  ]
-}
-```
-
-:::info
-Refer to ["Creating a JSON-Schema"](./creating-a-json-schema.md) page for more information about JSON-Schema.
-:::
-
-### Policies
-This property defines the permissions of the users previously defined in the members section, granting them roles with respect to the schemas they have defined. Policies are defined independently for each scheme defined in governance. 
-- **Validators**. Defines who the validators are for the subjects that are created with that schema. Also, the quorum required to consider an event as validated.
-- **Approvers**. Defines who the approvers are, those who are in charge of voting on whether a request is approved or rejected. Also, the quorum required to consider an event as approved.
-- **Invokation**. Defines in which cases a prior approval must be made before creating the event and its subsequent validation. It is based solely on who the invoker of the request is. It also has the following fields:
-  - **Owner**. Represent the owner of the subject.
-  - **Set**. Defines an array of Ids to represent a subset of members of the governance.
-  - **All**. Represent all other members of the governance.
-  - **External**. Represent Ids that do not belong to the governance.
-
-Once one of the fields matches the invoker (from bottom to top), the **allowance** property of it is used to check that the invoker has the necessary permissions to make the invocation. The **approvalRequired** field is used to define whether that request needs to be approved.
-
-
-```json title="Example of policies for Test schema"
-{
-  "id": "Test",
-  "validation": {
-    "quorum": 0.5,
-    "validators": [
-      "ED8MpwKh3OjPEw_hQdqJixrXlKzpVzdvHf2DqrPvdz7Y",
-      "EXjEOmKsvlXvQdEz1Z6uuDO_zJJ8LNDuPi6qPGuAwePU"
-    ]
-  },
-  "approval": {
-    "quorum": 1.0,
-    "approvers": [
-      "ED8MpwKh3OjPEw_hQdqJixrXlKzpVzdvHf2DqrPvdz7Y",
-      "EXjEOmKsvlXvQdEz1Z6uuDO_zJJ8LNDuPi6qPGuAwePU"
-    ]
-  },
-  "invokation": {
-    "owner": {
-      "allowance": true,
-      "approvalRequired": false
-    },
-    "set": {
-      "allowance": true,
-      "approvalRequired": true,
-      "invokers": ["EXjEOmKsvlXvQdEz1Z6uuDO_zJJ8LNDuPi6qPGuAwePU"]
-    },
-    "all": {
-      "allowance": true,
-      "approvalRequired": true
-    },
-    "external": {
-      "allowance": false,
-      "approvalRequired": false
-    }
-  }
-}
-```
-
-:::caution
-
-It is necessary to specify the permissions of all the schemes that are defined, there is no default assignment. Due to this, it is also necessary to specify the permissions of the governance scheme. 
-
-:::
+Actualmente solo cuenta con una función que se puede llamar desde un evento de tipo **Fact**, el método Patch: **Patch { data: ValueWrapper }**. Dicho método obtiene un json patch que aplica los cambios que incluye directamente sobre las propiedades del sujeto de governance. Al final de su ejecución se llama a la función que comprueba que el estado final obtenido después de aplicar el patch es una gobernanza válida.

@@ -1,8 +1,10 @@
-# Governance configuration
-In this page we will describe the governance structure and configuration. If you want to know more about what governance visit the [Governance](../discover/governance.md) page. 
+# Governance structure
+
+In this page we will describe the governance structure and configuration. If you want to know more about what governance visit the [Governance](../discover/governance.md) page.
 
 ## Governance scheme
-The governance in TAPLE is [modeled as a subject](../discover/governance.md#governance-as-a-subject). Governance is a special type of subject where the schema is not specified in the creation request. Instead, an internal TAPLE schema describing governance is implicitly applied. The governance schema has 3 sections: members, schemas and policies.
+
+The governance in TAPLE is [modeled as a subject](../discover/governance.md#governance-as-a-subject). Governance is a special type of subject where the schema is not specified in the creation request. Instead, an internal TAPLE schema describing governance is implicitly applied. The governance schema has 4 sections: members, schemas, roles and policies.
 
 :::info Governance Schema
 
@@ -11,43 +13,151 @@ The governance in TAPLE is [modeled as a subject](../discover/governance.md#gove
 
 ```json
 {
+  "$defs": {
+    "role": {
+      "type": "string",
+      "enum": ["VALIDATOR", "CREATOR", "ISSUER", "WITNESS", "APPROVER", "EVALUATOR"]
+    },
+    "quorum": {
+      "oneOf": [
+        {
+          "type": "string",
+          "enum": ["MAJORITY"]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "FIXED": {
+              "type": "number",
+              "minimum": 1,
+              "multipleOf": 1
+            }
+          },
+          "required": ["FIXED"],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "PORCENTAJE": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            }
+          },
+          "required": ["PORCENTAJE"],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "BFT": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            }
+          },
+          "required": ["BFT"],
+          "additionalProperties": false
+        }
+      ]
+    }
+  },
   "type": "object",
   "additionalProperties": false,
-  "required": ["members", "schemas", "policies"],
+  "required": [
+    "members",
+    "schemas",
+    "policies",
+    "roles"
+  ],
   "properties": {
     "members": {
       "type": "array",
-      "minItems": 1 /* There must be a minimum of one member*/,
       "items": {
         "type": "object",
         "properties": {
+          "name": {
+            "type": "string"
+          },
           "id": {
-            "type": "string"
-          },
-          "tags": {
-            "type": "object",
-            "patternProperties": {
-              "^.*$": {
-                "anyOf": [
-                  {
-                    "type": "string"
-                  },
-                  {
-                    "type": "null"
-                  }
-                ]
-              }
-            },
-            "additionalProperties": false
-          },
-          "description": {
-            "type": "string"
-          },
-          "key": {
-            "type": "string"
+            "type": "string",
+            "format": "keyidentifier"
           }
         },
-        "required": ["id", "tags", "key"],
+        "required": [
+          "id",
+          "name"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "roles": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "who": {
+            "oneOf": [
+            {
+              "type": "object",
+              "properties": {
+                "ID": {
+                  "type": "string"
+                }
+              },
+              "required": ["ID"],
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "properties": {
+                "NAME": {
+                  "type": "string"
+                }
+              },
+              "required": ["NAME"],
+              "additionalProperties": false
+            },
+            {
+              "const": "MEMBERS"
+            },
+            {
+              "const": "ALL"
+            },
+            {
+              "const": "NOT_MEMBERS"
+            }
+          ]
+        },
+        "namespace": {
+          "type": "string"
+        },
+        "role": {
+          "$ref": "#/$defs/role"
+        },
+        "schema": {
+          "oneOf": [
+            {
+              "type": "object",
+              "properties": {
+                "ID": {
+                  "type": "string"
+                }
+              },
+              "required": ["ID"],
+              "additionalProperties": false
+            },
+            {
+              "const": "ALL"
+            },
+            {
+              "const": "NOT_GOVERNANCE"
+            }
+            ]
+          }
+        },
+        "required": ["who", "role", "schema", "namespace"],
         "additionalProperties": false
       }
     },
@@ -60,23 +170,7 @@ The governance in TAPLE is [modeled as a subject](../discover/governance.md#gove
           "id": {
             "type": "string"
           },
-          "tags": {
-            "type": "object",
-            "patternProperties": {
-              "^.*$": {
-                "anyOf": [
-                  {
-                    "type": "string"
-                  },
-                  {
-                    "type": "null"
-                  }
-                ]
-              }
-            },
-            "additionalProperties": false
-          },
-          "content": {
+          "schema": {
             "$schema": "http://json-schema.org/draft/2020-12/schema",
             "$id": "http://json-schema.org/draft/2020-12/schema",
             "$vocabulary": {
@@ -89,7 +183,7 @@ The governance in TAPLE is [modeled as a subject](../discover/governance.md#gove
               "http://json-schema.org/draft/2020-12/vocab/content": true
             },
             "$dynamicAnchor": "meta",
-            "title": "Core and Validation specifications meta-schema",
+            "title": "Core and validation specifications meta-schema",
             "allOf": [
               {
                 "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -99,7 +193,10 @@ The governance in TAPLE is [modeled as a subject](../discover/governance.md#gove
                 },
                 "$dynamicAnchor": "meta",
                 "title": "Core vocabulary meta-schema",
-                "type": ["object", "boolean"],
+                "type": [
+                  "object",
+                  "boolean"
+                ],
                 "properties": {
                   "$id": {
                     "$ref": "#/$defs/uriReferenceString",
@@ -123,7 +220,7 @@ The governance in TAPLE is [modeled as a subject](../discover/governance.md#gove
                   },
                   "$vocabulary": {
                     "type": "object",
-                    "propertyNames": {
+                    "propertynames": {
                       "$ref": "#/$defs/uriString"
                     },
                     "additionalProperties": {
@@ -163,7 +260,10 @@ The governance in TAPLE is [modeled as a subject](../discover/governance.md#gove
                 },
                 "$dynamicAnchor": "meta",
                 "title": "Applicator vocabulary meta-schema",
-                "type": ["object", "boolean"],
+                "type": [
+                  "object",
+                  "boolean"
+                ],
                 "properties": {
                   "prefixItems": {
                     "$ref": "#/$defs/schemaArray"
@@ -189,19 +289,19 @@ The governance in TAPLE is [modeled as a subject](../discover/governance.md#gove
                     "additionalProperties": {
                       "$dynamicRef": "#meta"
                     },
-                    "propertyNames": {
+                    "propertynames": {
                       "format": "regex"
                     },
                     "default": {}
                   },
-                  "dependentSchemas": {
+                  "dependentschemas": {
                     "type": "object",
                     "additionalProperties": {
                       "$dynamicRef": "#meta"
                     },
                     "default": {}
                   },
-                  "propertyNames": {
+                  "propertynames": {
                     "$dynamicRef": "#meta"
                   },
                   "if": {
@@ -244,7 +344,10 @@ The governance in TAPLE is [modeled as a subject](../discover/governance.md#gove
                 },
                 "$dynamicAnchor": "meta",
                 "title": "Unevaluated applicator vocabulary meta-schema",
-                "type": ["object", "boolean"],
+                "type": [
+                  "object",
+                  "boolean"
+                ],
                 "properties": {
                   "unevaluatedItems": {
                     "$dynamicRef": "#meta"
@@ -261,8 +364,11 @@ The governance in TAPLE is [modeled as a subject](../discover/governance.md#gove
                   "https://json-schema.org/draft/2020-12/vocab/validation": true
                 },
                 "$dynamicAnchor": "meta",
-                "title": "Validation vocabulary meta-schema",
-                "type": ["object", "boolean"],
+                "title": "validation vocabulary meta-schema",
+                "type": [
+                  "object",
+                  "boolean"
+                ],
                 "properties": {
                   "type": {
                     "anyOf": [
@@ -381,7 +487,10 @@ The governance in TAPLE is [modeled as a subject](../discover/governance.md#gove
                 },
                 "$dynamicAnchor": "meta",
                 "title": "Meta-data vocabulary meta-schema",
-                "type": ["object", "boolean"],
+                "type": [
+                  "object",
+                  "boolean"
+                ],
                 "properties": {
                   "title": {
                     "type": "string"
@@ -416,7 +525,10 @@ The governance in TAPLE is [modeled as a subject](../discover/governance.md#gove
                 },
                 "$dynamicAnchor": "meta",
                 "title": "Format vocabulary meta-schema for annotation results",
-                "type": ["object", "boolean"],
+                "type": [
+                  "object",
+                  "boolean"
+                ],
                 "properties": {
                   "format": {
                     "type": "string"
@@ -430,8 +542,11 @@ The governance in TAPLE is [modeled as a subject](../discover/governance.md#gove
                   "https://json-schema.org/draft/2020-12/vocab/content": true
                 },
                 "$dynamicAnchor": "meta",
-                "title": "Content vocabulary meta-schema",
-                "type": ["object", "boolean"],
+                "title": "content vocabulary meta-schema",
+                "type": [
+                  "object",
+                  "boolean"
+                ],
                 "properties": {
                   "contentEncoding": {
                     "type": "string"
@@ -439,13 +554,16 @@ The governance in TAPLE is [modeled as a subject](../discover/governance.md#gove
                   "contentMediaType": {
                     "type": "string"
                   },
-                  "contentSchema": {
+                  "contentschema": {
                     "$dynamicRef": "#meta"
                   }
                 }
               }
             ],
-            "type": ["object", "boolean"],
+            "type": [
+              "object",
+              "boolean"
+            ],
             "$comment": "This meta-schema also defines keywords that have appeared in previous drafts in order to prevent incompatible extensions as they remain in common use.",
             "properties": {
               "definitions": {
@@ -458,7 +576,7 @@ The governance in TAPLE is [modeled as a subject](../discover/governance.md#gove
                 "default": {}
               },
               "dependencies": {
-                "$comment": "\"dependencies\" has been split and replaced by \"dependentSchemas\" and \"dependentRequired\" in order to serve their differing semantics.",
+                "$comment": "\"dependencies\" has been split and replaced by \"dependentschemas\" and \"dependentRequired\" in order to serve their differing semantics.",
                 "type": "object",
                 "additionalProperties": {
                   "anyOf": [
@@ -484,9 +602,25 @@ The governance in TAPLE is [modeled as a subject](../discover/governance.md#gove
                 "deprecated": true
               }
             }
-          }
+          },
+          "initial_value": {},
+          "contract": {
+            "type": "object",
+            "properties": {
+              "raw": {
+                "type": "string"
+              },
+            },
+            "additionalProperties": false,
+            "required": ["raw"]
+          },
         },
-        "required": ["id", "tags", "content"],
+        "required": [
+          "id",
+          "schema",
+          "initial_value",
+          "contract"
+        ],
         "additionalProperties": false
       }
     },
@@ -495,115 +629,46 @@ The governance in TAPLE is [modeled as a subject](../discover/governance.md#gove
       "items": {
         "type": "object",
         "additionalProperties": false,
-        "required": ["validation", "id", "approval", "invokation"],
+        "required": [
+          "id", "approve", "evaluate", "validate"
+        ],
         "properties": {
           "id": {
             "type": "string"
           },
-          "validation": {
+          "approve": {
             "type": "object",
             "additionalProperties": false,
-            "required": ["quorum", "validators"],
+            "required": ["quorum"],
             "properties": {
               "quorum": {
-                "type": "number",
-                "minimum": 0,
-                "maximum": 1.0
-              },
-              "validators": {
-                "type": "array",
-                "items": {
-                  "type": "string"
-                }
+                "$ref": "#/$defs/quorum"
               }
             }
           },
-          "approval": {
+          "evaluate": {
             "type": "object",
             "additionalProperties": false,
-            "required": ["quorum", "approvers"],
+            "required": ["quorum"],
             "properties": {
               "quorum": {
-                "type": "number",
-                "minimum": 0,
-                "maximum": 1.0
-              },
-              "approvers": {
-                "type": "array",
-                "items": {
-                  "type": "string"
-                }
+                "$ref": "#/$defs/quorum"
               }
             }
           },
-          "invokation": {
+          "validate": {
             "type": "object",
             "additionalProperties": false,
-            "required": ["owner", "set", "all", "external"],
+            "required": ["quorum"],
             "properties": {
-              "owner": {
-                "type": "object",
-                "properties": {
-                  "allowance": {
-                    "type": "boolean"
-                  },
-                  "approvalRequired": {
-                    "type": "boolean"
-                  }
-                },
-                "additionalProperties": false,
-                "required": ["allowance", "approvalRequired"]
-              },
-              "set": {
-                "type": "object",
-                "properties": {
-                  "allowance": {
-                    "type": "boolean"
-                  },
-                  "approvalRequired": {
-                    "type": "boolean"
-                  },
-                  "invokers": {
-                    "type": "array",
-                    "items": {
-                      "type": "string"
-                    }
-                  }
-                },
-                "additionalProperties": false,
-                "required": ["allowance", "approvalRequired", "invokers"]
-              },
-              "all": {
-                "type": "object",
-                "properties": {
-                  "allowance": {
-                    "type": "boolean"
-                  },
-                  "approvalRequired": {
-                    "type": "boolean"
-                  }
-                },
-                "additionalProperties": false,
-                "required": ["allowance", "approvalRequired"]
-              },
-              "external": {
-                "type": "object",
-                "properties": {
-                  "allowance": {
-                    "type": "boolean"
-                  },
-                  "approvalRequired": {
-                    "type": "boolean"
-                  }
-                },
-                "additionalProperties": false,
-                "required": ["allowance", "approvalRequired"]
+              "quorum": {
+                "$ref": "#/$defs/quorum"
               }
             }
           }
         }
       }
-    }
+    }        
   }
 }
 ```
@@ -621,23 +686,18 @@ The governance in TAPLE is [modeled as a subject](../discover/governance.md#gove
 {
 "members": [
   {
-    "id": "Company1",
-    "tags": {},
-    "description": "Headquarters in Spain",
-    "key": "ED8MpwKh3OjPEw_hQdqJixrXlKzpVzdvHf2DqrPvdz7Y"
+    "name": "Company1",
+    "id": "ED8MpwKh3OjPEw_hQdqJixrXlKzpVzdvHf2DqrPvdz7Y"
   },
   {
-    "id": "Company2",
-    "tags": {},
-    "description": "Headquarters in United Kingdom",
-    "key": "EXjEOmKsvlXvQdEz1Z6uuDO_zJJ8LNDuPi6qPGuAwePU"
+    "name": "Company2",
+    "id": "EXjEOmKsvlXvQdEz1Z6uuDO_zJJ8LNDuPi6qPGuAwePU"
   }
 ],
 "schemas": [
   {
     "id": "Test",
-    "tags": {},
-    "content": {
+    "schema": {
       "type": "object",
       "additionalProperties": false,
       "required": ["temperature", "location"],
@@ -649,81 +709,80 @@ The governance in TAPLE is [modeled as a subject](../discover/governance.md#gove
           "type": "string"
         }
       }
+    },
+    "initial_value": {
+      "temperatura": 0,
+      "localizacion": ""
+    },
+    "contract": {
+      "raw": "dXNlIHNlcmRlOjp7U2VyaWFsaXplLCBEZXNlcmlhbGl6ZX07Cgptb2Qgc2RrOwoKI1tkZXJpdmUoU2VyaWFsaXplLCBEZXNlcmlhbGl6ZSwgQ2xvbmUpXQpzdHJ1Y3QgU3RhdGUgewogIHB1YiBvbmU6IHUzMiwKICBwdWIgdHdvOiB1MzIsCiAgcHViIHRocmVlOiB1MzIKfQoKI1tkZXJpdmUoU2VyaWFsaXplLCBEZXNlcmlhbGl6ZSldCmVudW0gU3RhdGVFdmVudCB7CiAgTW9kT25lIHsgZGF0YTogdTMyIH0sCiAgTW9kVHdvIHsgZGF0YTogdTMyIH0sCiAgTW9kVGhyZWUgeyBkYXRhOiB1MzIgfSwKICBNb2RBbGwgeyBvbmU6IHUzMiwgdHdvOiB1MzIsIHRocmVlOiB1MzIgfQp9CgojW25vX21hbmdsZV0KcHViIHVuc2FmZSBmbiBtYWluX2Z1bmN0aW9uKHN0YXRlX3B0cjogaTMyLCBldmVudF9wdHI6IGkzMiwgaXNfb3duZXI6IGkzMikgLT4gdTMyIHsKICAgIHNkazo6ZXhlY3V0ZV9jb250cmFjdChzdGF0ZV9wdHIsIGV2ZW50X3B0ciwgaXNfb3duZXIsIGNvbnRyYWN0X2xvZ2ljKQp9CgpmbiBjb250cmFjdF9sb2dpYygKICBjb250ZXh0OiAmc2RrOjpDb250ZXh0PFN0YXRlLCBTdGF0ZUV2ZW50PiwKICBjb250cmFjdF9yZXN1bHQ6ICZtdXQgc2RrOjpDb250cmFjdFJlc3VsdDxTdGF0ZT4sCikgewogIGxldCBzdGF0ZSA9ICZtdXQgY29udHJhY3RfcmVzdWx0LmZpbmFsX3N0YXRlOwogIG1hdGNoIGNvbnRleHQuZXZlbnQgewogICAgICBTdGF0ZUV2ZW50OjpNb2RPbmUgeyBkYXRhIH0gPT4gewogICAgICAgIHN0YXRlLm9uZSA9IGRhdGE7CiAgICAgIH0sCiAgICAgIFN0YXRlRXZlbnQ6Ok1vZFR3byB7IGRhdGEgfSA9PiB7CiAgICAgICAgc3RhdGUudHdvID0gZGF0YTsKICAgICAgfSwKICAgICAgU3RhdGVFdmVudDo6TW9kVGhyZWUgeyBkYXRhIH0gPT4gewogICAgICAgIHN0YXRlLnRocmVlID0gZGF0YTsKICAgICAgfSwKICAgICAgU3RhdGVFdmVudDo6TW9kQWxsIHsgb25lLCB0d28sIHRocmVlIH0gPT4gewogICAgICAgIHN0YXRlLm9uZSA9IG9uZTsKICAgICAgICBzdGF0ZS50d28gPSB0d287CiAgICAgICAgc3RhdGUudGhyZWUgPSB0aHJlZTsKICAgICAgfQogIH0KICBjb250cmFjdF9yZXN1bHQuc3VjY2VzcyA9IHRydWU7Cn0="
     }
   }
 ],
   "policies": [
     {
       "id": "Test",
-      "validation": {
-        "quorum": 0.5,
-        "validators": [
-          "ED8MpwKh3OjPEw_hQdqJixrXlKzpVzdvHf2DqrPvdz7Y",
-          "EXjEOmKsvlXvQdEz1Z6uuDO_zJJ8LNDuPi6qPGuAwePU"
-        ]
+      "validate": {
+        "quorum": {
+          "PROCENTAJE": 0.5
+        }
       },
-      "approval": {
-        "quorum": 1.0,
-        "approvers": [
-          "ED8MpwKh3OjPEw_hQdqJixrXlKzpVzdvHf2DqrPvdz7Y",
-          "EXjEOmKsvlXvQdEz1Z6uuDO_zJJ8LNDuPi6qPGuAwePU"
-        ]
+      "evaluate": {
+        "quorum": "MAJORITY"
       },
-      "invokation": {
-        "owner": {
-          "allowance": true,
-          "approvalRequired": false
-        },
-        "set": {
-          "allowance": true,
-          "approvalRequired": true,
-          "invokers": ["EXjEOmKsvlXvQdEz1Z6uuDO_zJJ8LNDuPi6qPGuAwePU"]
-        },
-        "all": {
-          "allowance": true,
-          "approvalRequired": true
-        },
-        "external": {
-          "allowance": false,
-          "approvalRequired": false
+      "approve": {
+        "quorum": {
+          "FIXED": 1
         }
       }
     },
     {
       "id": "governance",
-      "validation": {
-        "quorum": 0.5,
-        "validators": [
-          "ED8MpwKh3OjPEw_hQdqJixrXlKzpVzdvHf2DqrPvdz7Y",
-          "EXjEOmKsvlXvQdEz1Z6uuDO_zJJ8LNDuPi6qPGuAwePU"
-        ]
+      "validate": {
+        "quorum": {
+          "PROCENTAJE": 0.5
+        }
       },
-      "approval": {
-        "quorum": 0.5,
-        "approvers": [
-          "ED8MpwKh3OjPEw_hQdqJixrXlKzpVzdvHf2DqrPvdz7Y",
-          "EXjEOmKsvlXvQdEz1Z6uuDO_zJJ8LNDuPi6qPGuAwePU"
-        ]
+      "evaluate": {
+        "quorum": "MAJORITY"
       },
-      "invokation": {
-        "owner": {
-          "allowance": true,
-          "approvalRequired": true
-        },
-        "set": {
-          "allowance": true,
-          "approvalRequired": false,
-          "invokers": []
-        },
-        "all": {
-          "allowance": false,
-          "approvalRequired": false
-        },
-        "external": {
-          "allowance": false,
-          "approvalRequired": false
+      "approve": {
+        "quorum": {
+          "FIXED": 1
         }
       }
+    }
+  ],
+  "roles": [
+    {
+      "who": "MEMBERS",
+      "namespace": "",
+      "role": "CREATOR",
+      "schema": {
+        "ID": "Test"
+      }
+    },
+    {
+      "who": "MEMBERS",
+      "namespace": "",
+      "role": "WITNESS",
+      "schema": {
+        "ID": "Test"
+      }
+    },
+    {
+      "who": "MEMBERS",
+      "namespace": "",
+      "role": "EVALUATOR",
+      "schema": "ALL"
+    },
+    {
+      "who": {
+        "NAME": "Company1"
+      },
+      "namespace": "",
+      "role": "APPROVER",
+      "schema": "ALL"
     }
   ]
 }
@@ -734,53 +793,60 @@ The governance in TAPLE is [modeled as a subject](../discover/governance.md#gove
 :::
 
 ### Members
+
 This property defines the list of members in the network, meaning, users that have the right to participate in the network, and each member has the following properties:
-- **id**. A short, colloquial name by which the node is known in the network. It serves no functionality other than being descriptive. It does not act as a unique identifier within the network.
-- **description**. A longer text that serves to further define the subject. It serves no functionality other than being descriptive.
-- **key**. Corresponds to the controller-id of the node. Acts as a unique [identifier](../discover/identity.md#identifiers) within the network and corresponds to the node's cryptographic public key.
+
+- **name**. A short, colloquial name by which the node is known in the network. It serves no functionality other than being descriptive. It does not act as a unique identifier within the network.
+- **id**. Corresponds to the controller-id of the node. Acts as a unique [identifier](../discover/identity.md#identifiers) within the network and corresponds to the node's cryptographic public key.
 
 ```json title="Members section example"
 {
   "members": [
     {
-      "id": "Company1",
-      "tags": {},
-      "description": "Headquarters in Spain",
-      "key": "ED8MpwKh3OjPEw_hQdqJixrXlKzpVzdvHf2DqrPvdz7Y"
+      "name": "Company1",
+      "id": "ED8MpwKh3OjPEw_hQdqJixrXlKzpVzdvHf2DqrPvdz7Y"
     },
     {
-      "id": "Company2",
-      "tags": {},
-      "description": "Headquarters in United Kingdom",
-      "key": "EXjEOmKsvlXvQdEz1Z6uuDO_zJJ8LNDuPi6qPGuAwePU"
+      "name": "Company2",
+      "id": "EXjEOmKsvlXvQdEz1Z6uuDO_zJJ8LNDuPi6qPGuAwePU"
     }
   ]
 }
 ```
 
 ### Schemas
+
 Defines the list of schemas that are allowed to be used in the subjects associated with governance. Each scheme includes the following properties:
+
 - **id**. Schema unique identifier.
-- **content**. Schema description in JSON-Schema format. 
+- **schema**. Schema description in JSON-Schema format.
+- **initial_value**. Value that takes a newly created subject for this schema, because you can't specify the properties in a Creation Event.
+- **contract**. The compiled contract in Raw String base 64.
 
 ```json title="Schemas section example"
 {
   "schemas": [
     {
       "id": "Test",
-      "tags": {},
-      "content": {
+      "schema": {
         "type": "object",
         "additionalProperties": false,
         "required": ["temperature", "location"],
         "properties": {
-          "temperature": {
+          "temperatura": {
             "type": "integer"
           },
-          "location": {
+          "localizacion": {
             "type": "string"
           }
         }
+      },
+      "initial_value": {
+        "temperatura": 0,
+        "localizacion": ""
+      },
+      "contract": {
+        "raw": "dXNlIHNlcmRlOjp7U2VyaWFsaXplLCBEZXNlcmlhbGl6ZX07Cgptb2Qgc2RrOwoKI1tkZXJpdmUoU2VyaWFsaXplLCBEZXNlcmlhbGl6ZSwgQ2xvbmUpXQpzdHJ1Y3QgU3RhdGUgewogIHB1YiBvbmU6IHUzMiwKICBwdWIgdHdvOiB1MzIsCiAgcHViIHRocmVlOiB1MzIKfQoKI1tkZXJpdmUoU2VyaWFsaXplLCBEZXNlcmlhbGl6ZSldCmVudW0gU3RhdGVFdmVudCB7CiAgTW9kT25lIHsgZGF0YTogdTMyIH0sCiAgTW9kVHdvIHsgZGF0YTogdTMyIH0sCiAgTW9kVGhyZWUgeyBkYXRhOiB1MzIgfSwKICBNb2RBbGwgeyBvbmU6IHUzMiwgdHdvOiB1MzIsIHRocmVlOiB1MzIgfQp9CgojW25vX21hbmdsZV0KcHViIHVuc2FmZSBmbiBtYWluX2Z1bmN0aW9uKHN0YXRlX3B0cjogaTMyLCBldmVudF9wdHI6IGkzMiwgaXNfb3duZXI6IGkzMikgLT4gdTMyIHsKICAgIHNkazo6ZXhlY3V0ZV9jb250cmFjdChzdGF0ZV9wdHIsIGV2ZW50X3B0ciwgaXNfb3duZXIsIGNvbnRyYWN0X2xvZ2ljKQp9CgpmbiBjb250cmFjdF9sb2dpYygKICBjb250ZXh0OiAmc2RrOjpDb250ZXh0PFN0YXRlLCBTdGF0ZUV2ZW50PiwKICBjb250cmFjdF9yZXN1bHQ6ICZtdXQgc2RrOjpDb250cmFjdFJlc3VsdDxTdGF0ZT4sCikgewogIGxldCBzdGF0ZSA9ICZtdXQgY29udHJhY3RfcmVzdWx0LmZpbmFsX3N0YXRlOwogIG1hdGNoIGNvbnRleHQuZXZlbnQgewogICAgICBTdGF0ZUV2ZW50OjpNb2RPbmUgeyBkYXRhIH0gPT4gewogICAgICAgIHN0YXRlLm9uZSA9IGRhdGE7CiAgICAgIH0sCiAgICAgIFN0YXRlRXZlbnQ6Ok1vZFR3byB7IGRhdGEgfSA9PiB7CiAgICAgICAgc3RhdGUudHdvID0gZGF0YTsKICAgICAgfSwKICAgICAgU3RhdGVFdmVudDo6TW9kVGhyZWUgeyBkYXRhIH0gPT4gewogICAgICAgIHN0YXRlLnRocmVlID0gZGF0YTsKICAgICAgfSwKICAgICAgU3RhdGVFdmVudDo6TW9kQWxsIHsgb25lLCB0d28sIHRocmVlIH0gPT4gewogICAgICAgIHN0YXRlLm9uZSA9IG9uZTsKICAgICAgICBzdGF0ZS50d28gPSB0d287CiAgICAgICAgc3RhdGUudGhyZWUgPSB0aHJlZTsKICAgICAgfQogIH0KICBjb250cmFjdF9yZXN1bHQuc3VjY2VzcyA9IHRydWU7Cn0="
       }
     }
   ]
@@ -791,60 +857,103 @@ Defines the list of schemas that are allowed to be used in the subjects associat
 Refer to ["Creating a JSON-Schema"](./creating-a-json-schema.md) page for more information about JSON-Schema.
 :::
 
+### Roles
+
+In this section, we define who are in charge of giving their consent for the event to progress through the different phases of its life cycle (evaluation, approval, and validation), and on the other hand, it also serves to indicate who can perform certain actions (creation of subjects and external invocation).
+
+In the part of looking for signatories, if no roles are defined for a specific subject, either because they do not match with their schema, namespace... the person in charge of signing will be the owner of the governance.
+
+- **who**. Indicates who the Role affects, it can be a specific id (public key), a member of the governance identified by their name, all members, both members and outsiders, or only outsiders.
+- **namespace**. It makes the role in question only valid if it matches the namespace of the subject for which the list of signatories or permissions is being obtained.
+-**role**. Indicates what phase it affects: ["VALIDATOR", "CREATOR", "ISSUER", "WITNESS", "APPROVER", "EVALUATOR"].
+-**schema**. Indicates which schemas are affected by the Role. They can be specified by their id, all or those that are not governance.
+
+```json title="Roles section example"
+{
+  "roles": [
+    {
+      "who": "MEMBERS",
+      "namespace": "",
+      "role": "CREATOR",
+      "schema": {
+        "ID": "Test"
+      }
+    },
+    {
+      "who": "MEMBERS",
+      "namespace": "",
+      "role": "WITNESS",
+      "schema": {
+        "ID": "Test"
+      }
+    },
+    {
+      "who": "MEMBERS",
+      "namespace": "",
+      "role": "EVALUATOR",
+      "schema": "ALL"
+    },
+    {
+      "who": {
+        "NAME": "Company1"
+      },
+      "namespace": "",
+      "role": "APPROVER",
+      "schema": "ALL"
+    }
+  ]
+}
+```
+
 ### Policies
-This property defines the permissions of the users previously defined in the members section, granting them roles with respect to the schemas they have defined. Policies are defined independently for each scheme defined in governance. 
-- **Validators**. Defines who the validators are for the subjects that are created with that schema. Also, the quorum required to consider an event as validated.
-- **Approvers**. Defines who the approvers are, those who are in charge of voting on whether a request is approved or rejected. Also, the quorum required to consider an event as approved.
-- **Invokation**. Defines in which cases a prior approval must be made before creating the event and its subsequent validation. It is based solely on who the invoker of the request is. It also has the following fields:
-  - **Owner**. Represent the owner of the subject.
-  - **Set**. Defines an array of Ids to represent a subset of members of the governance.
-  - **All**. Represent all other members of the governance.
-  - **External**. Represent Ids that do not belong to the governance.
 
-Once one of the fields matches the invoker (from bottom to top), the **allowance** property of it is used to check that the invoker has the necessary permissions to make the invocation. The **approvalRequired** field is used to define whether that request needs to be approved.
+This property defines the permissions of the users previously defined in the members section, granting them roles with respect to the schemas they have defined. Policies are defined independently for each scheme defined in governance.
 
+- **approve**. Defines who the approvators are for the subjects that are created with that schema. Also, the quorum required to consider an event as approved.
+- **evaluate**. Defines who the evaluators are for the subjects that are created with that schema. Also, the quorum required to consider an event as evaluated.
+- **validate**. Defines who the validators are for the subjects that are created with that schema. Also, the quorum required to consider an event as validated.
 
 ```json title="Example of policies for Test schema"
 {
-  "id": "Test",
-  "validation": {
-    "quorum": 0.5,
-    "validators": [
-      "ED8MpwKh3OjPEw_hQdqJixrXlKzpVzdvHf2DqrPvdz7Y",
-      "EXjEOmKsvlXvQdEz1Z6uuDO_zJJ8LNDuPi6qPGuAwePU"
-    ]
-  },
-  "approval": {
-    "quorum": 1.0,
-    "approvers": [
-      "ED8MpwKh3OjPEw_hQdqJixrXlKzpVzdvHf2DqrPvdz7Y",
-      "EXjEOmKsvlXvQdEz1Z6uuDO_zJJ8LNDuPi6qPGuAwePU"
-    ]
-  },
-  "invokation": {
-    "owner": {
-      "allowance": true,
-      "approvalRequired": false
+  "policies": [
+    {
+      "id": "Test",
+      "validate": {
+        "quorum": {
+          "PROCENTAJE": 0.5
+        }
+      },
+      "evaluate": {
+        "quorum": "MAJORITY"
+      },
+      "approve": {
+        "quorum": {
+          "FIXED": 1
+        }
+      }
     },
-    "set": {
-      "allowance": true,
-      "approvalRequired": true,
-      "invokers": ["EXjEOmKsvlXvQdEz1Z6uuDO_zJJ8LNDuPi6qPGuAwePU"]
-    },
-    "all": {
-      "allowance": true,
-      "approvalRequired": true
-    },
-    "external": {
-      "allowance": false,
-      "approvalRequired": false
+    {
+      "id": "governance",
+      "validate": {
+        "quorum": {
+          "PROCENTAJE": 0.5
+        }
+      },
+      "evaluate": {
+        "quorum": "MAJORITY"
+      },
+      "approve": {
+        "quorum": {
+          "FIXED": 1
+        }
+      }
     }
-  }
+  ]
 }
 ```
 
 :::caution
 
-It is necessary to specify the permissions of all the schemes that are defined, there is no default assignment. Due to this, it is also necessary to specify the permissions of the governance scheme. 
+It is necessary to specify the permissions of all the schemes that are defined, there is no default assignment. Due to this, it is also necessary to specify the permissions of the governance scheme.
 
 :::
