@@ -255,94 +255,6 @@ Up until this point we've been dealing with a very flat schema -- only one level
 }
 ```
 
-## References outside the schema
-
-So far our JSON schema has been wholly self contained. It is very common to share JSON schema across many data structures for reuse, readability and maintainability among other reasons.
-
-For this example we introduce a new JSON Schema resource and for both properties therein:
-* We use the `minimum` validation keyword noted earlier.
-* We add the [`maximum`](https://json-schema.org/draft/2020-12/json-schema-validation.html#section-6.2.2) validation keyword.
-* Combined, these give us a range to use in validation.
-
-```json
-{
-  "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://example.com/geographical-location.schema.json",
-  "title": "Longitude and Latitude",
-  "description": "A geographical coordinate on a planet (most commonly Earth).",
-  "required": [ "latitude", "longitude" ],
-  "type": "object",
-  "properties": {
-    "latitude": {
-      "type": "number",
-      "minimum": -90,
-      "maximum": 90
-    },
-    "longitude": {
-      "type": "number",
-      "minimum": -180,
-      "maximum": 180
-    }
-  }
-}
-```
-
-Next we add a reference to this new schema so it can be incorporated.
-
-```json
-{
-  "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://example.com/car.schema.json",
-  "title": "Car",
-  "description": "A registered car",
-  "type": "object",
-  "properties": {
-    "chassisNumber": {
-      "description": "Manufacturer's serial number",
-      "type": "integer"
-    },
-    "licensePlate": {
-      "description": "Identification of country of registration",
-      "type": "string"
-    },
-    "mileage": {
-      "description": "Number of kilometers driven",
-      "type": "number",
-      "minimum": 0
-    },
-    "tags": {
-      "description": "Tags for the car",
-      "type": "array",
-      "items": {
-        "type": "string"
-      },
-      "minItems": 1,
-      "uniqueItems": true
-    },
-    "dimensions": {
-      "type": "object",
-      "properties": {
-        "length": {
-          "type": "number"
-        },
-        "width": {
-          "type": "number"
-        },
-        "height": {
-          "type": "number"
-        }
-      },
-      "required": [ "length", "width", "height" ]
-    },
-    "geoPositioning": {
-      "description": "Coordinates of the warehouse where the car is located.",
-      "$ref": "https://example.com/geographical-location.schema.json"
-    }
-  },
-  "required": [ "chassisNumber", "licensePlate", "mileage" ]
-}
-```
-
 ## Taking a look at data for our defined JSON Schema
 
 We've certainly expanded on the concept of a car since our earliest sample data (scroll up to the top). Let's take a look at data which matches the JSON Schema we have defined.
@@ -358,10 +270,6 @@ We've certainly expanded on the concept of a car since our earliest sample data 
       "length": 4.005,
       "width": 1.932,
       "height": 1.425
-    },
-    "geoPositioning": {
-      "latitude": -78.75,
-      "longitude": 20.4
     }
   }
 ```

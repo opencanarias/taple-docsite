@@ -8,7 +8,7 @@ The following tutorial is intended to instruct the user about external invocatio
 
 ## Participants
 
-- **Customer**: This is a customer registered in the hotel system and, consequently, with the ability to open the door of his room. His role in the use case will be ***invoker***.
+- **Customer**: This is a customer registered in the hotel system and, consequently, with the ability to open the door of his room. His role in the use case will be ***issuer***.
 - **Cleaning workers**: Workers of a private cleaning company. They regularly come to the hotel to perform their duties. Their role in the use case will be ***invocator***.
 - **Hotel company**: Owner company of the hotel in the use case. It will have the role of ***validator***.
 - **Cleaning company**: Company to which the **cleaning workers** belong. It will have the role of ***validator***.
@@ -28,7 +28,7 @@ To increase security, an automatic system has been added whereby if the door is 
 
 ## TAPLE implementation
 
-Each of the previously described actors would have a TAPLE node. Of these, the three companies and the smart locks would share governance as they are the known actors in the use case. The clients and the cleaners, on the other hand, are undetermined; we cannot know their identity until they register so they cannot be added to the governance. Each of the locks would manage a subject whose state would be a reflection of that of the door on which it is installed. Each time a user intends to enter a room, he/she makes an **external invocation** request to the subject in question. This request cannot be resolved by the lock itself, and this responsibility falls to the hotel company and the cleaning company. Both will receive a request for a vote on the above invocation. Each must check their internal applications and systems to verify that the identity of the invoker is valid. If it is a customer, the hotel will vote yes and the lock will be unlocked, idem for the cleaners and the cleaning company. Conversely, if it is an invalid summoner, both will reject the request, denying access to the room. 
+Each of the previously described actors would have a TAPLE node. Of these, the three companies and the smart locks would share governance as they are the known actors in the use case. The clients and the cleaners, on the other hand, are undetermined; we cannot know their identity until they register so they cannot be added to the governance. Each of the locks would manage a subject whose state would be a reflection of that of the door on which it is installed. Each time a user intends to enter a room, he/she makes an **external invocation** request to the subject in question. This request cannot be resolved by the lock itself, and this responsibility falls to the hotel company and the cleaning company. Both will receive a request for a vote on the above invocation. Each must check their internal applications and systems to verify that the identity of the issuer is valid. If it is a customer, the hotel will vote yes and the lock will be unlocked, idem for the cleaners and the cleaning company. Conversely, if it is an invalid summoner, both will reject the request, denying access to the room. 
 
 When a lock automatically changes to **locked**, it is an invocation process again, but it differs from the previous one in the fact that it is not produced by an external actor, but by the **owner of the subject** to be modified. In this specific case, specific permissions are established in the governance to allow state updates to occur without requiring approvals.
 
@@ -107,7 +107,7 @@ Finally, it is necessary to define the validation, approval and invocation permi
 Note that these permissions establish, in particular, which users of the TAPLE network have the capacity and/or responsibility to perform the indicated actions.
 
 :::info
-For more information on how to define **policies** in governance, see the [Policies](../reference/operational-guides/governance-configuration.md) page.
+For more information on how to define **policies** in governance, see the [Policies](../reference/governance-structure.md) page.
 :::
 
 The permits to be defined must guarantee that:

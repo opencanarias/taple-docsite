@@ -92,7 +92,7 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
       {
         redirects: [
           {
-            to: '/docs/discover/introduction',
+            to: '/docs/discover/background',
             from: ['/technology', '/docs/discover/what-is-taple', '/docs/technology/what-is-taple', '/discover']
           },
           {
@@ -156,7 +156,7 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
         items: [
           {
             type: 'doc',
-            docId: 'discover/introduction',
+            docId: 'discover/background',
             position: 'left',
             label: 'Discover',
           },

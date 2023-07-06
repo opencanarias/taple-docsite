@@ -9,18 +9,23 @@ module.exports = {
       items: [
         {
           type: 'doc',
-          label: 'Introduction',
-          id: 'discover/introduction',
+          label: 'Background',
+          id: 'discover/background',
         },
         {
           type: 'doc',
-          label: 'Fundamentals',
+          label: 'TAPLE',
           id: 'discover/taple',
         },
         {
           type: 'doc',
           label: 'Overview',
           id: 'discover/overview',
+        },
+        {
+          type: 'doc',
+          label: 'Use cases',
+          id: 'discover/use-cases',
         },
         {
           type: 'link',
@@ -35,7 +40,7 @@ module.exports = {
         {
           type: 'doc',
           label: 'Glossary',
-          id: 'reference/glossary',
+          id: 'discover/glossary',
         }
       ],
     },
@@ -175,6 +180,41 @@ module.exports = {
     },
     {
       type: 'category',
+      label: 'TAPLE Client',
+      className: 'sidebar-section',
+      collapsible: false,
+      collapsed: false,
+      items: [
+        {
+          type: 'doc',
+          label: 'Description',
+          id: 'reference/taple-client-description',
+        },
+        {
+          type: 'doc',
+          label: 'Basic usage',
+          id: 'reference/taple-client-basic-usage',
+        },
+        {
+          type: 'doc',
+          label: 'Configuration',
+          id: 'reference/taple-client-config',
+        },
+        {
+          type: "category",
+          label: "REST API",
+          collapsed: true,
+          items: require("./docs/api-rest/sidebar.js"),
+        },
+        {
+          type: 'doc',
+          label: 'Tools',
+          id: 'reference/taple-tools',
+        },
+      ],
+    },
+    {
+      type: 'category',
       label: 'Other resources',
       className: 'sidebar-section',
       collapsible: false,
@@ -200,32 +240,6 @@ module.exports = {
           type: 'doc',
           label: 'First steps',
           id: 'build/first-steps'
-        },
-        {
-          type: 'doc',
-          label: 'Basic usage',
-          id: 'reference/taple-client-config',
-        },
-        {
-          type: 'doc',
-          label: 'Configuration',
-          id: 'reference/taple-client-config',
-        },
-        {
-          type: 'doc',
-          label: 'Backups',
-          id: 'reference/backups',
-        },
-        {
-          type: "category",
-          label: "REST API",
-          collapsed: true,
-          items: require("./docs/api-rest/sidebar.js"),
-        },
-        {
-          type: 'doc',
-          label: 'Tools',
-          id: 'reference/taple-tools',
         },
         {
           type: 'category',
