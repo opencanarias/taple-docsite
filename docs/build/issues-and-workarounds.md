@@ -51,7 +51,18 @@ The most frequent reason is not having sufficient permissions to run docker. Pos
 
 ## Network issues with docker
 While following [QuickStart tutorial](./quickstart.md) some users reports having issues when trying to access localhost on their network. This issue happens when you try to run docker containers using **Docker Desktop** for Mac, for Windows or **Docker EE** for Windows server. This issue happens because scripts used in tutorial use the flag `--network=host` and this flag is not supported outside of Linux System according to [official documentation](https://docs.docker.com/network/host/):
+
 ```
 The host networking driver only works on Linux hosts, and is not supported on Docker Desktop for Mac, Docker Desktop for Windows, or Docker EE for Windows Server.
 ```
+
 As today date, we are only giving support to execute TAPLE on Linux Operative Systems so we can't give support to issues happening in  Operative Systems not supported. Yet, we can give you some help by following some workarounds listed in the [official issue](https://github.com/docker/roadmap/issues/238).
+
+## Error in contract compilation UnkwnownOpcode 192
+
+Este error me salió porque lancé TAPLE con la versión de Rust 1.70, la cual es incompatible con las librerías de WASM que usamos actualmente. Para arreglarlo pasé a una versión inferior (1.67.0) y volví a instalar las dependencias de WASM:
+
+```bash
+rustup target add wasm32-unknown-unknown
+cargo install wasm-gc
+```
