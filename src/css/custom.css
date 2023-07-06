@@ -100,6 +100,10 @@ html[data-theme='dark'] .docusaurus-highlight-code-line {
   color: var(--ifm-menu-color);
 }
 
+.theme-doc-sidebar-item-link.theme-doc-sidebar-item-link-level-3.menu__list-item{
+  font-weight: 400;
+}
+
 .menu__list-item-collapsible--active {
   background: none;
 }

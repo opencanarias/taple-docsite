@@ -190,6 +190,12 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
           },
         ],
       },
+      docs: {
+        sidebar: {
+          autoCollapseCategories: true,
+          hideable: true,
+        },
+      },
       footer: {
         style: 'dark',
         logo: {
