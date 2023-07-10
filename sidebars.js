@@ -105,12 +105,16 @@ module.exports = {
         },
         {
           type: 'doc',
+          label: 'Under the Hood',
+          id: "discover/under-the-hood"
+        },
+        {
+          type: 'doc',
           label: 'Glossary',
           id: 'discover/glossary',
         }
       ]
     }
-
   ],
   referenceSidebar: [
     {
@@ -121,46 +125,47 @@ module.exports = {
       collapsed: false,
       items: [
         {
+          type: 'doc',
+          label: 'Components',
+          id: 'reference/components',
+        },
+        {
           type: 'category',
-          label: 'Architecture',
+          label: 'Core library',
+          collapsed: true,
+          items: [
+            {
+              type: 'doc',
+              label: 'Arquitecture',
+              id: 'reference/core-architecture',
+            },
+            {
+              type: 'link',
+              label: 'API',
+              href: 'pathname:///crate-doc/next/taple_core/',
+            },
+          ]
+        },
+        {
+          type: 'doc',
+          label: 'JSON Schema',
+          id: 'reference/json-schema',
+        },
+        {
+          type: 'category',
+          label: 'Smart contracts',
           collapsible: true,
           collapsed: true,
           items: [
             {
               type: 'doc',
-              label: 'Components',
-              id: 'reference/architecture',
-            },
-            {
-              type: 'category',
-              label: 'Core library',
-              collapsed: true,
-              items: [
-                {
-                  type: 'doc',
-                  label: 'Description',
-                  id: 'reference/taple-core',
-                },
-                {
-                  type: 'link',
-                  label: 'Documentation',
-                  href: 'pathname:///crate-doc/next/taple_core/',
-                },
-              ]
+              label: 'Introduction',
+              id: 'reference/smart-contracts',
             },
             {
               type: 'doc',
-              label: 'Network',
-              id: 'reference/taple-client-config',
-            }, {
-              type: 'doc',
-              label: 'Database',
-              id: 'reference/taple-client-config',
-            },
-            {
-              type: 'doc',
-              label: 'Under the Hood',
-              id: "discover/under-the-hood"
+              label: 'Programming smart contracts',
+              id: 'reference/smart-contracts-programming',
             },
           ]
         },
@@ -184,24 +189,6 @@ module.exports = {
         },
         {
           type: 'category',
-          label: 'Smart contracts',
-          collapsible: true,
-          collapsed: true,
-          items: [
-            {
-              type: 'doc',
-              label: 'Introduction',
-              id: 'reference/smart-contracts',
-            },
-            {
-              type: 'doc',
-              label: 'Programming smart contracts',
-              id: 'reference/smart-contracts-programming',
-            },
-          ]
-        },
-        {
-          type: 'category',
           label: 'TAPLE Client',
           collapsible: true,
           collapsed: true,
@@ -209,17 +196,17 @@ module.exports = {
             {
               type: 'doc',
               label: 'Description',
-              id: 'reference/taple-client-description',
+              id: 'reference/client-description',
             },
             {
               type: 'doc',
               label: 'Basic usage',
-              id: 'reference/taple-client-basic-usage',
+              id: 'reference/client-usage',
             },
             {
               type: 'doc',
               label: 'Configuration',
-              id: 'reference/taple-client-config',
+              id: 'reference/client-config',
             },
             {
               type: "category",
@@ -230,22 +217,9 @@ module.exports = {
             {
               type: 'doc',
               label: 'Tools',
-              id: 'reference/taple-tools',
+              id: 'reference/client-tools',
             },
           ],
-        },
-        {
-          type: 'category',
-          label: 'Other resources',
-          collapsible: true,
-          collapsed: true,
-          items: [
-            {
-              type: 'doc',
-              label: 'Creating a JSON-Schema',
-              id: 'reference/creating-a-json-schema',
-            },
-          ]
         },
       ]
     }
@@ -273,8 +247,45 @@ module.exports = {
               type: 'category',
               collapsible: true,
               collapsed: true,
-              label: 'Asset traceability',
-              link: { type: 'doc', id: 'build/wine-track/use-case-definition' },
+              label: 'Minimal network',
+              items: [
+                {
+                  type: 'doc',
+                  label: 'Introduction',
+                  id: 'build/minimal-network/introduction',
+                },
+                {
+                  type: 'doc',
+                  label: 'Running the first node',
+                  id: 'build/minimal-network/running-the-first-node',
+                },
+                {
+                  type: 'doc',
+                  label: 'Creating the governance',
+                  id: 'build/minimal-network/creating-governance',
+                },
+                {
+                  type: 'doc',
+                  label: 'Adding a second member',
+                  id: 'build/minimal-network/adding-a-second-member',
+                },
+                {
+                  type: 'doc',
+                  label: 'Adding a third member',
+                  id: 'build/minimal-network/adding-a-third-member',
+                },
+                {
+                  type: 'doc',
+                  label: 'Next steps',
+                  id: 'build/minimal-network/next-steps',
+                },
+              ]
+            },
+            {
+              type: 'category',
+              collapsible: true,
+              collapsed: true,
+              label: 'Assets traceability',
               items: [
                 {
                   type: 'doc',
@@ -347,19 +358,6 @@ module.exports = {
               type: 'doc',
               label: 'Issues and Workarounds',
               id: 'build/issues-and-workarounds',
-            },
-          ]
-        },
-        {
-          type: 'category',
-          label: 'Smart contracts',
-          collapsible: true,
-          collapsed: true,
-          items: [
-            {
-              type: 'doc',
-              label: 'SDK',
-              id: 'reference/creating-a-json-schema',
             },
           ]
         },
