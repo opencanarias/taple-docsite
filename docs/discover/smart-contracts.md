@@ -1,5 +1,7 @@
 # Smart Contracts
 
+asegurarnos de poner que se usa rust, que se ejecuta en un entorno controlado en web assembly
+
 ## ¿Qué son los Smart Contracts?
 
 Los contratos inteligentes, son programas que se ejecutan dentro de una red blockchain. A diferencia de los contratos tradicionales, los smart contracts no dependen de intermediarios o terceros de confianza para validar o hacer cumplir los acuerdos. Estos se basan en la tecnología descentralizada blockchain que se encarga de automatizar y ejecutar las transacciones y acuerdos digitales.

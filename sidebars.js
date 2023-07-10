@@ -184,6 +184,24 @@ module.exports = {
         },
         {
           type: 'category',
+          label: 'Smart contracts',
+          collapsible: true,
+          collapsed: true,
+          items: [
+            {
+              type: 'doc',
+              label: 'Introduction',
+              id: 'reference/smart-contracts',
+            },
+            {
+              type: 'doc',
+              label: 'Programming smart contracts',
+              id: 'reference/smart-contracts-programming',
+            },
+          ]
+        },
+        {
+          type: 'category',
           label: 'TAPLE Client',
           collapsible: true,
           collapsed: true,
@@ -342,11 +360,6 @@ module.exports = {
               type: 'doc',
               label: 'SDK',
               id: 'reference/creating-a-json-schema',
-            },
-            {
-              type: 'doc',
-              label: 'Programming smart contracts',
-              id: 'reference/programming-smart-contracts',
             },
           ]
         },
