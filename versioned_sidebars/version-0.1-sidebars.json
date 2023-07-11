@@ -2,7 +2,7 @@
   "discoverSidebar": [
     {
       "type": "category",
-      "label": "TAPLE Technology",
+      "label": "Discover",
       "className": "sidebar-section",
       "collapsible": false,
       "collapsed": false,
@@ -28,6 +28,57 @@
           "id": "discover/overview"
         },
         {
+          "type": "category",
+          "label": "Key concepts",
+          "collapsible": true,
+          "collapsed": true,
+          "items": [
+            {
+              "type": "doc",
+              "label": "Subjects",
+              "id": "discover/subjects"
+            },
+            {
+              "type": "doc",
+              "label": "Schemas",
+              "id": "discover/schemas"
+            },
+            {
+              "type": "doc",
+              "label": "Events",
+              "id": "discover/events"
+            },
+            {
+              "type": "doc",
+              "label": "Identity",
+              "id": "discover/identity"
+            },
+            {
+              "type": "doc",
+              "label": "Governance",
+              "id": "discover/governance"
+            }
+          ]
+        },
+        {
+          "type": "category",
+          "label": "Advanced concepts",
+          "collapsible": true,
+          "collapsed": true,
+          "items": [
+            {
+              "type": "doc",
+              "id": "discover/event-life-cycle",
+              "label": "Event life cycle"
+            },
+            {
+              "type": "doc",
+              "id": "discover/event-approval-process",
+              "label": "Event approval process"
+            }
+          ]
+        },
+        {
           "type": "doc",
           "label": "Under the Hood",
           "id": "discover/under-the-hood"
@@ -43,65 +94,12 @@
           "href": "pathname:///whitepaper/taple-whitepaper.pdf"
         }
       ]
-    },
-    {
-      "type": "category",
-      "label": "Key concepts",
-      "className": "sidebar-section",
-      "collapsible": false,
-      "collapsed": false,
-      "items": [
-        {
-          "type": "doc",
-          "label": "Subjects",
-          "id": "discover/subjects"
-        },
-        {
-          "type": "doc",
-          "label": "Schemas",
-          "id": "discover/schemas"
-        },
-        {
-          "type": "doc",
-          "label": "Events",
-          "id": "discover/events"
-        },
-        {
-          "type": "doc",
-          "label": "Identity",
-          "id": "discover/identity"
-        },
-        {
-          "type": "doc",
-          "label": "Governance",
-          "id": "discover/governance"
-        }
-      ]
-    },
-    {
-      "type": "category",
-      "label": "Advanced concepts",
-      "className": "sidebar-section",
-      "collapsible": false,
-      "collapsed": false,
-      "items": [
-        {
-          "type": "doc",
-          "id": "discover/event-life-cycle",
-          "label": "Event life cycle"
-        },
-        {
-          "type": "doc",
-          "id": "discover/event-approval-process",
-          "label": "Event approval process"
-        }
-      ]
     }
   ],
   "tutorialsSidebar": [
     {
       "type": "category",
-      "label": "Getting started",
+      "label": "Build",
       "className": "sidebar-section",
       "collapsible": false,
       "collapsed": false,
@@ -177,14 +175,14 @@
   "referenceSidebar": [
     {
       "type": "category",
-      "label": "Reference",
+      "label": "Learn",
       "className": "sidebar-section",
       "collapsible": false,
       "collapsed": false,
       "items": [
         {
           "type": "doc",
-          "label": "Components",
+          "label": "Architecture",
           "id": "reference/components"
         },
         {
@@ -348,25 +346,24 @@
           "type": "doc",
           "label": "TAPLE Tools",
           "id": "reference/taple-tools"
-        }
-      ]
-    },
-    {
-      "type": "category",
-      "label": "Operational guides",
-      "className": "sidebar-section",
-      "collapsible": false,
-      "collapsed": false,
-      "items": [
-        {
-          "type": "doc",
-          "label": "Governance configuration",
-          "id": "reference/operational-guides/governance-configuration"
         },
         {
-          "type": "doc",
-          "label": "Creating a JSON-Schema",
-          "id": "reference/operational-guides/creating-a-json-schema"
+          "type": "category",
+          "label": "Operational guides",
+          "collapsible": true,
+          "collapsed": true,
+          "items": [
+            {
+              "type": "doc",
+              "label": "Governance configuration",
+              "id": "reference/operational-guides/governance-configuration"
+            },
+            {
+              "type": "doc",
+              "label": "Creating a JSON-Schema",
+              "id": "reference/operational-guides/creating-a-json-schema"
+            }
+          ]
         }
       ]
     }
