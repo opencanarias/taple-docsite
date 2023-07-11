@@ -4,6 +4,7 @@ module.exports = {
             type: 'category',
             collapsible: false,
             collapsed: false,
+            className: 'sidebar-section',
             label: 'Community',
             items: [
                 {

@@ -184,8 +184,8 @@
       "items": [
         {
           "type": "doc",
-          "label": "Architecture",
-          "id": "reference/architecture"
+          "label": "Components",
+          "id": "reference/components"
         },
         {
           "type": "category",

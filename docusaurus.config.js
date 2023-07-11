@@ -100,7 +100,7 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
             from: ['/build', '/tutorials', '/docs/develop', '/develop']
           },
           {
-            to: '/docs/reference/architecture',
+            to: '/docs/reference/components',
             from: ['/reference', '/learn', ]
           },
           {
@@ -162,7 +162,7 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
           },
           {
             type: 'doc',
-            docId: 'reference/architecture',
+            docId: 'reference/components',
             position: 'left',
             label: 'Learn',
           },
@@ -189,6 +189,12 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
             'aria-label': 'GitHub repository',
           },
         ],
+      },
+      docs: {
+        sidebar: {
+          autoCollapseCategories: true,
+          hideable: true,
+        },
       },
       footer: {
         style: 'dark',

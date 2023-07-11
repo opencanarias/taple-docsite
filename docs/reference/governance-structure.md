@@ -854,7 +854,7 @@ Defines the list of schemas that are allowed to be used in the subjects associat
 ```
 
 :::info
-Refer to ["Creating a JSON-Schema"](./creating-a-json-schema.md) page for more information about JSON-Schema.
+Refer to ["Creating a JSON-Schema"](./json-schema.md) page for more information about JSON-Schema.
 :::
 
 ### Roles

@@ -29,7 +29,7 @@ or
     taple-sign: command not found
 ```
 
-The first thing you need to check is that you have installed the [TAPLE-Tools](../reference/taple-tools.md#installation). If the problem persists, you may not have the tools in the PATH. Possible solutions:
+The first thing you need to check is that you have installed the [TAPLE-Tools](../reference/client-tools.md#installation). If the problem persists, you may not have the tools in the PATH. Possible solutions:
 1. Add the ``taple-keygen`` and ``taple-sign`` tools to the PATH. Refer to your operating system documentation.
 2. Go to the directory of the scripts to run them. Example:
 
@@ -60,7 +60,7 @@ As today date, we are only giving support to execute TAPLE on Linux Operative Sy
 
 ## Error in contract compilation UnkwnownOpcode 192
 
-Este error me salió porque lancé TAPLE con la versión de Rust 1.70, la cual es incompatible con las librerías de WASM que usamos actualmente. Para arreglarlo pasé a una versión inferior (1.67.0) y volví a instalar las dependencias de WASM:
+Este error me salió porque lancé TAPLE con la versión de Rust 1.70, la cual es incompatible con las librerías de WASM que usamos actualmente. Para arreglarlo pasé a una versión inferior (1.69.0) y volví a instalar las dependencias de WASM:
 
 ```bash
 rustup target add wasm32-unknown-unknown

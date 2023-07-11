@@ -4,6 +4,39 @@ Governances have a specific schema and contract defined within the TAPLE code. T
 
 The governance schema can be seen in the [governance-structure](./governance-structure.md) section.
 
+And its initial state is:
+
+```json
+{
+    "members": [],
+    "roles": [
+        {
+        "namespace": "",
+        "role": "WITNESS",
+        "schema": {
+            "ID": "governance"
+        },
+        "who": "MEMBERS"
+        }
+    ],
+    "schemas": [],
+    "policies": [
+        {
+        "id": "governance",
+        "approve": {
+            "quorum": "MAJORITY"
+        },
+        "evaluate": {
+            "quorum": "MAJORITY"
+        },
+        "validate": {
+            "quorum": "MAJORITY"
+        }
+        }
+    ]
+}
+```
+
 The governance contract is:
 
 ```rust title="Governance Contract"

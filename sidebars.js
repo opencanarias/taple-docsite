@@ -2,7 +2,7 @@ module.exports = {
   discoverSidebar: [
     {
       type: 'category',
-      label: 'Basics',
+      label: 'Discover',
       className: 'sidebar-section',
       collapsible: false,
       collapsed: false,
@@ -19,13 +19,79 @@ module.exports = {
         },
         {
           type: 'doc',
+          label: 'Use cases',
+          id: 'discover/use-cases',
+        },
+        {
+          type: 'doc',
           label: 'Overview',
           id: 'discover/overview',
         },
         {
-          type: 'doc',
-          label: 'Use cases',
-          id: 'discover/use-cases',
+          type: 'category',
+          label: 'Key concepts',
+          collapsible: true,
+          collapsed: true,
+          items: [
+            {
+              type: 'doc',
+              label: 'Subjects',
+              id: 'discover/subjects',
+            },
+            {
+              type: 'doc',
+              label: 'Schemas',
+              id: 'discover/schemas',
+            },
+            {
+              type: 'doc',
+              label: 'Events',
+              id: 'discover/events',
+            },
+            {
+              type: 'doc',
+              label: 'Identity',
+              id: 'discover/identity',
+            },
+            {
+              type: 'doc',
+              label: 'Roles',
+              id: 'discover/roles',
+            },
+            {
+              type: 'doc',
+              label: 'Governance',
+              id: 'discover/governance',
+            },
+            {
+              type: 'doc',
+              label: 'Smart Contracts',
+              id: 'discover/smart-contracts',
+            }
+          ],
+        },
+        {
+          type: 'category',
+          label: 'Advanced',
+          collapsible: true,
+          collapsed: true,
+          items: [
+            {
+              type: 'doc',
+              id: 'discover/event-evaluation-process',
+              label: 'Evaluation process',
+            },
+            {
+              type: 'doc',
+              id: 'discover/event-approval-process',
+              label: 'Approval process',
+            },
+            {
+              type: 'doc',
+              id: 'discover/event-validation-process',
+              label: 'Validation process',
+            }
+          ]
         },
         {
           type: 'link',
@@ -39,84 +105,21 @@ module.exports = {
         },
         {
           type: 'doc',
+          label: 'Under the Hood',
+          id: "discover/under-the-hood"
+        },
+        {
+          type: 'doc',
           label: 'Glossary',
           id: 'discover/glossary',
         }
-      ],
-    },
-    {
-      type: 'category',
-      label: 'Key concepts',
-      className: 'sidebar-section',
-      collapsible: false,
-      collapsed: false,
-      items: [
-        {
-          type: 'doc',
-          label: 'Subjects',
-          id: 'discover/subjects',
-        },
-        {
-          type: 'doc',
-          label: 'Schemas',
-          id: 'discover/schemas',
-        },
-        {
-          type: 'doc',
-          label: 'Events',
-          id: 'discover/events',
-        },
-        {
-          type: 'doc',
-          label: 'Identity',
-          id: 'discover/identity',
-        },
-        {
-          type: 'doc',
-          label: 'Roles',
-          id: 'discover/roles',
-        },
-        {
-          type: 'doc',
-          label: 'Governance',
-          id: 'discover/governance',
-        },
-        {
-          type: 'doc',
-          label: 'Smart Contracts',
-          id: 'discover/smart-contracts',
-        }
-      ],
-    },
-    {
-      type: 'category',
-      label: 'Advanced',
-      className: 'sidebar-section',
-      collapsible: false,
-      collapsed: false,
-      items: [
-        {
-          type: 'doc',
-          id: 'discover/event-evaluation-process',
-          label: 'Evaluation process',
-        },
-        {
-          type: 'doc',
-          id: 'discover/event-approval-process',
-          label: 'Approval process',
-        },
-        {
-          type: 'doc',
-          id: 'discover/event-validation-process',
-          label: 'Validation process',
-        }
       ]
-    },
+    }
   ],
   referenceSidebar: [
     {
       type: 'category',
-      label: 'Architecture',
+      label: 'Learn',
       className: 'sidebar-section',
       collapsible: false,
       collapsed: false,
@@ -124,7 +127,7 @@ module.exports = {
         {
           type: 'doc',
           label: 'Components',
-          id: 'reference/architecture',
+          id: 'reference/components',
         },
         {
           type: 'category',
@@ -133,126 +136,156 @@ module.exports = {
           items: [
             {
               type: 'doc',
-              label: 'Description',
-              id: 'reference/taple-core',
+              label: 'Arquitecture',
+              id: 'reference/core-architecture',
             },
             {
               type: 'link',
-              label: 'Documentation',
+              label: 'API',
               href: 'pathname:///crate-doc/next/taple_core/',
             },
           ]
         },
         {
           type: 'doc',
-          label: 'Network',
-          id: 'reference/taple-client-config',
-        }, {
-          type: 'doc',
-          label: 'Database',
-          id: 'reference/taple-client-config',
+          label: 'JSON Schema',
+          id: 'reference/json-schema',
         },
         {
-          type: 'doc',
-          label: 'Under the Hood',
-          id: "discover/under-the-hood"
-        },
-      ]
-    },
-    {
-      type: 'category',
-      label: 'Governance',
-      className: 'sidebar-section',
-      collapsible: false,
-      collapsed: false,
-      items: [
-        {
-          type: 'doc',
-          label: 'Structure',
-          id: 'reference/governance-structure',
-        },
-        {
-          type: 'doc',
-          label: 'Schema and contract',
-          id: 'reference/governance-schema-and-contract',
-        },
-      ]
-    },
-    {
-      type: 'category',
-      label: 'TAPLE Client',
-      className: 'sidebar-section',
-      collapsible: false,
-      collapsed: false,
-      items: [
-        {
-          type: 'doc',
-          label: 'Description',
-          id: 'reference/taple-client-description',
-        },
-        {
-          type: 'doc',
-          label: 'Basic usage',
-          id: 'reference/taple-client-basic-usage',
-        },
-        {
-          type: 'doc',
-          label: 'Configuration',
-          id: 'reference/taple-client-config',
-        },
-        {
-          type: "category",
-          label: "REST API",
+          type: 'category',
+          label: 'Smart contracts',
+          collapsible: true,
           collapsed: true,
-          items: require("./docs/api-rest/sidebar.js"),
+          items: [
+            {
+              type: 'doc',
+              label: 'Introduction',
+              id: 'reference/smart-contracts',
+            },
+            {
+              type: 'doc',
+              label: 'Programming smart contracts',
+              id: 'reference/smart-contracts-programming',
+            },
+          ]
         },
         {
-          type: 'doc',
-          label: 'Tools',
-          id: 'reference/taple-tools',
+          type: 'category',
+          label: 'Governance',
+          collapsible: true,
+          collapsed: true,
+          items: [
+            {
+              type: 'doc',
+              label: 'Structure',
+              id: 'reference/governance-structure',
+            },
+            {
+              type: 'doc',
+              label: 'Schema and contract',
+              id: 'reference/governance-schema-and-contract',
+            },
+          ]
         },
-      ],
-    },
-    {
-      type: 'category',
-      label: 'Other resources',
-      className: 'sidebar-section',
-      collapsible: false,
-      collapsed: false,
-      items: [
         {
-          type: 'doc',
-          label: 'Creating a JSON-Schema',
-          id: 'reference/creating-a-json-schema',
+          type: 'category',
+          label: 'TAPLE Client',
+          collapsible: true,
+          collapsed: true,
+          items: [
+            {
+              type: 'doc',
+              label: 'Description',
+              id: 'reference/client-description',
+            },
+            {
+              type: 'doc',
+              label: 'Basic usage',
+              id: 'reference/client-usage',
+            },
+            {
+              type: 'doc',
+              label: 'Configuration',
+              id: 'reference/client-config',
+            },
+            {
+              type: "category",
+              label: "REST API",
+              collapsed: true,
+              items: require("./docs/api-rest/sidebar.js"),
+            },
+            {
+              type: 'doc',
+              label: 'Tools',
+              id: 'reference/client-tools',
+            },
+          ],
         },
       ]
-    },
+    }
   ],
   buildSidebar: [
     {
       type: 'category',
-      label: 'TAPLE Client',
+      label: 'Build',
       className: 'sidebar-section',
       collapsible: false,
       collapsed: false,
       items: [
         {
-          type: 'doc',
-          label: 'First steps',
-          id: 'build/first-steps'
-        },
-        {
           type: 'category',
-          label: 'Tutorials',
+          label: 'Using TAPLE Client',
+          collapsible: true,
           collapsed: false,
-          collapsible: false,
           items: [
+            {
+              type: 'doc',
+              label: 'First steps',
+              id: 'build/first-steps'
+            },
             {
               type: 'category',
               collapsible: true,
               collapsed: true,
-              label: 'Asset traceability',
-              link: { type: 'doc', id: 'build/wine-track/use-case-definition' },
+              label: 'Minimal network',
+              items: [
+                {
+                  type: 'doc',
+                  label: 'Introduction',
+                  id: 'build/minimal-network/introduction',
+                },
+                {
+                  type: 'doc',
+                  label: 'Running the first node',
+                  id: 'build/minimal-network/running-the-first-node',
+                },
+                {
+                  type: 'doc',
+                  label: 'Creating the governance',
+                  id: 'build/minimal-network/creating-governance',
+                },
+                {
+                  type: 'doc',
+                  label: 'Adding a second member',
+                  id: 'build/minimal-network/adding-a-second-member',
+                },
+                {
+                  type: 'doc',
+                  label: 'Adding a third member',
+                  id: 'build/minimal-network/adding-a-third-member',
+                },
+                {
+                  type: 'doc',
+                  label: 'Next steps',
+                  id: 'build/minimal-network/next-steps',
+                },
+              ]
+            },
+            {
+              type: 'category',
+              collapsible: true,
+              collapsed: true,
+              label: 'Assets traceability',
               items: [
                 {
                   type: 'doc',
@@ -321,33 +354,14 @@ module.exports = {
               label: 'Access control',
               id: 'build/uc-hotel-access-control',
             },
+            {
+              type: 'doc',
+              label: 'Issues and Workarounds',
+              id: 'build/issues-and-workarounds',
+            },
           ]
         },
-        {
-          type: 'doc',
-          label: 'Issues and Workarounds',
-          id: 'build/issues-and-workarounds',
-        },
-      ],
-    },
-    {
-      type: 'category',
-      label: 'Smart contracts',
-      className: 'sidebar-section',
-      collapsible: false,
-      collapsed: false,
-      items: [
-        {
-          type: 'doc',
-          label: 'SDK',
-          id: 'reference/creating-a-json-schema',
-        },
-        {
-          type: 'doc',
-          label: 'Programming smart contracts',
-          id: 'reference/programming-smart-contracts',
-        },
       ]
-    },
+    }
   ],
 };
