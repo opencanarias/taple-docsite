@@ -1,6 +1,7 @@
 # Introduction
 
 In this first tutorial we are going to learn how to create our first TAPLE network. We will learn:
+
 1. to set up TAPLE nodes using TAPLE Client;
 2. to use the REST API;
 3. to create a governance;
