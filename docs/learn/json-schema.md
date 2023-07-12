@@ -1,3 +1,7 @@
+---
+description: JSON Schema specification and examples
+---
+
 # Creating a JSON-Schema
 
 The following example is by no means definitive of all the value JSON Schema can provide. For this you will need to go deep into the specification itself -- learn more at [json schema specification.](https://json-schema.org/specification.html).
