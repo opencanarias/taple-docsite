@@ -1,5 +1,5 @@
 # Overview
-TAPLE is designed, not as a single application, but also as a set of specifications, libraries and utilities. The aim is to enable integration and interoperability with different applications, devices and architectures. 
+TAPLE is designed, not as a single application, but as a set of specifications, libraries and utilities. The aim is to enable integration and interoperability with different applications, devices and architectures. 
 
 The following diagram shows the usual elements of a TAPLE network. A brief description of each of them is given below so that we can obtain an overview before going into more detail.
 
