@@ -1,3 +1,7 @@
+---
+description: Approval process prior to event generation
+---
+
 # Event approval process
 
 The approval phase involves asking the approvers to vote for or against the application of an event. This process can be automated but tends to be manual, as the response usually requires interaction with the TAPLE API, so it requires a user who can interact with it and therefore usually takes longer than the other phases.

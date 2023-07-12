@@ -1,3 +1,7 @@
+---
+description: Ledger partitioning mechanism in TAPLE 
+---
+
 # Subjects
 
 The TAPLE network performs [ledger partitioning](./index.md#partitioning-of-the-ledger-by-assets) on a per-subject basis. Instead of having a single ledger shared by all participants, the information is structured on a subject-by-subject basis. Subjects are logical entities that represent an asset or process within a TAPLE network. 

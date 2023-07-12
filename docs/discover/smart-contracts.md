@@ -1,3 +1,7 @@
+---
+description: Business logic that controls changes in subjects
+---
+
 # Smart Contracts
 
 asegurarnos de poner que se usa rust, que se ejecuta en un entorno controlado en web assembly

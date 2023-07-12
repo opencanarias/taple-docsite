@@ -1,3 +1,7 @@
+---
+description: Rules of interaction between participants and subjects
+---
+
 # Governance
 In this page we will describe the governance functionally. If you want to know how to define a governance to adapt it to your needs visit the [governance configuration](../learn/governance-structure.md) page. 
 

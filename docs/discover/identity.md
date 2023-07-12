@@ -1,3 +1,7 @@
+---
+description: Taple identification based on key pairs
+---
+
 # Identity
 Each participant in a TAPLE network has a unique identifier and a private key that allows them to sign the transactions carried out. In addition, depending on their interest in each subject and their level of involvement with the network, each participant will have one or several different roles.
 

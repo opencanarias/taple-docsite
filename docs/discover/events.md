@@ -1,3 +1,7 @@
+---
+description: Data structures that make up the microledger
+---
+
 # Events
 Events are the data structures that make up the microledger, i.e., the chain of events. Each event is composed of the following:
 - The request that generated the event

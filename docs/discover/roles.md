@@ -1,4 +1,10 @@
+---
+description: Classification of participants based on their interests
+---
+
 # Roles
+
+Each network participant interacts with the network based on different interests. These interests are represented in TAPLE as roles.
 
 ## Owner
 Subject owner participant, who owns one or several subjects. They have total control over the subject because they possess the cryptographic material with permission to modify the subject.

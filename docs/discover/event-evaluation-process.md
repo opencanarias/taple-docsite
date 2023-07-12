@@ -1,3 +1,7 @@
+---
+description: Execution of smart contracts following an event request
+---
+
 # Event evaluation process
 
 The evaluation phase consists of the issuer generating an event request with the event type and its content. Currently, evaluation is only present in Fact type events. These events affect a certain subject to establish a fact that may or may not modify the subject's properties. A context is also sent containing the necessary information for the evaluators to execute the smart contract that contains the evaluation logic for our subject, such as previous properties, whether the issuer is the owner of the subject, etc.

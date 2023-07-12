@@ -1,3 +1,7 @@
+---
+description: Definition of the data structures that model the state of subjects
+---
+
 # Schemas
 
 In **TAPLE** each subject stores a microledger and a [state](./subjects.md#subject-state). The state is the representation of the information stored by a subject at a given instant, usually the current moment. The structure of this state is defined by a schema, which is nothing more than a set of rules that allow to define this structure, and therefore, to validate it.  
