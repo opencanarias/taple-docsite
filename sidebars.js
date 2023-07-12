@@ -350,6 +350,34 @@ module.exports = {
               ],
             },
             {
+              type: 'category',
+              label: 'Access control',
+              collapsible: true,
+              collapsed: true,
+              items: [
+                {
+                  type: 'doc',
+                  label: 'Use case description',
+                  id: 'build/cars-track/use-case',
+                },
+                {
+                  type: 'doc',
+                  label: 'Governance definition',
+                  id: 'build/cars-track/governance-definition',
+                },
+                {
+                  type: 'doc',
+                  label: 'Setting up the network',
+                  id: 'build/cars-track/setting-network',
+                },
+                {
+                  type: 'doc',
+                  label: 'Interactuar con la red',
+                  id: 'build/cars-track/interactuar-red',
+                }
+              ],
+            },
+            {
               type: 'doc',
               label: 'Access control',
               id: 'build/uc-hotel-access-control',
