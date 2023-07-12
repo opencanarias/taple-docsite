@@ -1,5 +1,5 @@
 module.exports = {
-    community: [
+    communitySidebar: [
         {
             type: 'category',
             collapsible: false,

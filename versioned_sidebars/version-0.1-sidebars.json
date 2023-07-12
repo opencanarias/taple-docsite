@@ -183,7 +183,7 @@
         {
           "type": "doc",
           "label": "Architecture",
-          "id": "reference/components"
+          "id": "learn/components"
         },
         {
           "type": "category",
@@ -193,7 +193,7 @@
             {
               "type": "doc",
               "label": "Description",
-              "id": "reference/taple-core"
+              "id": "learn/taple-core"
             },
             {
               "type": "link",
@@ -210,12 +210,12 @@
             {
               "type": "doc",
               "label": "Configuration",
-              "id": "reference/taple-client-config"
+              "id": "learn/taple-client-config"
             },
             {
               "type": "doc",
               "label": "Backups",
-              "id": "reference/backups"
+              "id": "learn/backups"
             },
             {
               "type": "category",
@@ -345,7 +345,7 @@
         {
           "type": "doc",
           "label": "TAPLE Tools",
-          "id": "reference/taple-tools"
+          "id": "learn/taple-tools"
         },
         {
           "type": "category",
@@ -356,12 +356,12 @@
             {
               "type": "doc",
               "label": "Governance configuration",
-              "id": "reference/operational-guides/governance-configuration"
+              "id": "learn/operational-guides/governance-configuration"
             },
             {
               "type": "doc",
               "label": "Creating a JSON-Schema",
-              "id": "reference/operational-guides/creating-a-json-schema"
+              "id": "learn/operational-guides/creating-a-json-schema"
             }
           ]
         }

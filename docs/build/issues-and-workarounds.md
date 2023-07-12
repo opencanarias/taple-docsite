@@ -29,7 +29,7 @@ or
     taple-sign: command not found
 ```
 
-The first thing you need to check is that you have installed the [TAPLE-Tools](../reference/client-tools.md#installation). If the problem persists, you may not have the tools in the PATH. Possible solutions:
+The first thing you need to check is that you have installed the [TAPLE-Tools](../learn/client-tools.md#installation). If the problem persists, you may not have the tools in the PATH. Possible solutions:
 1. Add the ``taple-keygen`` and ``taple-sign`` tools to the PATH. Refer to your operating system documentation.
 2. Go to the directory of the scripts to run them. Example:
 

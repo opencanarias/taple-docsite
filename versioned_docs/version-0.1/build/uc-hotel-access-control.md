@@ -107,7 +107,7 @@ Finally, it is necessary to define the validation, approval and invocation permi
 Note that these permissions establish, in particular, which users of the TAPLE network have the capacity and/or responsibility to perform the indicated actions.
 
 :::info
-For more information on how to define **policies** in governance, see the [Policies](../reference/operational-guides/governance-configuration.md) page.
+For more information on how to define **policies** in governance, see the [Policies](../learn/operational-guides/governance-configuration.md) page.
 :::
 
 The permits to be defined must guarantee that:
@@ -341,7 +341,7 @@ Once the problem has been modeled and adapted to run against TAPLE nodes, it is 
 
 ### Lifting the TAPLE nodes
 
-We will proceed to raise the four TAPLE nodes required for the system. For this purpose, the [**keygen**](../reference/taple-tools.md) tool has been used to generate the cryptographic materials for the following nodes:
+We will proceed to raise the four TAPLE nodes required for the system. For this purpose, the [**keygen**](../learn/taple-tools.md) tool has been used to generate the cryptographic materials for the following nodes:
 
 - Hotel company
     <details>
@@ -591,9 +591,9 @@ After that, the first state of our lock is created through the construction of i
 
 ### Lock Unlock Request (Sending external request)
 
-Next we will simulate the interaction of a hotel customer with the lock defined above. For this case, and taking into account that it is an example and not a real situation, it is not necessary to raise a new node, since the external request will be generated with the tool scripts [**keygen**](../reference/taple-tools.md) and [**sign**](../reference/taple-tools.md#taple-sign) and the request will be passed to the lock so that it generates the event in the subject.
+Next we will simulate the interaction of a hotel customer with the lock defined above. For this case, and taking into account that it is an example and not a real situation, it is not necessary to raise a new node, since the external request will be generated with the tool scripts [**keygen**](../learn/taple-tools.md) and [**sign**](../learn/taple-tools.md#taple-sign) and the request will be passed to the lock so that it generates the event in the subject.
 
-First we use [**keygen**](../reference/taple-tools.md):
+First we use [**keygen**](../learn/taple-tools.md):
 
 ```bash
 taple-keygen
@@ -609,7 +609,7 @@ CONTROLLER ID ED25519: Evb_T0ASdQDy2z5Vo8pzH-lhLcvAnrqp2T_cWMRF3b2s
 PeerID: 12D3KooWNb4soq1eUhb7waXvLPPELoQ5tJHAyFtis6ucJMXGykVQ
 ```
 
-We will use the private key to sign the lock opening request with the [**sign**](../reference/taple-tools.md#taple-sign) script (change {{subject_id}} to the id of the subject representing the lock):
+We will use the private key to sign the lock opening request with the [**sign**](../learn/taple-tools.md#taple-sign) script (change {{subject_id}} to the id of the subject representing the lock):
 
 ```bash
 sign bdc3ea6396f0a60dfb4d92f1811e2fead7e436ebd5449a913c3af2f761983caf "{\"subject_id\":\"{{subject_id}}\",\"payload\":{\"Json\":{\"current_state\":\"CLOSED\"}}}"

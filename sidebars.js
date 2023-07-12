@@ -127,7 +127,7 @@ module.exports = {
         {
           type: 'doc',
           label: 'Components',
-          id: 'reference/components',
+          id: 'learn/components',
         },
         {
           type: 'category',
@@ -137,7 +137,7 @@ module.exports = {
             {
               type: 'doc',
               label: 'Arquitecture',
-              id: 'reference/core-architecture',
+              id: 'learn/core-architecture',
             },
             {
               type: 'link',
@@ -149,7 +149,7 @@ module.exports = {
         {
           type: 'doc',
           label: 'JSON Schema',
-          id: 'reference/json-schema',
+          id: 'learn/json-schema',
         },
         {
           type: 'category',
@@ -160,12 +160,12 @@ module.exports = {
             {
               type: 'doc',
               label: 'Introduction',
-              id: 'reference/smart-contracts',
+              id: 'learn/smart-contracts',
             },
             {
               type: 'doc',
               label: 'Programming smart contracts',
-              id: 'reference/smart-contracts-programming',
+              id: 'learn/smart-contracts-programming',
             },
           ]
         },
@@ -178,12 +178,12 @@ module.exports = {
             {
               type: 'doc',
               label: 'Structure',
-              id: 'reference/governance-structure',
+              id: 'learn/governance-structure',
             },
             {
               type: 'doc',
               label: 'Schema and contract',
-              id: 'reference/governance-schema-and-contract',
+              id: 'learn/governance-schema-and-contract',
             },
           ]
         },
@@ -196,17 +196,17 @@ module.exports = {
             {
               type: 'doc',
               label: 'Description',
-              id: 'reference/client-description',
+              id: 'learn/client-description',
             },
             {
               type: 'doc',
               label: 'Basic usage',
-              id: 'reference/client-usage',
+              id: 'learn/client-usage',
             },
             {
               type: 'doc',
               label: 'Configuration',
-              id: 'reference/client-config',
+              id: 'learn/client-config',
             },
             {
               type: "category",
@@ -217,7 +217,7 @@ module.exports = {
             {
               type: 'doc',
               label: 'Tools',
-              id: 'reference/client-tools',
+              id: 'learn/client-tools',
             },
           ],
         },
