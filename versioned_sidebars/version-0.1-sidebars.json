@@ -103,7 +103,7 @@
         {
           "type": "doc",
           "label": "First steps",
-          "id": "build/index"
+          "id": "build/taple-client"
         },
         {
           "type": "doc",
@@ -207,7 +207,7 @@
             {
               "type": "doc",
               "label": "Configuration",
-              "id": "learn/taple-client-config"
+              "id": "learn/taple-client"
             },
             {
               "type": "doc",

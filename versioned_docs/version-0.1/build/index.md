@@ -1,16 +1,5 @@
-# First steps
+import TapleClient from './_taple-client.md';
 
-The minimum requirements for running the tutorials are as follows:
+# TAPLE Client First steps
 
-* Linux operating system. TAPLE has only been tested on Linux operating systems. In the future, Windows and Mac systems will be supported.
-* Internet connection
-* [cURL](https://curl.se/)
-* [Docker](https://www.docker.com)
-* [TAPLE Tools](../learn/taple-tools.md)
-* [Git](https://git-scm.com/)
-
-:::caution IMPORTANT
-Tutorials assume that:
-- Docker service has elevated privilegies. If you have any trouble with it try using `sudo` or `su` utilities.
-- All required applications (cURL, Docker, TAPLE Tools and Git) are in the `$PATH` environment variable.
-::: 
+<TapleClient />

@@ -188,13 +188,13 @@ module.exports = {
           type: 'category',
           label: 'TAPLE Client',
           collapsible: true,
-          link: {type: 'doc', id: 'learn/client-description'},
+          link: {type: 'doc', id: 'learn/taple-client'},
           collapsed: true,
           items: [
             {
               type: 'doc',
               label: 'Description',
-              id: 'learn/client-description',
+              id: 'learn/taple-client',
             },
             {
               type: 'doc',
@@ -234,14 +234,14 @@ module.exports = {
         {
           type: 'category',
           label: 'Using TAPLE Client',
-          link: {type: 'doc', id: 'build/index'},
+          link: {type: 'doc', id: 'build/taple-client'},
           collapsible: true,
           collapsed: false,
           items: [
             {
               type: 'doc',
               label: 'First steps',
-              id: 'build/index'
+              id: 'build/taple-client'
             },
             {
               type: 'category',

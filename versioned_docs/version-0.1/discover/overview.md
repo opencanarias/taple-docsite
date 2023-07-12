@@ -35,7 +35,7 @@ Official client to create a TAPLE Node. It is the easiest way to work with TAPLE
 
 :::info
 
-To learn more about TAPLE Core and TAPLE Client visit those pages: [TAPLE Core](./../learn/taple-core.md), [TAPLE Client](./../learn/taple-client-config.md).
+To learn more about TAPLE Core and TAPLE Client visit those pages: [TAPLE Core](./../learn/taple-core.md), [TAPLE Client](./../learn/taple-client.md).
 
 :::
 
