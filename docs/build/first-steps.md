@@ -13,4 +13,4 @@ The minimum requirements for running the tutorials are as follows:
 Tutorials assume that:
 - Docker service has elevated privilegies. If you have any trouble with it try using `sudo` or `su` utilities.
 - All required applications (cURL, Docker, TAPLE Tools and Git) are in the `$PATH` environment variable.
-::: 
+:::
