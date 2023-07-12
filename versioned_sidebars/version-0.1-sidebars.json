@@ -167,18 +167,19 @@
       ]
     }
   ],
-  "referenceSidebar": [
+  "learnSidebar": [
     {
       "type": "category",
       "label": "Learn",
       "className": "sidebar-section",
+      "link": {"type": "doc", "id": "learn/index"},
       "collapsible": false,
       "collapsed": false,
       "items": [
         {
           "type": "doc",
           "label": "Architecture",
-          "id": "learn/components"
+          "id": "learn/architecture"
         },
         {
           "type": "category",

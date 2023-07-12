@@ -113,19 +113,15 @@ module.exports = {
       ]
     }
   ],
-  referenceSidebar: [
+  learnSidebar: [
     {
       type: 'category',
       label: 'Learn',
       className: 'sidebar-section',
+      link: {type: 'doc', id: 'learn/index'},
       collapsible: false,
       collapsed: false,
       items: [
-        {
-          type: 'doc',
-          label: 'Components',
-          id: 'learn/components',
-        },
         {
           type: 'category',
           label: 'Core library',
