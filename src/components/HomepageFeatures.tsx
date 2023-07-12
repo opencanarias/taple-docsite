@@ -118,7 +118,7 @@ const FeatureList: FeatureItem[] = [
           Github
         </Translate>
       </>,
-    href: 'https://github.com/search?q=topic%3Ataple+org%3Aopencanarias++fork%3Atrue&type=repositories',
+    href: 'https://github.com/search?q=topic%3Ataple+org%3Aopencanarias++fork%3Atrue+archived%3Afalse&type=repositories',
     image:
       (
         <svg className={styles.featureSvg} viewBox="0 0 1024 1024">
