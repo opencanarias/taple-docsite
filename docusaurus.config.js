@@ -150,7 +150,9 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
             label: 'Build',
           },
           {
-            to: '/community/CONTRIBUTING',
+            type: 'doc',
+            docId: 'index',
+            docsPluginId: 'community',
             label: 'Community',
             position: 'left',
           },

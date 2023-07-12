@@ -5,22 +5,18 @@ module.exports = {
             collapsible: false,
             collapsed: false,
             className: 'sidebar-section',
+            link: {type: 'doc', id: 'index'},
             label: 'Community',
             items: [
                 {
                     type: 'doc',
+                    label: 'Licenses',
+                    id: 'index',
+                },
+                {
+                    type: 'doc',
                     label: 'Contributing',
                     id: 'CONTRIBUTING',
-                },
-                {
-                    type: 'doc',
-                    label: 'Disclaimer',
-                    id: 'DISCLAIMER',
-                },
-                {
-                    type: 'doc',
-                    label: 'Licenses',
-                    id: 'licenses',
                 },
                 {
                     type: 'doc',
