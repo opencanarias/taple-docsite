@@ -1,9 +1,3 @@
-<div align="center">
-<p>⚠️ <b>TAPLE is in early development and <a href="https://www.taple.es/community/DISCLAIMER/">should not be used in production</a></b> ⚠️</p>
-<br/>
-<p><img src="https://raw.githubusercontent.com/opencanarias/public-resources/master/images/taple-logo-readme.png"></p>
-</div>
-
 # TAPLE Docsite
 
 TAPLE (pronounced T+🍎 ['tapəl]) stands for Tracking (Autonomous) of Provenance and Lifecycle Events. TAPLE is a permissioned DLT solution for traceability of assets and processes. It is:
@@ -20,7 +14,8 @@ TAPLE docsite is the official TAPLE documentation website. It is built with [Doc
 [agpl-badge]: https://img.shields.io/badge/license-AGPL-blue.svg
 [agpl-url]: https://github.com/opencanarias/taple-docsite/blob/master/LICENSE
 
-[Technology](https://www.taple.es) | [Develop](https://www.taple.es/docs/develop) | [Core](https://github.com/opencanarias/taple-core) | [Client](https://github.com/opencanarias/taple-client) | [Tools](https://github.com/opencanarias/taple-tools)
+[Discover](https://www.taple.es) | [Learn](https://www.taple.es/learn) | [Build](https://www.taple.es/build) | 
+[Code](https://github.com/search?q=topic%3Ataple+org%3Aopencanarias++fork%3Afalse+archived%3Afalse++is%3Apublic&type=repositories)
 
 ## Quick start
 ```bash
@@ -31,4 +26,4 @@ $ npm run start
 ```
 
 ## License
-This project is licensed under the [AGPL license](https://github.com/opencanarias/taple-core/blob/master/LICENSE).
+This project is licensed under the [AGPL license](./LICENSE).
