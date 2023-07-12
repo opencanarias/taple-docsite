@@ -87,29 +87,6 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
         showLastUpdateTime: true,
       }),
     ],
-    [
-      '@docusaurus/plugin-client-redirects',
-      {
-        redirects: [
-          {
-            to: '/docs/discover/background',
-            from: ['/technology', '/docs/technology/what-is-taple', '/docs', '/discover']
-          },
-          {
-            to: '/docs/build/first-steps',
-            from: ['/build', '/tutorials', '/docs/develop', '/develop']
-          },
-          {
-            to: '/docs/reference/components',
-            from: ['/reference', '/learn', ]
-          },
-          {
-            to: '/community/DISCLAIMER',
-            from: ['/community']
-          }
-        ],
-      },
-    ],
   ],
 
   markdown: {
