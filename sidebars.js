@@ -9,13 +9,8 @@ module.exports = {
       items: [
         {
           type: 'doc',
-          label: 'Background',
-          id: 'discover/background',
-        },
-        {
-          type: 'doc',
           label: 'TAPLE',
-          id: 'discover/taple',
+          id: 'discover/index',
         },
         {
           type: 'doc',
@@ -32,6 +27,7 @@ module.exports = {
           label: 'Key concepts',
           collapsible: true,
           collapsed: true,
+          link: {type: 'doc', id: 'discover/key-concepts'},
           items: [
             {
               type: 'doc',
@@ -75,6 +71,7 @@ module.exports = {
           label: 'Advanced',
           collapsible: true,
           collapsed: true,
+          link: {type: 'doc', id: 'discover/advanced'},
           items: [
             {
               type: 'doc',

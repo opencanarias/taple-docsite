@@ -9,13 +9,8 @@
       "items": [
         {
           "type": "doc",
-          "label": "DLT & Blockchain",
-          "id": "discover/background"
-        },
-        {
-          "type": "doc",
           "label": "What is TAPLE",
-          "id": "discover/taple"
+          "id": "discover/index"
         },
         {
           "type": "doc",

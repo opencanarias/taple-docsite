@@ -63,7 +63,7 @@ PeerID: 12D3KooWBXD44QCJEes2199hTGeutyG3a2cmv2YG1Y3Fi8By12fv
 ```
 
 :::info
-It should be noted that currently only two algorithms are supported but TAPLE is intended to add new algorithms (more information can be found in the following **[link](../discover/taple.md#objectives)**).
+It should be noted that currently only two algorithms are supported but TAPLE is intended to add new algorithms (more information can be found in the following **[link](../discover/index.md#objectives)**).
 :::
 
 ## TAPLE Sign
