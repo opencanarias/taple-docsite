@@ -10,7 +10,7 @@ In this tutorial we are going, step by step, learn how to:
 
 :::caution
 
-Consult the [requirements](./../first-steps.md) before continuing this tutorial.
+Consult the [requirements](./../index.md) before continuing this tutorial.
 
 :::
 

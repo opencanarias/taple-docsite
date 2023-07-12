@@ -145,7 +145,7 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
           },
           {
             type: 'doc',
-            docId: 'build/first-steps',
+            docId: 'build/index',
             position: 'left',
             label: 'Build',
           },

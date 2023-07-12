@@ -96,13 +96,14 @@
       "type": "category",
       "label": "Build",
       "className": "sidebar-section",
+      "link": {"type": "doc", "id": "build/index"},
       "collapsible": false,
       "collapsed": false,
       "items": [
         {
           "type": "doc",
           "label": "First steps",
-          "id": "build/first-steps"
+          "id": "build/index"
         },
         {
           "type": "doc",

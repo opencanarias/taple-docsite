@@ -4,6 +4,7 @@ module.exports = {
       type: 'category',
       label: 'Discover',
       className: 'sidebar-section',
+      link: {type: 'doc', id: 'discover/index'},
       collapsible: false,
       collapsed: false,
       items: [
@@ -125,6 +126,7 @@ module.exports = {
         {
           type: 'category',
           label: 'Core library',
+          link: {type: 'doc', id: 'learn/core-architecture'},
           collapsed: true,
           items: [
             {
@@ -147,6 +149,7 @@ module.exports = {
         {
           type: 'category',
           label: 'Smart contracts',
+          link: {type: 'doc', id: 'learn/smart-contracts'},
           collapsible: true,
           collapsed: true,
           items: [
@@ -167,6 +170,7 @@ module.exports = {
           label: 'Governance',
           collapsible: true,
           collapsed: true,
+          link: {type: 'doc', id: 'learn/governance-structure'},
           items: [
             {
               type: 'doc',
@@ -184,6 +188,7 @@ module.exports = {
           type: 'category',
           label: 'TAPLE Client',
           collapsible: true,
+          link: {type: 'doc', id: 'learn/client-description'},
           collapsed: true,
           items: [
             {
@@ -222,19 +227,21 @@ module.exports = {
       type: 'category',
       label: 'Build',
       className: 'sidebar-section',
+      link: {type: 'doc', id: 'build/index'},
       collapsible: false,
       collapsed: false,
       items: [
         {
           type: 'category',
           label: 'Using TAPLE Client',
+          link: {type: 'doc', id: 'build/index'},
           collapsible: true,
           collapsed: false,
           items: [
             {
               type: 'doc',
               label: 'First steps',
-              id: 'build/first-steps'
+              id: 'build/index'
             },
             {
               type: 'category',
@@ -369,11 +376,6 @@ module.exports = {
                   id: 'build/cars-track/interactuar-red',
                 }
               ],
-            },
-            {
-              type: 'doc',
-              label: 'Access control',
-              id: 'build/uc-hotel-access-control',
             },
             {
               type: 'doc',
