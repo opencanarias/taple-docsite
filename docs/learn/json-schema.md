@@ -2,9 +2,65 @@
 description: JSON Schema specification and examples
 ---
 
-# Creating a JSON-Schema
+# Learn JSON Schema
 
-The following example is by no means definitive of all the value JSON Schema can provide. For this you will need to go deep into the specification itself -- learn more at [json schema specification.](https://json-schema.org/specification.html).
+## JSON Schema specification
+The JSON Schema [specification](https://json-schema.org/specification.html) is in [DRAFT status in the IETF](https://json-schema.org/specification-links.html), however, it is widely used today and is practically considered a de facto standard.
+
+JSON-Schema establishes a set of rules that model and validate a data structure. The following example defines a schema that models a simple data structure with 2 fields: id and value. It is also indicated that the id is mandatory and that no additional fields are allowed. 
+
+```json
+{
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id"
+  ],
+  "properties": {
+    "id": {"type":"string"},
+    "value": {"type":"integer"}
+  }
+}
+```
+
+:::tip Valid JSON Object
+
+```json
+{
+    "id": "id_1",
+    "value": 23
+}
+```
+
+:::
+
+:::danger Invalid JSON Objects
+
+```json
+{
+    "value": 3 // id is not defined and is mandatory
+}
+```
+
+```json
+{
+    "id": "id_3",
+    "value": 3,
+    "count": 5    // additional properties are not allowed
+}
+```
+
+:::
+
+:::info JSON Schema online validator
+
+You can test this behavior using this [online and interactive JSON Schema validator](https://www.jsonschemavalidator.net/s/oyxObQeM).
+
+:::
+
+## Creating a JSON-Schema
+
+The following example is by no means definitive of all the value JSON Schema can provide. For this you will need to go deep into the specification itself. Learn more at [json schema specification.](https://json-schema.org/specification.html).
 
 Let's pretend we're interacting with a JSON based car registration. This registration has a car which has:
 
@@ -33,7 +89,7 @@ While generally straightforward, the example leaves some open questions. Here ar
 
 When you're talking about a data format, you want to have metadata about what keys mean, including the valid inputs for those keys. **JSON Schema** is a proposed IETF standard how to answer those questions for data.
 
-## Starting the schema
+### Starting the schema
 
 To start a schema definition, let's begin with a basic JSON schema.
 
@@ -62,7 +118,7 @@ We introduce the following pieces of terminology when we start the schema:
 * [Schema Annotations](https://json-schema.org/draft/2020-12/json-schema-validation.html#section-9.1): `title` and `description`.
 * [Validation Keyword](https://json-schema.org/draft/2020-12/json-schema-validation.html#section-6.1.1): `type`.
 
-## Defining the properties
+### Defining the properties
 
 `chassisNumber` is a numeric value that uniquely identifies a car. Since this is the canonical identifier for a var, it doesn't make sense to have a car without one, so it is required.
 
@@ -115,7 +171,7 @@ In JSON Schema terms, we update our schema to add:
 }
 ```
 
-## Going deeper with properties
+### Going deeper with properties
 
 According to the car registry, they cannot have negative mileage.
 
@@ -201,7 +257,7 @@ Therefore:
 }
 ```
 
-## Nesting data structures
+### Nesting data structures
 
 Up until this point we've been dealing with a very flat schema -- only one level. This section demonstrates nested data structures.
 
@@ -259,7 +315,7 @@ Up until this point we've been dealing with a very flat schema -- only one level
 }
 ```
 
-## Taking a look at data for our defined JSON Schema
+### Taking a look at data for our defined JSON Schema
 
 We've certainly expanded on the concept of a car since our earliest sample data (scroll up to the top). Let's take a look at data which matches the JSON Schema we have defined.
 
