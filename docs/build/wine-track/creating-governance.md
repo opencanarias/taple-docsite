@@ -1,8 +1,36 @@
 # Creating a governance
 
-Nivel caso de uso: 
-  - Breve explicación de que necesitaremos formalizar una gobernanza para poder llevar a cabo nuestro caso de uso.
+Una vez creado el primer nodo que actuará como dueño del caso de uso, es necesario formalizar el entorno en el que se llevará a cabo dicho caso de uso. Esta formalización se realiza a través de la implementación de una estructura conocida como gobernanza. A continuación, se describirán los pasos necesarios para su creación.
 
-Nivel Taple:
-- Crear una gobernanza mínima.
-- Hacer referencia en la documentación donde se indica que la gobernanza es un sujeto más dentro de la red de Taple.
+Para comenzar, generamos el material criptográfico necesario para la gobernanza en el nodo previamente creado:
+
+```
+curl --silent  --location --request POST 'http://localhost:3000/api/keys' \
+--form 'algorithm="Ed25519"'
+```
+
+Copiamos el resultado generado por la petición anterior y lo sustituimos en `public_key`:
+
+```
+curl --silent --location --request POST 'http://localhost:3000/api/event-requests' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+  "request": {
+    "Create": {
+      "governance_id": "",
+      "schema_id": "governance",
+      "namespace": "",
+      "public_key": {{MC-GENERATED}},
+      "name": "wine_track"
+    }
+  }
+}'
+```
+
+Comprobamos si la gobernanza se ha creado con éxito:
+
+```
+curl --silent --location --request GET 'http://localhost:3000/api/subjects?subject_type=governances'
+```
+
+Guardamos el id de la gobernanza, ya que será necesario para pasos posteriores en el tutorial.
