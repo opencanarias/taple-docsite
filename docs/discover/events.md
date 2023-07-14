@@ -11,8 +11,6 @@ Each event is composed of the following:
 - A series of meta information related to the subject and the event
 - A group of different signatures that are added as the event progresses in its life cycle
 
-![Microledger structure](../img/microledger-structure.svg)
-
 ## Event life cycle
 
 The event life cycle is composed of 6 stages, from its generation request to its distribution.
@@ -96,7 +94,9 @@ Unlike the others, only the validation signatures associated with the last event
 :::
 
 ### Event distribution
-Once there are enough validation signatures, the event is complete and can be distributed to the rest of the network participants. They will only check that the signatures included with the event are correct and that they comply with the requirements established in the governance.
+Once there are enough validation signatures, the event is complete and can be distributed to the rest of the network participants. The owner sends the event together with the validation signatures to the witnesses. The witnesses, once the validity of the set has been verified, will incorporate the event into the microledger, and delete the validation signatures they had stored for the previous event. 
+
+![Microledger structure](../img/microledger-structure.svg)
 
 ## Event types
 Within TAPLE, there are different types of events when operating with a subject.
