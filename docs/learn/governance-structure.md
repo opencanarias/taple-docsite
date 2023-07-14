@@ -1,5 +1,7 @@
 # Governance structure
 
+me falta definir por ejemplo el quorum. Lo engancho en governance.md. Poner bien el enlace. 
+
 In this page we will describe the governance structure and configuration. If you want to know more about what governance visit the [Governance](../discover/governance.md) page.
 
 ## Governance scheme

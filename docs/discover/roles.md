@@ -14,7 +14,11 @@ Subject ownership can be obtained by creating it or receiving it from the previo
 :::
 
 ## Issuer
-Participant who initiates a request to modify a subject. It can be the owner of a subject or another participant with sufficient permissions. In addition, an issuer can be a member of the governance or it can be completely external and anonymous.
+Participant who initiates a request to modify a subject. It can be the owner of a subject or another participant with sufficient permissions. 
+
+All an issuer needs to participate in the network is a pair of cryptographic keys. These keys are sufficient to sign [event requests](./events.md#event-request) before sending them to the subject owner. This process of sending requests to the owner is currently external to the operation of TAPLE and must be solved by the implementer of the use case.
+
+In addition, an issuer can be a member of the governance or it can be completely external and anonymous as the governance can define permissions at the level of members of the governance or for external participants.
 
 ## Evaluator
 Evaluators assume a crucial role within the governance framework, being responsible for carrying out the evaluation process. This process performs the execution of a smart contract, which usually results in a change in the state of the subject.
