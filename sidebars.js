@@ -289,6 +289,11 @@ module.exports = {
               items: [
                 {
                   type: 'doc',
+                  label: 'Introduction',
+                  id: 'build/wine-track/use-case-definition',
+                },
+                {
+                  type: 'doc',
                   label: 'Running a node',
                   id: 'build/wine-track/running-node',
                 },

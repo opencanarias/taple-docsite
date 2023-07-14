@@ -1,21 +1,21 @@
 # Segmentation
 
-Actualmente hemos conseguido que existan testigos y aprobadores de sujetos de tipo "Wine", pero este tiene un problema con uno de los últimos nodos que hemos añadido SFO, ya que este es de caracter Español y no nos interesaria por ejemplo que pudiese afectar en las decisiones que se tomasen en otros pasises como podrían ser Francia o Japón.
+Actualmente, hemos logrado tener testigos y aprobadores para los sujetos de tipo *Wine*. Sin embargo, surge un problema con uno de los nodos que hemos agregado, **SFO**, ya que este es específico de España y no nos interesa que pueda influir en decisiones que se tomen en otros países como Francia o Japón.
 
-Para poder atender a esta necesidad surge un concepto denominado segmentación por namespace, este permite que se puedan definir permisos y roles concretos sobre determinados namespace, evitando así que nodos que no consideremos relevante para una determianda segmentación puedan influir sobre estos.
+Para abordar esta necesidad, surge el concepto de segmentación por namespace, que permite definir permisos y roles específicos para determinados namespaces, evitando así que los nodos que consideremos irrelevantes para una segmentación determinada puedan influir en ella.
 
-Con estos nuevos conocimientos ha llegado el momento de seguir adaptando nuestro caso de uso, PremiumWines no solamente tiene viñedos en España, sino que tambien tiene de estos en Francia, lo que le permite producir botellas con diferentes orígenes. Como ya sabemos, en España existe un organismo capaz de aprobar el analisis de calidad del producto (SFO), pero en el caso de Francia no es así, es por ello que esta responsabilidad le queda relegada a WFO.
+Con este nuevo conocimiento, es hora de seguir adaptando nuestro caso de uso. *PremiumWines* no solo tiene viñedos en España, sino también en Francia, lo que le permite producir botellas con diferentes orígenes. Como ya sabemos, en España existe un organismo (**SFO**) capaz de aprobar el análisis de calidad del producto, pero en el caso de Francia no es así, por lo que esta responsabilidad recae en **WFO**.
 
-Para conseguir lo que proponemos debemos realizar ciertos cambios en el esquema actual, estos son:
+Para lograr lo que proponemos, debemos realizar algunos cambios en el esquema actual. Estos son:
 
-* *PremiumWines* debe poder crear sujetos en ambos paises, para ello debe ser creador en los *namespace* *Spain* y *France*.
-* *WFO* pasa a ser testigo y aprobador de los vinos en España y Francia.
-* Las *invocaciones externas* deben poder realizarse tanto en España como en Francia.
-* *SFO* solo será aprobador y testigo de los "Wines" españoles.
+- *PremiumWines* debe poder crear sujetos en ambos países, por lo tanto, debe ser creador en los *namespaces* "Spain" y "France".
+- *WFO* pasa a ser testigo y aprobador de los vinos tanto en España como en Francia.
+- Las invocaciones externas deben poder realizarse tanto en España como en Francia.
+- *SFO* solo será aprobador y testigo de los vinos españoles.
 
-La ejecución del siguiente comando conseguirá todo lo mencionado anteriormente:
+La ejecución del siguiente comando logrará todo lo mencionado anteriormente:
 
-```
+```bash
 curl --location --request POST 'http://localhost:3000/api/event-requests' \
 --header 'Content-Type: application/json' \
 --data-raw '{
@@ -181,46 +181,45 @@ curl --location --request POST 'http://localhost:3000/api/event-requests' \
 }'
 ```
 
-* **Nota**: Se han modificado el orden de algunos elementos en el esquema para que cuando se traten de consultar se vean con mayor claridad.
+* **Nota**: Se ha modificado el orden de algunos elementos en el esquema para que, al realizar consultas, se visualicen con mayor claridad.
 
-Una vez lanzada la solicitud de actualización de la gobernanza, debemos obtener una vez más la petición de aprobación, para ello ejecutaremos:
+Una vez que se haya enviado la solicitud de actualización de la gobernanza, debemos obtener nuevamente la notificación de aprobación. Para hacerlo, ejecutaremos el siguiente comando:
 
-```
+```bash
 curl --silent --location --request GET 'http://localhost:3000/api/approval-requests?status=Pending'
 ```
 
-Y copiaremos el valor del campo `id`, pero esta vez, será necesaria tambien la aprobación por parte de WFO, por ello tendremos que ejecutar las siguientes dos acciones:
+Copiaremos el valor del campo `id`, pero en esta ocasión será necesaria también la aprobación por parte de **WFO**. Por lo tanto, realizaremos las siguientes dos acciones:
 
-```
+```bash
 curl --silent --location --request PATCH 'http://localhost:3000/api/approval-requests/{{ID-ANTERIOR}}' \
 --header 'x-api-key: 1453' \
 --header 'Content-Type: application/json' \
 --data-raw '{"approvalType": "Accept"}'
 ```
 
-```
+```bash
 curl --silent --location --request PATCH 'http://localhost:3002/api/approval-requests/{{ID-ANTERIOR}}' \
 --header 'x-api-key: 1453' \
 --header 'Content-Type: application/json' \
 --data-raw '{"approvalType": "Accept"}'
 ```
 
-Si todo ha ido correctamente al ejecutar el siguiente comando el sn de la gobernanza debería ser 7 y deberían aparecer los cambios comentados anteriormente:
+Si todo ha ido correctamente, al ejecutar el siguiente comando, el valor de `sn` de la gobernanza debería ser 7 y deberían aparecer los cambios mencionados anteriormente:
 
-```
+```bash
 curl --location --request GET 'http://localhost:3000/api/subjects?subject_type=governances'
 ```
 
-Para comprobar que la segmentación por namespace funciona correctamente, comenzaremos por crear una botella francesa, para ello ejecutaremos el siguiente comando para crear su nuevo material criptográfico:
+Para verificar que la segmentación por *namespace* funciona correctamente, comenzaremos creando una botella de vino francesa. Para hacerlo, ejecutaremos el siguiente comando para generar su nuevo material criptográfico:
 
-```
+```bash
 curl --location --request POST 'http://localhost:3001/api/keys' \
 --form 'algorithm="Ed25519"'
 ```
 
-Y a continuación este otro para crear la botella:
-
-```
+Y a continuación, ejecutaremos el siguiente comando para crear la botella de vino:
+```bash
 curl --location --request POST 'http://localhost:3001/api/event-requests' \
 --header 'Content-Type: application/json' \
 --data-raw '{
@@ -236,17 +235,17 @@ curl --location --request POST 'http://localhost:3001/api/event-requests' \
 }'
 ```
 
-Si todo ha ido correctamente, al ejecutar el siguiente comando debería aparecer esta nueva botella junto con la tranferida anteriormente al ciudadano:
+Si todo ha ido correctamente, al ejecutar el siguiente comando, deberías ver la nueva botella creada junto con la botella transferida anteriormente al **ciudadano**:
 
-```
+```bash
 curl --location --request GET 'http://localhost:3001/api/subjects?subject_type=all&governanceid={{GOVERNANCE-ID}}'
 ```
 
-Debemos copiar su `subject_id` ya que será necesario para los siguientes pasos.
+Debemos copiar su `subject_id`, ya que será necesario para los siguientes pasos.
 
-Antes de probar la emisión del evento de certificación (para comprobar la segmentación) tenemos que inicializar la botella, para ello ejecutaremos:
+Antes de probar la emisión del evento de certificación para comprobar la segmentación, debemos inicializar la botella. Para hacerlo, ejecutaremos el siguiente comando:
 
-```
+```bash
 curl --location --request POST 'http://localhost:3001/api/event-requests' \
 --header 'Content-Type: application/json' \
 --data-raw '{
@@ -265,43 +264,43 @@ curl --location --request POST 'http://localhost:3001/api/event-requests' \
 }'
 ```
 
-Ahora al ejecutar de nuevo la consulta del sujeto este debería de tener un sn 1 y la información anterior:
+Ahora, al ejecutar nuevamente la consulta del sujeto, debería tener un valor de `sn` igual a 1 y mostrar la información previamente mencionada:
 
-```
+```bash
 curl --location --request GET 'http://localhost:3001/api/subjects?subject_type=all&governanceid={{GOVERNANCE-ID}}'
 ```
 
-Ahora probaremos a emitir el evento de certificación. Para ello, generaremos la firma del evento que deseamos emitir utilizando `taple-sign`, con el siguiente formato, reemplazando `subject_id` por el identificador de nuestro sujeto de vino:
+Probaremos a emitir el evento de certificación. Para ello, generaremos la firma del evento que deseamos emitir utilizando `taple-sign`, con el siguiente formato, reemplazando `subject_id` por el identificador de nuestro sujeto de vino:
 
-```
+```bash
 cargo run "f855c6736463a65f515afe7b85d1418c096ed73852b42bbe4c332eb43d532326" "{\"Fact\":{\"subject_id\":\"{{SUBJECT-ID}}\",\"payload\":{\"OrganicCertification\":{\"fertilizers_control\":false,\"pesticides_control\":false,\"analytics\":false,\"additional_info\":\"test\"}}}}"
 ```
 
-El resultado de esta ejecución lo incluiremos en la siguiente petición:
+El resultado de esta ejecución se incluirá en la siguiente solicitud:
 
-```
+```bash
 curl --silent --location --request POST 'http://localhost:3001/api/event-requests' \
 --header 'Content-Type: application/json' \
 --data-raw 'SIGN-RESULT'
 ```
 
-Si la segmentación ha ido correctamente, el mensaje para la aprobación de este sujeto solo debería haberle llegado a WFO, para consultarlo ejecutaremos:
+Si la segmentación se ha realizado correctamente, el mensaje de aprobación para este sujeto solo debería haber sido recibido por **WFO**. Para consultarlo, ejecutaremos el siguiente comando:
 
-```
+```bash
 curl --location --request GET 'http://localhost:3002/api/approval-requests?status=pending'
 ```
 
-Compiaremos su `id` y la aceptaremos con la siguiente petición:
+Copiaremos su `id` y lo utilizaremos para aceptarla mediante la siguiente solicitud:
 
-```
+```bash
 curl --location --request PATCH 'http://localhost:3002/api/approval-requests/{{ID-ANTERIOR}}' \
 --header 'x-api-key: 1453' \
 --header 'Content-Type: application/json' \
 --data-raw '{"approvalType": "Accept"}'
 ```
 
-Ahora al consultar una ultima vez el sujeto debería aparecer su `sn` a 2 y la variable `organic_certified` a false:
+Ahora, al consultar una vez más el sujeto, debería mostrarse un valor de `sn` igual a 2 y el campo `organic_certified` debería ser `false`.
 
-```
+```bash
 curl --location --request GET 'http://localhost:3001/api/subjects?subject_type=all&governanceid={{GOVERNANCE-ID}}'
 ```

@@ -210,7 +210,7 @@ fn check_is_organic(fertilizers_control: bool, pesticides_control: bool, analyti
 
 Una vez que hayamos declarado tanto el esquema como el contrato inteligente, será necesario emitir un evento de **hecho** a la gobernanza para agregar esta nueva información. Para hacerlo, ejecutaremos lo siguiente:
 
-```
+```bash
 curl --silent --location --request POST 'http://localhost:3000/api/event-requests' \
 --header 'Content-Type: application/json' \
 --data-raw '{
@@ -328,21 +328,21 @@ curl --silent --location --request POST 'http://localhost:3000/api/event-request
 
 Una vez emitido el evento, será necesario obtener la nueva solicitud de actualización. Para hacerlo, ejecutamos lo siguiente:
 
-```
+```bash
 curl --silent --location --request GET 'http://localhost:3000/api/approval-requests?status=Pending'
 ```
 
 Compiaremos el valor del campo `id` y acepateremos la solicitud actualización de la gobernanza:
 
-```
+```bash
 curl --silent --location --request PATCH 'http://localhost:3000/api/approval-requests/{{ID-ANTERIOR}}' \
 --header 'x-api-key: 1453' \
 --header 'Content-Type: application/json' \
 --data-raw '{"approvalType": "Accept"}'
 ```
 
-Por último, realizaremos una consulta a la gobernanza para verificar que el cambio se ha efectuado correctamente. Si todo ha sido realizado según lo previsto, ahora debería tener sn 2 y tanto el esquema como el contrato deberían aparecer:
+Por último, realizaremos una consulta a la gobernanza para verificar que el cambio se ha efectuado correctamente. Si todo ha sido realizado según lo previsto, ahora debería tener `sn` 2 y tanto el esquema como el contrato deberían aparecer:
 
-```
+```bash
 curl --silent --location --request GET 'http://localhost:3000/api/subjects?subject_type=governances'
 ```

@@ -1,12 +1,12 @@
 # Approvals
 
-Si observamos lo realizado en el paso anterior, nos damos cuenta de un grave riesgo: el sujeto será aprobado automáticamente sin la verificación de un participante de la red, lo cual puede conducir a un comportamiento no deseado. Por lo tanto, en este punto nos centraremos en incluir un nuevo miembro que se encargará de llevar a cabo esta tarea. Este nuevo miembro será la Spanish Food Organization (SFO).
+Si observamos lo realizado en el paso anterior, nos damos cuenta de un grave riesgo: el sujeto será aprobado automáticamente sin la verificación de un participante de la red, lo cual puede conducir a un comportamiento no deseado. Por lo tanto, en este punto nos centraremos en incluir un nuevo miembro que se encargará de llevar a cabo esta tarea. Este nuevo miembro será la *Spanish Food Organization* (**SFO**).
 
 La incorporación de este nuevo miembro y el rol que desempeñará son fundamentales para garantizar el control de calidad, asegurando que solo las empresas autorizadas puedan realizar esta acción.
 
 Para incluirlo, primero debemos crear el nuevo nodo. Por lo tanto, ejecutaremos el siguiente comando:
 
-```
+```bash
 cargo run -- --http \
     --http.port 3003 \
     -k 65698ba9608521d65137912cdd85601820574415ebc3a9a7285e7493012167c6 \
@@ -17,7 +17,7 @@ cargo run -- --http \
 
 Un problema que enfrentamos es que, al igual que el nodo anterior, este nuevo nodo no podrá acceder automáticamente a esta gobernanza. Por lo tanto, antes de avanzar, debemos preautorizar la gobernanza para permitir el acceso del nuevo nodo. Para lograrlo, ejecutaremos lo siguiente:
 
-```
+```bash
 curl --silent --location --request PUT 'http://localhost:3003/api/allowed-subjects/{{GOVERNANCE-ID}}' \
 --header 'Content-Type: application/json' \
 --data-raw '{
@@ -25,7 +25,7 @@ curl --silent --location --request PUT 'http://localhost:3003/api/allowed-subjec
 }'
 ```
 
-El siguiente paso será agregarlo a la gobernanza como aprobador y testigo de los sujetos con el esquema "Wine". Además, modificaremos el método del contrato inteligente de **certificación orgánica** para que requiera aprobación. El contrato se verá de la siguiente manera:
+El siguiente paso será agregarlo a la gobernanza como aprobador y testigo de los sujetos con el esquema *Wine*. Además, modificaremos el método del contrato inteligente de **certificación orgánica** para que requiera aprobación. El contrato se verá de la siguiente manera:
 
 ```rs
 
@@ -72,7 +72,7 @@ StateEvent::OrganicCertification {
 
 La ejecución que debemos realizar es la siguiente:
 
-```
+```bash
 curl --location --request POST 'http://localhost:3000/api/event-requests' \
 --header 'Content-Type: application/json' \
 --data-raw '{
@@ -133,20 +133,20 @@ curl --location --request POST 'http://localhost:3000/api/event-requests' \
 
 Una vez lanzada la solicitud de actualización de la gobernanza, debemos obtener una vez más la petición de aprobación, para ello ejecutaremos:
 
-```
+```bash
 curl --silent --location --request GET 'http://localhost:3000/api/approval-requests?status=Pending'
 ```
 
-Y copiaremos el valor del campo `id`, pero esta vez, será necesaria tambien la aprobación por parte de WFO, por ello tendremos que ejecutar las siguientes dos acciones:
+Y copiaremos el valor del campo `id`, pero esta vez, será necesaria tambien la aprobación por parte de **WFO**, por ello tendremos que ejecutar las siguientes dos acciones:
 
-```
+```bash
 curl --silent --location --request PATCH 'http://localhost:3000/api/approval-requests/{{ID-ANTERIOR}}' \
 --header 'x-api-key: 1453' \
 --header 'Content-Type: application/json' \
 --data-raw '{"approvalType": "Accept"}'
 ```
 
-```
+```bash
 curl --silent --location --request PATCH 'http://localhost:3002/api/approval-requests/{{ID-ANTERIOR}}' \
 --header 'x-api-key: 1453' \
 --header 'Content-Type: application/json' \
@@ -155,33 +155,33 @@ curl --silent --location --request PATCH 'http://localhost:3002/api/approval-req
 
 Con todo esto, al lanzar una vez más una consulta sobre nuestra gobernanza debería de aparecernos su correspondiente nueva versión:
 
-```
+```bash
 curl --silent --silent --location --request GET 'http://localhost:3003/api/subjects?subject_type=governances'
 ```
 
 Para verificar que todo lo mencionado anteriormente funciona correctamente, realizaremos una solicitud de evento al **certificado orgánico**. Para ello, generaremos la firma del evento que deseamos emitir utilizando `taple-sign`, con el siguiente formato, reemplazando `subject_id` por el identificador de nuestro sujeto de vino:
 
-```
+```bash
 cargo run "f855c6736463a65f515afe7b85d1418c096ed73852b42bbe4c332eb43d532326" "{\"Fact\":{\"subject_id\":\"{{SUBJECT-ID}}\",\"payload\":{\"OrganicCertification\":{\"fertilizers_control\":false,\"pesticides_control\":true,\"analytics\":true,\"additional_info\":\"test\"}}}}"
 ```
 
 El resultado de esta ejecución lo incluiremos en la siguiente petición:
 
-```
+```bash
 curl --silent --location --request POST 'http://localhost:3001/api/event-requests' \
 --header 'Content-Type: application/json' \
 --data-raw 'SIGN-RESULT'
 ```
 
-Ahora debemos consultar las solicitudes de aprobación que han llegado a SFO y debemos denegar la que aparece, ya que este evento ha sido emitido por una entidad en la que no confiamos. Para obtener nuevamente la solicitud de aprobación, ejecutaremos el siguiente comando:
+Ahora debemos consultar las solicitudes de aprobación que han llegado a **SFO** y debemos denegar la que aparece, ya que este evento ha sido emitido por una entidad en la que no confiamos. Para obtener nuevamente la solicitud de aprobación, ejecutaremos el siguiente comando:
 
-```
+```bash
 curl --silent --location --request GET 'http://localhost:3000/api/approval-requests?status=Pending'
 ```
 
 Copiaremos el valor del campo `id` y lo pegaremos en la siguiente solicitud:
 
-```
+```bash
 curl --silent --location --request PATCH 'http://localhost:3003/api/approval-requests/{{ID-ANTERIOR}}' \
 --header 'x-api-key: 1453' \
 --header 'Content-Type: application/json' \
@@ -190,5 +190,5 @@ curl --silent --location --request PATCH 'http://localhost:3003/api/approval-req
 
 Ahora, al realizar una consulta al sujeto de vino que hemos creado, debería tener un valor de `sn` igual a 3. Además, el campo `organic_certified` debería seguir siendo `true`, ya que el evento de modificación ha sido rechazado. En caso de que el evento hubiera sido aprobado, el valor de `organic_certified` se habría actualizado a `false`.
 
-```
-curl --location --request GET 'http://localhost:3001/api/subjects?subject_type=all&governanceid={{GOVERNANCE-ID}}'
+```bash
+curl --silent --location --request GET 'http://localhost:3001/api/subjects?subject_type=all&governanceid={{GOVERNANCE-ID}}'
