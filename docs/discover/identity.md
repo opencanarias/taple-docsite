@@ -19,7 +19,7 @@ Although several solutions to the trilemma have already been proposed, we have p
 ### Derivation codes
 This cryptographic material is large binary numbers, representing a challenge when used as identifiers. The best way to handle identifiers is through a character string, and for the conversion, we have adopted [Base64 encoding](https://www.rfc-editor.org/rfc/rfc4648), which encodes every 3 bytes of a binary number into 4 ASCII characters. As the cryptographic material being managed is not a multiple of 3 (32 bytes and 64 bytes), it is padded with one additional character (32 bytes) or two (64 bytes). As in KERI, we have taken advantage of these additional characters to establish a derivation code to determine the type of material, placing the derivation character(s) at the beginning. Figure 3 shows this solution.
 
-![Derivation codes](../img/derivation-codes.png)
+![Derivation codes](../img/derivation-codes.svg)
 
 The following table details the currently supported derivation codes :
 
