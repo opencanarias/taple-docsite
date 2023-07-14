@@ -1,8 +1,11 @@
 # Wine track
 
-En este tutorial, te guiaremos a través del desarrollo de un caso de uso utilizando real através de Taple.
+## Introduction
+comentar qeu vamos aprender, similar a lol que pone en minimal network
 
-Este caso de uso puede ser un ejemplo realmente útil para comprobar la viabilidad de Taple en un caso de uso real, como podría ser el seguimiento del ciclo de vida de un tipo de vino de alta categoria, permitiendo certificar a sus compradores finales la calidad de su ciclo de vida hasta el momento de su adquisición. Alguno de los aspectos que podrían comprobarse son la temperatura, ya que este para su correcta conservación no debería rebasar un determinado rango.
+## Use case description
+
+En este tutorial, te guiaremos a través del desarrollo de un caso de uso utilizando real através de Taple. Este caso de uso puede ser un ejemplo realmente útil para comprobar la viabilidad de Taple en un caso de uso real, como podría ser el seguimiento del ciclo de vida de un tipo de vino de alta categoria, permitiendo certificar a sus compradores finales la calidad de su ciclo de vida hasta el momento de su adquisición. Alguno de los aspectos que podrían comprobarse son la temperatura, ya que este para su correcta conservación no debería rebasar un determinado rango.
 
 El caso de uso se centra en el ciclo de vida del vino y abarca diversas etapas, como la creación de un nodo, la implementación de una gobernanza, la creación de eventos, la adición de esquemas y participantes, las invocaciones externas, las aprobaciones, las transferencias, la segmentación y el fin de vida de un sujeto.
 
