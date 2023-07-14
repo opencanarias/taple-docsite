@@ -17,7 +17,7 @@ Each subject complies with the following: 
 
 Each subject contains internally a ledger in which the events that affect only that subject are recorded, the microledger. This microledger is a set of events chained together using cryptographic mechanisms. It is similar to a blockchain in that the different elements of the chain are related by including the cryptographic fingerprint of the immediately preceding element, but, unlike blockchains in which each block can include a set of transactions, possibly from different accounts, in the microledger each element represents a single event of the subject itself.
 
-![Ledger differences](../img/ledger-differences.png)
+![Ledger differences](../img/ledger-differences.svg)
 
 :::info
 
@@ -29,7 +29,7 @@ To learn more about the microledger structure visit the [Events](./events.md) pa
 
 The state is the representation of the information stored by a subject at a given instant, usually the current moment. The state is obtained by applying, one after the other, the different microledger events on the initial state of the subject defined in its [genesis-event](/docs/discover/events#evento-de-g%C3%A9nesis-genesis-event). 
 
-![Subjects](../img/subject-state.png)
+![Subjects](../img/subject-state.svg)
 
 :::info
 

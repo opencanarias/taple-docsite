@@ -6,7 +6,7 @@ Taple has been designed with traceability use cases in mind. It is considered th
 
 Any process that requires traceability with high levels of security and confidence, is apt to be a suitable use case to be traced through TAPLE nodes, for instance, the water cycle. This process describes how the flow of water starts from a point A and passes through a series of other points until it finally returns to the point of origin, simulating a circular path. Along the way, the water flow passes through various entities and processes that cause its volume to decrease. Simultaneously, at some of these points it is possible to analyze the state of that flow by means of sensors or other systems that allow to obtain and generate additional information of the flow itself.
 
-![Diagram Water cycle](../img/water_cycle.png)
+![Diagram Water cycle](../img/water-cycle.svg)
 
 ## Assets
 
