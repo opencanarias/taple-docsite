@@ -18,7 +18,7 @@ IoT is defined as [The Internet of things](https://en.wikipedia.org/wiki/Interne
 
 Today, the benefits of a city are not only limited to physical infrastructure, services and institutional support, but also to the availability and quality of communication channels, and the transmission and exploitation of knowledge from these channels to improve and efficiently provide resources to social infrastructures. 
 
-![Top case uses Smart Cities](../img/smart_city_top_use_cases.png)
+![Top case uses Smart Cities](../img/smart-city.svg)
 
 One of the most interesting processes within a smart city, both for its public health implications and its economic nature, is waste management. The first step is to collect the garbage provided by citizens in containers which have sensors or other systems that determine the weight of the container and how full they are. Once the sensor is activated at the value set by the company, the garbage truck picks up the container to take it to the recycling factory, where they are responsible for separating these elements and perform the relevant processes for recycling. Finally, when the process is finished, these materials are put back on sale so that they can be used again and the process explained above is repeated. 
 

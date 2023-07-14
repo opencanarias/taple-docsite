@@ -12,7 +12,7 @@ TAPLE was created to address these problems and focuses on meeting the following
 * Have a flexible and adaptable cryptographic scheme mechanism for a multitude of scenarios, including PQC.
 * Sustainable and efficient from the point of view of energy consumption.
 
-![Objectives](../img/problems_and_objectives.png)
+![Objectives](../img/problems_and_objectives.svg)
 
 ## Background
 
@@ -23,7 +23,7 @@ DLT stands for *Distributed Ledger Technology*, but, ¿what is really a DLT?. Th
 - Shared. Usually not all nodes are under the control of the same organisation. This makes it necessary to assume that there could be malicious nodes within the network and, therefore, to establish security mechanisms. Moreover, not all nodes would have to have exactly the same information, as there could be private transactions, or simply different interest groups.
 - Immutable and tamper-resistant. It implements cryptographic security mechanisms that prevent its content from being altered, or at least, if any node tries to modify the information, it can be easily detected and blocked.
 
-![distributed-network](../img/distributed-network.png)
+![distributed-network](../img/distributed-network.svg)
 
 :::info
 
@@ -59,7 +59,7 @@ Possibly the best known consensus mechanism is ***PoW (Proof of Work)***, used b
 
 :::
 
-![Blockchain-figure](../img/blockchain-structure.png)
+![Blockchain-figure](../img/blockchain-structure.svg)
 
 #### When do we need a Blockchain?
 
@@ -81,7 +81,7 @@ Like any other technology, blockchain has a number of use cases for which it is,
 - Security, or the ability of the network to resist external attacks or data corruption;
 - Scalability, or the ability to adapt to ever-increasing demands.
 
-![Trilema](../img/trilema.png)
+![Trilema](../img/trilema.svg)
 
 According to this trilemma, it is very difficult to satisfy all three concepts simultaneously, which marks the limits of the use of a blockchain technology. Many blockchain networks try to alleviate this problem, but to do so they need to sacrifice, at least in part, some of their advantages. For example, technologies such as Ethereum are committed to enhancing security and decentralisation, which has a direct impact on their ability to scale. 
 
@@ -93,7 +93,7 @@ For instance, Ethereum 2 intends to increase its scalability by introducing nume
 
 :::
 
-![dlt-types](../img/dlt-types.png)
+![dlt-types](../img/dlt-types.svg)
 
 Each use case is unique and it is necessary to assess your specific needs to determine whether it is appropriate to use a blockchain technology, which one, and if not, what alternatives are available, e.g. within other DLTs, for instance [TAPLE](index.md).
 
