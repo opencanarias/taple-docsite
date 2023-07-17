@@ -57,13 +57,13 @@ module.exports = {
             },
             {
               type: 'doc',
-              label: 'Governance',
-              id: 'discover/governance',
+              label: 'Smart Contracts',
+              id: 'discover/smart-contracts',
             },
             {
               type: 'doc',
-              label: 'Smart Contracts',
-              id: 'discover/smart-contracts',
+              label: 'Governance',
+              id: 'discover/governance',
             }
           ],
         },

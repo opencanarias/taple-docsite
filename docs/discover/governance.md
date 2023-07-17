@@ -23,7 +23,7 @@ Governance is structured into the following components: members, schemas, polici
 These are the persons, entities or organizations that participate in the governance and therefore may be part of the use cases that are supported. Each member declares a unique identifier that represents the cryptographic material with which it will operate in the network, their [identity](./identity.md).
 
 ### Schemas
-[Schemas](./schemas.md) are the data structures that model the information stored in the subjects. Within a governance, different schemas can be defined to support different use cases. When a subject is created, it defines which governance it is associated with and which schema it will use. Moreover, each scheme has a smart contract associated with it that will allow the status of the subjects to be modified. 
+[Schemas](./schemas.md) are the data structures that model the information stored in the subjects. Within a governance, different schemas can be defined to support different use cases. When a subject is created, it defines which governance it is associated with and which schema it will use. Moreover, each scheme has a [smart contract](./smart-contracts.md) associated with it that will allow the status of the subjects to be modified. 
 
 ### Roles
 [Roles](./roles.md) represent groups of participants with some kind of common interest in a set of subjects. Roles allow us to assign permissions over these groups of subjects more easily than if we had to assign them individually to each member of the governance. 
