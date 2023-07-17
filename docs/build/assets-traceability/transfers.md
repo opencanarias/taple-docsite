@@ -15,6 +15,16 @@ cargo run -- --http \
     --network.known_node "/ip4/172.17.0.1/tcp/50000/p2p/12D3KooWHHjN5vKSKeCWiBG3gHaDRDp6YzsEgu9iTesYqrWxAgFk"
 ```
 
+```bash
+docker run opencanarias/taple-client:0.2 \
+    -p 3004:3000 \
+    -p 50004:50000 \
+    -e TAPLE_HTTP=true \
+    -e TAPLE_SECRET_KEY=4f0e3c9cd24ab3420b81220bb7ebccb4e42501d3667dea81838b3bfaae20c936 \
+    -e TAPLE_NETWORK_LISTEN_ADDR=/ip4/0.0.0.0/tcp/50004 \
+    -e TAPLE_NETWORK_KNOWN_NODE=/ip4/172.17.0.1/tcp/50000/p2p/12D3KooWHHjN5vKSKeCWiBG3gHaDRDp6YzsEgu9iTesYqrWxAgFk 
+``````
+
 Generamos la nueva clave pública para el sujeto sobre el nuevo nodo:
 
 ```bash
