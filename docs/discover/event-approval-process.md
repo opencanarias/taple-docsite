@@ -4,7 +4,7 @@ description: Approval process prior to event generation
 
 # Event approval process
 
-The approval phase involves asking the approvers to vote for or against the application of an event. This process can be automated but tends to be manual, as the response usually requires interaction with the TAPLE API, so it requires a user who can interact with it and therefore usually takes longer than the other phases.
+The approval phase involves asking the approvers to vote for or against the application of an event. This process can be automated but tends to be manual. The response requires interaction with the TAPLE API if it's set to manual, so it requires a user who can interact with it and therefore generally takes longer than the other phases.
 
 The approvers are defined by the governance, so they must possess it in order to carry out the evaluation, otherwise they would not have access to the contract, which in turn is stored in the state of the governance.
 
