@@ -15,6 +15,16 @@ cargo run -- --http \
     --network.known_node "/ip4/172.17.0.1/tcp/50000/p2p/12D3KooWHHjN5vKSKeCWiBG3gHaDRDp6YzsEgu9iTesYqrWxAgFk"
 ```
 
+```bash
+docker run opencanarias/taple-client:0.2 \
+    -p 3001:3000 \
+    -p 50001:50000 \
+    -e TAPLE_HTTP=true \
+    -e TAPLE_SECRET_KEY=4f0e3c9cd24ab3420b81220bb7ebccb4e42501d3667dea81838b3bfaae20c936 \
+    -e TAPLE_NETWORK_LISTEN_ADDR=/ip4/0.0.0.0/tcp/50001 \
+    -e TAPLE_NETWORK_KNOWN_NODE=/ip4/172.17.0.1/tcp/50000/p2p/12D3KooWHHjN5vKSKeCWiBG3gHaDRDp6YzsEgu9iTesYqrWxAgFk 
+``````
+
 Un problema que enfrentamos es que el nodo actualmente no podrá acceder a esta gobernanza. Por lo tanto, antes de avanzar, debemos otorgar permisos previos a la gobernanza. Para hacerlo, ejecutaremos lo siguiente:
 
 ```bash
@@ -102,6 +112,16 @@ cargo run -- --http \
     --network.listen_addr "/ip4/0.0.0.0/tcp/50002" \
     --network.known_node "/ip4/127.0.0.1/tcp/50000/p2p/12D3KooWHHjN5vKSKeCWiBG3gHaDRDp6YzsEgu9iTesYqrWxAgFk"
 ```
+
+```bash
+docker run opencanarias/taple-client:0.2 \
+    -p 3002:3000 \
+    -p 50002:50000 \
+    -e TAPLE_HTTP=true \
+    -e TAPLE_SECRET_KEY=6d3103185146ecedd28d3759df693999927e69aacb55e1aa9fe7ac17555da81c \
+    -e TAPLE_NETWORK_LISTEN_ADDR=/ip4/0.0.0.0/tcp/50002 \
+    -e TAPLE_NETWORK_KNOWN_NODE=/ip4/172.17.0.1/tcp/50000/p2p/12D3KooWHHjN5vKSKeCWiBG3gHaDRDp6YzsEgu9iTesYqrWxAgFk 
+``````
 
 Nos encontramos con un problema similar al nodo anterior, ya que este nuevo nodo tampoco podrá acceder a la gobernanza de forma predeterminada. Por lo tanto, antes de avanzar, debemos preautorizar la gobernanza para que el nuevo nodo pueda acceder a ella. A continuación, ejecutaremos lo siguiente:
 
