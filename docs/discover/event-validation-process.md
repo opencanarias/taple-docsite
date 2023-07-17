@@ -54,39 +54,37 @@ pub struct NotaryEvent {
 
 The previous proof is optional because it does not exist in the case of event 0. The hashset of signatures includes all the signatures of the validators that allow the previous proof to have reached quorum. With this data, the validator can trust the previous proof sent to them if they do not previously have it.
 
-The communication to request validation and to send validation is direct between the controller and the validator and is carried out asynchronously.
+The communication to request validation and to send validation is direct between the owner and the validator and is carried out asynchronously.
 
 ## Correct Chain
 
-As we mentioned earlier, the validation phase focuses on achieving a unique chain, but not on whether this chain is correct. This responsibility ultimately falls on the witnesses, who are the subject's stakeholders. The validators do not need to have the subject's updated chain to validate the next proof, as the proofs are self-contained and at most require information from the previous proof. But nothing prevents a malicious controller from sending erroneous data in the proof, the validators will not realize it because they do not have the necessary context and will sign as if everything was correct. The witnesses, however, do have the updated subject, so they can detect this kind of tricks. If something like this were to happen, the witnesses are the ones responsible for reporting it and the subject would be blocked.
+As we mentioned earlier, the validation phase focuses on achieving a unique chain, but not on whether this chain is correct. This responsibility ultimately falls on the witnesses, who are the subject's stakeholders. The validators do not need to have the subject's updated chain to validate the next proof, as the proofs are self-contained and at most require information from the previous proof. But nothing prevents a malicious owner from sending erroneous data in the proof, the validators will not realize it because they do not have the necessary context and will sign as if everything was correct. The witnesses, however, do have the updated subject, so they can detect this kind of tricks. If something like this were to happen, the witnesses are the ones responsible for reporting it and the subject would be blocked.
 
 ## Sequence Diagram
 
 ```mermaid
 sequenceDiagram
-participant Owner as Owner
-participant Validator as Validator
+actor Owner as Owner
+actor Validator1 as Validator 1
+actor Validator2 as Validator 2
+actor Validator3 as Validator 3
 
-Owner->>Validator: Send NotaryEvent
-Validator->>Validator: Inspect Governance Version
-alt Governance Version Matches
-    alt Validator has Last Proof
-        Validator->>Validator: Check if Proofs are Valid
-        alt Proofs are Valid
-            Validator->>Owner: Return NotaryEventResponse with Validator's Signature
-        else Proofs are Invalid
-            Note over Validator: End Process (No Response)
-        end
-    else Validator does not have Last Proof
-        Validator->>Validator: Check Last Proof and Signatures
-        alt Last Proof and Signatures are Valid
-            Validator->>Owner: Return NotaryEventResponse with Validator's Signature
-        else Last Proof and Signatures are Invalid
-            Note over Validator: End Process (No Response)
-        end
-    end
-else Governance Version Mismatch
-    Validator->>Owner: Send Appropriate Message (GovernanceTooLow or GovernanceTooHigh)
+Owner->>Validator1: Send NotaryEvent
+Owner->>Validator2: Send NotaryEvent
+Owner->>Validator3: Send NotaryEvent
+
+alt Governance Version Matches and Proofs are Valid
+    Validator1->>Validator1: Inspect Governance, Check Last Proof and Signatures
+    Validator2->>Validator2: Inspect Governance, Check Last Proof and Signatures
+    Validator3->>Validator3: Inspect Governance, Check Last Proof and Signatures
+    Validator1->>Owner: Return NotaryEventResponse with Validator's Signature
+    Validator2->>Owner: Return NotaryEventResponse with Validator's Signature
+    Validator3->>Owner: Return NotaryEventResponse with Validator's Signature
+else Governance Version Mismatch or Proofs are Invalid
+    Validator1->>Owner: Send Appropriate Message (if applicable)
+    Validator2->>Owner: Send Appropriate Message (if applicable)
+    Validator3->>Owner: Send Appropriate Message (if applicable)
+    Note over Validator1,Validator3: End Process (No Response)
 end
 
 Owner->>Owner: Collect Enough Validator Signatures
