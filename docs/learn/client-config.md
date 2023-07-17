@@ -1,6 +1,7 @@
 # TAPLE Client configuration
 
 The configuration of a TAPLE node can be done at different levels, each of which overwrites the previous one in case of conflict. The order, and consequently the list of existing options, is as follows:
+
 - Default configuration.
 - Configuration by **.toml** file.
 - Configuration by input parameters.
@@ -27,6 +28,7 @@ descripción de la configuración
 - EnvVar: TAPLE_DB_PATH
 - Command line: --db-path
 - file: db-path
+## Configuration by file
 
 All TAPLE nodes can be configured using a settings.toml file that is located in the same location as the binary. This file does not have to specify all possible parameters, only those that are of interest to overwrite with respect to the default parameters.
 
