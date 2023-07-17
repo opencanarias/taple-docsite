@@ -2,7 +2,7 @@
 
 Ya hemos agregado nuestro primer miembro a nuestra gobernanza, pero aún está incompleta, ya que actualmente no hay ningún esquema que modele el sujeto del vino al que queremos realizar seguimiento en este caso de uso.
 
-Por lo tanto, el siguiente paso será [declarar nuestro esquema](referencia-a-la-documentación) para los sujetos de tipo "Wine" y un [contrato inteligente](referencia-a-la-documentación) que contendrá las operaciones que permitirán actualizar el estado de este sujeto:
+Por lo tanto, el siguiente paso será [declarar nuestro esquema](../../learn/json-schema.md) para los sujetos de tipo "Wine" y un [contrato inteligente](../../learn/smart-contracts.md) que contendrá las operaciones que permitirán actualizar el estado de este sujeto:
 
 Para cumplir tal fin, hemos desarrollado el siguiente `json-schema`:  
 

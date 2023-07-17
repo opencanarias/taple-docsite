@@ -2,7 +2,7 @@
 
 (explicar como ejecutar taple-client. Hacer referencia al basic usage y la configuración)
 
-Para levantar un nodo taple se debe ejecutar el binario [taple-client](https://github.com/opencanarias/taple-client), situado en la carpeta client del repositorio. Para usar su imagen docker ir a la página en [dockerhub]([](https://hub.docker.com/r/opencanarias/taple-client)). Si nos colocamos en la raíz del repositorio podemos ejecutarlo lanzando:
+Para levantar un nodo taple se debe ejecutar el binario [taple-client](https://github.com/opencanarias/taple-client), situado en la carpeta client del repositorio. Para usar su imagen docker ir a la página en [dockerhub](https://hub.docker.com/r/opencanarias/taple-client). Si nos colocamos en la raíz del repositorio podemos ejecutarlo lanzando:
 
 ```bash
 docker run opencanarias/taple-client:0.2
@@ -47,7 +47,7 @@ experimental(Unstable configurations):
       --sc.build_path <sc.build_path>  Path in which contracts are compiled
 ```
 
-Lo primero que debemos añadir obligatoriamente en la configuración es la clave privada. Podemos generar una válida usando taple-tools, que se encuentra en el mismo repositorio que el client en el directorio taple-tools, y en el [dockerhub]([Title](https://hub.docker.com/r/opencanarias/taple-tools)). En concreto su binario **keygen**, que creará el material criptográfico necesario para el nodo. Una salida sin configuración extra nos dará un reesultado tal que:
+Lo primero que debemos añadir obligatoriamente en la configuración es la clave privada. Podemos generar una válida usando taple-tools, que se encuentra en el mismo repositorio que el client en el directorio taple-tools, y en el [dockerhub](https://hub.docker.com/r/opencanarias/taple-tools). En concreto su binario **keygen**, que creará el material criptográfico necesario para el nodo. Una salida sin configuración extra nos dará un reesultado tal que:
 
 ```bash
 PRIVATE KEY ED25519 (HEX): f78e9b42c3f265d0c5bf613f47bf4fb8fa3f18b3b38dd4e90ca7eed497e3394a

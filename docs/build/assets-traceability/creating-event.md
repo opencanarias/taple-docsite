@@ -4,9 +4,9 @@ Ya hemos inicializado nuestra gobernanza para comenzar a formalizar el caso de u
 
 Para realizar estas modificaciones, es necesario generar un evento. *Taple* admite diferentes tipos de eventos, como el evento de **génesis**, que fue el que provocó la creación de la gobernanza. Sin embargo, el tipo de evento que necesitamos realizar ahora es el evento de **hecho**, el cual permite modificar el estado de un sujeto en la red.
 
-Internamente, estos eventos de **hecho** se comunican con una de las operaciones declaradas en el *smart contract* del sujeto y actúan sobre ella. En el caso de la gobernanza, es algo especial, ya que tanto su esquema como su contrato son [internos de Taple](referencia-a-la-documentación).
+Internamente, estos eventos de **hecho** se comunican con una de las operaciones declaradas en el *smart contract* del sujeto y actúan sobre ella. En el caso de la gobernanza, es algo especial, ya que tanto su esquema como su contrato son [internos de Taple](../../learn/governance-schema-and-contract.md).
 
-El contrato de la gobernanza expone solo un método para modificarla, el cual debe ser utilizado mediante [*json-patch*](referencia-a-la-documentación).
+El contrato de la gobernanza expone solo un método para modificarla, el cual debe ser utilizado mediante [*json-patch*](../../learn/governance-schema-and-contract.md).
 
 Siguiendo todo lo mencionado anteriormente, para modificar la gobernanza e incluir al miembro que la ha creado, debemos seguir los siguientes pasos:
 

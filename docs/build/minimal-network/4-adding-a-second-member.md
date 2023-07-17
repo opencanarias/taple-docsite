@@ -52,7 +52,7 @@ Ahora que está levantado y se conectan mediante la variable de entorno **TAPLE_
 
 Como hemos visto anteriormente el contrato de la governance actualmente solo tiene un método para modificar su estado, el método Patch. Este método incluye un objeto con un atributo data que a su vez es un array que representa un json-patch. Dicho patch se aplicará al estado actual de la governance para modificarlo. También al realizar la modificación se comprueba que el estado obtenido sea válido para una governance, no solo realizando la validación con el propio esquema de governance sino también realizando comprobaciones exhaustivas, como que no existan miembros repetidos, cada schema definido tenga a su vez unas policies...
 
-Para facilitar la obtención del resultado que queremos y generar el json-patch específico podemos usar la herramienta taple-patch, incluida entre las [taple-tools]([](https://hub.docker.com/r/opencanarias/taple-tools)) (TODO: REFERENCIA A TAPLE TOOLS si existe md). A este ejecutable se le pasa el estado actual y el estado deseado y genera el patch correspondiente tras cuya aplicación se pasa de uno a otro.
+Para facilitar la obtención del resultado que queremos y generar el json-patch específico podemos usar la herramienta taple-patch, incluida entre las [taple-tools](../../learn/client-tools.md). A este ejecutable se le pasa el estado actual y el estado deseado y genera el patch correspondiente tras cuya aplicación se pasa de uno a otro.
 
 y enviar la petición, hacer la aprobación etc...
 

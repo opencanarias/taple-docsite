@@ -2,7 +2,7 @@
 
 Actualmente, existe un problema con los eventos en los que hemos estado trabajando, ya que no hemos descartado ninguno. Esto es especialmente grave en el caso de las botellas españolas y francesas, ya que en su último evento han perdido la certificación orgánica.
 
-Sin embargo, hay una solución para este problema, que es el uso del evento [**EOL**](refrencia-a-la-documentación). Este evento nos permite finalizar el ciclo de vida de un sujeto en la red, impidiendo que se emitan más eventos sobre él en el futuro.
+Sin embargo, hay una solución para este problema, que es el uso del evento [**EOL**](../../discover/events.md#end-of-life-event-eol). Este evento nos permite finalizar el ciclo de vida de un sujeto en la red, impidiendo que se emitan más eventos sobre él en el futuro.
 
 Para probar este evento, lo aplicaremos a la última botella que hemos creado (la española). Para hacerlo, ejecutaremos lo siguiente:
 
