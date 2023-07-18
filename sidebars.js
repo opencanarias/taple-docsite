@@ -4,7 +4,7 @@ module.exports = {
       type: 'category',
       label: 'Discover',
       className: 'sidebar-section',
-      link: {type: 'doc', id: 'discover/index'},
+      link: { type: 'doc', id: 'discover/index' },
       collapsible: false,
       collapsed: false,
       items: [
@@ -28,7 +28,7 @@ module.exports = {
           label: 'Key concepts',
           collapsible: true,
           collapsed: true,
-          link: {type: 'doc', id: 'discover/key-concepts'},
+          link: { type: 'doc', id: 'discover/key-concepts' },
           items: [
             {
               type: 'doc',
@@ -72,7 +72,7 @@ module.exports = {
           label: 'Advanced',
           collapsible: true,
           collapsed: true,
-          link: {type: 'doc', id: 'discover/advanced'},
+          link: { type: 'doc', id: 'discover/advanced' },
           items: [
             {
               type: 'doc',
@@ -119,14 +119,14 @@ module.exports = {
       type: 'category',
       label: 'Learn',
       className: 'sidebar-section',
-      link: {type: 'doc', id: 'learn/index'},
+      link: { type: 'doc', id: 'learn/index' },
       collapsible: false,
       collapsed: false,
       items: [
         {
           type: 'category',
           label: 'Core library',
-          link: {type: 'doc', id: 'learn/core-architecture'},
+          link: { type: 'doc', id: 'learn/core-architecture' },
           collapsed: true,
           items: [
             {
@@ -149,7 +149,7 @@ module.exports = {
         {
           type: 'category',
           label: 'Smart contracts',
-          link: {type: 'doc', id: 'learn/smart-contracts'},
+          link: { type: 'doc', id: 'learn/smart-contracts' },
           collapsible: true,
           collapsed: true,
           items: [
@@ -170,7 +170,7 @@ module.exports = {
           label: 'Governance',
           collapsible: true,
           collapsed: true,
-          link: {type: 'doc', id: 'learn/governance-structure'},
+          link: { type: 'doc', id: 'learn/governance-structure' },
           items: [
             {
               type: 'doc',
@@ -188,7 +188,7 @@ module.exports = {
           type: 'category',
           label: 'TAPLE Client',
           collapsible: true,
-          link: {type: 'doc', id: 'learn/taple-client'},
+          link: { type: 'doc', id: 'learn/taple-client' },
           collapsed: true,
           items: [
             {
@@ -227,14 +227,14 @@ module.exports = {
       type: 'category',
       label: 'Build',
       className: 'sidebar-section',
-      link: {type: 'doc', id: 'build/index'},
+      link: { type: 'doc', id: 'build/index' },
       collapsible: false,
       collapsed: false,
       items: [
         {
           type: 'category',
           label: 'Using TAPLE Client',
-          link: {type: 'doc', id: 'build/taple-client'},
+          link: { type: 'doc', id: 'build/taple-client' },
           collapsible: true,
           collapsed: false,
           items: [
@@ -362,13 +362,18 @@ module.exports = {
               items: [
                 {
                   type: 'doc',
+                  label: 'Introduction',
+                  id: 'build/access-control/introduction',
+                },
+                {
+                  type: 'doc',
                   label: 'Use case description',
                   id: 'build/access-control/use-case',
                 },
                 {
                   type: 'doc',
-                  label: 'Governance definition',
-                  id: 'build/access-control/governance-definition',
+                  label: 'Build the use case',
+                  id: 'build/access-control/build-case',
                 },
                 {
                   type: 'doc',
