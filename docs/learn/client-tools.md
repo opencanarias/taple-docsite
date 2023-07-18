@@ -4,28 +4,30 @@ TAPLE Tools are a group of utilities developed to facilitate the use of TAPLE Cl
 
 ## Installation
 
-There are different ways in which the user can acquire these tools. The first and most basic is the generation of their binaries through the compilation of their source code, which can be obtained through the public repositories. However, we recommend making use of the available images in conjunction with a series of scripts that abstract the use of these images, so that the user does not need to interact with the code directly. Considering this last option, you need to access the [repository](https://github.com/opencanarias/taple-tools) to get the scripts, located in the directory with the same name. These scripts will download the required image if needed. Essentially, once you have downloaded the scripts, run:
+There are different ways in which the user can acquire these tools. The first and most basic is the generation of their binaries through the compilation of their source code, which can be obtained through the public repositories. However, we recommend making use of the available images in conjunction with a series of scripts that abstract the use of these images, so that the user does not need to interact with the code directly. Considering this last option, you need to access the [repository](https://github.com/opencanarias/taple-client/tree/release-0.2/taple-tools) to get the scripts, located in the directory with the same name. These scripts will download the required image if needed. Essentially, once you have downloaded the scripts, run:
 
 
 ```bash
-  git clone -b release-0.2 https://github.com/opencanarias/client-tools.git
-  cd taple-tools
+  git clone -b release-0.2 https://github.com/opencanarias/taple-client.git
+  cd taple-client/taple-tools
   chmod +x ./scripts/taple-keygen
   chmod +x ./scripts/taple-sign
+  chmod +x ./scripts/taple-patch
   ./scripts/taple-keygen -h
   ./scripts/taple-sign -h
+  ./scripts/taple-patch -h
 ```
 
 If you prefer to compile the code and work with the resulting binaries:
 
 ```bash
-  git clone -b release-0.2 https://github.com/opencanarias/taple-core.git
-  git clone -b release-0.2 https://github.com/opencanarias/client-tools.git
-  cd taple-tools
+  git clone -b release-0.2 https://github.com/opencanarias/taple-client.git
+  cd taple-client/taple-tools
   cargo install --path taple-keygen
   cargo install --path taple-sign
   taple-keygen -h
   taple-sign -h
+  taple-patch -h
 ```
 
 Note that regardless of the method you choose, the way to use the utilities is the same.
@@ -39,7 +41,7 @@ These utilities may be used relatively frequently, so we recommend that you incl
 Any TAPLE node needs cryptographic material to function. To do so, it is necessary to generate it externally and then indicate it to the node, either by means of environment variables or through input parameters. The TAPLE Keygen utility satisfies this need by allowing, in a simple way, the generation of this cryptographic material. Specifically, its execution allows to obtain a ***private key*** in hexadecimal format, as well as the ***identifier (controller ID)*** which is the identifier at TAPLE level in which its format includes the public key, plus information of the cryptographic scheme used (you can obtain more information in the following **[link](../discover/identity.md)**). Finally, we can find the Peer ID that the node using the generated private key would have, which is what allows us to identify ourselves within the TAPLE network.
 
 To use this utility:
-```
+```bash
   taple-keygen [OPTIONS] [MODE]
 ```
 
@@ -49,17 +51,17 @@ In which ***Mode*** is the argument specifying the cryptographic algorithm:
 
 The existing options are:
 ```
-    -h, --help           Print help information
-    -V, --version        Print version information
+  -h, --help           Print help information
+  -V, --version        Print version information
 ```
 
 Here is an example of use
 ```bash
 taple-keygen
 # Output
-PRIVATE KEY ED25519 (HEX): 2999aa4107f2ce1c8699623db0bb79295e40fa6975a3f54ffe93249ade16d775
-CONTROLLER ID ED25519: EGVIxhXCVPSjGJ2vEl6Be-CytEbaSdMfRGHn-UXrgEfU
-PeerID: 12D3KooWBXD44QCJEes2199hTGeutyG3a2cmv2YG1Y3Fi8By12fv
+PRIVATE KEY ED25519 (HEX): 2a71a0aff12c2de9e21d76e0538741aa9ac6da9ff7f467cf8b7211bd008a3198
+CONTROLLER ID ED25519: EtbFWPL6eVOkvMMiAYV8qio291zd3viCMepUL6sY7RjA
+PeerID: 12D3KooWN3coLXzLcj8A5ftudcFF38PbZ3qHBkwgcLxPNYWnUiv3
 ```
 
 :::info
@@ -76,7 +78,7 @@ For the correct operation of the utility, it is necessary to pass as arguments b
 
 Thus, its use would be as follows:
 
-```
+```bash
 taple-sign [OPTIONS] <PRIVATE_KEY> <REQUEST>
 ```
 
@@ -86,11 +88,9 @@ It is important to note that currently only private keys of the ***ED25519*** al
 The format of the request must be ***JSON String***. Note that this implies that special characters must be escaped. Thus, for example, the following request in JSON format:
 ```json
 {
-  "subject_id":"Js6jwJIfGm362YXrlaCgybjIfbdB6vjNo4RGu_cDoi6Q",
-  "payload":{
-    "Json":{
-      "test":"test"
-    }
+  "Transfer": {
+    "subject_id": "JjyqcA-44TjpwBjMTu9kLV21kYfdIAu638juh6ye1gyU",
+    "public_key":"E9M2WgjXLFxJ-zrlZjUcwtmyXqgT1xXlwYsKZv47Duew"
   }
 }
 ```
@@ -98,7 +98,7 @@ The format of the request must be ***JSON String***. Note that this implies that
 Would result in:
 
 ```
-"{\"subject_id\":\"Js6jwJIfGm362YXrlaCgybjIfbdB6vjNo4RGu_cDoi6Q\",\"payload\":{\"Json\":{\"test\":\"test\"}}}"
+"{\"Transfer\":{\"subject_id\":\"JjyqcA-44TjpwBjMTu9kLV21kYfdIAu638juh6ye1gyU\",\"public_key\":\"E9M2WgjXLFxJ-zrlZjUcwtmyXqgT1xXlwYsKZv47Duew\"}}"
 ``` 
 
 The existing options are:
@@ -107,32 +107,73 @@ The existing options are:
     -V, --version        Print version information
 ```
 
-Here is an example of use
+Here is an example of use:
 ```bash
-taple-sign 2999aa4107f2ce1c8699623db0bb79295e40fa6975a3f54ffe93249ade16d775 \
-"{\"subject_id\":\"Js6jwJIfGm362YXrlaCgybjIfbdB6vjNo4RGu_cDoi6Q\",\"payload\":{\"Json\":{\"test\":\"test\"}}}"
+taple-sign "2a71a0aff12c2de9e21d76e0538741aa9ac6da9ff7f467cf8b7211bd008a3198" "{\"Transfer\":{\"subject_id\":\"JjyqcA-44TjpwBjMTu9kLV21kYfdIAu638juh6ye1gyU\",\"public_key\":\"E9M2WgjXLFxJ-zrlZjUcwtmyXqgT1xXlwYsKZv47Duew\"}}"
 
 # Output
-
 {
   "request": {
-    "State": {
-      "subject_id": "Js6jwJIfGm362YXrlaCgybjIfbdB6vjNo4RGu_cDoi6Q",
-      "payload": {
-        "Json": {
-          "test": "test"
-        }
-      }
+    "Transfer": {
+      "subject_id": "JjyqcA-44TjpwBjMTu9kLV21kYfdIAu638juh6ye1gyU",
+      "public_key": "E9M2WgjXLFxJ-zrlZjUcwtmyXqgT1xXlwYsKZv47Duew",
     }
   },
-  "timestamp": 1673956776446,
   "signature": {
-    "content": {
-      "signer": "EGVIxhXCVPSjGJ2vEl6Be-CytEbaSdMfRGHn-UXrgEfU",
-      "event_content_hash": "JwR68kZu1xlZrsJhUa9PuJkwSp7AaVUkL4L8uNrSfhEs",
-      "timestamp": 1673956776446
-    },
-    "signature": "SEYHtydTm7D8-lnXKNMC-ZZljI5pynbwTR1zBh0O6q_jzfCEYHI22tlGjso2s7OJ_IOK9McMVcJKSzY2asuQ3ZBw"
+    "signer": "EtbFWPL6eVOkvMMiAYV8qio291zd3viCMepUL6sY7RjA",
+    "timestamp": 1689683051761526319,
+    "value": "SERgux6drlM0eBapwv4rkJ-OkXz8ZlOqwTvVB0jkAA5lVKVq1kYNqQVKH7F7FIRgACUkHd8Dl-7R_3H89hg1JFDA"
   }
 }
+```
+
+## TAPLE Patch
+
+Se trata de una utilidad destinada a la generación de cambios de estado en un sujeto de tipo gobernanza. Esto se logra mediante la modificación de sus propiedades internas. Como ya ha sido mencionado en otros puntos de la documentación, las gobernanzas, en la definición de su contrato inteligente, establecen un único método de invocación que permite alterar sus propiedades. Este método recibe un parámetro que debe ser un objeto *JSON Patch*.
+
+Taple Patch permite generar este *JSON Patch*. Para emplear esta utilidad, se deben proporcionar dos parámetros en formato *JSON String*. El primero de ellos corresponde a las propiedades antiguas de la gobernanza, mientras que el segundo representa las nuevas propiedades que deseamos agregar.
+
+A continuación se muestra cómo se utiliza:
+```bash
+taple-patch [OPTIONS] <STATE> <NEW_STATE>
+```
+
+El formato de la solicitiud, al igual que en el Taple Sing debe ser JSON String. Tenga en cuenta que eso implica que los caracteres especiales deben ser escapados. Así, por ejemplo, la siguiente petición en formato JSON:
+```json
+{
+  "members": [
+    {
+      "id": "EtbFWPL6eVOkvMMiAYV8qio291zd3viCMepUL6sY7RjA",
+      "name": "Test"
+    }
+  ]
+}
+```
+
+Would result in:
+```
+"{\"members\":[{\"id\":\"EtbFWPL6eVOkvMMiAYV8qio291zd3viCMepUL6sY7RjA\",\"name\":\"Test\"}]}"
+```
+
+The existing options are:
+```
+    -h, --help           Print help information
+    -V, --version        Print version information
+```
+
+Here is an example of use:
+```bash
+taple-patch "{\"members\":[]}" "{\"members\":[{\"id\":\"EtbFWPL6eVOkvMMiAYV8qio291zd3viCMepUL6sY7RjA\",\"name\":\"Test\"}]}"
+
+# Output
+[
+  {
+    "op": "add",
+    "path": "/members/0",
+    "value": {
+      "id": "EtbFWPL6eVOkvMMiAYV8qio291zd3viCMepUL6sY7RjA",
+      "name": "Test"
+    }
+  }
+]
 ```
