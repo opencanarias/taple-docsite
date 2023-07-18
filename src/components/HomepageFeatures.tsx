@@ -22,7 +22,7 @@ const FeatureList: FeatureItem[] = [
     title:
       <>
         <Translate>
-          What is Taple?
+          What is TAPLE?
         </Translate>
       </>,
     href: '/docs/discover',
@@ -34,7 +34,7 @@ const FeatureList: FeatureItem[] = [
     description: (
       <>
         <Translate>
-          Learn about TAPLE technology
+          Discover TAPLE technology
         </Translate>
       </>
     ),
@@ -61,7 +61,7 @@ const FeatureList: FeatureItem[] = [
     description: (
       <>
         <Translate>
-        Create your first TAPLE network
+        Build your first TAPLE network
         </Translate>
       </>
     ),
