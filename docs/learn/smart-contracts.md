@@ -27,13 +27,17 @@ Los contratos de TAPLE funcionan sin ningún estado asociado, en otras palabras,
 
 ![smart-contracts-life-cycle](../img/smart-contracts.svg)
 
-## Desarrollo
+### Desarrollo
 
 Los contratos se definen en proyectos locales de Rust. único lenguaje permitido para la redacción de los mismos. Estos proyectos, que debemos definir como librerías, han de importar el **SDK** de los contratos disponible en los repositorios oficiales y, además, deben seguir las indicaciones especificadas en ["cómo redactar un contrato"](./smart-contracts-programming.md).
 
-## Distribución
+### Distribución
 
 Una vez definido el contrato, este ser incluído en una gobernanza y asociado a un esquema para que pueda ser empleado por los nodos de una red. A tal fin, es necesarior realizar una operación de actualización de gobernanza en la que se incluya el contrato en el apartado correspondiente y codificado en **base64**. De haberse definido una batería de tests, esta no es necesario que se incluya en la codificación.
+
+:::info
+Para más información sobre este proceso, consulte el siguiente [tutorial](../build/assets-traceability/adding-schema.md).
+:::
 
 :::caution
 Debido a que los nodos TAPLE son los encargados de la compilación de contratos, es necesario que el ***base 64*** incluya el contrato en su totalidad. En otras palabras, el contrato debería escrbirse enteramente en un único fichero y este codificado.
@@ -41,17 +45,17 @@ Debido a que los nodos TAPLE son los encargados de la compilación de contratos,
 Se trata de una limitación actual y en el futuro se espera poder ofrecer otras alternativas.
 :::
 
-## Compilación
+### Compilación
 
 Si la petición de actualización es correcta, el estado de la gobernanza cambiará y los nodos evaluadores compilarán el contrato como un módulo de **Web Assembly**, lo serializarán y lo guardarán en su base de datos. Se trata de un proceso automatizado y autogestionado, por lo que no es necesaria la intervención del usuario en ninguna fase del mismo.
 
 :::info
-Actualmente no es posible utilizar cualquier crate en los contratos inteligentes, tan solo se puede emplear una reducida selección entre la que se encuentra el SDK. El listado completo de posibles dependencias lo encontrará en ["cómo redactar un contrato"](./smart-contracts-programming.md).
+Actualmente no es posible utilizar cualquier crate en los contratos inteligentes, tan solo se puede emplear una selección entre la que se encuentra el SDK. El listado completo de posibles dependencias lo encontrará en ["cómo redactar un contrato"](./smart-contracts-programming.md).
 :::
 
 Tras este paso, el contrato puede ser utilizado.
 
-## Ejecución
+### Ejecución
 
 La ejecución del contrato se realizará en un **Runtime** de Web Assembly, aislando su ejecución del resto del sistema. Esto evita el uso indebido de los recursos del mismo, añadiendo una capa de seguridad.
 
