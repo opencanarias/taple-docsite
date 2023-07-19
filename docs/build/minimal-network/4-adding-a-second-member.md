@@ -8,7 +8,7 @@ CONTROLLER ID ED25519: E6AL_cLzXRIAnc3Hy2oX5K8CgnzPXPmyL1KyDo36DNdM
 PeerID: 12D3KooWRS3QVwqBtNp7rUCG4SF3nBrinQqJYC1N5qc1Wdr4jrze
 ```
 
-Con lo que el body de la nueva request nos quedaría:
+La nueva request nos quedaría:
 
 ```json
 {
@@ -34,6 +34,32 @@ Con lo que el body de la nueva request nos quedaría:
 }
 ```
 
+```bash
+curl --silent 'http://localhost:3000/api/event-requests' \
+--header 'Content-Type: application/json' \
+--data '{
+    "request": {
+        "Fact": {
+            "subject_id": "Jz6RNP5F7wNoSeCH65MXYuNVInyuhLvjKb5IpRiH_J6M",
+            "payload": {
+                "Patch": {
+                    "data": [
+                        {
+                            "op": "add",
+                            "path": "/members/1",
+                            "value": {
+                                "id": "E6AL_cLzXRIAnc3Hy2oX5K8CgnzPXPmyL1KyDo36DNdM",
+                                "name": "Tutorial2"
+                            }
+                        }
+                    ]
+                }
+            }
+        }
+    }
+}'
+```
+
 Debemos volver a aprobar la nueva request como en el caso anterior.
 
 ## Levantar el segundo nodo
@@ -41,12 +67,30 @@ Debemos volver a aprobar la nueva request como en el caso anterior.
 El primer nodo va a estar mandando los eventos del sujeto de la governanza al controllador **E6AL_cLzXRIAnc3Hy2oX5K8CgnzPXPmyL1KyDo36DNdM**, cuyo PeerId (identificación en LibP2P, la librería de comunicación) es **12D3KooWRS3QVwqBtNp7rUCG4SF3nBrinQqJYC1N5qc1Wdr4jrze**. Lamentablemente no lo va a encontrar en su red porque no están conectados, con lo que a continuación procederemos a levantar el segundo nodo y conectarlo al primero:
 
 ```bash
-docker run -p 3001:3000 -p 50001:50000 -e TAPLE_SECRET_KEY=388e07385cfd8871f990fe05f82610af1989f7abf5d4e42884c8337498086ba0 -e TAPLE_HTTP=true opencanarias/taple-client:0.2 -e TAPLE_NETWORK_KNOWN_NODE=/ip4/{addr}/tcp/50000/p2p/12D3KooWLXexpg81PjdjnrhmHUxN7U5EtfXJgr9cahei1SJ9Ub3B -e TAPLE_NETWORK_LISTEN_ADDR=/ip4/0.0.0.0/tcp/50000
+docker run -p 3001:3000 -p 50001:50000 \ 
+-e TAPLE_SECRET_KEY=388e07385cfd8871f990fe05f82610af1989f7abf5d4e42884c8337498086ba0 \ 
+-e TAPLE_HTTP=true opencanarias/taple-client:0.2 \ 
+-e TAPLE_NETWORK_KNOWN_NODE=/ip4/127.0.0.1/tcp/50000/p2p/12D3KooWLXexpg81PjdjnrhmHUxN7U5EtfXJgr9cahei1SJ9Ub3B \ 
+-e TAPLE_NETWORK_LISTEN_ADDR=/ip4/0.0.0.0/tcp/50000
 ```
 
 Reemplazar addr con la ip con la que el segundo nodo puede encontrar al primero. Depende de si se lanzan los contenedores en una red docker, en la red host...
 
-Ahora que está levantado y se conectan mediante la variable de entorno **TAPLE_NETWORK_KNOWN_NODE** le empezarán a llegar eventos de la governance al segundo nodo. Aunque aún no se guardarán en su base de datos. Esto se debe a que las governances siempre se tienen que preautorizar para permitir la recepción de sus eventos. Para esto se usa el endpoint **/api/allowed-subjects/{{governance_id}}** y el método **PUT**. Recordar que en este caso se debe lanzar en el segundo nodo, que por la configuración que hemos puesto estará escuchando en el puerto 3001 de localhost. Ahora sí que se acatualizará correctamente el segundo nodo con el sujeto de governance.
+Ahora que está levantado y se encuentra con los demás a partir de un bootstrap en **TAPLE_NETWORK_KNOWN_NODE**. Le empezarán a llegar eventos de la governance al segundo nodo, aunque aún no se guardarán en su base de datos. Esto se debe a que las governances siempre se tienen que preautorizar para permitir la recepción de sus eventos. Para esto se usa el endpoint **/api/allowed-subjects/{{governance_id}}** y el método **PUT**. Recordar que en este caso se debe lanzar en el segundo nodo, que por la configuración que hemos puesto estará escuchando en el puerto 3001 de localhost. Ahora sí que se acatualizará correctamente el segundo nodo con el sujeto de governance.
+
+```bash
+curl --silent --request PUT 'http://localhost:3001/api/allowed-subjects/Jz6RNP5F7wNoSeCH65MXYuNVInyuhLvjKb5IpRiH_J6M' \
+--header 'Content-Type: application/json' \
+--data '{
+    "providers": []
+}'
+```
+
+Respuesta:
+
+```json
+{"providers":[]}
+```
 
 ## Modificar la gobernanza
 
@@ -116,6 +160,36 @@ Con lo que el body de la request quedará:
     }
   }
 }
+```
+
+```bash
+curl --silent 'http://localhost:3000/api/event-requests' \
+--header 'Content-Type: application/json' \
+--data '{
+    "request": {
+        "Fact": {
+            "subject_id": "Jz6RNP5F7wNoSeCH65MXYuNVInyuhLvjKb5IpRiH_J6M",
+            "payload": {
+                "Patch": {
+                    "data": [
+                        {
+                            "op": "add",
+                            "path": "/roles/1",
+                            "value": {
+                                "namespace": "",
+                                "role": "APPROVER",
+                                "schema": {
+                                    "ID": "governance"
+                                },
+                                "who": "MEMBERS"
+                            }
+                        }
+                    ]
+                }
+            }
+        }
+    }
+}'
 ```
 
 Aunque el estado siguiente diga que los dos son aprobadores, para calcular los firmantes de las distintas fases se usa el estado actual del sujeto, previo a aplicar el cambio en el estado de este nuevo evento que estamos creando, con lo que el único aprobador ahora mismo seguirá siendo el primer nodo por ser el dueño de la governance, por lo que debemos repetir el paso previo de autorización.
