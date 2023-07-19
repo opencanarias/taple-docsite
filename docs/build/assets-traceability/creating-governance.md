@@ -1,36 +1,96 @@
 # Creating a governance
 
-Una vez creado el primer nodo que actuará como dueño del caso de uso, es necesario formalizar el entorno en el que se llevará a cabo dicho caso de uso. Esta formalización se realiza a través de la implementación de una estructura conocida como gobernanza. A continuación, se describirán los pasos necesarios para su creación.
+Una vez que **WPO** dispone de un nodo en la red TAPLE, es el momento de definir el caso de uso,  que incluye los participantes, las reglas de interacción, los modelos de información, entre otros aspectos. En la red TAPLE, esto se realiza mediante la creación de una [gobernanza](../../discover/governance.md), donde se especifica la funcionalidad concreta del caso de uso.
 
-Para comenzar, generamos el material criptográfico necesario para la gobernanza en el nodo previamente creado:
 
-```bash
-curl --silent  --location --request POST 'http://localhost:3000/api/keys' \
---form 'algorithm="Ed25519"'
-```
+Para crear una gobernanza básica se requiere de la realización de los siguientes pasos:
 
-Copiamos el resultado generado por la petición anterior y lo sustituimos en `public_key`:
+* Para comenzar, ejecutamos el siguiente comando para crear una versión básica de una gobernanza:
 
-```bash
-curl --silent --location --request POST 'http://localhost:3000/api/event-requests' \
---header 'Content-Type: application/json' \
---data-raw '{
-  "request": {
-    "Create": {
-      "governance_id": "",
-      "schema_id": "governance",
-      "namespace": "",
-      "public_key": {{MC-GENERATED}},
-      "name": "wine_track"
+  ```bash title="Node WPO"
+  curl --request POST 'http://localhost:3000/api/event-requests' \
+  --header 'Content-Type: application/json' \
+  --data-raw '{
+    "request": {
+      "Create": {
+        "governance_id": "",
+        "schema_id": "governance",
+        "namespace": "",
+        "name": "wine_track"
+      }
     }
+  }'
+  ```
+
+* Como resultado de la acción anterior se nos devolverá un `request-id`, debemos copiarlo y utilizar en el siguiente comando: 
+
+  ```bash title="Node WPO"
+  curl --request GET 'http://localhost:3000/api/event-requests/{{REQUEST-ID}}/state'
+  ```
+
+  Este último comando nos proporcionará una respuesta como la siguiente:
+
+  ```json
+  {
+    "id": {{REQUEST-ID}},
+    "subject_id": {{GOVERNANCE-ID}},
+    "sn": 0,
+    "state": "finished",
+    "success": true
   }
-}'
-```
+  ```
 
-Comprobamos si la gobernanza se ha creado con éxito:
+  :::note
+  Guarda el `subject_id` de la **gobernanza**, ya que se necesitará en pasos posteriores del tutorial.
+  :::
 
-```bash
-curl --silent --location --request GET 'http://localhost:3000/api/subjects?subject_type=governances'
-```
+* Podemos consultar la gobernanza creada utilizando el siguiente comando:
 
-Guardamos el `id` de la gobernanza, ya que será necesario para pasos posteriores en el tutorial.
+  ```bash title="Node WPO"
+  curl --request GET 'http://localhost:3000/api/subjects/{{GOVERNANCE-ID}}'
+  ```
+
+  El resultado obtenido debería ser similar al siguiente:
+
+  ```json
+  {
+    "subject_id": {{GOVERNANCE-ID}},
+    "governance_id": "",
+    "sn": 0,
+    "public_key": "EcQ7syPhhduUOSlco7pqTdird_iVhGwOXAz8xIHcM7KU",
+    "namespace": "",
+    "name": "wine_track",
+    "schema_id": "governance",
+    "owner": "EbwR0yYrCYpTzlN5i5GX_MtAbKRw5y2euv3TqiTgwggs",
+    "creator": "EbwR0yYrCYpTzlN5i5GX_MtAbKRw5y2euv3TqiTgwggs",
+    "properties": {
+      "members": [],
+      "policies": [
+        {
+          "approve": {
+            "quorum": "MAJORITY"
+          },
+          "evaluate": {
+            "quorum": "MAJORITY"
+          },
+          "id": "governance",
+          "validate": {
+            "quorum": "MAJORITY"
+          }
+        }
+      ],
+      "roles": [
+        {
+          "namespace": "",
+          "role": "WITNESS",
+          "schema": {
+            "ID": "governance"
+          },
+          "who": "MEMBERS"
+        }
+      ],
+      "schemas": []
+    },
+    "active": true
+  }
+  ```

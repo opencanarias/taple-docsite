@@ -1,55 +1,67 @@
 # Adding a schema
 
-Ya hemos agregado nuestro primer miembro a nuestra gobernanza, pero aún está incompleta, ya que actualmente no hay ningún esquema que modele el sujeto del vino al que queremos realizar seguimiento en este caso de uso.
+Hemos agregado nuestro primer miembro a la gobernanza, pero aún falta completarla, ya que no hemos definido la estructura de datos para el seguimiento de los sujetos de tipo *Wine* en este caso de uso.
 
-Por lo tanto, el siguiente paso será [declarar nuestro esquema](../../learn/json-schema.md) para los sujetos de tipo "Wine" y un [contrato inteligente](../../learn/smart-contracts.md) que contendrá las operaciones que permitirán actualizar el estado de este sujeto:
+Para avanzar en el tutorial, necesitamos definir una estructura de datos donde podamos almacenar la información de cada botella de vino. En Taple, esta definición se realiza mediante [*schemas*](../../discover/schemas.md), que nos permiten especificar los campos, tipos de datos y relaciones que deseamos guardar, como lo son el número de la cosecha, el tipo de uva, su origen, etc.
 
-Para cumplir tal fin, hemos desarrollado el siguiente `json-schema`:  
+Antes de continuar, asegurémonos de tener claro qué información queremos guardar para cada botella de vino y luego procederemos a crear el esquema que representará esa información de manera adecuada. Esta será:
+
+- Harvest number
+- Type of grape
+- Origin of the grape
+- Certificate authenticating whether it is organic or not
+- Values to be changed in the temperature control event:
+    - Timestamp of last check
+    - Value that corroborates whether the wine cold chain has been complied with
+
+El esquema deberá ser definido en formato [*json-schema*](../../learn/json-schema.md) para que Taple sea capaz de interpretarlo, la formalización que hemos estimado oportuna para el mismo ha sido la siguiente:
 
 ```json
 {
-  "id": "Wine",
-  "description": "Representation of a bottle of wine",
-  "type": "object",
-  "properties": {
-    "harvest": {
-      "description": "Harvest number",
-      "type": "integer"
-    },
-    "grape": {
-      "description": "Type of grape",
-      "type": ["string", "null"],
-  	   "enum": ["CabernetSauvignon", "Chardonnay", "PinotNoir", null]
-    },
-    "origin": {
-      "description": "Origin of the grape",
-      "type": "string"
-    },
-    "organic_certified": {
-      "description": "Certificate authenticating whether it is organic or not",
-      "type": ["boolean", "null"]
-    },
-    "temperature_control": {
-      "description": "Values to be changed in the temperature control event",
-      "type": "object",
-      "properties": {
-      	"last_check": {
-       	  "description": "Timestamp of last check",
-          "type": "number"
+    "id": "Wine",
+    "description": "Representation of a bottle of wine",
+    "type": "object",
+    "properties": {
+        "harvest": {
+            "description": "Harvest number",
+            "type": "integer"
         },
-        "temperature_ok": {
-          "description": "Value that corroborates whether the wine cold chain has been complied with",
-          "type": "boolean"
+        "grape": {
+            "description": "Type of grape",
+            "type": ["string", "null"],
+            "enum": ["CabernetSauvignon", "Chardonnay", "PinotNoir", null]
+        },
+        "origin": {
+            "description": "Origin of the grape",
+            "type": "string"
+        },
+        "organic_certified": {
+            "description": "Certificate authenticating whether it is organic or not",
+            "type": ["boolean", "null"]
+        },
+        "temperature_control": {
+            "description": "Values to be changed in the temperature control event",
+            "type": "object",
+            "properties": {
+                "last_check": {
+                    "description": "Timestamp of last check",
+                    "type": "number"
+                },
+                "temperature_ok": {
+                    "description": "Value that corroborates whether the wine cold chain has been complied with",
+                    "type": "boolean"
+                }
+            },
+            "required": [ "last_check", "temperature_ok" ],
+            "additionalProperties": false
         }
-      },
-      "required": [ "last_check", "temperature_ok" ],
-      "additionalProperties": false
-    }
-  },
-  "required": [ "harvest", "grape", "origin", "organic_certified", "temperature_control" ],
-  "additionalProperties": false
+    },
+    "required": [ "harvest", "grape", "origin", "organic_certified", "temperature_control" ],
+    "additionalProperties": false
 }
 ```
+
+Por lo tanto, el siguiente paso será [declarar nuestro esquema](../../learn/json-schema.md) para los sujetos de tipo "Wine" y un [contrato inteligente](../../learn/smart-contracts.md) que contendrá las operaciones que permitirán actualizar el estado de este sujeto:
 
 Así como este `smart contract`:
 
