@@ -6,7 +6,6 @@ TAPLE Tools are a group of utilities developed to facilitate the use of TAPLE Cl
 
 There are different ways in which the user can acquire these tools. The first and most basic is the generation of their binaries through the compilation of their source code, which can be obtained through the public repositories. However, we recommend making use of the available images in conjunction with a series of scripts that abstract the use of these images, so that the user does not need to interact with the code directly. Considering this last option, you need to access the [repository](https://github.com/opencanarias/taple-client/tree/release-0.2/taple-tools) to get the scripts, located in the directory with the same name. These scripts will download the required image if needed. Essentially, once you have downloaded the scripts, run:
 
-
 ```bash
   git clone -b release-0.2 https://github.com/opencanarias/taple-client.git
   cd taple-client/taple-tools

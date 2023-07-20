@@ -1,10 +1,10 @@
 # Next steps
 
-Una vez llegados a este punto contamos con una pequeña red de tres nodos con una governance común para todos ellos. A partir de ahí podemos realizar configuraciones extra para adaptar la red al caso de uso que se requiera, tanto modificando la governanza como creando sujetos que no sean governances.
+Once we have reached this point, we have a small network of three nodes with a common governance for all of them. From there, we can perform extra configurations to adapt the network to the use case that is required, both by modifying the governance and by creating subjects that are not governances.
 
-En los siguientes tutoriales veremos como realizar los siguientes pasos, que requieren un manejo más avanzado de taple:
+In the following tutorials, we will see how to perform the following steps, which require a more advanced handling of taple:
 
-- Añadir nuevos esquemas a la governance
-- Creación de contratos
-- Creación de sujetos
-- Invocación externa
+- Adding new schemas to the governance
+- Creation of contracts
+- Creation of subjects
+- External invocation

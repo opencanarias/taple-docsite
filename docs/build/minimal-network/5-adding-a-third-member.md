@@ -1,8 +1,8 @@
 # Adding a third member
 
-## Levantar el tercer nodo
+## Launching the third node
 
-Para añadir un tercer miembro repetimos los pasos anteriores, lo primero es crear el material criptográfico con taple-keygen:
+To add a third member we repeat the previous steps, the first thing is to create the cryptographic material with taple-keygen:
 
 ```bash
 PRIVATE KEY ED25519 (HEX): 984af9a964bd6534418696814fa96244e7d719d51877e8e449514e941ff0c7d6
@@ -10,7 +10,7 @@ CONTROLLER ID ED25519: E8WyEDqEvAZUOlZzydwtr1bYZHQ25gtNR2617PezbgoE
 PeerID: 12D3KooWS4nPvBjbftvVQa4one9dQbneK66wVSLpZNSoTopxuNr4
 ```
 
-Para lanzar el docker:
+To launch the docker:
 
 ```bash
 docker run -p 3002:3000 -p 50002:50000 \ 
@@ -22,7 +22,7 @@ docker run -p 3002:3000 -p 50002:50000 \
 
 ## Modificar la gobernanza
 
-Ahora lanzaremos el evento que añade al tercer miembro a la governance, pero para comprobar el funcionamiento de las aprobaciones votaremos que sí con un nodo y que no con el otro, lo que dejará el evento como rechazado por la fase de aprobación. Aún así se añadirá a la cadena del sujeto, pero no modificará el estado del mismo.
+Now we will launch the event that adds the third member to the governance, but to check the operation of the approvals we will vote yes with one node and no with the other, which will leave the event as rejected by the approval phase. It will still be added to the subject's chain, but it will not modify its state.
 
 ```json
 {
@@ -74,13 +74,13 @@ curl --silent 'http://localhost:3000/api/event-requests' \
 }'
 ```
 
-Debemos primero preguntar por las aprobaciones pendientes en **/api/approval-requests?status=pending** usando un **GET**. El id del json de respuesta es lo que debemos usar para aprobarla. En **/api/approval-requests/{id}** usando un **PATCH** añadiremos el id recibido para lanzar el voto.
+We must first ask for pending approvals at **/api/approval-requests?status=pending** using a **GET**. The id of the response json is what we must use to approve it. At **/api/approval-requests/{id}** using a **PATCH** we will add the received id to cast the vote.
 
 ```bash
 curl --silent 'http://localhost:3000/api/approval-requests?status=pending'
 ```
 
-Respuesta:
+Response:
 
 ```json
 [
@@ -137,9 +137,9 @@ Respuesta:
 ]
 ```
 
-En el nodo 1 la aprobaremos pero en el 2 la rechazaremos. Como el quorum es Majority significa que los dos deben aprobarla para que se apruebe. Con lo que si uno de los dos la rechaza quedará como rechazada porque no se podrá llegar al quorum de aceptación.
+In node 1 we will approve it but in node 2 we will reject it. As the quorum is Majority, this means that both must approve it for it to be approved. So if one of the two rejects it, it will be rejected because the quorum for acceptance cannot be reached.
 
-Nodo 1:
+Node 1:
 
 ```json
 {"approvalType": "Accept"}
@@ -152,7 +152,7 @@ curl --silent --request PATCH 'http://localhost:3000/api/approval-requests/J8NvG
 --data '{"approvalType": "Accept"}'
 ```
 
-Nodo 2:
+Node 2:
 
 ```json
 {"approvalType": "Reject"}
@@ -165,7 +165,7 @@ curl --silent --request PATCH 'http://localhost:3001/api/approval-requests/J8NvG
 --data '{"approvalType": "Reject"}'
 ```
 
-Comprobamos que el estado no se ha modificado buscando nuestros sujetos, sin embargo el sn del sujeto sí que habrá aumentado en 1:
+We verify that the state has not been modified by looking for our subjects, however, the sn of the subject will have increased by 1:
 
 ```json
 [
@@ -229,7 +229,7 @@ Comprobamos que el estado no se ha modificado buscando nuestros sujetos, sin emb
 ]
 ```
 
-También podemos buscar un evento en concreto con la api de eventos: **/api/subjects/{id}/events/{sn}** cuyo id es el SubjectId del sujeto, el sn es el evento concreto que vamos a buscar (si no se añade nada devolverá todos los eventos del sujeto) y la petición es de tipo **GET**.
+We can also search for a specific event with the event api: **/api/subjects/{id}/events/{sn}** whose id is the SubjectId of the subject, the sn is the specific event that we are going to search for (if nothing is added it will return all the events of the subject) and the request is of type **GET**.
 
 ```bash
 curl --silent 'http://localhost:3000/api/subjects/Jz6RNP5F7wNoSeCH65MXYuNVInyuhLvjKb5IpRiH_J6M/events/4' \
@@ -302,4 +302,4 @@ curl --silent 'http://localhost:3000/api/subjects/Jz6RNP5F7wNoSeCH65MXYuNVInyuhL
 }
 ```
 
-Ahora repetiremos la misma petición pero votaremos que sí con ambos nodos, lo que hará que se apruebe la petición y se modifique el estado del sujeto. Aprobamos la governance en el tercer nodo y veremos como la tendremos actualizada en un corto periodo de tiempo.
+Now we will repeat the same request but we will vote yes with both nodes, which will approve the request and modify the state of the subject. We approve the governance in the third node and we will see how it will be updated in a short period of time.
