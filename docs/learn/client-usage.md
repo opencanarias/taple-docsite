@@ -85,7 +85,7 @@ curl --location --request GET 'http://localhost:3001/api/doc/json'
 ```
 
 :::note
-Para consultar todos los endpoints de esta versión de Taple sin abandonar la documentación, puede consultar [esta sección](../api-rest/create-a-new-event-request.api.mdx).
+Para consultar todos los endpoints de esta versión de Taple sin abandonar la documentación, puede consultar [esta sección](../api-rest/create-event-request.api.mdx).
 :::
 
 ## Backups
