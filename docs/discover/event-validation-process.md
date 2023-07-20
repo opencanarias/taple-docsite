@@ -44,7 +44,7 @@ If the validator has the previous proof, they can validate certain aspects, such
 Another interesting point is the case where validators do not have the previous proof to validate the new one. There is no scenario where validators always have the previous proof, since even when the quorum requires 100% of the signatures, if a change in governance adds a new validator, they will not have the previous proof. This is why when a validation is requested, it should send:
 
 ```Rust
-pub struct NotaryEvent {
+pub struct ValidationEvent {
     pub proof: ValidationProof,
     pub subject_signature: Signature,
     pub previous_proof: Option<ValidationProof>,
@@ -69,17 +69,17 @@ actor Validator1 as Validator 1
 actor Validator2 as Validator 2
 actor Validator3 as Validator 3
 
-Owner->>Validator1: Send NotaryEvent
-Owner->>Validator2: Send NotaryEvent
-Owner->>Validator3: Send NotaryEvent
+Owner->>Validator1: Send ValidationEvent
+Owner->>Validator2: Send ValidationEvent
+Owner->>Validator3: Send ValidationEvent
 
 alt Governance Version Matches and Proofs are Valid
     Validator1->>Validator1: Inspect Governance, Check Last Proof and Signatures
     Validator2->>Validator2: Inspect Governance, Check Last Proof and Signatures
     Validator3->>Validator3: Inspect Governance, Check Last Proof and Signatures
-    Validator1->>Owner: Return NotaryEventResponse with Validator's Signature
-    Validator2->>Owner: Return NotaryEventResponse with Validator's Signature
-    Validator3->>Owner: Return NotaryEventResponse with Validator's Signature
+    Validator1->>Owner: Return ValidationEventResponse with Validator's Signature
+    Validator2->>Owner: Return ValidationEventResponse with Validator's Signature
+    Validator3->>Owner: Return ValidationEventResponse with Validator's Signature
 else Governance Version Mismatch or Proofs are Invalid
     Validator1->>Owner: Send Appropriate Message (if applicable)
     Validator2->>Owner: Send Appropriate Message (if applicable)
