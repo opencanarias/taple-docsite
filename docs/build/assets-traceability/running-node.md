@@ -6,13 +6,13 @@ A continuación, describiremos los pasos para crear el nodo WPO:
 
 * En primer lugar, asegurémonos de descargar la imagen adecuada del Taple Client desde Dockerhub:
 
-    ```bash bash title="Node WPO"
+    ```bash bash title="Node: WPO"
     docker pull opencanarias/taple-client:0.2
     ```
 
 * Posteriormente, levantaremos el nodo utilizando el siguiente comando:
 
-    ```bash title="Node WPO"
+    ```bash title="Node: WPO"
     docker run opencanarias/taple-client:0.2 \
         -p 3000:3000 \
         -p 50000:50000 \

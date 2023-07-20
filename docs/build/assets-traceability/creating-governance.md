@@ -7,7 +7,7 @@ Para crear una gobernanza básica se requiere de la realización de los siguient
 
 * Para comenzar, ejecutamos el siguiente comando para crear una versión básica de una gobernanza:
 
-  ```bash title="Node WPO"
+  ```bash title="Node: WPO"
   curl --request POST 'http://localhost:3000/api/event-requests' \
   --header 'Content-Type: application/json' \
   --data-raw '{
@@ -24,7 +24,7 @@ Para crear una gobernanza básica se requiere de la realización de los siguient
 
 * Como resultado de la acción anterior se nos devolverá un `request-id`, debemos copiarlo y utilizar en el siguiente comando: 
 
-  ```bash title="Node WPO"
+  ```bash title="Node: WPO"
   curl --request GET 'http://localhost:3000/api/event-requests/{{REQUEST-ID}}/state'
   ```
 
@@ -46,7 +46,7 @@ Para crear una gobernanza básica se requiere de la realización de los siguient
 
 * Podemos consultar la gobernanza creada utilizando el siguiente comando:
 
-  ```bash title="Node WPO"
+  ```bash title="Node: WPO"
   curl --request GET 'http://localhost:3000/api/subjects/{{GOVERNANCE-ID}}'
   ```
 
@@ -57,7 +57,7 @@ Para crear una gobernanza básica se requiere de la realización de los siguient
     "subject_id": {{GOVERNANCE-ID}},
     "governance_id": "",
     "sn": 0,
-    "public_key": "EcQ7syPhhduUOSlco7pqTdird_iVhGwOXAz8xIHcM7KU",
+    "public_key": "E8tVWEasubIp7P9fzk_HttNCsABymV9m9xEPAfr-QV7M",
     "namespace": "",
     "name": "wine_track",
     "schema_id": "governance",

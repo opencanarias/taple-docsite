@@ -124,7 +124,7 @@ El resultado será el siguiente:
 
 Ahora, es el momento de llamar al método del contrato de la gobernanza que se encarga de la actualización de sus propiedades. Para ello, ejecutaremos lo siguiente:
 
-```bash title="Node WPO"
+```bash title="Node: WPO"
 curl --request POST 'http://localhost:3000/api/event-requests' \
 --header 'Content-Type: application/json' \
 --data-raw '{
@@ -172,22 +172,21 @@ En este punto, debemos hablar sobre un nuevo concepto: [la emisión de ciertos e
 
 Por lo tanto, debemos consultar nuestra lista de solicitudes de aprobación pendientes en el sistema:
 
-```bash title="Node WPO"
+```bash title="Node: WPO"
 curl --request GET 'http://localhost:3000/api/approval-requests?status=pending'
 ```
 
 El resultado de esta operación será una lista con un único elemento, que representa el evento que espera ser aprobado. Para aprobar esta solicitud de actualización de la gobernanza, copiaremos el valor que aparece en su campo `id` y ejecutaremos el siguiente comando:
 
-```bash title="Node WPO"
+```bash title="Node: WPO"
 curl --request PATCH 'http://localhost:3000/api/approval-requests/{{PREVIOUS-ID}}' \
---header 'x-api-key: 1453' \
 --header 'Content-Type: application/json' \
 --data-raw '{"approvalType": "Accept"}'
 ```
 
 Luego, consultamos la gobernanza nuevamente para verificar los cambios. El resultado debería mostrar un campo `sn` igual a 1 y la inclusión del nuevo miembro:
 
-```bash title="Node WPO"
+```bash title="Node: WPO"
 curl --request GET 'http://localhost:3000/api/subjects/{{GOVERNANCE-ID}}'
 ```
 
@@ -196,7 +195,7 @@ curl --request GET 'http://localhost:3000/api/subjects/{{GOVERNANCE-ID}}'
     "subject_id": {{GOVERNACE-ID}},
     "governance_id": "",
     "sn": 1,
-    "public_key": "EcQ7syPhhduUOSlco7pqTdird_iVhGwOXAz8xIHcM7KU",
+    "public_key": "E8tVWEasubIp7P9fzk_HttNCsABymV9m9xEPAfr-QV7M",
     "namespace": "",
     "name": "wine_track",
     "schema_id": "governance",
