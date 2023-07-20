@@ -1,12 +1,12 @@
 # Creating the governance
 
-Ahora que hemos podido levantar nuestro primer nodo, lo primero que debemos hacer para que sea útil es crear una [governance](../../discover/governance.md). Las governances son sujetos especiales que definen las reglas del caso de uso en cuestión. Sin governance no pueden existir sujetos. Tanto su [esquema como su smart contract](../../learn/governance-schema-and-contract.md) son fijos y están definidos en el código de Taple. Lo mismo con su [estructura](../../learn/governance-structure.md).
+Now that we have been able to launch our first node, the first thing we must do for it to be useful is to create a [governance](../../discover/governance.md). Governances are special subjects that define the rules of the use case at hand. Without governance, there can be no subjects. Both its [scheme and its smart contract](../../learn/governance-schema-and-contract.md) are fixed and defined in Taple's code. The same goes for its [structure](../../learn/governance-structure.md).
 
-Un aspecto interesante de la API del Taple-client es las diferentes posibilidades para usar el endpoint de envío de event requests. La forma más ortodoxa sería incluir la request y la firma de la request. Para ello se puede usar Taple-sign (incluido en las [taple-tools](../../learn/client-tools.md)) para firmar la request. Pero también se puede omitir la firma en el body de la request y que sea el client quien se encargue de firmarlo con nuestra propia clave privada. Esto obviamente no se puede hacer para invocaciones externas donde el firmante no es el propietario del nodo. Otro cambio destinado a aumentar la sencillez para los eventos de Génesis/Creación es que se puede omitir la public key del body y el client creará una por nosotros. En general antes de crear un sujeto habría que llamar a la api de creación de material criptográfico para generar un par de claves **/api/keys** y el método **POST**. Dicha API devuelve el valor de la public key del KeyPair para incluirlo en los eventos de Create y Transfer.
+An interesting aspect of the Taple-client API is the different possibilities for using the event request submission endpoint. The most orthodox way would be to include the request and the signature of the request. For this, Taple-sign can be used (included in [taple-tools](../../learn/client-tools.md)) to sign the request. But you can also omit the signature in the body of the request and have the client sign it with our own private key. This obviously cannot be done for external invocations where the signer is not the owner of the node. Another change intended to increase simplicity for Genesis/Creation events is that the public key can be omitted from the body and the client will create one for us. In general, before creating a subject, you should call the cryptographic material creation API to generate a pair of keys **/api/keys** and the **POST** method. This API returns the value of the public key of the KeyPair to include it in the Create and Transfer events.
 
-Para ello debemos lanzar una event request usando el API de taple-client. El endpoint que debemos usar es **/api/event-requests** y el método **POST**. Este endpoint admite diferentes configuraciones para facilitarle la vida al usuario:
+To do this, we must launch an event request using the taple-client API. The endpoint we must use is **/api/event-requests** and the method is **POST**. This endpoint supports different configurations to make life easier for the user:
 
-Con lo cual, si optamos por la tercera vía el body del post de la llamada que crea la governance se nos quedaría en:
+So, if we opt for the third way, the body of the post call that creates the governance would end up like:
 
 ```json
 {
@@ -36,14 +36,14 @@ curl --silent --location 'http://localhost:3000/api/event-requests' \
 }'
 ```
 
-La respuesta que obtenemos al lanzar la event request es la id de la propia request, si queremos saber cuál ha acabado siendo el SubjectId de la governance debemos consultar el endpoint **/api/event-requests/{id}** y el método **GET**. En la respuesta de este endpoint se nos devuelve inforamación de la request que incluye el SubjectId de la governance.
+The response we get when launching the event request is the id of the request itself. If we want to know what ended up being the SubjectId of the governance, we must consult the endpoint **/api/event-requests/{id}** and the method **GET**. The response to this endpoint returns information about the request that includes the SubjectId of the governance.
 
 ```bash
 curl --silent 'http://127.0.0.1:3000/api/event-requests/Jr4kWJOgdIhdtUMTqyLbu676-k8-eVCd8VQ9ZmLWpSdg/state' \
 --header 'X-API-KEY: 1234'
 ```
 
-Respuesta:
+Response:
 
 ```json
 {
@@ -55,11 +55,11 @@ Respuesta:
 }
 ```
 
-También podemos pedir la lista de sujetos en **/api/subjects** con el método **GET**. En este caso se nos devolverá una lista de los sujetos que tenemos en el nodo, en este caso solo tendremos la governance que acabamos de crear.
+We can also ask for the list of subjects at **/api/subjects** using the **GET** method. In this case, we will get a list of the subjects we have on the node, in this case, we will only have the governance we just created.
 
-Al ser los dueños del sujeto se puede decir que somos testigos del mismo. El único rol que se define por defecto en el estado inicial de la governance es el que hace que todos los miembros de la governanza sean testigos de la misma, pero en el caso de los miembros viene vacío. En el siguiente paso nos añadiremos como miembros de la governance. Esto se debe a que el estado inicial no tiene ningún miembro, y para participar activamente en el caso de uso debemos añadirnos como miembros. Aunque este paso no es obligatorio, depende del caso de uso.
+Since we are the owners of the subject, it can be said that we are witnesses of it. The only role that is defined by default in the initial state of the governance is the one that makes all members of the governance witnesses of it, but in the case of the members, it comes empty. In the next step, we will add ourselves as members of the governance. This is because the initial state has no members, and to actively participate in the use case, we must add ourselves as members. Although this step is not mandatory, it depends on the use case.
 
-El endpoint a usar es el mismo que el de la creación, pero el tipo de evento será FACT:
+The endpoint to use is the same as for creation, but the type of event will be FACT:
 
 ```json
 {
@@ -111,11 +111,11 @@ curl --silent 'http://localhost:3000/api/event-requests' \
 }'
 ```
 
-Reemplazar {{governance_id}} por el SubjectId de la governance que hemos creado. El id de nuestro usuario lo sacamos de cuando usamos taple-keygen en el paso anterior. Es nuestro KeyIdentifier, que identifica nuestra clave pública. El método Patch es el único que contiene el contrato de la governance actualmente y simplemente aplica un json-patch a su estado. Este método hace que sea necesaria la fase de Aprobación.
+Replace {{governance_id}} with the SubjectId of the governance we have created. The id of our user we get from when we used taple-keygen in the previous step. It is our KeyIdentifier, which identifies our public key. The Patch method is the only one that currently contains the contract of the governance and it simply applies a json-patch to its state. This method requires the Approval phase.
 
-Como hemos comentado anteriormente el creador será el firmante en todas las fases si no se define a nadie más, por lo que para este evento 1 nosotros seremos [Evaluador](../../discover/event-evaluation-process.md), [Aprobador](../../discover/event-approval-process.md) y [Validador](../../discover/event-validation-process.md). La evaluación y la validación funcionan automáticamente, pero la parte de aprobación requiere intervención del usuario a través de la API (siempre que no esté definida la variable de entorno que hace que se apruebe automáticamente).
+As we mentioned earlier, the creator will be the signer in all phases if no one else is defined, so for this event 1 we will be the [Evaluator](../../discover/event-evaluation-process.md), [Approver](../../discover/event-approval-process.md), and [Validator](../../discover/event-validation-process.md). Evaluation and validation work automatically, but the approval part requires user intervention through the API (provided the environment variable that automatically approves is not defined).
 
-Para ello debemos primero preguntar por las aprobaciones pendientes en **/api/approval-requests?status=pending** usando un **GET**.
+For this, we must first ask for pending approvals at **/api/approval-requests?status=pending** using a **GET**.
 
 ```bash
 curl --silent 'http://localhost:3000/api/approval-requests?status=pending'
@@ -176,7 +176,7 @@ curl --silent 'http://localhost:3000/api/approval-requests?status=pending'
 ]
 ```
 
-El id del json de respuesta es lo que debemos usar para aprobarla. En **/api/approval-requests/{id}** usando un **PATCH** añadiremos el id recibido para lanzar el voto. Como en nuestro caso queremos aprobarla el body debe ser:
+The id of the json response is what we must use to approve it. At **/api/approval-requests/{id}** using a **PATCH**, we will add the received id to cast the vote. As in our case, we want to approve it, the body should be:
 
 ```json
 {"approvalType": "Accept"}

@@ -107,7 +107,7 @@ It is an agreement or communication between 2 different entities to accept a cha
 ## V
 
 ### Validator
-The validator is a network participant who provides the security signature to the subject. The validator maintains a complete copy of the subjects it validates and commits to the network not to accept more than one version of the same event. 
+The validator is a network participant who provides the security signature to the subject. The validator maintains a complete copy of the subjects it validates and commits to the network not to accept more than one version of the same event.
 
 ## W
 
