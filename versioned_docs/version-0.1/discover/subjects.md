@@ -23,7 +23,7 @@ To learn more about the microledger structure visit the [Events](./events.md) pa
 
 ## Subject state
 
-The state is the representation of the information stored by a subject at a given instant, usually the current moment. It is a data structure, stored with the microledger, which contains the information stored in a subject. The state is obtained by applying, one after the other, the different microledger events on the initial state of the subject defined in its [genesis-event](/docs/discover/events#evento-de-g%C3%A9nesis-genesis-event). 
+The state is the representation of the information stored by a subject at a given instant, usually the current moment. It is a data structure, stored with the microledger, which contains the information stored in a subject. The state is obtained by applying, one after the other, the different microledger events on the initial state of the subject defined in its [genesis-event](/docs/discover/events.md#evento-de-g%C3%A9nesis-genesis-event). 
 
 ![Subjects](../img/subject-state.png)
 
