@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `core/src/distribution/inner_manager.rs`."><title>inner_manager.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-ba5701c5741a7b69.css" id="mainThemeStyle"><div id="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="taple_core" data-themes="" data-resource-suffix="" data-rustdoc-version="1.70.0 (90c541806 2023-05-31)" data-search-js="search-e077946657036a58.js" data-settings-js="settings-298e1ea74db45b39.js" data-settings-css="settings-7bfb4c59cc6bc502.css" data-theme-light-css="light-0f8c037637f9eb3e.css" data-theme-dark-css="dark-1097f8e92a01e3cf.css" data-theme-ayu-css="ayu-614652228113ac93.css" ></div><script src="../../../static.files/storage-62ce34ea385b278a.js"></script><script defer src="../../../static.files/source-script-905937fbbdc8e9ea.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../static.files/main-f61008743c98d196.js"></script><noscript><link rel="stylesheet" media="(prefers-color-scheme:light)" href="../../../static.files/light-0f8c037637f9eb3e.css"><link rel="stylesheet" media="(prefers-color-scheme:dark)" href="../../../static.files/dark-1097f8e92a01e3cf.css"><link rel="stylesheet" href="../../../static.files/noscript-13285aec31fa243e.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../../taple_core/index.html"><img class="rust-logo" src="../../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `core/src/distribution/inner_manager.rs`."><title>inner_manager.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-f3501f0f5ae15dfb.css" id="mainThemeStyle"><div id="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="taple_core" data-themes="" data-resource-suffix="" data-rustdoc-version="1.71.0 (8ede3aae2 2023-07-12)" data-search-js="search-4926e5fc22a5646a.js" data-settings-js="settings-de11bff964e9d4e5.js" data-settings-css="settings-8c76f75bfb6bd192.css" data-theme-light-css="light-0f8c037637f9eb3e.css" data-theme-dark-css="dark-1097f8e92a01e3cf.css" data-theme-ayu-css="ayu-614652228113ac93.css" ></div><script src="../../../static.files/storage-62ce34ea385b278a.js"></script><script defer src="../../../static.files/source-script-11255107d0a65077.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../static.files/main-f0540c1d82cde29b.js"></script><noscript><link rel="stylesheet" media="(prefers-color-scheme:light)" href="../../../static.files/light-0f8c037637f9eb3e.css"><link rel="stylesheet" media="(prefers-color-scheme:dark)" href="../../../static.files/dark-1097f8e92a01e3cf.css"><link rel="stylesheet" href="../../../static.files/noscript-13285aec31fa243e.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../../taple_core/index.html"><img class="rust-logo" src="../../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -511,13 +511,14 @@
 <a href="#511" id="511">511</a>
 <a href="#512" id="512">512</a>
 <a href="#513" id="513">513</a>
+<a href="#514" id="514">514</a>
+<a href="#515" id="515">515</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>std::collections::{HashMap, HashSet};
 
 <span class="kw">use </span><span class="kw">crate</span>::commons::channel::SenderEnd;
 <span class="kw">use </span><span class="kw">crate</span>::commons::models::state::Subject;
 <span class="kw">use </span><span class="kw">crate</span>::commons::self_signature_manager::{SelfSignatureInterface, SelfSignatureManager};
 <span class="kw">use </span><span class="kw">crate</span>::distribution::{AskForSignatures, SignaturesReceived};
-<span class="kw">use </span><span class="kw">crate</span>::event_content::Metadata;
 <span class="kw">use </span><span class="kw">crate</span>::governance::stage::ValidationStage;
 <span class="kw">use </span><span class="kw">crate</span>::identifier::{Derivable, DigestIdentifier, KeyIdentifier};
 <span class="kw">use </span><span class="kw">crate</span>::message::{MessageConfig, MessageTaskCommand};
@@ -526,13 +527,13 @@
 <span class="kw">use </span><span class="kw">crate</span>::utils::message::distribution::{
     create_distribution_request, create_distribution_response,
 };
-<span class="kw">use </span><span class="kw">crate</span>::utils::message::ledger::request_lce;
-<span class="kw">use </span><span class="kw">crate</span>::TapleSettings;
+<span class="kw">use </span><span class="kw">crate</span>::utils::message::ledger::{request_gov_event, request_lce};
 <span class="kw">use crate</span>::{
     database::{Error <span class="kw">as </span>DbError, DB},
     governance::GovernanceInterface,
     DatabaseCollection,
 };
+<span class="kw">use crate</span>::{Metadata, TapleSettings};
 
 <span class="kw">use </span><span class="kw">super</span>::error::{DistributionErrorResponses, DistributionManagerError};
 <span class="kw">use </span><span class="kw">super</span>::StartDistribution;
@@ -596,10 +597,8 @@
                 </span>.db
                 .get_witness_signatures(<span class="kw-2">&amp;</span>id)
                 .map_err(|error| DistributionManagerError::DatabaseError(error.to_string()))<span class="question-mark">?</span>;
-            <span class="kw">let </span>current_signers: HashSet&lt;KeyIdentifier&gt; = current_signatures
-                .into_iter()
-                .map(|s| s.content.signer)
-                .collect();
+            <span class="kw">let </span>current_signers: HashSet&lt;KeyIdentifier&gt; =
+                current_signatures.into_iter().map(|s| s.signer).collect();
             <span class="kw">let </span>remaining_signers: HashSet&lt;KeyIdentifier&gt; =
                 witnesses.difference(<span class="kw-2">&amp;</span>current_signers).cloned().collect();
             witnesses.insert(owner);
@@ -860,7 +859,7 @@
                     </span><span class="kw">let </span>requested = <span class="kw-2">&amp;</span>msg.signatures_requested;
                     <span class="kw">let </span>result = signatures
                         .iter()
-                        .filter(|s| requested.contains(<span class="kw-2">&amp;</span>s.content.signer))
+                        .filter(|s| requested.contains(<span class="kw-2">&amp;</span>s.signer))
                         .cloned()
                         .collect();
                     <span class="kw">let </span>response = create_distribution_response(msg.subject_id.clone(), sn, result);
@@ -875,10 +874,23 @@
                         </span>.map_err(|<span class="kw">_</span>| DistributionManagerError::MessageChannelNotAvailable)<span class="question-mark">?</span>;
                 } <span class="kw">else if </span>msg.sn &gt; sn {
                     <span class="comment">// No veo necesario un mensaje para el caso de MSG.SN = SN + 1
-                    </span><span class="kw">let </span>request = request_lce(
-                        <span class="self">self</span>.signature_manager.get_own_identifier(),
-                        msg.subject_id.clone(),
-                    );
+                    </span><span class="kw">let </span>request = <span class="kw">if </span><span class="self">self
+                        </span>.governance
+                        .is_governance(msg.subject_id.clone())
+                        .<span class="kw">await
+                        </span>.map_err(|<span class="kw">_</span>| DistributionManagerError::GovernanceChannelNotAvailable)<span class="question-mark">?
+                    </span>{
+                        request_gov_event(
+                            <span class="self">self</span>.signature_manager.get_own_identifier(),
+                            msg.subject_id.clone(),
+                            sn + <span class="number">1</span>,
+                        )
+                    } <span class="kw">else </span>{
+                        request_lce(
+                            <span class="self">self</span>.signature_manager.get_own_identifier(),
+                            msg.subject_id.clone(),
+                        )
+                    };
                     <span class="self">self</span>.messenger_channel
                         .tell(MessageTaskCommand::Request(
                             <span class="prelude-val">None</span>,
@@ -918,10 +930,8 @@
         current_signatures: <span class="kw-2">&amp;</span>HashSet&lt;Signature&gt;,
         targets: <span class="kw-2">&amp;</span>HashSet&lt;KeyIdentifier&gt;,
     ) -&gt; HashSet&lt;KeyIdentifier&gt; {
-        <span class="kw">let </span>current_signers: HashSet&lt;<span class="kw-2">&amp;</span>KeyIdentifier&gt; = current_signatures
-            .iter()
-            .map(|s| <span class="kw-2">&amp;</span>s.content.signer)
-            .collect();
+        <span class="kw">let </span>current_signers: HashSet&lt;<span class="kw-2">&amp;</span>KeyIdentifier&gt; =
+            current_signatures.iter().map(|s| <span class="kw-2">&amp;</span>s.signer).collect();
         <span class="kw">let </span>targets_ref: HashSet&lt;<span class="kw-2">&amp;</span>KeyIdentifier&gt; = targets.iter().map(|s| s).collect();
         targets_ref
             .difference(<span class="kw-2">&amp;</span>current_signers)
@@ -966,19 +976,13 @@
                     </span>.map_err(|<span class="kw">_</span>| DistributionManagerError::GovernanceChannelNotAvailable)<span class="question-mark">?</span>;
                 <span class="kw">let </span>metadata = build_metadata(<span class="kw-2">&amp;</span>subject, governance_version);
                 <span class="kw">let </span><span class="kw-2">mut </span>targets = <span class="self">self</span>.get_targets(metadata, <span class="kw-2">&amp;</span>subject).<span class="kw">await</span><span class="question-mark">?</span>;
-                <span class="kw">let </span>hash_signed = DigestIdentifier::from_serializable_borsh(<span class="kw-2">&amp;</span>event)
-                    .map_err(|<span class="kw">_</span>| DistributionManagerError::HashGenerationFailed)<span class="question-mark">?</span>;
                 <span class="kw">for </span>signature <span class="kw">in </span>msg.signatures.iter() {
                     <span class="comment">// Comprobamos signer
-                    </span><span class="kw">if </span>!targets.contains(<span class="kw-2">&amp;</span>signature.content.signer) {
+                    </span><span class="kw">if </span>!targets.contains(<span class="kw-2">&amp;</span>signature.signer) {
                         <span class="kw">return </span><span class="prelude-val">Ok</span>(<span class="prelude-val">Err</span>(DistributionErrorResponses::InvalidSigner));
                     }
                     <span class="comment">// Comprobamos firma
-                    </span><span class="kw">if let </span><span class="prelude-val">Err</span>(_error) = signature
-                        .content
-                        .signer
-                        .verify(<span class="kw-2">&amp;</span>hash_signed.derivative(), <span class="kw-2">&amp;</span>signature.signature)
-                    {
+                    </span><span class="kw">if let </span><span class="prelude-val">Err</span>(_error) = signature.verify(<span class="kw-2">&amp;</span>event) {
                         <span class="kw">return </span><span class="prelude-val">Ok</span>(<span class="prelude-val">Err</span>(DistributionErrorResponses::InvalidSignature));
                     }
                 }

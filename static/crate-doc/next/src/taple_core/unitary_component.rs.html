@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `core/src/unitary_component.rs`."><title>unitary_component.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-ba5701c5741a7b69.css" id="mainThemeStyle"><div id="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="taple_core" data-themes="" data-resource-suffix="" data-rustdoc-version="1.70.0 (90c541806 2023-05-31)" data-search-js="search-e077946657036a58.js" data-settings-js="settings-298e1ea74db45b39.js" data-settings-css="settings-7bfb4c59cc6bc502.css" data-theme-light-css="light-0f8c037637f9eb3e.css" data-theme-dark-css="dark-1097f8e92a01e3cf.css" data-theme-ayu-css="ayu-614652228113ac93.css" ></div><script src="../../static.files/storage-62ce34ea385b278a.js"></script><script defer src="../../static.files/source-script-905937fbbdc8e9ea.js"></script><script defer src="../../source-files.js"></script><script defer src="../../static.files/main-f61008743c98d196.js"></script><noscript><link rel="stylesheet" media="(prefers-color-scheme:light)" href="../../static.files/light-0f8c037637f9eb3e.css"><link rel="stylesheet" media="(prefers-color-scheme:dark)" href="../../static.files/dark-1097f8e92a01e3cf.css"><link rel="stylesheet" href="../../static.files/noscript-13285aec31fa243e.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../taple_core/index.html"><img class="rust-logo" src="../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `core/src/unitary_component.rs`."><title>unitary_component.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-f3501f0f5ae15dfb.css" id="mainThemeStyle"><div id="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="taple_core" data-themes="" data-resource-suffix="" data-rustdoc-version="1.71.0 (8ede3aae2 2023-07-12)" data-search-js="search-4926e5fc22a5646a.js" data-settings-js="settings-de11bff964e9d4e5.js" data-settings-css="settings-8c76f75bfb6bd192.css" data-theme-light-css="light-0f8c037637f9eb3e.css" data-theme-dark-css="dark-1097f8e92a01e3cf.css" data-theme-ayu-css="ayu-614652228113ac93.css" ></div><script src="../../static.files/storage-62ce34ea385b278a.js"></script><script defer src="../../static.files/source-script-11255107d0a65077.js"></script><script defer src="../../source-files.js"></script><script defer src="../../static.files/main-f0540c1d82cde29b.js"></script><noscript><link rel="stylesheet" media="(prefers-color-scheme:light)" href="../../static.files/light-0f8c037637f9eb3e.css"><link rel="stylesheet" media="(prefers-color-scheme:dark)" href="../../static.files/dark-1097f8e92a01e3cf.css"><link rel="stylesheet" href="../../static.files/noscript-13285aec31fa243e.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../taple_core/index.html"><img class="rust-logo" src="../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -637,34 +637,6 @@
 <a href="#637" id="637">637</a>
 <a href="#638" id="638">638</a>
 <a href="#639" id="639">639</a>
-<a href="#640" id="640">640</a>
-<a href="#641" id="641">641</a>
-<a href="#642" id="642">642</a>
-<a href="#643" id="643">643</a>
-<a href="#644" id="644">644</a>
-<a href="#645" id="645">645</a>
-<a href="#646" id="646">646</a>
-<a href="#647" id="647">647</a>
-<a href="#648" id="648">648</a>
-<a href="#649" id="649">649</a>
-<a href="#650" id="650">650</a>
-<a href="#651" id="651">651</a>
-<a href="#652" id="652">652</a>
-<a href="#653" id="653">653</a>
-<a href="#654" id="654">654</a>
-<a href="#655" id="655">655</a>
-<a href="#656" id="656">656</a>
-<a href="#657" id="657">657</a>
-<a href="#658" id="658">658</a>
-<a href="#659" id="659">659</a>
-<a href="#660" id="660">660</a>
-<a href="#661" id="661">661</a>
-<a href="#662" id="662">662</a>
-<a href="#663" id="663">663</a>
-<a href="#664" id="664">664</a>
-<a href="#665" id="665">665</a>
-<a href="#666" id="666">666</a>
-<a href="#667" id="667">667</a>
 </pre></div><pre class="rust"><code><span class="attr">#[cfg(feature = <span class="string">&quot;aproval&quot;</span>)]
 </span><span class="kw">use </span><span class="kw">crate</span>::approval::manager::{ApprovalAPI, ApprovalManager};
 <span class="attr">#[cfg(feature = <span class="string">&quot;aproval&quot;</span>)]
@@ -673,7 +645,7 @@
 <span class="kw">use </span><span class="kw">crate</span>::authorized_subjecs::{AuthorizedSubjectsCommand, AuthorizedSubjectsResponse};
 <span class="kw">use </span><span class="kw">crate</span>::commons::channel::MpscChannel;
 <span class="kw">use </span><span class="kw">crate</span>::commons::config::NetworkSettings;
-<span class="kw">use </span><span class="kw">crate</span>::commons::config::{DatabaseSettings, NodeSettings, TapleSettings};
+<span class="kw">use </span><span class="kw">crate</span>::commons::config::{NodeSettings, TapleSettings};
 <span class="kw">use </span><span class="kw">crate</span>::commons::crypto::{
     Ed25519KeyPair, KeyGenerator, KeyMaterial, KeyPair, Secp256k1KeyPair,
 };
@@ -692,15 +664,19 @@
 <span class="kw">use </span><span class="kw">crate</span>::governance::GovernanceAPI;
 <span class="kw">use </span><span class="kw">crate</span>::governance::{governance::Governance, GovernanceMessage, GovernanceResponse};
 <span class="kw">use </span><span class="kw">crate</span>::ledger::manager::EventManagerAPI;
-<span class="kw">use </span><span class="kw">crate</span>::ledger::{manager::EventManager <span class="kw">as </span>LedgerManager, LedgerCommand, LedgerResponse};
+<span class="kw">use </span><span class="kw">crate</span>::ledger::{manager::LedgerManager, LedgerCommand, LedgerResponse};
 <span class="kw">use </span><span class="kw">crate</span>::message::{
-    Message, MessageReceiver, MessageSender, MessageTaskCommand, MessageTaskManager, NetworkEvent,
+    MessageContent, MessageReceiver, MessageSender, MessageTaskCommand, MessageTaskManager,
+    NetworkEvent,
 };
 <span class="kw">use </span><span class="kw">crate</span>::network::network::{NetworkProcessor, SendMode};
-<span class="attr">#[cfg(feature = <span class="string">&quot;validation&quot;</span>)]
-</span><span class="kw">use </span><span class="kw">crate</span>::notary::manager::NotaryManager;
-<span class="kw">use </span><span class="kw">crate</span>::notary::{NotaryCommand, NotaryResponse};
 <span class="kw">use </span><span class="kw">crate</span>::protocol::protocol_message_manager::{ProtocolManager, TapleMessages};
+<span class="kw">use </span><span class="kw">crate</span>::signature::Signed;
+<span class="attr">#[cfg(feature = <span class="string">&quot;validation&quot;</span>)]
+</span><span class="kw">use </span><span class="kw">crate</span>::validation::manager::ValidationManager;
+<span class="attr">#[cfg(feature = <span class="string">&quot;validation&quot;</span>)]
+</span><span class="kw">use </span><span class="kw">crate</span>::validation::{ValidationCommand, ValidationResponse};
+<span class="kw">use </span><span class="kw">crate</span>::ListenAddr;
 <span class="kw">use </span>futures::future::BoxFuture;
 <span class="kw">use </span>futures::FutureExt;
 <span class="kw">use </span>libp2p::{Multiaddr, PeerId};
@@ -712,6 +688,28 @@
 <span class="kw">use </span><span class="kw">crate</span>::error::Error;
 
 <span class="kw">const </span>BUFFER_SIZE: usize = <span class="number">1000</span>;
+
+<span class="doccomment">/// Instance a default settings to start a new Taple Node
+</span><span class="kw">pub fn </span>get_default_settings() -&gt; TapleSettings {
+    TapleSettings {
+        network: NetworkSettings {
+            listen_addr: <span class="macro">vec!</span>[ListenAddr::default()],
+            known_nodes: Vec::&lt;String&gt;::new(),
+            external_address: <span class="macro">vec!</span>[],
+        },
+        node: NodeSettings {
+            key_derivator: KeyDerivator::Ed25519,
+            secret_key: <span class="prelude-ty">Option</span>::&lt;String&gt;::None,
+            digest_derivator:
+                <span class="kw">crate</span>::commons::identifier::derive::digest::DigestDerivator::Blake3_256,
+            replication_factor: <span class="number">0.25f64</span>,
+            timeout: <span class="number">3000u32</span>,
+            passvotation: <span class="number">0</span>,
+            <span class="attr">#[cfg(feature = <span class="string">&quot;evaluation&quot;</span>)]
+            </span>smartcontracts_directory: <span class="string">&quot;./contracts&quot;</span>.into(),
+        },
+    }
+}
 
 <span class="doccomment">/// Object that allows receiving [notifications](Notification) of the
 /// different events of relevance that a node performs and/or detects.
@@ -769,6 +767,47 @@
     }
 }
 
+<span class="kw">pub struct </span>TapleShutdownManager {
+    shutdown_sender: tokio::sync::broadcast::Sender&lt;()&gt;,
+    shutdown_receiver: tokio::sync::broadcast::Receiver&lt;()&gt;,
+}
+
+<span class="kw">impl </span>TapleShutdownManager {
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>new(sender: tokio::sync::broadcast::Sender&lt;()&gt;) -&gt; <span class="self">Self </span>{
+        <span class="self">Self </span>{
+            shutdown_receiver: sender.subscribe(),
+            shutdown_sender: sender,
+        }
+    }
+    <span class="kw">pub fn </span>get_raw_receiver(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; tokio::sync::broadcast::Receiver&lt;()&gt; {
+        <span class="self">self</span>.shutdown_sender.subscribe()
+    }
+
+    <span class="kw">pub fn </span>get_raw_sender(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; tokio::sync::broadcast::Sender&lt;()&gt; {
+        <span class="self">self</span>.shutdown_sender.clone()
+    }
+
+    <span class="kw">pub async fn </span>wait_for_shutdown(<span class="kw-2">mut </span><span class="self">self</span>) {
+        <span class="kw">loop </span>{
+            <span class="kw">match </span><span class="self">self</span>.shutdown_receiver.recv().<span class="kw">await </span>{
+                <span class="prelude-val">Err</span>(RecvError::Lagged(<span class="kw">_</span>)) =&gt; <span class="kw">continue</span>,
+                <span class="kw">_ </span>=&gt; <span class="kw">break</span>,
+            }
+        }
+    }
+
+    <span class="kw">pub async fn </span>shutdown(<span class="kw-2">mut </span><span class="self">self</span>) {
+        <span class="self">self</span>.shutdown_sender.send(()).unwrap();
+        drop(<span class="self">self</span>.shutdown_sender);
+        <span class="kw">loop </span>{
+            <span class="kw">match </span><span class="self">self</span>.shutdown_receiver.recv().<span class="kw">await </span>{
+                <span class="prelude-val">Err</span>(RecvError::Closed) =&gt; <span class="kw">break</span>,
+                <span class="kw">_ </span>=&gt; <span class="kw">continue</span>,
+            }
+        }
+    }
+}
+
 <span class="doccomment">/// Structure representing a node of a TAPLE network.
 ///
 /// A node must be instantiated using the [`Taple::new`] method, which requires a set
@@ -784,6 +823,8 @@
     notification_sender: tokio::sync::broadcast::Sender&lt;Notification&gt;,
     settings: TapleSettings,
     database: <span class="prelude-ty">Option</span>&lt;M&gt;,
+    shutdown_sender: <span class="prelude-ty">Option</span>&lt;tokio::sync::broadcast::Sender&lt;()&gt;&gt;,
+    _shutdown_receiver: tokio::sync::broadcast::Receiver&lt;()&gt;,
     _c: PhantomData&lt;C&gt;,
 }
 
@@ -825,18 +866,24 @@
         }
     }
 
+    <span class="doccomment">/// This method allows to get the receiver of the shutdown channel used by the node.
+    /// This can be used by the user/client to detect when the node has emmited the signal to .
+    </span><span class="kw">pub fn </span>get_shutdown_manager(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; TapleShutdownManager {
+        TapleShutdownManager::new(<span class="self">self</span>.shutdown_sender.as_ref().unwrap().clone())
+    }
+
     <span class="doccomment">/// This method allows the creation of cryptographic material through a
     /// given public key.
     </span><span class="kw">fn </span>generate_mc(<span class="kw-2">&amp;mut </span><span class="self">self</span>, stored_public_key: <span class="prelude-ty">Option</span>&lt;String&gt;) -&gt; <span class="prelude-ty">Result</span>&lt;KeyPair, Error&gt; {
         <span class="kw">let </span>kp = <span class="self">Self</span>::create_key_pair(
             <span class="kw-2">&amp;</span><span class="self">self</span>.settings.node.key_derivator,
-            <span class="self">self</span>.settings.node.seed.clone(),
+            <span class="prelude-val">None</span>,
             <span class="self">self</span>.settings.node.secret_key.clone(),
         )<span class="question-mark">?</span>;
         <span class="kw">let </span>public_key = kp.public_key_bytes();
         <span class="kw">let </span>key_identifier = KeyIdentifier::new(kp.get_key_derivator(), <span class="kw-2">&amp;</span>public_key).to_str();
         <span class="kw">if let </span><span class="prelude-val">Some</span>(key) = stored_public_key {
-            <span class="kw">if </span>(key_identifier != key) &amp;&amp; !<span class="self">self</span>.settings.node.dev_mode {
+            <span class="kw">if </span>key_identifier != key {
                 <span class="macro">log::error!</span>(<span class="string">&quot;Invalid MC specified. There is a previous defined MC in the system&quot;</span>);
                 <span class="kw">return </span><span class="prelude-val">Err</span>(Error::InvalidKeyPairSpecified(key_identifier));
             }
@@ -848,9 +895,10 @@
 
     <span class="doccomment">/// Main and unique method to create an instance of a TAPLE node.
     </span><span class="kw">pub fn </span>new(settings: TapleSettings, database: M) -&gt; <span class="self">Self </span>{
-        check_dev_settings(<span class="kw-2">&amp;</span>settings);
         <span class="kw">let </span>(api_input, api_sender) = MpscChannel::new(BUFFER_SIZE);
         <span class="kw">let </span>(sender, <span class="kw">_</span>) = tokio::sync::broadcast::channel(BUFFER_SIZE);
+        <span class="comment">// Shutdown channel
+        </span><span class="kw">let </span>(bsx, brx) = tokio::sync::broadcast::channel::&lt;()&gt;(<span class="number">10</span>);
         <span class="kw">let </span>api = NodeAPI { sender: api_sender };
         <span class="self">Self </span>{
             api,
@@ -861,90 +909,13 @@
             notification_sender: sender,
             settings,
             database: <span class="prelude-val">Some</span>(database),
+            shutdown_sender: <span class="prelude-val">Some</span>(bsx),
+            _shutdown_receiver: brx,
             _c: PhantomData::default(),
         }
     }
 
-    <span class="doccomment">/// Instance a default settings to start a new Taple Node
-    </span><span class="kw">pub fn </span>get_default_settings() -&gt; TapleSettings {
-        TapleSettings {
-            network: NetworkSettings {
-                p2p_port: <span class="number">50000u32</span>,
-                addr: <span class="string">&quot;/ip4/0.0.0.0/tcp&quot;</span>.into(),
-                known_nodes: Vec::&lt;String&gt;::new(),
-                external_address: <span class="macro">vec!</span>[],
-            },
-            node: NodeSettings {
-                key_derivator: KeyDerivator::Ed25519,
-                secret_key: <span class="prelude-ty">Option</span>::&lt;String&gt;::None,
-                seed: <span class="prelude-val">None</span>,
-                digest_derivator:
-                    <span class="kw">crate</span>::commons::identifier::derive::digest::DigestDerivator::Blake3_256,
-                replication_factor: <span class="number">0.25f64</span>,
-                timeout: <span class="number">3000u32</span>,
-                passvotation: <span class="number">0</span>,
-                dev_mode: <span class="bool-val">false</span>,
-                smartcontracts_directory: <span class="string">&quot;../../../contracts&quot;</span>.into(),
-                req_res: <span class="bool-val">false</span>,
-            },
-            database: DatabaseSettings { path: <span class="string">&quot;&quot;</span>.into() },
-        }
-    }
-
-    <span class="comment">// // Instance a default governance settings
-    // pub fn get_default_governance(&amp;self) -&gt; RequestPayload {
-    //     RequestPayload::Json(
-    //         serde_json::to_string(&amp;serde_json::json!({
-    //                             &quot;members&quot;: [
-    //                                 {
-    //                                     &quot;id&quot;: &quot;Company&quot;,
-    //                                     &quot;tags&quot;: {},
-    //                                     &quot;description&quot;: &quot;Basic Usage&quot;,
-    //                                     &quot;key&quot;: self.controller_id().unwrap()
-    //                                 },
-    //                             ],
-    //                             &quot;schemas&quot;: [],
-    //                             &quot;policies&quot;: [
-    //                                 {
-    //                                     &quot;id&quot;: &quot;governance&quot;,
-    //                                     &quot;validation&quot;: {
-    //                                         &quot;quorum&quot;: 0.5,
-    //                                         &quot;validators&quot;: [
-    //                                             self.controller_id().unwrap()
-    //                                         ]
-    //                                     },
-    //                                     &quot;approval&quot;: {
-    //                                         &quot;quorum&quot;: 0.5,
-    //                                         &quot;approvers&quot;: [
-    //         ]
-    //                                     },
-    //                                     &quot;invokation&quot;: {
-    //                                         &quot;owner&quot;: {
-    //                                             &quot;allowance&quot;: true,
-    //                                             &quot;approvalRequired&quot;: false
-    //                                         },
-    //                                         &quot;set&quot;: {
-    //                                             &quot;allowance&quot;: false,
-    //                                             &quot;approvalRequired&quot;: false,
-    //                                             &quot;invokers&quot;: []
-    //                                         },
-    //                                         &quot;all&quot;: {
-    //                                             &quot;allowance&quot;: false,
-    //                                             &quot;approvalRequired&quot;: false,
-    //                                         },
-    //                                         &quot;external&quot;: {
-    //                                             &quot;allowance&quot;: false,
-    //                                             &quot;approvalRequired&quot;: false
-    //                                         }
-    //                                     }
-    //                                 }
-    //                             ]
-    //                     }))
-    //         .unwrap(),
-    //     )
-    // }
-
-    </span><span class="doccomment">/// This method initializes a TAPLE node, generating each of its internal components
+    <span class="doccomment">/// This method initializes a TAPLE node, generating each of its internal components
     /// and allowing subsequent interaction with the node. Each of the aforementioned
     /// components is executed in its own Tokyo task, allowing the method to return the
     /// control flow once its execution is finished.
@@ -956,7 +927,8 @@
     /// This method panics if it has not been possible to generate the network layer.
     </span><span class="kw">pub async fn </span>start(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;(), Error&gt; {
         <span class="comment">// Create channels
-        // Channels for network
+        </span><span class="kw">let </span>shutdown_sender = <span class="self">self</span>.shutdown_sender.take().unwrap();
+        <span class="comment">// Channels for network
         </span><span class="kw">let </span>(sender_network, receiver_network): (
             tokio::sync::mpsc::Sender&lt;NetworkEvent&gt;,
             tokio::sync::mpsc::Receiver&lt;NetworkEvent&gt;,
@@ -981,7 +953,7 @@
             MpscChannel::&lt;MessageTaskCommand&lt;TapleMessages&gt;, ()&gt;::new(BUFFER_SIZE);
         <span class="comment">// Receiver and sender of protocol messages
         </span><span class="kw">let </span>(protocol_receiver, protocol_sender) =
-            MpscChannel::&lt;Message&lt;TapleMessages&gt;, ()&gt;::new(BUFFER_SIZE);
+            MpscChannel::&lt;Signed&lt;MessageContent&lt;TapleMessages&gt;&gt;, ()&gt;::new(BUFFER_SIZE);
         <span class="comment">// Receiver and sender of distribution messages
         </span><span class="kw">let </span>(distribution_receiver, distribution_sender) = MpscChannel::&lt;
             DistributionMessagesNew,
@@ -998,11 +970,9 @@
         <span class="comment">// Receiver and sender of validation messages
         </span><span class="attr">#[cfg(feature = <span class="string">&quot;validation&quot;</span>)]
         </span><span class="kw">let </span>(validation_receiver, validation_sender) =
-            MpscChannel::&lt;NotaryCommand, NotaryResponse&gt;::new(BUFFER_SIZE);
-        <span class="comment">// Shutdown channel
-        </span><span class="kw">let </span>(bsx, _brx) = tokio::sync::broadcast::channel::&lt;()&gt;(<span class="number">10</span>);
+            MpscChannel::&lt;ValidationCommand, ValidationResponse&gt;::new(BUFFER_SIZE);
         <span class="comment">// Creation Watch Channel
-        </span><span class="kw">let </span>(wath_sender, watch_receiver): (
+        </span><span class="kw">let </span>(wath_sender, _watch_receiver): (
             tokio::sync::watch::Sender&lt;TapleSettings&gt;,
             tokio::sync::watch::Receiver&lt;TapleSettings&gt;,
         ) = tokio::sync::watch::channel(<span class="self">self</span>.settings.clone());
@@ -1020,28 +990,13 @@
         <span class="kw">let </span>public_key = kp.public_key_bytes();
         <span class="kw">let </span>key_identifier = KeyIdentifier::new(kp.get_key_derivator(), <span class="kw-2">&amp;</span>public_key);
         <span class="comment">// Creation Network
-        </span><span class="kw">let </span>addr = {
-            <span class="kw">if </span><span class="kw-2">&amp;</span><span class="self">self</span>.settings.network.addr == <span class="string">&quot;&quot; </span>|| <span class="self">self</span>.settings.network.p2p_port == <span class="number">0 </span>{
-                <span class="prelude-val">None
-            </span>} <span class="kw">else </span>{
-                <span class="prelude-val">Some</span>(<span class="macro">format!</span>(
-                    <span class="string">&quot;{}/{}&quot;</span>,
-                    <span class="self">self</span>.settings.network.addr.clone(),
-                    <span class="self">self</span>.settings.network.p2p_port.clone()
-                ))
-            }
-        };
-        <span class="kw">let </span>network_manager = NetworkProcessor::new(
-            addr,
+        </span><span class="kw">let </span>network_manager = NetworkProcessor::new(
+            <span class="self">self</span>.settings.network.listen_addr.clone(),
             network_access_points(<span class="kw-2">&amp;</span><span class="self">self</span>.settings.network.known_nodes)<span class="question-mark">?</span>, <span class="comment">// TODO: Provide Bootraps nodes per configuration
             </span>sender_network,
             kp.clone(),
-            bsx.subscribe(),
-            <span class="kw">if </span><span class="self">self</span>.settings.node.req_res {
-                SendMode::RequestResponse
-            } <span class="kw">else </span>{
-                SendMode::Tell
-            },
+            shutdown_sender.subscribe(),
+            SendMode::Tell,
             external_addresses(<span class="kw-2">&amp;</span><span class="self">self</span>.settings.network.external_address)<span class="question-mark">?</span>,
         )
         .<span class="kw">await
@@ -1053,7 +1008,7 @@
         </span><span class="kw">let </span>network_receiver = MessageReceiver::new(
             receiver_network,
             protocol_sender,
-            bsx.subscribe(),
+            shutdown_sender.subscribe(),
             signature_manager.get_own_identifier(),
         );
         <span class="comment">// Creation NetworkSender
@@ -1066,8 +1021,8 @@
         </span><span class="kw">let </span><span class="kw-2">mut </span>task_manager = MessageTaskManager::new(
             network_sender.clone(),
             task_receiver,
-            bsx.clone(),
-            bsx.subscribe(),
+            shutdown_sender.clone(),
+            shutdown_sender.subscribe(),
         );
         <span class="comment">// Creation ProtocolManager
         </span><span class="kw">let </span>protocol_manager = ProtocolManager::new(
@@ -1081,13 +1036,13 @@
             <span class="attr">#[cfg(feature = <span class="string">&quot;aproval&quot;</span>)]
             </span>approval_sender.clone(),
             ledger_sender.clone(),
-            bsx.clone(),
+            shutdown_sender.clone(),
         );
         <span class="comment">// Creation Governance
         </span><span class="kw">let </span><span class="kw-2">mut </span>governance_manager = Governance::&lt;M, C&gt;::new(
             governance_receiver,
-            bsx.clone(),
-            bsx.subscribe(),
+            shutdown_sender.clone(),
+            shutdown_sender.subscribe(),
             DB::new(db.clone()),
             governance_update_sx.clone(),
         );
@@ -1097,8 +1052,8 @@
             governance_update_rx,
             GovernanceAPI::new(governance_sender.clone()),
             DB::new(db.clone()),
-            bsx.clone(),
-            bsx.subscribe(),
+            shutdown_sender.clone(),
+            shutdown_sender.subscribe(),
             task_sender.clone(),
             <span class="self">self</span>.notification_sender.clone(),
             ledger_sender.clone(),
@@ -1108,8 +1063,8 @@
         <span class="comment">// Creation LedgerManager
         </span><span class="kw">let </span>ledger_manager = LedgerManager::new(
             ledger_receiver,
-            bsx.clone(),
-            bsx.subscribe(),
+            shutdown_sender.clone(),
+            shutdown_sender.subscribe(),
             <span class="self">self</span>.notification_sender.clone(),
             GovernanceAPI::new(governance_sender.clone()),
             DB::new(db.clone()),
@@ -1123,8 +1078,8 @@
             DB::new(db.clone()),
             task_sender.clone(),
             key_identifier.clone(),
-            bsx.clone(),
-            bsx.subscribe(),
+            shutdown_sender.clone(),
+            shutdown_sender.subscribe(),
         );
         <span class="comment">// Creation API module
         </span><span class="kw">let </span>api = API::new(
@@ -1135,10 +1090,8 @@
             AuthorizedSubjectsAPI::new(as_sender),
             EventManagerAPI::new(ledger_sender),
             wath_sender,
-            <span class="self">self</span>.settings.clone(),
-            kp.clone(),
-            bsx.clone(),
-            bsx.subscribe(),
+            shutdown_sender.clone(),
+            shutdown_sender.subscribe(),
             DB::new(db.clone()),
         );
         <span class="attr">#[cfg(feature = <span class="string">&quot;evaluation&quot;</span>)]
@@ -1148,8 +1101,8 @@
             db.clone(),
             signature_manager.clone(),
             governance_update_sx.subscribe(),
-            bsx.clone(),
-            bsx.subscribe(),
+            shutdown_sender.clone(),
+            shutdown_sender.subscribe(),
             GovernanceAPI::new(governance_sender.clone()),
             <span class="self">self</span>.settings.node.smartcontracts_directory.clone(),
             task_sender.clone(),
@@ -1159,8 +1112,8 @@
         </span><span class="kw">let </span>approval_manager = ApprovalManager::new(
             GovernanceAPI::new(governance_sender.clone()),
             approval_receiver,
-            bsx.clone(),
-            bsx.subscribe(),
+            shutdown_sender.clone(),
+            shutdown_sender.subscribe(),
             task_sender.clone(),
             governance_update_sx.subscribe(),
             signature_manager.clone(),
@@ -1172,8 +1125,8 @@
         </span><span class="kw">let </span>distribution_manager = DistributionManager::new(
             distribution_receiver,
             governance_update_sx.subscribe(),
-            bsx.clone(),
-            bsx.subscribe(),
+            shutdown_sender.clone(),
+            shutdown_sender.subscribe(),
             task_sender.clone(),
             GovernanceAPI::new(governance_sender.clone()),
             signature_manager.clone(),
@@ -1181,13 +1134,13 @@
             DB::new(db.clone()),
         );
         <span class="attr">#[cfg(feature = <span class="string">&quot;validation&quot;</span>)]
-        </span><span class="kw">let </span>validation_manager = NotaryManager::new(
+        </span><span class="kw">let </span>validation_manager = ValidationManager::new(
             validation_receiver,
             GovernanceAPI::new(governance_sender),
             DB::new(db.clone()),
             signature_manager,
-            bsx.clone(),
-            bsx.subscribe(),
+            shutdown_sender.clone(),
+            shutdown_sender.subscribe(),
             task_sender,
         );
         <span class="comment">// Module initialization
@@ -1272,15 +1225,6 @@
             <span class="prelude-val">Err</span>(Error::PkConflict)
         } <span class="kw">else </span>{
             <span class="prelude-val">Err</span>(Error::NoMCAvailable)
-        }
-    }
-}
-
-<span class="kw">fn </span>check_dev_settings(settings: <span class="kw-2">&amp;</span>TapleSettings) {
-    <span class="kw">if </span>!settings.node.dev_mode {
-        <span class="kw">if </span>settings.node.passvotation == <span class="number">1 </span>|| settings.node.passvotation == <span class="number">2 </span>{
-            <span class="macro">log::error!</span>(<span class="string">&quot;Invalid Settings for normal mode, try in dev mode&quot;</span>);
-            <span class="macro">panic!</span>(<span class="string">&quot;Invalid Settings for normal mode, try in dev mode&quot;</span>)
         }
     }
 }
