@@ -1,22 +1,22 @@
-# Running a node
+# Running a Node
 
-Para iniciar el desarrollo de nuestro caso de uso, debemos establecer nuestro primer nodo, que será *Wine Producers Organization* (**WPO**). Esta organización ha sido mencionada previamente en la formalización del caso de uso y serán los responsables de su gestión.
+The *Wine Producers Organization* (hereinafter referred to as **WPO**) is the entity responsible for proposing the business model and, consequently, will be in charge of managing the network. To achieve this, the first step is to set up a TAPLE node representing the **WPO**, which will allow interaction to configure the rest of the use case.
 
-Para llevar a cabo esto, crearemos el nodo **WPO** siguiendo estos pasos:
+Below, we will describe the steps to create the WPO node:
 
-```bash
-cargo run -- --http \
-    --http.port 3000 \
-    -k 74c417de2174f3a76b0b98343cea3aa35bfd3860cac8bf470092c3e751745c1a \
-    -d "/tmp/data" \
-    --network.listen_addr "/ip4/0.0.0.0/tcp/50000"
-```
+* First, make sure to download the appropriate Taple Client image from Dockerhub:
 
-```bash
-docker run opencanarias/taple-client:0.2 \
-    -p 3000:3000 \
-    -p 50000:50000 \
-    -e TAPLE_HTTP=true \
-    -e TAPLE_SECRET_KEY=74c417de2174f3a76b0b98343cea3aa35bfd3860cac8bf470092c3e751745c1a \
-    -e TAPLE_NETWORK_LISTEN_ADDR=/ip4/0.0.0.0/tcp/50000
-```
+    ```bash bash title="Node: WPO"
+    docker pull opencanarias/taple-client:0.2
+    ```
+
+* Next, we will start the node using the following command:
+
+    ```bash title="Node: WPO"
+    docker run opencanarias/taple-client:0.2 \
+        -p 3000:3000 \
+        -p 50000:50000 \
+        -e TAPLE_HTTP=true \
+        -e TAPLE_SECRET_KEY=74c417de2174f3a76b0b98343cea3aa35bfd3860cac8bf470092c3e751745c1a \
+        -e TAPLE_NETWORK_LISTEN_ADDR=/ip4/0.0.0.0/tcp/50000
+    ```

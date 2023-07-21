@@ -1,38 +1,25 @@
-# Wine track
+# Wine Track
 
 ## Introduction
 
-What we will learn in this tutorial will be divided into the following points:
+This tutorial will cover a series of advanced Taple network concepts, in which we will learn:
 
-1. [Execution of a node](running-node.md).
-2. [Creation of governance](creating-governance.md).
-3. [Creation of events](creating-event.md).
-4. [Addition of a schema and a smart contract to the governance](adding-schema.md).
-5. [Addition of new participants](adding-participants.md).
-6. [Creation of subjects](creating-subject.md).
-7. [External invocations](external-invocations.md).
-8. [Approvals](approvals.md).
-9. [Subject transfers](transfers.md).
-10. [Namespace segmentation](segmentation.md).
-11. [Changing voting policies in a subject](changing-policies.md).
-12. [End of life of a subject](eol.md).
+1. How to perform external invocations to methods of a smart contract.
+2. How to transfer ownership of a subject to another participant.
+3. How works subject segmentation by namespace works.
+4. How to modify voting policies on a subject.
+5. How to finalize the life cycle tracking of a subject.
 
-## Use case description
+## Use Case Description
 
-En este tutorial, te guiaremos a través del desarrollo de un caso de uso real utilizando Taple. Este ejemplo es muy útil para evaluar la viabilidad de esta tecnología en un entorno práctico, como el seguimiento del ciclo de vida de un vino de alta calidad. Este permitirá certificar a los compradores finales la calidad del vino desde su producción hasta su adquisición. Algunos aspectos que se pueden verificar incluyen la certificación orgánica y la temperatura, ya que para su correcta conservación no debería exceder un rango determinado.
+In this tutorial, we will implement a system for tracking the life cycle of a food product, specifically a premium high-quality wine. The objective is to certify the wine's quality to the end buyers based on certain parameters, such as organic certification and optimal temperature control.
 
-Comenzaremos estableciendo el primer nodo llamado *Wine Producers Organization* (**WPO**), que será responsable de gestionar el caso de uso. A continuación, crearemos una gobernanza para formalizar el entorno en el que se desarrollará el caso de uso. La gobernanza será generada con un material criptográfico específico.
+To achieve this goal, the support of different participants will be necessary, each responsible for carrying out various actions required for the proper functioning of this life cycle. Among them, we can distinguish:
 
-Una vez establecida la gobernanza, procederemos a crear eventos en Taple para modificar el estado de los sujetos en la red. Utilizaremos eventos de tipo **hecho** para modificar la gobernanza y agregar miembros a ella. Además, declararemos un esquema y un contrato inteligente para los sujetos de tipo *Wine* y los agregaremos a la gobernanza.
+* **Wine Producers Organization (WPO)**: Responsible for formalizing the traceability use case.
+* **Premium Wines**: Authorized personnel in charge of initiating the tracking of wine bottles.
+* **World Food Organization (WFO)**: Administrator of the changes made to the use case and wine-type subjects.
+* **Spanish Food Organization (SFO)**: Responsible for validating changes to the wine subject.
+* **Citizen**: External entity to whom the ownership of a wine bottle will be transferred.
 
-A medida que avanzamos en el tutorial, añadiremos participantes a la gobernanza, como *Premium Wines* y *World Food Organization* (**WFO**), asignándoles roles específicos. También permitiremos la ejecución de eventos por parte de agentes externos a la gobernanza y estableceremos aprobadores adicionales, como *Spanish Food Organization* (**SFO**), para garantizar el control de calidad.
-
-Además, exploraremos la transferencia de propiedad de un sujeto de vino a un nuevo propietario externo a la gobernanza, y utilizaremos la segmentación por namespace para limitar la influencia de ciertos nodos en determinados contextos. A través de cambios en las políticas de gobernanza, simplificaremos el proceso de aprobación de eventos para los sujetos de vino.
-
-Por último, abordaremos el fin de vida de un sujeto mediante la emisión de un evento de *End of Life* (**EOL**) para detener su ciclo de vida y evitar eventos posteriores.
-
-A lo largo de este tutorial, te proporcionaremos instrucciones detalladas y los comandos necesarios para llevar a cabo cada paso. ¡Comencemos con el desarrollo de este emocionante caso de uso del ciclo de vida del vino en Taple!
-
-La red resultante deberá tener un aspecto similar a este:
-
-![Event Lifecycle](../../img/wine-tracking.svg)
+Throughout this tutorial, detailed instructions and the necessary commands will be provided to carry out each step. Let's begin with the development of this use case for tracking the wine life cycle in Taple!
