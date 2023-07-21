@@ -11,20 +11,6 @@ Let's start by verifying the changes we want to make in the governance propertie
 ```json
 {
     "members": [],
-    "policies": [
-        {
-            "approve": {
-                "quorum": "MAJORITY"
-            },
-            "evaluate": {
-                "quorum": "MAJORITY"
-            },
-            "id": "governance",
-            "validate": {
-                "quorum": "MAJORITY"
-            }
-        }
-    ],
     "roles": [
         {
             "namespace": "",
@@ -34,8 +20,7 @@ Let's start by verifying the changes we want to make in the governance propertie
             },
             "who": "MEMBERS"
         }
-    ],
-    "schemas": []
+    ]
 }
 ```
 
@@ -49,29 +34,10 @@ Now, we need to include the member who created the governance, which would resul
             "name": "WPO"
         }
     ],
-    "policies": [
-        {
-            "approve": {
-                "quorum": "MAJORITY"
-            },
-            "evaluate": {
-                "quorum": "MAJORITY"
-            },
-            "id": "governance",
-            "validate": {
-                "quorum": "MAJORITY"
-            }
-        }
-    ],
     "roles": [
-        {
-            "namespace": "",
-            "role": "WITNESS",
-            "schema": {
-                "ID": "governance"
-            },
-            "who": "MEMBERS"
-        },
+        
+        ...
+
         {
             "namespace": "",
             "role": "APPROVER",
@@ -82,43 +48,42 @@ Now, we need to include the member who created the governance, which would resul
                 "NAME": "WPO"
             }
         }
-    ],
-    "schemas": []
+    ]
 }
 ```
 
 To generate the mentioned changes, we will use our [**TAPLE-Patch**](../../learn/client-tools.md#taple-patch) tool as follows:
 
 ```bash title="Another terminal"
-taple-patch "{\"members\":[],\"policies\":[{\"approve\":{\"quorum\":\"MAJORITY\"},\"evaluate\":{\"quorum\":\"MAJORITY\"},\"id\":\"governance\",\"validate\":{\"quorum\":\"MAJORITY\"}}],\"roles\":[{\"namespace\":\"\",\"role\":\"WITNESS\",\"schema\":{\"ID\":\"governance\"},\"who\":\"MEMBERS\"}],\"schemas\":[]}" "{\"members\":[{\"id\":\"EbwR0yYrCYpTzlN5i5GX_MtAbKRw5y2euv3TqiTgwggs\",\"name\":\"WPO\"}],\"policies\":[{\"approve\":{\"quorum\":\"MAJORITY\"},\"evaluate\":{\"quorum\":\"MAJORITY\"},\"id\":\"governance\",\"validate\":{\"quorum\":\"MAJORITY\"}}],\"roles\":[{\"namespace\":\"\",\"role\":\"WITNESS\",\"schema\":{\"ID\":\"governance\"},\"who\":\"MEMBERS\"},{\"namespace\":\"\",\"role\":\"APPROVER\",\"schema\":{\"ID\":\"governance\"},\"who\":{\"NAME\":\"WPO\"}}],\"schemas\":[]}"
+taple-patch '{"members":[],"roles":[{"namespace":"","role":"WITNESS","schema":{"ID":"governance"},"who":"MEMBERS"}]}' '{"members":[{"id":"EbwR0yYrCYpTzlN5i5GX_MtAbKRw5y2euv3TqiTgwggs","name":"WPO"}],"roles":[{"namespace":"","role":"WITNESS","schema":{"ID":"governance"},"who":"MEMBERS"},{"namespace":"","role":"APPROVER","schema":{"ID":"governance"},"who":{"NAME":"WPO"}}]}'
 ```
 
 The result will be as follows:
 
 ```json
 [
-  {
-    "op": "add",
-    "path": "/members/0",
-    "value": {
-      "id": "EbwR0yYrCYpTzlN5i5GX_MtAbKRw5y2euv3TqiTgwggs",
-      "name": "WPO"
+    {
+        "op": "add",
+        "path": "/members/0",
+        "value": {
+        "id": "EbwR0yYrCYpTzlN5i5GX_MtAbKRw5y2euv3TqiTgwggs",
+        "name": "WPO"
+        }
+    },
+    {
+        "op": "add",
+        "path": "/roles/1",
+        "value": {
+        "namespace": "",
+        "role": "APPROVER",
+        "schema": {
+            "ID": "governance"
+        },
+        "who": {
+            "NAME": "WPO"
+        }
+        }
     }
-  },
-  {
-    "op": "add",
-    "path": "/roles/1",
-    "value": {
-      "namespace": "",
-      "role": "APPROVER",
-      "schema": {
-        "ID": "governance"
-      },
-      "who": {
-        "NAME": "WPO"
-      }
-    }
-  }
 ]
 ```
 
@@ -181,7 +146,7 @@ The result of this operation will be a list with a single element, representing 
 ```bash title="Node: WPO"
 curl --request PATCH 'http://localhost:3000/api/approval-requests/{{PREVIOUS-ID}}' \
 --header 'Content-Type: application/json' \
---data-raw '{"approvalType": "Accept"}'
+--data-raw '{"state": "RespondedAccepted"}'
 ```
 
 Then, we check the governance again to verify the changes. The result should show an `sn` field equal to 1 and the inclusion of the new member:
@@ -189,6 +154,9 @@ Then, we check the governance again to verify the changes. The result should sho
 ```bash title="Node: WPO"
 curl --request GET 'http://localhost:3000/api/subjects/{{GOVERNANCE-ID}}'
 ```
+
+<details>
+ <summary>Click to look at the full governance.</summary>
 
 ```json
 {
@@ -247,3 +215,5 @@ curl --request GET 'http://localhost:3000/api/subjects/{{GOVERNANCE-ID}}'
     "active": true
 }
 ```
+
+</details>

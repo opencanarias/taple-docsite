@@ -11,7 +11,7 @@ docker run opencanarias/taple-client:0.2 \
     -p 3004:3000 \
     -p 50004:50000 \
     -e TAPLE_HTTP=true \
-    -e TAPLE_SECRET_KEY=2a71a0aff12c2de9e21d76e0538741aa9ac6da9ff7f467cf8b7211bd008a3198 \
+    -e TAPLE_ID_PRIVATE_KEY=2a71a0aff12c2de9e21d76e0538741aa9ac6da9ff7f467cf8b7211bd008a3198 \
     -e TAPLE_NETWORK_LISTEN_ADDR=/ip4/0.0.0.0/tcp/50004 \
     -e TAPLE_NETWORK_KNOWN_NODE=/ip4/172.17.0.1/tcp/50000/p2p/12D3KooWHHjN5vKSKeCWiBG3gHaDRDp6YzsEgu9iTesYqrWxAgFk 
 ```
@@ -48,7 +48,7 @@ curl --request PUT 'http://localhost:3004/api/allowed-subjects/{{SUBJECT-ID}}' \
 Now, we need to sign the transfer request with the material from the new node. To do this, we will use our [TAPLE-Sign tool](../../learn/client-tools.md#taple-sign) and execute the following command:
 
 ```bash title="Another terminal"
-taple-sing "2a71a0aff12c2de9e21d76e0538741aa9ac6da9ff7f467cf8b7211bd008a3198" "{\"Transfer\":{\"subject_id\":\"{{SUBJECT-ID}}\",\"public_key\":\"{{PUBLIC-KEY}}\"}}"
+taple-sing '2a71a0aff12c2de9e21d76e0538741aa9ac6da9ff7f467cf8b7211bd008a3198' '{"Transfer":{"subject_id":"{{SUBJECT-ID}}","public_key":"{{PUBLIC-KEY}}"}}'
 ```
 
 The result of this execution will be included in the following request:
