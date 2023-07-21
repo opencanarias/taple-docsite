@@ -142,27 +142,27 @@ In node 1 we will approve it but in node 2 we will reject it. As the quorum is M
 Node 1:
 
 ```json
-{"approvalType": "Accept"}
+{"state": "RespondedAccepted"}
 ```
 
 ```bash
 curl --silent --request PATCH 'http://localhost:3000/api/approval-requests/J8NvGJ6XzV3ThfWdDN4epwXDFTY9hB2NKcyGEPbVViO4' \
 --header 'x-api-key: 1453' \
 --header 'Content-Type: application/json' \
---data '{"approvalType": "Accept"}'
+--data '{"state": "RespondedAccepted"}'
 ```
 
 Node 2:
 
 ```json
-{"approvalType": "Reject"}
+{"state": "RespondedRejected"}
 ```
 
 ```bash
 curl --silent --request PATCH 'http://localhost:3001/api/approval-requests/J8NvGJ6XzV3ThfWdDN4epwXDFTY9hB2NKcyGEPbVViO4' \
 --header 'x-api-key: 1453' \
 --header 'Content-Type: application/json' \
---data '{"approvalType": "Reject"}'
+--data '{"state": "RespondedRejected"}'
 ```
 
 We verify that the state has not been modified by looking for our subjects, however, the sn of the subject will have increased by 1:
