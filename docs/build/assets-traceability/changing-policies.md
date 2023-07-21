@@ -551,7 +551,7 @@ curl --request GET 'http://localhost:3003/api/approval-requests?status=pending'
 
 We will try to approve it on one of the two nodes, for example, on **SFO**:
 
-```bash
+```bash title="Node: SFO"
 curl --request PATCH 'http://localhost:3003/api/approval-requests/{{PREVIUS-ID}}' \
 --header 'Content-Type: application/json' \
 --data-raw '{"approvalType": "Accept"}'

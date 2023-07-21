@@ -285,7 +285,7 @@ After declaring our schema, the next step is to create the [*smart contract*](..
 
 Taple only supports contracts in *Base64*, so we'll need to transform ours into that format. For this purpose, Linux has its own utility called `base64`. Therefore, what we need to do in our `main.rs` file is:
 
-```bash
+```bash title="Another terminal"
 base64 main.rs
 ```
 
@@ -343,7 +343,7 @@ Let's start by verifying the changes we want to make in the governance propertie
 }
 ```
 
-Now, we need to include the *schema*, the *smart contract*, the [**genesis**](../../discover/events#create-event) state of a subject, as well as the policies that will be applied to them:
+Now, we need to include the *schema*, the *smart contract*, the [**genesis**](../../discover/events.md#create-event) state of a subject, as well as the policies that will be applied to them:
 
 ```json
 {
