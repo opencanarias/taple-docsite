@@ -1,71 +1,67 @@
 # Smart Contracts in TAPLE
 
 ## Smart contracts & schemas
-En TAPLE cada sujeto está asociado a un [esquema](../discover/schemas.md) que determina, fundamentalmente, sus propiedades. El valor de dichas propiedades prodrá cambiar con el tiempo a través de la emisión de eventos, siendo necesario, en consecuencia, establecer el mecanismo a través del cual estos eventos realizan tal acción. En la práctica, esto se gestiona mediante una serie de reglas que constituyen lo que denominados un [contrato inteligente](../discover/smart-contracts.md).
+In TAPLE, each subject is associated to a [schema](../discover/schemas.md) that determines, fundamentally, its properties. The value of these properties may change over time through the emission of events, being necessary, consequently, to establish the mechanism through which these events perform such action. In practice, this is managed through a series of rules that constitute what we call a [smart contract](../discover/smart-contracts.md).
 
-En consecuencia, podemos afirmar que un esquema posee siempre un contrato inteligente asociado que regula cómo este evoluciona. La especificación de ambos se realiza en la gobernanza.
+Consequently, we can say that a schema always has an associated smart contract that regulates how it evolves. The specification of both is done in governance.
+## Inputs and outputs
 
-## Entradas y salidas
+Contracts, although specified in the governance, are only executed by those nodes that have evaluation capabilities and have been defined as such in the governance rules. It is important to note that TAPLE allows a node to act as [evaluator](../discover/roles.md#evaluator) of a subject even if it ***does not possess the subject's events chain***, i.e., even if it is not [witness](../discover/roles.md#witness). This helps to reduce the load on these nodes and contributes to the overall network performance.
 
-Los contratos, aunque se especifican en la gobernanza, solamente son ejecutados por aquellos nodos que tengan capacidades de evaluación y, así mismo, que se hayan definido como tales en las reglas de la gobernanza. Resulta importante destacar que TAPLE permite que un nodo actúe como [evaluador](../discover//roles.md#evaluator) de un sujeto aunque este ***no posea la cadena del mismo***, es que decir, aunque no sea [testigo](../discover//roles.md#witness). Esto ayuda a reducir la carga de estos nodos y contribuye al rendimiento general de la red.
+To achieve the correct execution of a contract, it receives three inputs: the current state of the subject, the event to be processed and a flag indicating whether or not the event request has been issued by the owner of the subject. Once these inputs are received, the contract must use them to generate a new valid state. Note that the logic of the latter lies entirely with the contract programmer. The contract programmer also determines which events are valid, i.e. decides the ***family of events to be used***. Thus, the contract will only accept events from this family, rejecting all others, and which the programmer can adapt, in terms of structure and data, to the needs of his use case. As an example, suppose a subject representing an user's profile with his contact information as well as his identity; an event of the family could be one that only updates the user's telephone number. On the other hand, the flag can be used to restrict certain operations to only the owner of the subject, since the execution of the contract is performed both by the events it generates on its own and by external invocations.
 
-Para lograr la correcta ejecución de un contrato, este recibe tres entradas: el estado actual del sujeto, el evento a procesar y un flag que indica si la petición de evento ha sido emitida o no por el propietario del sujeto. Una vez recibidos dichos datos, el contrato debe utilizarlos para generar un nuevo estado válido. Nótese que la lógica de esto último recae completamente en el programador del contrato. Este, además, también determina qué eventos son válidos, o lo que es lo mismo, decide la ***familia de eventos a emplear***. Así, el contrato solo aceptará eventos de dicha familia, rechazando todos los demás, y que el programar podrá adaptar, en cuanto a su estructura y datos, a las necesidades de su caso de uso. A modo de ejemplo, supóngase un sujeto que representa el pérfil de un usuario con su información de contacto además de su identidad; un evento de la familia podría ser uno que solamente actualizase el número de teléfono del usuario. Por su parte, el flag puede ser considerado para restringir ciertas operaciones a únicamente el propietario del sujeto, pues la ejecución del contrato se realiza tanto con los eventos que este genera por su propia cuenta como por invocaciones externas.
-
-Cuando un contrato se termina de ejecutar, este genera tres salidas:
-- **Flag de éxito**: Mediante un booleano se indica que si la ejecución del contrato ha sido éxitosa, en otras palabras, si el evento debería provocar un cambio de estado del sujeto. Este flag se mantendrá a falso siempre que se produzca un error en la obtención de los datos de entrada del contrato o bien, si la lógica del mismo así lo dictamina. En otras palabras, se puede y se debe establecer explicítamente si la ejecución se puede considerar o no como exitosa. Esto es importante debido a que estas decisiones dependen en su totalidad del caso de uso, del que TAPLE se abstrae en su totalidad. Así, por ejemplo, el programador podría determinar que si, tras la ejecución de un evento, el valor de unas de las propiedades el sujeto a superado un umbral el evento no pueda ser considerado como válido.
-- **Estado final**: Si el evento se ha procesado con éxito y la ejecución del contrato se ha marcado como exitosa, entonces este retorna el nuevo estado final generado, que en la práctica podría ser el mismo que el anterior incluso. Dicho estado será validado contra el esquema definido en la gobernanza para garantizar la integridad de la información. Si la validación no es existosa, se anula el flag de éxito.
-- **Flag de aprobación**: El contrato debe decidir si un evento debe ser o no [aprobado](../discover/roles.md#approver). Nuevamente, esto dependerá enteramente del caso de uso, siendo responsabilidad del programador establecer cuando es necesario. De esta manera, la aprobación se establece como una fase opcional pero también **condicional**.
+When a contract is finished executing, it generates three outputs:
+- **Success flag**: By means of a Boolean, it indicates whether the execution of the contract has been successful, in other words, whether the event should cause a change of state of the subject. This flag will be set to false whenever an error occurs in obtaining the input data of the contract or if the logic of the contract so dictates. In other words, it can and should be explicitly stated whether or not the execution can be considered successful. This is important because these decisions depend entirely on the use case, from which TAPLE is abstracted in its entirety. Thus, for example, the programmer could determine that if, after the execution of an event, the value of one of the subject properties has exceeded a threshold, the event cannot be considered valid.
+- **Final state**: If the event has been successfully processed and the execution of the contract has been marked as successful, then it returns the new state generated, which in practice could be the same as the previous one. This state will be validated against the schema defined in the governance to ensure the integrity of the information. If the validation is not successful, the success flag is cancelled.
+- **Approval flag**: The contract must decide whether or not an event should be [approved](../discover/roles.md#approver). Again, this will depend entirely on the use case, being the responsibility of the programmer to establish when it is necessary. Thus, approval is set as an optional but also **conditional** phase.
 
 :::caution
-Los contratos de TAPLE funcionan sin ningún estado asociado. Toda la información con la que pueden trabajar es la que reciben de entrada. Esto quiere decir que el valor de las variables no se conserva entre ejecuciones, marcando una diferencia importante con respecto a los contratos inteligentes de otras plataformas, como Ethereum.
+TAPLE contracts work without any associated status. All the information they can work with is what they receive as input. This means that the value of variables is not retained between executions, marking an important difference with respect to smart contracts on other platforms, such as Ethereum.
 :::
-
-## Consideraciones adicionales
-Los contratos de TAPLE funcionan sin ningún estado asociado, en otras palabras, los cambios que produzcan en cualquier variable no se guardarán para futuras ejecuciones del mismo. En su lugar, cualquier dato debe proceder de los parámetros de entrada y en caso de interesar algún tipo de persistencia se debe recurrir a las propiedades del sujeto. Esto es una diferencia fundamental de los contratos de TAPLE con respecto a otros como los de Ethereum, en los que la persistencia de datos sí es posible.
 
 ## Life cycle
 
 ![smart-contracts-life-cycle](../img/smart-contracts.svg)
 
-### Desarrollo
+### Development
 
-Los contratos se definen en proyectos locales de Rust. único lenguaje permitido para la redacción de los mismos. Estos proyectos, que debemos definir como librerías, han de importar el **SDK** de los contratos disponible en los repositorios oficiales y, además, deben seguir las indicaciones especificadas en ["cómo redactar un contrato"](./smart-contracts-programming.md).
+Contracts are defined in local Rust projects, the only language allowed for writing them. These projects, which we must define as libraries, must import the **SDK** of the contracts available in the official repositories and, in addition, must follow the indications specified in ["how to write a contract"](./smart-contracts-programming.md).
 
-### Distribución
+### Distribution
 
-Una vez definido el contrato, este ser incluído en una gobernanza y asociado a un esquema para que pueda ser empleado por los nodos de una red. A tal fin, es necesarior realizar una operación de actualización de gobernanza en la que se incluya el contrato en el apartado correspondiente y codificado en **base64**. De haberse definido una batería de tests, esta no es necesario que se incluya en la codificación.
+Once the contract has been defined, it must be included in a governance and associated to a schema so that it can be used by the nodes of a network. To this end, it is necessary to perform a governance update operation in which the contract is included in the corresponding section and coded in **base64**. If a test battery has been defined, it does not need to be included in the encoding process.
 
 :::info
-Para más información sobre este proceso, consulte el siguiente [tutorial](../build/assets-traceability/adding-schema.md).
+For more information on this process, see the following [tutorial](../build/assets-traceability/adding-schema.md).
 :::
 
 :::caution
-Debido a que los nodos TAPLE son los encargados de la compilación de contratos, es necesario que el ***base 64*** incluya el contrato en su totalidad. En otras palabras, el contrato debería escrbirse enteramente en un único fichero y este codificado.
+Since the TAPLE nodes are in charge of contract compilation, it is necessary that the ***base 64*** includes the contract in its entirety. In other words, the contract should be written entirely in a single file and encoded.
 
-Se trata de una limitación actual y en el futuro se espera poder ofrecer otras alternativas.
+This is a current limitation and other alternatives are expected to be available in the future.
 :::
 
-### Compilación
+### Compilation
 
-Si la petición de actualización es correcta, el estado de la gobernanza cambiará y los nodos evaluadores compilarán el contrato como un módulo de **Web Assembly**, lo serializarán y lo guardarán en su base de datos. Se trata de un proceso automatizado y autogestionado, por lo que no es necesaria la intervención del usuario en ninguna fase del mismo.
+If the update request is successful, the governance status will change and the evaluator nodes will compile the contract as a **Web Assembly** module, serialize it and store it in their database. This is an automated and self-managed process, so no user intervention is required at any stage of the process.
 
 :::info
-Actualmente no es posible utilizar cualquier crate en los contratos inteligentes, tan solo se puede emplear una selección entre la que se encuentra el SDK. El listado completo de posibles dependencias lo encontrará en ["cómo redactar un contrato"](./smart-contracts-programming.md).
+Currently it is not possible to use any crate in smart contracts, only a selection can be used. The complete list of possible dependencies can be found in ["how to write a contract"](./smart-contracts-programming.md).
 :::
 
-Tras este paso, el contrato puede ser utilizado.
+After this step, the contract can be used.
 
-### Ejecución
+### Execution
 
-La ejecución del contrato se realizará en un **Runtime** de Web Assembly, aislando su ejecución del resto del sistema. Esto evita el uso indebido de los recursos del mismo, añadiendo una capa de seguridad.
+The execution of the contract will be done in a Web Assembly **Runtime**, isolating its execution from the rest of the system. This avoids the misuse of its resources, adding a layer of security.
 
 ## Rust and WASM
 
-Se utiliza Web Assembly para la ejecución de los contratos debido a sus características:
-- Alto rendimiento y eficiencia.
-- Ofrece un entorno aíslado y seguro de ejecución.
-- Posee una comunidad activa.
-- Permite compilación desde varios lenguajes, muchos de ellos con una base de usuarios considerables.
-- Los módulos resultantes de la compilación, una vez optimizados, son ligeros.
+Web Assembly is used for contract execution due to its characteristics:
+- High performance and efficiency.
+- It offers an isolated and secure execution environment.
+- It has an active community.
+- Allows compilation from several languages, many of them with a considerable user base.
+- The modules resulting from the compilation, once optimized, are lightweight.
 
-Se elije Rust como lenguaje para escribir los contratos de TAPLE debido a su capacidad para compilar a Web Assembly así como por sus capacidades y especificaciones, mismo motivo que el que motivó su elección para el desarrollo de TAPLE. En concreto, Rust es un lenguaje centrado en la redacción de código seguro y de alto rendimiento, cuestiones que contribuyen a la calidad del módulo Web Assembly resultante. Así mismo, el lenguaje cuenta, de manera nativa, con los recursos para crear tests, cuestión que favorece el testeo de los contratos.
+Rust was chosen as the language for writing TAPLE contracts because of its ability to compile to Web Assembly as well as its capabilities and specifications, the same reason that motivated its choice for the development of TAPLE. Specifically, Rust is a language focused on writing secure, high-performance code, both of which contribute to the quality of the resulting Web Assembly module. In addition, the language natively has the resources to create tests, which favors the testing of contracts.

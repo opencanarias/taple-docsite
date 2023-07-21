@@ -1,20 +1,20 @@
-# Programming smart contracts
+## Programming smart contracts
 
 ## SDK
 
-Para el correcto desarrollo de los contratos es necesario utilizar su **SDK**, proyecto que se puede encontrar en el [repositorio](https://github.com/opencanarias/taple-sc-rust/tree/main) oficial de TAPLE. El objetivo principal del mismo es abstraer al programador de la interacción con el contexto de la máquina evaluadora subyacente, facilitando en gran medida la obtención de los datos de entrada, así como el proceso de escritura del resultado del contrato.
+For the correct development of the contracts it is necessary to use its **SDK**, a project that can be found in the official TAPLE [repository](https://github.com/opencanarias/taple-sc-rust/tree/main). The main objective of this project is to abstract the programmer from the interaction with the context of the underlying evaluating machine, making it much easier to obtain the input data, as well as the process of writing the result of the contract.
 
-El proyecto SDK se puede dividir en tres secciones. Por un lado, un conjunto de funciones cuya enlazamiento se produce en tiempo de ejecución y que están dirigidas a poder interactuar con la máquina evaluadora, en concreto, para la lectura y escritura de datos a un buffer interno. Adicionalmente, también distinguimos un módulo que, empleando las funciones anteriores, se encarga de la serialización y deserialización de los datos, así como de aportar la función principal de cualquier contrato. Por último, destacamos una serie de funciones y estructuras de utilidad que pueden emplearse activamente en el código.
+The SDK project can be divided into three sections. On the one hand, a set of functions whose binding occurs at runtime and which are aimed at being able to interact with the evaluating machine, in particular, for reading and writing data to an internal buffer. Additionally, we also distinguish a module that, using the previous functions, is in charge of the serialization and deserialization of the data, as well as of providing the main function of any contract. Finally, we highlight a number of utility functions and structures that can be actively used in the code.
 
-Muchos de los elementos anteriores son privados, por lo que el usuario nunca tendrá oportunidad de emplearlos. Debido a ello, en esta documentación nos centraremos en aquellos que sí se exponen de cara al usuario y que este podrá usar de manera activa en el desarrollo de sus contratos.
+Many of the above elements are private, so the user will never have the opportunity to use them. Therefore, in this documentation we will focus on those that are exposed to the user and that the user will be able to actively use in the development of his contracts.
 
 :::caution
-Téngase en cuenta de que no es posible ejecutar cualquier función o utilizar cualquier tipo de dato en un entorno de Web Assembly. Deberá informarse adecuadamente sobre las posibilidades del entorno. Así, a modo de ejemplo, cualquier interacción con el sistema operativo se encuentra deshabilitada, puesto que se trata de un entorno aislado y seguro.
+Please note that it is not possible to execute every function or use every type of data in a Web Assembly environment. You should inform yourself about the possibilities of the environment. For example, any interaction with the operating system is disabled, since it is an isolated and secure environment.
 :::
 
-### Estructuras auxiliares
+### Auxiliary structures
 
-```rs
+```rust
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Context<State, Event> {
     pub initial_state: State,
@@ -23,9 +23,9 @@ pub struct Context<State, Event> {
 }
 ```
 
-Esta estructura contiene los tres datos de entrada de todo contrato: el estado inicial o actual del sujeto, el evento entrante y un flag que nos indica si el que solicita el evento es o no el propietario del sujeto. Nótese el uso de génericos para el estado y el evento.
+This structure contains the three input data of any contract: the initial or current state of the subject, the incoming event and a flag indicating whether or not the person requesting the event is the owner of the subject. Note the use of generics for the state and the event.
 
-```rs
+```rust
 #[derive(Serialize, Deserialize, Debug)]
 pub struct ContractResult<State> {
     pub final_state: State,
@@ -34,10 +34,10 @@ pub struct ContractResult<State> {
 }
 ```
 
-Contiene el resultado de la ejecución del contrato, siendo este una conjunción del estado resultante y de dos flags que indican, por un lado si la ejecución ha sido existosa según los criterios que establezca el programador (o bien si se ha producido un error en la carga de datos); y por otro, si el evento requiere o no [aprobación](../discover/roles.md#approver).
+It contains the result of the execution of the contract, being this a conjunction of the resulting state and two flags that indicate, on the one hand, if the execution has been successful according to the criteria established by the programmer (or if an error has occurred in the data loading); and on the other hand, if the event requires [approval](../discover/roles.md#approver) or not.
 
 
-```rs
+```rust
 pub fn execute_contract<F, State, Event>(
     state_ptr: i32,
     event_ptr: i32,
@@ -50,56 +50,56 @@ where
     F: Fn(&Context<State, Event>, &mut ContractResult<State>);
 ```
 
-Esta función es la principal del SDK y, así mismo, la más importante. En concreto se encarga de la obtención de los datos de entrada, datos que obtiene del contexto que comparte con la máquina evaluadora. La función, que inicialmente recibirá un puntero a cada uno de estos datos, será la encargada de extraerlos del contexto y de deserializarlos a las estructuras de estado y evento que espera recibir el contrato, especificables mediante genéricos. Dichos datos, una vez obtenidos, se encapsulan en la estructura de *Context* presente anteriormente y se pasan como argumentos a una función callback que gestiona la lógica del contrato, es decir, sabe qué hacer con los datos recibidos. Por último, independientemente de si la ejecución ha sido exitosa o no, la función se encargará de escribir el resultado en el contexto, para que este pueda ser utilizado por la máquina evaluadora.
+This function is the main function of the SDK and, likewise, the most important one. Specifically, it is in charge of obtaining the input data, data that it obtains from the context that it shares with the evaluating machine. The function, which will initially receive a pointer to each of these data, will be in charge of extracting them from the context and deserializing them to the state and event structures that the contract expects to receive, which can be specified by means of generics. These data, once obtained, are encapsulated in the *Context* structure present above and are passed as arguments to a callback function that manages the contract logic, i.e. it knows what to do with the data received. Finally, regardless of whether the execution has been successful or not, the function will take care of writing the result in the context, so that it can be used by the evaluating machine.
 
-```rs
+```rust
 pub fn apply_patch<State: for<'a> Deserialize<'a> + Serialize>(
     patch_arg: Value,
     state: &State,
 ) -> Result<State, i32>;
 ```
 
-Se trata de la última función pública del SDK y permite actualizar un estado mediante la aplicación de un JSON-PATCH, útil en casos en los que se considere esta técnica para actualizar el estado.
+This is the latest public feature of the SDK and allows to update a state by applying a JSON-PATCH, useful in cases where this technique is considered to update the state.
 
 ## Your first smart contract
 
-### Creación del proyecto
+### Creating the project
 
-Ubíquese en la ruta y/o directorios deseados y cree un nuevo paquete de cargo empleando `cargo new`. El proyecto deberá tratarse de una librería. Asegúrese pues, que cuenta con un fichero `lib.rs` y no un `main.rs`. 
+Locate the desired path and/or directories and create a new cargo package using `cargo new`. The project should be a library. Make sure you have a `lib.rs` file and not a `main.rs` file. 
 
-Acto seguido, incluya en el ***Cargo.toml*** como dependencia el SDK de los contratos y el resto de dependencias que desee de entre la siguiente lista:
+Then, include in the ***Cargo.toml*** as a dependency the SDK of the contracts and the rest of the dependencies you want from the following list
 
--  **serde**: Versiones >=1.0.152 y <2.0.0.
--  **serde_json**: Versiones >=1.0.92 y <2.0.0.
--  **json_patch**: Versiones >=0.2 y <0.3.
--  **thiserror**: Versiones >=1.0.0 y <2.0.0.
+- **serde**: Versions >=1.0.152 and <2.0.0.
+- **serde_json**: Versions >=1.0.92 and <2.0.0.
+- **json_patch**: Versions >=0.2 and <0.3.
+- **thiserror**: Versions >=1.0.0.0 and <2.0.0.0.
 
 ```toml
 serde = { version = "=1.0.152", features = ["derive"] }
 serde_json = "=1.0.92"
 json-patch = "=0.2"
 thiserror = "=1.0"
-# Note: Change the label to the appropriate one
+# Note: Change the tag label to the appropriate one
 taple-sc-rust = { git = "https://github.com/opencanarias/taple-sc-rust.git", tag = "0.2"}
 ```
 
-A continuación se especificará cómo redactar un contrato inteligente, información que vendrá acompañada de un ejemplo básico.
+The following will specify how to draw up a smart contract, accompanied by a basic example.
 
-### Redacción del contrato
+### Writing the contract
 
-Debido a que la compilación la realizará el nodo, **debemos escribir todo el contrato en el fichero lib.rs**.
+Since the compilation will be done by the node, **we must write the whole contract in the lib.rs** file.
 
-En nuestro caso, empezaremos el contrato **especificando los paquetes que vamos a utilizar**.
+In our case, we will start the contract by **specifying the packages we are going to use**.
 
-```rs
+```rust
 use serde::{Serialize, Deserialize};
 
 use taple_sc_rust as sdk;
 ```
 
-Acto seguido, es necesario especificar la estructura de datos que representará el estado de nuestros sujetos así como la familia de eventos que recibiremos. Para este ejemplo se supondrá un caso muy sencillo, en concreto, un estado formado por tres números y una familia de eventos que permite modificar cada uno de ellos por separados o todos en su conjunto.
+Next, it is necessary to specify the data structure that will represent the state of our subjects as well as the family of events that we will receive. For this example we will assume a very simple case, namely, a state formed by three numbers and a family of events that allows us to modify each of them separately or all of them together.
 
-```rs
+```rust
 #[derive(Serialize, Deserialize, Clone)]
 struct State {
   pub one: u32,
@@ -117,34 +117,34 @@ enum StateEvent {
 ```
 
 :::info
-La familia de eventos, por lo general, se definirá como un enumerado, aunque en la práctica nada impide que sea una estructura en caso de que así se requiera. Independientemente del caso, de emplear un enumerado, si las variantes de este reciben datos estos deben especificarse mediante una estructura anónima y no mediante la sintaxis de tupla.
+The event family will generally be defined as an enumerate, although in practice nothing prevents it from being a structure if required. Regardless of the case, if an enumerate is used, if its variants receive data, these must be specified by means of an anonymous structure and not by means of the tuple syntax.
 
-Destacar, además, que los eventos de la familia pueden ser subconjuntos de los eventos reales. Así, y a modo de ejemplo, el contrato aceptaría un evento ***StateEvent::ModOne*** que incluya más datos a parte del atributo *data*. El contrato, al ejecutarse, solo se quedará con los datos necesarios, descartando todos los demás en el proceso de deserialización. Esto podría emplearse para guardar información en la cadena que no es necesaria para la lógica del contrato.
+It should also be noted that the events of the family can be subsets of the real events. Thus, as an example, the contract would accept a ***StateEvent::ModOne*** event that includes more data than the *data* attribute. The contract, when executed, will only keep the necessary data, discarding all other data in the deserialization process. This could be used to store information in the string that is not needed for the contract logic.
 
 :::
 
 :::note
-Téngase en cuenta de que la implementación de los *trait Serialize y Deserialize* son obligatorios de especificar para el estado y los eventos. Adicionalmente, el primero deberá implementar también *Clone*.
+Note that the implementation of the *trait Serialize and Deserialize* are mandatory to specify for state and events. Additionally, the former must also implement *Clone*.
 :::
 
-En siguiente lugar definimos la **función entrada del contrato**, la equivalente a la función **main**. Es importante que esta función tenga siempre el mismo nombre que la que aquí se especifica, pues se trata del identificador con la que la intentará ejecutar la máquina evaluadora, produciendo un error en caso de no encontrarla.
+Next we define the **contract entry function**, the equivalent of the **main** function. It is important that this function always has the same name as the one specified here, since it is the identifier with which the evaluating machine will try to execute it, producing an error if it is not found.
 
-```rs
+```rust
 #[no_mangle]
 pub unsafe fn main_function(state_ptr: i32, event_ptr: i32, is_owner: i32) -> u32 {
     sdk::execute_contract(state_ptr, event_ptr, is_owner, contract_logic)
 }
 ```
 
-Esta función debe ir siempre acompañada del atributo ***#[no_mangle]*** y sus parámetros de entrada y de salida también deben coincidir con los del ejemplo. En concreto, esta función recibirá los punteros de los datos de entrada, que luego procesará la función del SDK. Como salida se genera un nuevo puntero al resultado del contrato, cuya obtención, como mencionamos anteriormente, es responsabilidad del SDK y no del programador.
+This function must always be accompanied by the attribute ***#[no_mangle]*** and its input and output parameters must also match those of the example. Specifically, this function will receive the pointers to the input data, which will then be processed by the SDK function. As output, a new pointer to the result of the contract is generated, which, as mentioned above, is obtained by the SDK and not by the programmer.
 
 :::info
-La modificación de los valores de los punteros en esta sección del código no logrará efecto alguno. Los punteros son con respecto al contexto compartido, que se corresponde con un buffer único por ejecución de contrato. Alterar los valores de los punteros no permite al programador acceder a información arbitraria ya sea de la máquina evaluadora o de otros contratos.
+Modifying the pointer values in this section of the code will have no effect. Pointers are with respect to the shared context, which corresponds to a single buffer per contract execution. Altering the pointer values does not allow the programmer to access arbitrary information either from the evaluating machine or from other contracts.
 :::
 
-Por último, especificamos la lógica de nuestro contrato, que puede estar definida por cuentras funciones deseemos. Preferiblemente se destacará una función principal, que será la que se ejecute como *callback* por parte de la función *execute_contract* del SDK. 
+Finally, we specify the logic of our contract, which can be defined by as many functions as we wish. Preferably a main function will be highlighted, which will be the one to be executed as *callback* by the *execute_contract* function of the SDK.
 
-```rs
+```rust
 fn contract_logic(
   context: &sdk::Context<State, StateEvent>,
   contract_result: &mut sdk::ContractResult<State>,
@@ -171,13 +171,13 @@ fn contract_logic(
 }
 ```
 
-Esta función principal recibe los datos de entrada del contrato encapsulados en una instancia de la estructura **Context** del SDK. También se recibe una referencia mutable al resultado del contrato que contiene el estado final, originalmente idéntico al estado inicial, y los flags de *aprobación requerida* y de *ejecución exitosa*. Nótese cómo, además de modificar el estado en función del evento recibido, se tiene que dar varlos a los flags anteriores. Con el primero especificaremos que el contrato acepta el evento y los cambios que este propone para el estado actual del sujeto, lo que se traducirá en el SDK generando un JSON_PATCH con las modificaciones necesarias para transicionar del estado inicial al obtenido. El segundo flag, por su parte, nos permite indicar condicionalmente si consideramos que el evento debería ser o no aprobado.
+This main function receives the contract input data encapsulated in an instance of the **Context** structure of the SDK. It also receives a mutable reference to the contract result containing the final state, originally identical to the initial state, and the *approval required* and *successful execution* flags. Note how, in addition to modifying the state according to the received event, the previous flags have to be modified. With the first one we will specify that the contract accepts the event and the changes it proposes for the current state of the subject, which will be translated in the SDK by generating a JSON_PATCH with the necessary modifications to transition from the initial state to the obtained one. The second flag, on the other hand, allows us to conditionally indicate whether we consider that the event should be approved or not.
 
 ### Testing your smart contract
 
-Al tratarse de código Rust, podemos crear una batería de tests unitarios en el propio código del contrato para comprobar su funcionamiento utilizando los recursos del propio lenguaje. También sería posible especificarlos en un fichero diferente. 
+Since this is Rust code, we can create a battery of unit tests in the contract code itself to check its performance using the resources of the language itself. It would also be possible to specify them in a different file.
 
-```rs
+```rust
 #[test]
 fn contract_test() {
   let initial_state = State {
@@ -198,6 +198,6 @@ fn contract_test() {
 }
 ```
 
-Como se puede comprobar, lo único que se debe realizar para crear un test válido es definir manualmente un estado inicial y un evento entrante en lugar de utilizando la función ejecutora del SDK, que solo puede ejecutarse apropiadamente por TAPLE. Una vez definidas las entradas, realizar una llamada a la función principal de la lógica del contrato debería ser suficiente.
+As you can see, the only thing you need to do to create a valid test is to manually define an initial state and an incoming event instead of using the SDK executor function, which can only be properly executed by TAPLE. Once the inputs are defined, making a call to the main function of the contract logic should be sufficient.
 
-Una vez probado el contrato, este está listo para ser enviado a TAPLE tal y como se indica en la sección de [introducción](./smart-contracts.md). Téngase en cuenta de que no es necesario enviar los test de los contratos a los nodos TAPLE, De hecho, enviarlos supondrá un mayor uso de bytes por parte del fichero codificado y, en consecuencia, al almacenarse este en la gobernanza, un mayor consumo de bytes de la misma.
+Once the contract is tested, it is ready to be sent to TAPLE as indicated in the [introduction](./smart-contracts.md) section. Note that it is not necessary to send the contract tests to the TAPLE nodes. In fact, sending them will result in a higher byte usage of the encoded file and, consequently, as it is stored in the governance, a higher byte consumption of the governance.

@@ -7,13 +7,14 @@ Any subject that has not completed its lifecycle in Taple can be transferred to 
 To carry out this transfer, we need to set up a new node that will act as the new external owner outside the governance. We will follow these steps:
 
 ```bash title="Node: Citizen"
-docker run opencanarias/taple-client:0.2 \
+docker run \
     -p 3004:3000 \
     -p 50004:50000 \
     -e TAPLE_HTTP=true \
     -e TAPLE_SECRET_KEY=2a71a0aff12c2de9e21d76e0538741aa9ac6da9ff7f467cf8b7211bd008a3198 \
     -e TAPLE_NETWORK_LISTEN_ADDR=/ip4/0.0.0.0/tcp/50004 \
-    -e TAPLE_NETWORK_KNOWN_NODE=/ip4/172.17.0.1/tcp/50000/p2p/12D3KooWHHjN5vKSKeCWiBG3gHaDRDp6YzsEgu9iTesYqrWxAgFk 
+    -e TAPLE_NETWORK_KNOWN_NODE=/ip4/172.17.0.1/tcp/50000/p2p/12D3KooWHHjN5vKSKeCWiBG3gHaDRDp6YzsEgu9iTesYqrWxAgFk \
+    opencanarias/taple-client:0.2
 ```
 
 Up to this point, when creating the subject, we have not had to declare its public key, although we always had the possibility to do so. However, in this case, it's different because, during the transfer, the new owner must generate a public key with which they want to manage the subject being transferred to them. To do this, they must execute the following:

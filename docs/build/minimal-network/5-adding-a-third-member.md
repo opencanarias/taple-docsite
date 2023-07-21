@@ -15,9 +15,10 @@ To launch the docker:
 ```bash
 docker run -p 3002:3000 -p 50002:50000 \ 
 -e TAPLE_SECRET_KEY=984af9a964bd6534418696814fa96244e7d719d51877e8e449514e941ff0c7d6 \ 
--e TAPLE_HTTP=true opencanarias/taple-client:0.2 \ 
+-e TAPLE_HTTP=true \ 
 -e TAPLE_NETWORK_KNOWN_NODE=/ip4/{addr}/tcp/50000/p2p/12D3KooWLXexpg81PjdjnrhmHUxN7U5EtfXJgr9cahei1SJ9Ub3B \ 
--e TAPLE_NETWORK_LISTEN_ADDR=/ip4/0.0.0.0/tcp/50000
+-e TAPLE_NETWORK_LISTEN_ADDR=/ip4/0.0.0.0/tcp/50000 \
+opencanarias/taple-client:0.2
 ```
 
 ## Modificar la gobernanza
