@@ -6,45 +6,50 @@ Para comenzar con el caso de uso lo primero que haremos será levantar los nodos
 
 ### Rental Company node 
 ```bash
-    docker run opencanarias/taple-client:0.2 \
+    docker run \
         -p 3000:3000 \
         -p 50000:50000 \
         -e TAPLE_HTTP=true \
         -e TAPLE_SECRET_KEY=74c417de2174f3a76b0b98343cea3aa35bfd3860cac8bf470092c3e751745c1a \
-        -e TAPLE_NETWORK_LISTEN_ADDR=/ip4/0.0.0.0/tcp/50000
+        -e TAPLE_NETWORK_LISTEN_ADDR=/ip4/0.0.0.0/tcp/50000 \
+        opencanarias/taple-client:0.2
 ```
 
 ### Cleaning Company node
 ```bash
-    docker run opencanarias/taple-client:0.2 \
+    docker run \
         -p 3001:3000 \
         -p 50001:50000 \
         -e TAPLE_HTTP=true \
         -e TAPLE_SECRET_KEY=4f0e3c9cd24ab3420b81220bb7ebccb4e42501d3667dea81838b3bfaae20c936 \
         -e TAPLE_NETWORK_LISTEN_ADDR=/ip4/0.0.0.0/tcp/50001 \
-        -e TAPLE_NETWORK_KNOWN_NODE=/ip4/172.17.0.1/tcp/50000/p2p/12D3KooWHHjN5vKSKeCWiBG3gHaDRDp6YzsEgu9iTesYqrWxAgFk 
+        -e TAPLE_NETWORK_KNOWN_NODE=/ip4/172.17.0.1/tcp/50000/p2p/12D3KooWHHjN5vKSKeCWiBG3gHaDRDp6YzsEgu9iTesYqrWxAgFk \
+        opencanarias/taple-client:0.2
 ```
 
 ### Security Company node
 ```bash
-    docker run opencanarias/taple-client:0.2 \
+    docker run \
         -p 3002:3000 \
         -p 50002:50000 \
         -e TAPLE_HTTP=true \
         -e TAPLE_SECRET_KEY=6d3103185146ecedd28d3759df693999927e69aacb55e1aa9fe7ac17555da81c \
         -e TAPLE_NETWORK_LISTEN_ADDR=/ip4/0.0.0.0/tcp/50002 \
-        -e TAPLE_NETWORK_KNOWN_NODE=/ip4/172.17.0.1/tcp/50000/p2p/12D3KooWHHjN5vKSKeCWiBG3gHaDRDp6YzsEgu9iTesYqrWxAgFk 
+        -e TAPLE_NETWORK_KNOWN_NODE=/ip4/172.17.0.1/tcp/50000/p2p/12D3KooWHHjN5vKSKeCWiBG3gHaDRDp6YzsEgu9iTesYqrWxAgFk \
+        opencanarias/taple-client:0.2
+         
 ```
 
 ### Vehicle node
 ```bash
-    docker run opencanarias/taple-client:0.2 \
+    docker run \
         -p 3003:3000 \
         -p 50003:50000 \
         -e TAPLE_HTTP=true \
         -e TAPLE_SECRET_KEY=2a71a0aff12c2de9e21d76e0538741aa9ac6da9ff7f467cf8b7211bd008a3198 \
         -e TAPLE_NETWORK_LISTEN_ADDR=/ip4/0.0.0.0/tcp/50003 \
-        -e TAPLE_NETWORK_KNOWN_NODE=/ip4/172.17.0.1/tcp/50000/p2p/12D3KooWHHjN5vKSKeCWiBG3gHaDRDp6YzsEgu9iTesYqrWxAgFk 
+        -e TAPLE_NETWORK_KNOWN_NODE=/ip4/172.17.0.1/tcp/50000/p2p/12D3KooWHHjN5vKSKeCWiBG3gHaDRDp6YzsEgu9iTesYqrWxAgFk \
+        opencanarias/taple-client:0.2
 ```
 
 ## Creating and updating governance

@@ -9,13 +9,14 @@ Therefore, at this point, we'll focus on including a new member who will be resp
 To include **SFO**, we must first create the new node. Therefore, we'll proceed to execute the following command:
 
 ```bash title="Node: SFO"
-docker run opencanarias/taple-client:0.2 \
+docker run \
     -p 3003:3000 \
     -p 50003:50000 \
     -e TAPLE_HTTP=true \
     -e TAPLE_ID_PRIVATE_KEY=65698ba9608521d65137912cdd85601820574415ebc3a9a7285e7493012167c6 \
     -e TAPLE_NETWORK_LISTEN_ADDR=/ip4/0.0.0.0/tcp/50003 \
-    -e TAPLE_NETWORK_KNOWN_NODE=/ip4/172.17.0.1/tcp/50000/p2p/12D3KooWHHjN5vKSKeCWiBG3gHaDRDp6YzsEgu9iTesYqrWxAgFk 
+    -e TAPLE_NETWORK_KNOWN_NODE=/ip4/172.17.0.1/tcp/50000/p2p/12D3KooWHHjN5vKSKeCWiBG3gHaDRDp6YzsEgu9iTesYqrWxAgFk \
+    opencanarias/taple-client:0.2
 ```
 
 Whether an event requires approval or not depends directly on its [specification in the *smart contract* method](../../learn/smart-contracts-programming.md#auxiliary-structures). Therefore, we must add `contract_result.approval_required = true;` to our contract as follows: 
