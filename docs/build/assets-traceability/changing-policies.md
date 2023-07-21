@@ -1,10 +1,10 @@
 # Changing policies
 
-En el paso anterior, hemos observado que el proceso de aprobación de sujetos en Francia solo requiere la aprobación de **WFO**. Sin embargo, en España, el procedimiento es diferente. A pesar de que tanto **WFO** como **SFO** tienen la autoridad suficiente para aprobar la certificación orgánica sin la intervención de la otra entidad, nuestras políticas de gobernanza no permiten esto. Lo que ocurre es que ambas entidades deben aprobar una nueva petición de evento para que sea considerada aceptada o rechazada.
+In the previous step, we observed that the approval process for subjects in France only requires approval from **WFO**. However, in Spain, the procedure is different. Although both **WFO** and **SFO** have sufficient authority to approve the organic certification without the intervention of the other entity, our governance policies do not allow this. Both entities must approve a new event request for it to be considered accepted or rejected.
 
-Por lo tanto, en esta sección del tutorial, proponemos actualizar las políticas de gobernanza para que los sujetos relacionados con vino solo necesiten la aprobación de una de las dos entidades mencionadas.
+Therefore, in this section of the tutorial, we propose updating the governance policies so that wine-related subjects only need approval from one of the two mentioned entities.
 
-Comenzaremos verificando las políticas actuales en la gobernanza antes de realizar estos cambios:
+Let's start by checking the current policies in the governance before making these changes:
 
 ```json
 {
@@ -37,7 +37,7 @@ Comenzaremos verificando las políticas actuales en la gobernanza antes de reali
 }
 ```
 
-Realizaremos el cambio necesario en las políticas de los sujetos de tipo *Wine*:
+We will make the necessary change in the policies for the *Wine* subjects:
 
 ```json
 {
@@ -72,13 +72,13 @@ Realizaremos el cambio necesario en las políticas de los sujetos de tipo *Wine*
 }
 ```
 
-Para generar dichos cambios, utilizaremos nuestra herramienta [**TAPLE-Patch**](../../learn/client-tools.md#taple-patch) siguiendo este procedimiento:
+To generate these changes, we will use our tool [**TAPLE-Patch**](../../learn/client-tools.md#taple-patch) following this procedure:
 
 ```bash title="Another terminal"
 taple-patch "{\"policies\":[{\"approve\":{\"quorum\":\"MAJORITY\"},\"evaluate\":{\"quorum\":\"MAJORITY\"},\"id\":\"governance\",\"validate\":{\"quorum\":\"MAJORITY\"}},{\"approve\":{\"quorum\":\"MAJORITY\"},\"evaluate\":{\"quorum\":\"MAJORITY\"},\"id\":\"Wine\",\"validate\":{\"quorum\":\"MAJORITY\"}}]}" "{\"policies\":[{\"approve\":{\"quorum\":\"MAJORITY\"},\"evaluate\":{\"quorum\":\"MAJORITY\"},\"id\":\"governance\",\"validate\":{\"quorum\":\"MAJORITY\"}},{\"approve\":{\"quorum\":\"MAJORITY\"},\"evaluate\":{\"quorum\":\"MAJORITY\"},\"id\":\"Wine\",\"validate\":{\"quorum\":{\"FIXED\":1}}}]}"
 ```
 
-El resultado obtenido será:
+The result obtained will be:
 
 ```json
 [
@@ -92,7 +92,7 @@ El resultado obtenido será:
 ]
 ```
 
-Luego, invocaremos el método del contrato de gobernanza responsable de actualizar sus propiedades:
+Next, we will invoke the governance contract method responsible for updating its properties:
 
 ```bash title="Node: WPO"
 curl --request POST 'http://localhost:3000/api/event-requests' \
@@ -119,13 +119,13 @@ curl --request POST 'http://localhost:3000/api/event-requests' \
 }'
 ```
 
-Una vez que hayamos enviado la solicitud de actualización de la gobernanza, deberemos obtener nuevamente la solicitud de aprobación. Para hacerlo, ejecutaremos el siguiente comando:
+Once we have sent the governance update request, we should receive the approval request again. To do this, run the following command:
 
 ```bash title="Node: WPO"
 curl --request GET 'http://localhost:3000/api/approval-requests?status=Pending'
 ```
 
-Copiaremos el valor del campo `id`, pero en esta ocasión también será necesaria la aprobación por parte de **WFO**. Por lo tanto, realizaremos las siguientes dos acciones:
+Copy the value of the `id` field, but this time, approval from **WFO** will also be necessary. Therefore, we will perform the following two actions:
 
 ```bash title="Node: WPO"
 curl --request PATCH 'http://localhost:3000/api/approval-requests/{{PREVIUS-ID}}' \
@@ -139,7 +139,7 @@ curl --request PATCH 'http://localhost:3002/api/approval-requests/{{PREVIUS-ID}}
 --data-raw '{"approvalType": "Accept"}'
 ```
 
-Si todo ha ido correctamente, al ejecutar el siguiente comando, el valor de `sn` de la gobernanza debería ser 8 y deberían aparecer los cambios mencionados anteriormente:
+If everything went well, when you execute the following command, the governance `sn` should be 8, and the changes made earlier should be displayed:
 
 ```bash title="Node: WPO"
 curl --request GET 'http://localhost:3000/api/subjects/{{GOVERNANCE-ID}}'
@@ -433,7 +433,7 @@ curl --request GET 'http://localhost:3000/api/subjects/{{GOVERNANCE-ID}}'
 }
 ```
 
-Ahora crearemos un nuevo sujeto de botella de vino en España para probar nuestro cambio:
+Now, let's create a new wine bottle subject in Spain to test our change:
 
 ```bash title="Node: Premium Wines"
 curl --request POST 'http://localhost:3001/api/event-requests' \
@@ -450,13 +450,13 @@ curl --request POST 'http://localhost:3001/api/event-requests' \
 }'
 ```
 
-Al realizar esta acción, recibiremos un `request-id`, el cual debemos copiar y utilizar en el siguiente comando:
+When you perform this action, you will receive a `request-id`, which you should copy and use in the following command:
 
 ```bash title="Node: Premium wines"
 curl --request GET 'http://localhost:3001/api/event-requests/{{REQUEST-ID}}/state'
 ```
 
-Este último comando nos proporcionará una respuesta como la siguiente:
+This last command will give you a response similar to the following:
 
 ```json
 {
@@ -469,10 +469,10 @@ Este último comando nos proporcionará una respuesta como la siguiente:
 ```
 
 :::note
-Guarda el `subject_id` del **sujeto**, ya que lo necesitaremos en pasos posteriores del tutorial.
+Save the `subject_id` of the **subject**, as you will need it for subsequent steps in the tutorial.
 :::
 
-Antes de poder lanzar un evento de certificación, debemos inicializar la botella. Para hacerlo, ejecutaremos el siguiente comando:
+Before we can issue a certification event, we need to initialize the bottle. To do this, execute the following command:
 
 ```bash title="Node: Premium wines"
 curl --request POST 'http://localhost:3001/api/event-requests' \
@@ -493,7 +493,7 @@ curl --request POST 'http://localhost:3001/api/event-requests' \
 }'
 ```
 
-Al ejecutar la consulta del sujeto, debería tener un valor de `sn` igual a 1 y mostrar la información anteriormente mencionada:
+When you query the subject, it should have a `sn` value of 1 and display the previously mentioned information:
 
 ```bash title="Node: Premium wines"
 curl --request GET 'http://localhost:3001/api/subjects/{{SUBJECT-ID}}'
@@ -524,13 +524,13 @@ curl --request GET 'http://localhost:3001/api/subjects/{{SUBJECT-ID}}'
 }
 ```
 
-Ahora probaremos a emitir el evento de certificación. Para ello, generaremos la firma del evento que deseamos emitir utilizando [**TAPLE-Sign**](../../learn/client-tools.md#taple-sign), con el siguiente formato, reemplazando `subject_id` por el identificador de nuestro sujeto *Wine*:
+Now, we will test issuing the certification event. To do this, we will generate the event signature we want to issue using [**TAPLE-Sign**](../../learn/client-tools.md#taple-sign), with the following format, replacing `subject_id` with the identifier of our *Wine* subject:
 
 ```bash title="Another terminal"
 taple-sign "f855c6736463a65f515afe7b85d1418c096ed73852b42bbe4c332eb43d532326" "{\"Fact\":{\"subject_id\":\"{{SUBJECT-ID}}\",\"payload\":{\"OrganicCertification\":{\"fertilizers_control\":false,\"pesticides_control\":false,\"analytics\":false,\"additional_info\":\"test\"}}}}"
 ```
 
-El resultado de esta ejecución se incluirá en la siguiente solicitud:
+The result of this execution will be included in the following request:
 
 ```bash title="Node: Premium Wines"
 curl --request POST 'http://localhost:3001/api/event-requests' \
@@ -539,6 +539,7 @@ curl --request POST 'http://localhost:3001/api/event-requests' \
 ```
 
 Tras realizarla, debería aparecer la solicitud de aprobación a los nodos **WFO** y **SFO**. Puedes comprobarlo de la siguiente manera:
+After making this request, you should see the approval request to **WFO** and **SFO**. You can check it as follows:
 
 ```bash title="Node: WFO"
 curl --request GET 'http://localhost:3002/api/approval-requests?status=pending'
@@ -548,7 +549,7 @@ curl --request GET 'http://localhost:3002/api/approval-requests?status=pending'
 curl --request GET 'http://localhost:3003/api/approval-requests?status=pending'
 ```
 
-Intentaremos aprobarlo en uno de los dos nodos, por ejemplo, en **SFO**:
+We will try to approve it on one of the two nodes, for example, on **SFO**:
 
 ```bash
 curl --request PATCH 'http://localhost:3003/api/approval-requests/{{PREVIUS-ID}}' \
@@ -556,7 +557,7 @@ curl --request PATCH 'http://localhost:3003/api/approval-requests/{{PREVIUS-ID}}
 --data-raw '{"approvalType": "Accept"}'
 ```
 
-Si todo ha ido correctamente al lanzar la petición de consulta de sujetos debería aparecernos con `sn` 2 y el `organic_certified` a false:
+If everything went well, when you launch the subject query request, it should appear with `sn` 2 and the `organic_certified` set to false:
 
 ```bash title="Node: Premium Wines"
 curl --request GET 'http://localhost:3001/api/subjects?subject_type=all&governanceid={{GOVERNANCE-ID}}'

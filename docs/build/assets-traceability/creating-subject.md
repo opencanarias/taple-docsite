@@ -1,8 +1,8 @@
 # Creating a subject
 
-En este punto, ya seremos capaces de dar seguimiento al ciclo de vida de nuestras botellas de vino mediante [sujetos](../../discover/subjects.md) del tipo *Wine*, los cuales están definidos en nuestra red Taple. Además, tenemos a la entidad **Premium Wines**, que será la responsable de llevar a cabo esta acción.
+At this point, we are capable of tracking the life cycle of our wine bottles through *Wine* type [subjects](../../discover/subjects.md), which are defined in our Taple network. Additionally, we have the entity **Premium Wines**, which will be responsible for carrying out this action.
 
-Comenzaremos lanzando un evento de **génesis** para crear nuestro primer sujeto del tipo *Wine*:
+Let's start by launching a **genesis** event to create our first *Wine* type subject:
 
 ```bash title="Node: Premium wines"
 curl --request POST 'http://localhost:3001/api/event-requests' \
@@ -19,13 +19,13 @@ curl --request POST 'http://localhost:3001/api/event-requests' \
 }'
 ```
 
-Al realizar esta acción, recibiremos un `request-id`, el cual debemos copiar y utilizar en el siguiente comando:
+Upon performing this action, we will receive a `request-id`, which we need to copy and use in the following command:
 
 ```bash title="Node: Premium wines"
 curl --request GET 'http://localhost:3001/api/event-requests/{{REQUEST-ID}}/state'
 ```
 
-Este último comando nos proporcionará una respuesta como la siguiente:
+The last command will provide a response like the following:
 
 ```json
 {
@@ -38,10 +38,10 @@ Este último comando nos proporcionará una respuesta como la siguiente:
 ```
 
 :::note
-Guarda el `subject_id` del **sujeto**, ya que lo necesitaremos en pasos posteriores del tutorial.
+Keep the `subject_id` of the **subject**, as we'll need it in later steps of the tutorial.
 :::
 
-Podemos consultar el sujeto creado utilizando el siguiente comando:
+We can query the created subject using the following command:
 
 ```bash title="Node: Premium Wines"
 curl --request GET 'http://localhost:3001/api/subjects/{{SUBJECT-ID}}'
@@ -72,15 +72,14 @@ curl --request GET 'http://localhost:3001/api/subjects/{{SUBJECT-ID}}'
 }
 ```
 
+Now that we have reached this point, the first subject has been created. However, as we can see in the previous information block, it has a default initialization with the *body* we defined in the **genesis** event. Therefore, our next step will be to modify the basic characteristics of the subject to represent the production of a wine bottle produced by **Premium Wines**. We'll achieve this through the `Init` event we declared in the *smart contract* of *Wine* subjects.
 
-Una vez hemos llegado a este punto, el primer sujeto ha sido creado, pero como podemos observar en el bloque de información anterior, tiene una inicialización por defecto con el *body* que definimos en el evento de **génesis**. Por lo tanto, nuestro siguiente paso será modificar las características básicas del sujeto para representar la producción de una botella de vino producida por **Premium Wines**. Esto lo lograremos mediante el evento `Init` que hemos declarado en el *smart contract* de los sujetos *Wine*.
-
-Las características que deseamos que tenga nuestra botella son las siguientes:
+The characteristics we want our bottle to have are as follows:
 * Harvest number: 1
-* Grape type: Cabernet sauvignon
-* Origin: spain
+* Grape type: Cabernet Sauvignon
+* Origin: Spain
 
-Por lo tanto, el comando que deberemos ejecutar será el siguiente:
+Therefore, the command we need to execute is the following:
 
 ```bash  title="Node: Premium wines"
 curl --request POST 'http://localhost:3001/api/event-requests' \
@@ -101,7 +100,7 @@ curl --request POST 'http://localhost:3001/api/event-requests' \
 }'
 ```
 
-Si todo ha ido correctamente, al ejecutar el siguiente comando, el sujeto debería actualizarse con un valor `sn` de 1 y reflejar los cambios mencionados anteriormente:
+If everything has gone correctly, running the following command should update the subject with an `sn` value of 1 and reflect the changes mentioned above:
 
 ```bash title="Node: Premium Wines"
 curl --request GET 'http://localhost:3001/api/subjects/{{SUBJECT-ID}}'

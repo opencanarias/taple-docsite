@@ -1,10 +1,10 @@
 # External invocations
 
-Se ha planteado una nueva necesidad: la certificación del origen orgánico del vino. Para llevar a cabo esta tarea, un laboratorio deberá visitar nuestras tierras o viñedos y realizar una serie de análisis y pruebas que determinarán si el origen del vino es orgánico o no. Sin embargo, existen muchas empresas que ofrecen este servicio, y no es eficiente incorporarlas todas en la gobernanza o exigirles que tengan su propio nodo.
+A new need has arisen: the certification of the organic origin of wine. To carry out this task, a laboratory will need to visit our lands or vineyards and conduct a series of analyses and tests that will determine whether the wine's origin is organic or not. However, there are many companies that offer this service, and it's not efficient to incorporate all of them into the governance or require them to have their own node.
 
-Para resolver este problema, emplearemos una nueva función de Taple denominada *invocaciones externas*. Para llevar a cabo estas invocaciones en la red, no es necesario tener un nodo completo; será suficiente con tener acceso a uno de los nodos existentes y contar con un par de claves que nos permitan firmar la petición para certificar la identidad de la invocación.
+To solve this problem, we will use a new function of Taple called *external invocations*. To perform these invocations on the network, it's not necessary to have a complete node; it will be enough to have access to one of the existing nodes and have a pair of keys that allow us to sign the request to certify the invocation's identity.
 
-Para lograr esta actualización, se llevarán a cabo modificaciones en los roles dentro de las propiedades de la gobernanza. Primero, revisaremos su estado actual:
+To achieve this update, modifications will be made to the roles within the governance properties. First, let's review its current state:
 
 ```json
 {
@@ -81,7 +81,7 @@ Para lograr esta actualización, se llevarán a cabo modificaciones en los roles
 }
 ```
 
-El cambio que deseamos realizar se aplicará al apartado de *roles* y será el siguiente:
+The change we want to make will apply to the *roles* section and will be as follows:
 
 ```json
 {
@@ -101,13 +101,13 @@ El cambio que deseamos realizar se aplicará al apartado de *roles* y será el s
 }
 ```
 
-Utilizaremos nuestra herramienta [**TAPLE-Patch**](../../learn/client-tools.md#taple-patch) para generar dichos cambios, siguiendo el siguiente procedimiento:
+We'll use our [**TAPLE-Patch**](../../learn/client-tools.md#taple-patch) tool to generate these changes, following the procedure below:
 
 ```bash title="Another terminal"
 taple-patch "{\"roles\":[{\"namespace\":\"\",\"role\":\"WITNESS\",\"schema\":{\"ID\":\"governance\"},\"who\":\"MEMBERS\"},{\"namespace\":\"\",\"role\":\"APPROVER\",\"schema\":{\"ID\":\"governance\"},\"who\":{\"NAME\":\"WPO\"}},{\"namespace\":\"\",\"role\":\"CREATOR\",\"schema\":{\"ID\":\"Wine\"},\"who\":{\"NAME\":\"PremiumWines\"}},{\"namespace\":\"\",\"role\":\"APPROVER\",\"schema\":{\"ID\":\"governance\"},\"who\":{\"NAME\":\"WFO\"}},{\"namespace\":\"\",\"role\":\"VALIDATOR\",\"schema\":{\"ID\":\"governance\"},\"who\":{\"NAME\":\"WFO\"}},{\"namespace\":\"\",\"role\":\"EVALUATOR\",\"schema\":{\"ID\":\"governance\"},\"who\":{\"NAME\":\"WFO\"}},{\"namespace\":\"\",\"role\":\"WITNESS\",\"schema\":{\"ID\":\"Wine\"},\"who\":{\"NAME\":\"WFO\"}}]}" "{\"roles\":[{\"namespace\":\"\",\"role\":\"WITNESS\",\"schema\":{\"ID\":\"governance\"},\"who\":\"MEMBERS\"},{\"namespace\":\"\",\"role\":\"APPROVER\",\"schema\":{\"ID\":\"governance\"},\"who\":{\"NAME\":\"WPO\"}},{\"namespace\":\"\",\"role\":\"CREATOR\",\"schema\":{\"ID\":\"Wine\"},\"who\":{\"NAME\":\"PremiumWines\"}},{\"namespace\":\"\",\"role\":\"APPROVER\",\"schema\":{\"ID\":\"governance\"},\"who\":{\"NAME\":\"WFO\"}},{\"namespace\":\"\",\"role\":\"VALIDATOR\",\"schema\":{\"ID\":\"governance\"},\"who\":{\"NAME\":\"WFO\"}},{\"namespace\":\"\",\"role\":\"EVALUATOR\",\"schema\":{\"ID\":\"governance\"},\"who\":{\"NAME\":\"WFO\"}},{\"namespace\":\"\",\"role\":\"WITNESS\",\"schema\":{\"ID\":\"Wine\"},\"who\":{\"NAME\":\"WFO\"}},{\"namespace\":\"\",\"role\":\"ISSUER\",\"schema\":{\"ID\":\"Wine\"},\"who\":\"NOT_MEMBERS\"}]}"
 ```
 
-Una vez completado el proceso, obtendremos el siguiente resultado:
+Once the process is completed, we'll get the following result:
 
 ```json
 [
@@ -126,7 +126,7 @@ Una vez completado el proceso, obtendremos el siguiente resultado:
 ]
 ```
 
-A continuación, procederemos a invocar el método del contrato de gobernanza responsable de actualizar sus propiedades. Para ello, ejecutaremos lo siguiente:
+Next, we'll proceed to invoke the method of the governance contract responsible for updating its properties. To do this, we'll execute the following:
 
 ```bash title="Node: WPO"
 curl --request POST 'http://localhost:3000/api/event-requests' \
@@ -156,13 +156,13 @@ curl --request POST 'http://localhost:3000/api/event-requests' \
 }'
 ```
 
-Después de lanzar la solicitud de actualización de la gobernanza, debemos obtener nuevamente una solicitud de aprobación:
+After submitting the governance update request, we need to obtain an approval request again:
 
 ```bash title="Node: WPO"
 curl --request GET 'http://localhost:3000/api/approval-requests?status=Pending'
 ```
 
-Copiaremos el valor del campo `id`. Sin embargo, en esta ocasión, será necesaria también la aprobación por parte de **WFO**. Por lo tanto, realizaremos las siguientes dos acciones:
+We'll copy the value of the `id` field. However, this time, approval from **WFO** is also required. Therefore, we'll perform the following two actions:
 
 ```bash title="Node: WPO"
 curl --request PATCH 'http://localhost:3000/api/approval-requests/{{PREVIUS-ID}}' \
@@ -176,7 +176,7 @@ curl --request PATCH 'http://localhost:3002/api/approval-requests/{{PREVIUS-ID}}
 --data-raw '{"approvalType": "Accept"}'
 ```
 
-Con todas estas acciones, al consultar nuestra gobernanza una vez más, debería aparecer la nueva versión correspondiente:
+With all these actions, upon querying our governance once more, the new corresponding version should appear:
 
 ```bash title="Node: WPO"
 curl --silent --request GET 'http://localhost:3002/api/subjects?subject_type=governances'
@@ -396,13 +396,13 @@ curl --silent --request GET 'http://localhost:3002/api/subjects?subject_type=gov
 }
 ```
 
-Ahora, procederemos a probar las ejecuciones de manera externa. Para ello, generaremos la firma del evento que queremos emitir utilizando [**TAPLE-Sign**](../../learn/client-tools.md#taple-sign) con el siguiente comando. Reemplazaremos `subject_id` con el identificador de nuestro sujeto de *Wine*:
+Now, we'll proceed to test the external executions. To do this, we'll generate the signature of the event we want to emit using [**TAPLE-Sign**](../../learn/client-tools.md#taple-sign) with the following command. Replace `subject_id` with the identifier of our *Wine* subject:
 
 ```bash title="Another terminal"
 taple-sign "f855c6736463a65f515afe7b85d1418c096ed73852b42bbe4c332eb43d532326" "{\"Fact\":{\"subject_id\":\"{{SUBJECT-ID}}\",\"payload\":{\"OrganicCertification\":{\"fertilizers_control\":true,\"pesticides_control\":true,\"analytics\":true,\"additional_info\":\"test\"}}}}"
 ```
 
-El resultado de esta ejecución lo incluiremos en la siguiente petición:
+The result of this execution will be included in the following request:
 
 ```bash title="Node: Premium wines"
 curl --request POST 'http://localhost:3001/api/event-requests' \
@@ -410,7 +410,7 @@ curl --request POST 'http://localhost:3001/api/event-requests' \
 --data-raw {{PREVIUS-RESULT}}
 ```
 
-Esto nos dará como resultado algo similar a lo siguiente:
+This will give us a result similar to the following:
 
 ```bash title="Node: Premium wines"
 curl --request POST 'http://localhost:3001/api/event-requests' \
@@ -437,9 +437,7 @@ curl --request POST 'http://localhost:3001/api/event-requests' \
 }'
 ```
 
-Para verificar que la ejecución ha sido exitosa, podemos lanzar el siguiente comando:
-
-Si todo ha ido correctamente, al ejecutar el siguiente comando, el sujeto debería actualizarse con un valor `sn` de 2 y reflejar los cambios mencionados anteriormente:
+If everything has gone correctly, running the following command should update the subject with an `sn` value of 2 and reflect the changes mentioned above:
 
 ```bash title="Node: Premium Wines"
 curl --request GET 'http://localhost:3001/api/subjects/{{SUBJECT-ID}}'

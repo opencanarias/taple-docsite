@@ -1,16 +1,16 @@
-# Running a node
+# Running a Node
 
-La *Wine Producers Organization* (en adelante **WPO**) es la entidad encargada de proponer el modelo de negocio y, por tanto, será responsable de gestionar la red. Para lograrlo, el primer paso es levantar un nodo de TAPLE que represente a la **WPO** y con el cual sea posible interactuar para configurar el resto del caso de uso.
+The *Wine Producers Organization* (hereinafter referred to as **WPO**) is the entity responsible for proposing the business model and, consequently, will be in charge of managing the network. To achieve this, the first step is to set up a TAPLE node representing the **WPO**, which will allow interaction to configure the rest of the use case.
 
-A continuación, describiremos los pasos para crear el nodo WPO:
+Below, we will describe the steps to create the WPO node:
 
-* En primer lugar, asegurémonos de descargar la imagen adecuada del Taple Client desde Dockerhub:
+* First, make sure to download the appropriate Taple Client image from Dockerhub:
 
     ```bash bash title="Node: WPO"
     docker pull opencanarias/taple-client:0.2
     ```
 
-* Posteriormente, levantaremos el nodo utilizando el siguiente comando:
+* Next, we will start the node using the following command:
 
     ```bash title="Node: WPO"
     docker run opencanarias/taple-client:0.2 \

@@ -1,25 +1,25 @@
-# Wine track
+# Wine Track
 
 ## Introduction
 
-This tutorial will contain a series of advanced Taple network concepts, in which we will learn:
+This tutorial will cover a series of advanced Taple network concepts, in which we will learn:
 
-1. Como realizar invocaciones externas a métodos de un smart contract;
-2. Como transferir la propiedad de un sujeto a otro participante;
-3. Como funciona la segmentación de sujetos por namespace;
-4. Como modificar las políticas de voto en un sujeto;
-5. Como finalizar el seguimiento del ciclo de vida de un sujeto.
+1. How to perform external invocations to methods of a smart contract.
+2. How to transfer ownership of a subject to another participant.
+3. How works subject segmentation by namespace works.
+4. How to modify voting policies on a subject.
+5. How to finalize the life cycle tracking of a subject.
 
-## Use case description
+## Use Case Description
 
-En este tutorial, implementaremos un sistema de seguimiento del ciclo de vida de un producto alimentario, específicamente un vino premium de alta calidad. El objetivo es certificar la calidad del vino a los compradores finales en función de ciertos parámetros, como la certificación de origen orgánico y un control de temperatura óptimo.
+In this tutorial, we will implement a system for tracking the life cycle of a food product, specifically a premium high-quality wine. The objective is to certify the wine's quality to the end buyers based on certain parameters, such as organic certification and optimal temperature control.
 
-Para lograr este objetivo, será necesario contar con el apoyo de diferentes participantes que serán responsables de llevar a cabo las diferentes acciones necesarias para el correcto funcionamiento de este ciclo de vida. Entre ellos, podemos distinguir:
+To achieve this goal, the support of different participants will be necessary, each responsible for carrying out various actions required for the proper functioning of this life cycle. Among them, we can distinguish:
 
-* **Wine Producers Organization (WPO)**: Responsable de formalizar el caso de uso de trazabilidad.
-* **Premium Wines**: Autor encargado de iniciar el seguimiento de las botellas de vino.
-* **World Food Organization (WFO)**: Administrador de los cambios realizados en el caso de uso y los sujetos de tipo vino.
-* **Spanish Food Organization (SFO)**: Encargado de validar los cambios en el sujeto de vino.
-* **Citizen**: EEntidad externa a la que se transferirá la propiedad de una botella de vino.
+* **Wine Producers Organization (WPO)**: Responsible for formalizing the traceability use case.
+* **Premium Wines**: Authorized personnel in charge of initiating the tracking of wine bottles.
+* **World Food Organization (WFO)**: Administrator of the changes made to the use case and wine-type subjects.
+* **Spanish Food Organization (SFO)**: Responsible for validating changes to the wine subject.
+* **Citizen**: External entity to whom the ownership of a wine bottle will be transferred.
 
-A lo largo de este tutorial, se proporcionarán instrucciones detalladas y los comandos necesarios para llevar a cabo cada paso. ¡Comencemos con el desarrollo de este caso de uso de seguimiento del ciclo de vida del vino en Taple!
+Throughout this tutorial, detailed instructions and the necessary commands will be provided to carry out each step. Let's begin with the development of this use case for tracking the wine life cycle in Taple!

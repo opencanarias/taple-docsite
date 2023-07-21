@@ -1,22 +1,22 @@
 # Adding a schema
 
-Hemos agregado nuestro primer miembro a la gobernanza, pero aún falta completarla, ya que no hemos definido la estructura de datos para el seguimiento de los sujetos de tipo *Wine* en este caso de uso.
+We have added our first member to the governance, but there's still more to complete, as we haven't defined the data structure for tracking *Wine* type subjects in this use case.
 
-Para avanzar en el tutorial, necesitamos definir una estructura de datos donde podamos almacenar la información de cada botella de vino. En Taple, esta definición se realiza mediante [*schemas*](../../discover/schemas.md), que nos permiten especificar los campos, tipos de datos y relaciones que deseamos guardar, como el número de cosecha, el tipo de uva, su origen, etc.
+To progress in the tutorial, we need to define a data structure where we can store information for each wine bottle. In Taple, this definition is done using [*schemas*](../../discover/schemas.md), which allow us to specify the fields, data types, and relationships we want to store, such as harvest number, type of grape, origin of the grape, organic certification, etc.
 
 ## Schema
 
-Antes de continuar, es importante tener claro qué información queremos guardar para cada botella de vino y . Luego procederemos a crear el esquema que representará esa información de manera adecuada. A continuación, presentamos el esquema que hemos creado:
+Before proceeding, it's essential to have a clear idea of the information we want to store for each wine bottle. Then, we'll proceed to create the schema that represents that information appropriately. Below is the schema we have created:
 
 - Harvest number
 - Type of grape
 - Origin of the grape
 - Certificate authenticating whether it is organic or not
 - Values to be changed in the temperature control event:
-    - Timestamp of last check
-    - Value that corroborates whether the wine cold chain has been complied with
+    - Timestamp of the last check
+    - Value that confirms whether the wine cold chain has been complied with
 
-El esquema se debe definir en formato [*json-schema*](../../learn/json-schema.md) para que Taple pueda interpretarlo correctamente. A continuación, mostramos el esquema en este formato:
+The schema must be defined in [*json-schema*](../../learn/json-schema.md) format so that Taple can interpret it correctly. Here's the schema in this format:
 
 ```json
 {
@@ -65,15 +65,15 @@ El esquema se debe definir en formato [*json-schema*](../../learn/json-schema.md
 
 ## Smart Contract
 
-Después de declarar nuestro esquema, el siguiente paso es crear el [*smart contract*](../../learn/smart-contracts.md), ya que necesitamos alguna forma de actualizar los estados de los sujetos que declaremos. Por lo tanto, crearemos un pequeño proyecto para el desarrollo del *contrato*, tomando como referencia lo que se ha [declarado en este apartado](../../learn/smart-contracts-programming.md).
+After declaring our schema, the next step is to create the [*smart contract*](../../learn/smart-contracts.md) as we need a way to update the states of the subjects we declare. Therefore, we'll create a small project for the contract development, taking reference from what has been [declared in this section](../../learn/smart-contracts-programming.md).
 
-1. Ejecutamos el siguiente comando:
+1. Execute the following command:
 
     ```bash title="Another terminal"
     cargo new wine-contract
     ```
 
-    Esto creará un proyecto Rust vacio con el nombre especificado con la siguiente apariencia:
+    This will create an empty Rust project with the specified name, resulting in the following structure:
 
     ```bash
     .
@@ -82,7 +82,7 @@ Después de declarar nuestro esquema, el siguiente paso es crear el [*smart cont
         └── main.rs
     ```
 
-2. Debemos modificar el archivo *Cargo.toml* para incluir el *SDK* de los contratos de Taple, así como el módulo *serde* que será el encargado de la serialización y deserialización de los datos:
+2. We need to modify the *Cargo.toml* file to include the Taple contracts *SDK* as well as the *serde* module, which will handle data serialization and deserialization:
 
     ```toml
     [package]
@@ -96,17 +96,17 @@ Después de declarar nuestro esquema, el siguiente paso es crear el [*smart cont
     ```
 
     :::info
-    A partir de ahora, todos los pasos numerados restantes se realizarán desde el archivo `main.rs`.
+    From now on, all the remaining numbered steps will be performed within the `main.rs` file.
     :::
 
-3. Debemos añadir las dependencias necesarias al comienzo de nuestro archivo:
-  
+3. Add the necessary dependencies at the beginning of our file:
+
     ```rs
     use taple_sc_rust as sdk;
     use serde::{Deserialize, Serialize};
     ```
 
-4. Posteriormente, agregaremos las estructuras de datos que representarán a nuestro sujeto:
+4. Next, we'll add the data structures that will represent our *Wine* subjects:
 
     ``` rust
     #[derive(Serialize, Deserialize, Clone, PartialEq)] 
@@ -132,12 +132,12 @@ Después de declarar nuestro esquema, el siguiente paso es crear el [*smart cont
     }
     ```
 
-5. Ahora es el momento de definir los eventos de estado que podrán ser lanzados sobre nuestros sujetos de tipo *Wine*, los cuales son:
-    - *Init*: Encargo de inicializar únicamente a aquellos sujetos que vienen de un estado de **génesis**.
-    - *TemperatureControl*: Encargado de realizar la comprobación de temperatura.
-    - *OrganicCertification*: Encargado de modificar el estado del certificado orgánico.
+5. Now is the time to define the state events that can be triggered on our *Wine* type subjects, which are:
+    - *Init*: Responsible for initializing only those subjects coming from a **genesis** state.
+    - *TemperatureControl*: In charge of performing the temperature check.
+    - *OrganicCertification*: Responsible for modifying the state of organic certification.
 
-    El código añadido será:
+    The added code will be:
 
     ```rust
     #[derive(Serialize, Deserialize)]
@@ -160,8 +160,8 @@ Después de declarar nuestro esquema, el siguiente paso es crear el [*smart cont
     }
     ```
 
-6. Agregamos la función de entrada del contrato, equivalente a la función main: 
-    
+6. Add the entry function for the contract, equivalent to the `main` function:
+
     ```rust
     #[no_mangle]
     pub unsafe fn main_function(state_ptr: i32, event_ptr: i32, is_owner: i32) -> u32 {
@@ -170,10 +170,10 @@ Después de declarar nuestro esquema, el siguiente paso es crear el [*smart cont
     ```
 
     :::warning WARNING
-    Es importante que esta función tenga siempre el mismo nombre que se especifica aquí, ya que es el identificador con el que la máquina evaluadora intentará ejecutarla, y producirá un error si no la encuentra.
+    It's important for this function to always have the same name specified here since it's the identifier with which the evaluator will try to execute it, and it will result in an error if not found.
     :::
 
-7. Por último, agregamos la lógica de negocio, que actuará en cada uno de los casos de los eventos de estado declarados anteriormente:
+7. Lastly, add the business logic that will act in each of the cases for the state events declared above:
 
     ```rust
     const TEMPERATURE_RANGE: (f32, f32) = (10.0, 16.0);
@@ -280,23 +280,22 @@ Después de declarar nuestro esquema, el siguiente paso es crear el [*smart cont
     ```
 
     :::caution
-    Es importante incluir `contract_result.success = true` en aquellos puntos de la función `contract_logic` donde creamos que su ejecución ha ido correcta, ya que, de lo contrario, al emitir los eventos, estos siempre finalizarán con el estado `"success" = false`.
+    It's essential to include `contract_result.success = true` in those points of the `contract_logic` function where we believe the execution has been successful. Otherwise, when emitting the events, they will always end with `"success" = false` state.
     :::
 
-
-Taple solo admite contratos en *Base64*, por lo que será necesario transformar el nuestro a dicho formato. Para ello, Linux tiene su propia utilidad llamada `base64`. Por lo tanto, lo que debemos hacer en nuestro archivo main.rs es:
+Taple only supports contracts in *Base64*, so we'll need to transform ours into that format. For this purpose, Linux has its own utility called `base64`. Therefore, what we need to do in our `main.rs` file is:
 
 ```bash
 base64 main.rs
 ```
 
-El resultado devuelto será el contrato codificado en *base64*.
+The returned result will be the contract encoded in *base64*.
 
 ## Back to Taple network
 
-Una vez que hayamos declarado tanto el esquema como el contrato inteligente, será necesario emitir un evento de **hecho** a la gobernanza para agregar esta nueva información. 
+Once we have declared both, the schema and the smart contract, it's necessary to emit a **fact** event to the governance to add this new information.
 
-Comenzaremos verificando los cambios que deseamos realizar en las propiedades de la gobernanza. En este punto, nuestra gobernanza deberá tener el siguiente aspecto:
+Let's start by verifying the changes we want to make in the governance properties. At this point, our governance should look like the following:
 
 ```json
 {
@@ -344,7 +343,7 @@ Comenzaremos verificando los cambios que deseamos realizar en las propiedades de
 }
 ```
 
-Ahora, debemos incluir el *schema*, el *smart contract*, el estado [**génesis**](../../discover/events#create-event) de un sujeto, así como las políticas que se les aplicarán:
+Now, we need to include the *schema*, the *smart contract*, the [**genesis**](../../discover/events#create-event) state of a subject, as well as the policies that will be applied to them:
 
 ```json
 {
@@ -482,13 +481,13 @@ Ahora, debemos incluir el *schema*, el *smart contract*, el estado [**génesis**
 }
 ```
 
-Para generar los cambios mencionados, utilizaremos nuestra herramienta [**TAPLE-Patch**](../../learn/client-tools.md#taple-patch) de la siguiente manera:
+To generate the mentioned changes, we will use our [**TAPLE-Patch**](../../learn/client-tools.md#taple-patch) tool as follows:
 
 ```bash title="Another terminal"
 taple-patch "{\"members\":[{\"id\":\"EbwR0yYrCYpTzlN5i5GX_MtAbKRw5y2euv3TqiTgwggs\",\"name\":\"WPO\"}],\"policies\":[{\"approve\":{\"quorum\":\"MAJORITY\"},\"evaluate\":{\"quorum\":\"MAJORITY\"},\"id\":\"governance\",\"validate\":{\"quorum\":\"MAJORITY\"}}],\"roles\":[{\"namespace\":\"\",\"role\":\"WITNESS\",\"schema\":{\"ID\":\"governance\"},\"who\":\"MEMBERS\"},{\"namespace\":\"\",\"role\":\"APPROVER\",\"schema\":{\"ID\":\"governance\"},\"who\":{\"NAME\":\"WPO\"}}],\"schemas\":[]}" "{\"members\":[{\"id\":\"EbwR0yYrCYpTzlN5i5GX_MtAbKRw5y2euv3TqiTgwggs\",\"name\":\"WPO\"}],\"policies\":[{\"approve\":{\"quorum\":\"MAJORITY\"},\"evaluate\":{\"quorum\":\"MAJORITY\"},\"id\":\"governance\",\"validate\":{\"quorum\":\"MAJORITY\"}},{\"approve\":{\"quorum\":\"MAJORITY\"},\"evaluate\":{\"quorum\":\"MAJORITY\"},\"id\":\"Wine\",\"validate\":{\"quorum\":\"MAJORITY\"}}],\"roles\":[{\"namespace\":\"\",\"role\":\"WITNESS\",\"schema\":{\"ID\":\"governance\"},\"who\":\"MEMBERS\"},{\"namespace\":\"\",\"role\":\"APPROVER\",\"schema\":{\"ID\":\"governance\"},\"who\":{\"NAME\":\"WPO\"}}],\"schemas\":[{\"contract\":{\"raw\":\"dXNlIHRhcGxlX3NjX3J1c3QgYXMgc2RrOwp1c2Ugc2VyZGU6OntEZXNlcmlhbGl6ZSwgU2VyaWFsaXplfTsKCiNbZGVyaXZlKFNlcmlhbGl6ZSwgRGVzZXJpYWxpemUsIENsb25lLCBQYXJ0aWFsRXEpXSAKZW51bSBHcmFwZSB7CiAgICBDYWJlcm5ldFNhdXZpZ25vbiwKICAgIENoYXJkb25uYXksCiAgICBQaW5vdE5vaXIsCn0KCiNbZGVyaXZlKFNlcmlhbGl6ZSwgRGVzZXJpYWxpemUsIENsb25lKV0Kc3RydWN0IFRlbXBlcmF0dXJlQ29udHJvbCB7CiAgICBwdWIgbGFzdF9jaGVjazogdTMyLAogICAgcHViIHRlbXBlcmF0dXJlX29rOiBib29sLAp9CgojW2Rlcml2ZShTZXJpYWxpemUsIERlc2VyaWFsaXplLCBDbG9uZSldCnN0cnVjdCBTdGF0ZSB7CiAgICBwdWIgaGFydmVzdDogdTMyLAogICAgcHViIGdyYXBlOiBPcHRpb248R3JhcGU+LAogICAgcHViIG9yaWdpbjogU3RyaW5nLAogICAgcHViIG9yZ2FuaWNfY2VydGlmaWVkOiBPcHRpb248Ym9vbD4sCiAgICBwdWIgdGVtcGVyYXR1cmVfY29udHJvbDogVGVtcGVyYXR1cmVDb250cm9sLAp9CgojW2Rlcml2ZShTZXJpYWxpemUsIERlc2VyaWFsaXplKV0KZW51bSBTdGF0ZUV2ZW50IHsKICAgIEluaXQgewogICAgICAgIGhhcnZlc3Q6IHUzMiwKICAgICAgICBncmFwZTogU3RyaW5nLAogICAgICAgIG9yaWdpbjogU3RyaW5nLAogICAgfSwKICAgIFRlbXBlcmF0dXJlQ29udHJvbCB7CiAgICAgICAgdGVtcGVyYXR1cmU6IGYzMiwKICAgICAgICB0aW1lc3RhbXA6IHUzMiwKICAgIH0sCiAgICBPcmdhbmljQ2VydGlmaWNhdGlvbiB7CiAgICAgICAgZmVydGlsaXplcnNfY29udHJvbDogYm9vbCwKICAgICAgICBwZXN0aWNpZGVzX2NvbnRyb2w6IGJvb2wsCiAgICAgICAgYW5hbHl0aWNzOiBib29sLAogICAgICAgIGFkZGl0aW9uYWxfaW5mbzogU3RyaW5nLAogICAgfSwKfQoKY29uc3QgVEVNUEVSQVRVUkVfUkFOR0U6IChmMzIsIGYzMikgPSAoMTAuMCwgMTYuMCk7CgojW25vX21hbmdsZV0KcHViIHVuc2FmZSBmbiBtYWluX2Z1bmN0aW9uKHN0YXRlX3B0cjogaTMyLCBldmVudF9wdHI6IGkzMiwgaXNfb3duZXI6IGkzMikgLT4gdTMyIHsKICAgIHNkazo6ZXhlY3V0ZV9jb250cmFjdChzdGF0ZV9wdHIsIGV2ZW50X3B0ciwgaXNfb3duZXIsIGNvbnRyYWN0X2xvZ2ljKQp9CgpmbiBjb250cmFjdF9sb2dpYygKICAgIGNvbnRleHQ6ICZzZGs6OkNvbnRleHQ8U3RhdGUsIFN0YXRlRXZlbnQ+LAogICAgY29udHJhY3RfcmVzdWx0OiAmbXV0IHNkazo6Q29udHJhY3RSZXN1bHQ8U3RhdGU+LAopIHsKICAgIGxldCBzdGF0ZSA9ICZtdXQgY29udHJhY3RfcmVzdWx0LmZpbmFsX3N0YXRlOwogICAgbWF0Y2ggJmNvbnRleHQuZXZlbnQgewogICAgICAgIFN0YXRlRXZlbnQ6OkluaXQgewogICAgICAgICAgICBoYXJ2ZXN0LAogICAgICAgICAgICBncmFwZSwKICAgICAgICAgICAgb3JpZ2luLAogICAgICAgIH0gPT4gewogICAgICAgICAgICBpZiBjb250ZXh0LmlzX293bmVyICYmICFjaGVja19zdWJqZWN0X2hhc19iZWVuX2luaXRpYXRlZChzdGF0ZSkgewogICAgICAgICAgICAgICAgbGV0IGdyYXBlID0gbWF0Y2ggZ3JhcGUuYXNfc3RyKCkgewogICAgICAgICAgICAgICAgICAgICJDYWJlcm5ldFNhdXZpZ25vbiIgPT4gU29tZShHcmFwZTo6Q2FiZXJuZXRTYXV2aWdub24pLAogICAgICAgICAgICAgICAgICAgICJDaGFyZG9ubmF5IiA9PiBTb21lKEdyYXBlOjpDaGFyZG9ubmF5KSwKICAgICAgICAgICAgICAgICAgICAiUGlub3ROb2lyIiA9PiBTb21lKEdyYXBlOjpQaW5vdE5vaXIpLAogICAgICAgICAgICAgICAgICAgIF8gPT4gTm9uZSwKICAgICAgICAgICAgICAgIH07CiAgICAgICAgICAgICAgICBpZiBncmFwZS5pc19zb21lKCkgewogICAgICAgICAgICAgICAgICAgIHN0YXRlLmhhcnZlc3QgPSAqaGFydmVzdDsKICAgICAgICAgICAgICAgICAgICBzdGF0ZS5ncmFwZSA9IGdyYXBlOwogICAgICAgICAgICAgICAgICAgIHN0YXRlLm9yaWdpbiA9IG9yaWdpbi50b19zdHJpbmcoKTsKICAgICAgICAgICAgICAgICAgICBjb250cmFjdF9yZXN1bHQuc3VjY2VzcyA9IHRydWU7CiAgICAgICAgICAgICAgICB9CiAgICAgICAgICAgIH0KICAgICAgICB9CiAgICAgICAgU3RhdGVFdmVudDo6VGVtcGVyYXR1cmVDb250cm9sIHsKICAgICAgICAgICAgdGVtcGVyYXR1cmUsCiAgICAgICAgICAgIHRpbWVzdGFtcCwKICAgICAgICB9ID0+IHsKICAgICAgICAgICAgaWYgY29udGV4dC5pc19vd25lciAmJiBjaGVja19zdWJqZWN0X2hhc19iZWVuX2luaXRpYXRlZChzdGF0ZSkgewogICAgICAgICAgICAgICAgaWYgY2hlY2tfdGVtcGVyYXR1cmVfaW5fcmFuZ2UoKnRlbXBlcmF0dXJlKQogICAgICAgICAgICAgICAgICAgICYmIHN0YXRlLnRlbXBlcmF0dXJlX2NvbnRyb2wudGVtcGVyYXR1cmVfb2sKICAgICAgICAgICAgICAgIHsKICAgICAgICAgICAgICAgICAgICBzdGF0ZS50ZW1wZXJhdHVyZV9jb250cm9sLmxhc3RfY2hlY2sgPSAqdGltZXN0YW1wOwogICAgICAgICAgICAgICAgfSBlbHNlIHsKICAgICAgICAgICAgICAgICAgICBzdGF0ZS50ZW1wZXJhdHVyZV9jb250cm9sLnRlbXBlcmF0dXJlX29rID0gZmFsc2U7CiAgICAgICAgICAgICAgICAgICAgc3RhdGUudGVtcGVyYXR1cmVfY29udHJvbC5sYXN0X2NoZWNrID0gKnRpbWVzdGFtcDsKICAgICAgICAgICAgICAgIH0KICAgICAgICAgICAgICAgIGNvbnRyYWN0X3Jlc3VsdC5zdWNjZXNzID0gdHJ1ZTsKICAgICAgICAgICAgfQogICAgICAgIH0KICAgICAgICBTdGF0ZUV2ZW50OjpPcmdhbmljQ2VydGlmaWNhdGlvbiB7CiAgICAgICAgICAgIGZlcnRpbGl6ZXJzX2NvbnRyb2wsCiAgICAgICAgICAgIHBlc3RpY2lkZXNfY29udHJvbCwKICAgICAgICAgICAgYW5hbHl0aWNzLAogICAgICAgICAgICBhZGRpdGlvbmFsX2luZm8sCiAgICAgICAgfSA9PiB7CiAgICAgICAgICAgIGlmIGNoZWNrX3N1YmplY3RfaGFzX2JlZW5faW5pdGlhdGVkKHN0YXRlKSB7CiAgICAgICAgICAgICAgICBtYXRjaCBzdGF0ZS5vcmdhbmljX2NlcnRpZmllZCB7CiAgICAgICAgICAgICAgICAgICAgU29tZShvcmdhbmljX2NlcmlmaWVkKSA9PiB7CiAgICAgICAgICAgICAgICAgICAgICAgIGlmIG9yZ2FuaWNfY2VyaWZpZWQKICAgICAgICAgICAgICAgICAgICAgICAgICAgICYmICFjaGVja19pc19vcmdhbmljKAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICpmZXJ0aWxpemVyc19jb250cm9sLAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICpwZXN0aWNpZGVzX2NvbnRyb2wsCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgKmFuYWx5dGljcywKICAgICAgICAgICAgICAgICAgICAgICAgICAgICkKICAgICAgICAgICAgICAgICAgICAgICAgewogICAgICAgICAgICAgICAgICAgICAgICAgICAgc3RhdGUub3JnYW5pY19jZXJ0aWZpZWQgPSBTb21lKGZhbHNlKTsKICAgICAgICAgICAgICAgICAgICAgICAgfQogICAgICAgICAgICAgICAgICAgIH0KICAgICAgICAgICAgICAgICAgICBOb25lID0+IHsKICAgICAgICAgICAgICAgICAgICAgICAgaWYgY2hlY2tfaXNfb3JnYW5pYygqZmVydGlsaXplcnNfY29udHJvbCwgKnBlc3RpY2lkZXNfY29udHJvbCwgKmFuYWx5dGljcykgewogICAgICAgICAgICAgICAgICAgICAgICAgICAgc3RhdGUub3JnYW5pY19jZXJ0aWZpZWQgPSBTb21lKHRydWUpOwogICAgICAgICAgICAgICAgICAgICAgICB9IGVsc2UgewogICAgICAgICAgICAgICAgICAgICAgICAgICAgc3RhdGUub3JnYW5pY19jZXJ0aWZpZWQgPSBTb21lKGZhbHNlKTsKICAgICAgICAgICAgICAgICAgICAgICAgfQogICAgICAgICAgICAgICAgICAgIH0KICAgICAgICAgICAgICAgIH0KICAgICAgICAgICAgICAgIGNvbnRyYWN0X3Jlc3VsdC5hcHByb3ZhbF9yZXF1aXJlZCA9IHRydWU7CiAgICAgICAgICAgICAgICBjb250cmFjdF9yZXN1bHQuc3VjY2VzcyA9IHRydWU7CiAgICAgICAgICAgIH0KICAgICAgICB9CiAgICB9Cn0KCmZuIGNoZWNrX3N1YmplY3RfaGFzX2JlZW5faW5pdGlhdGVkKHN0YXRlOiAmU3RhdGUpIC0+IGJvb2wgewogICAgbGV0IGluaXRpYWxfZ3JhcGUgPSBtYXRjaCBzdGF0ZS5ncmFwZSB7CiAgICAgICAgU29tZShfKSA9PiBmYWxzZSwKICAgICAgICBOb25lID0+IHRydWUsCiAgICB9OwogICAgaWYgc3RhdGUuaGFydmVzdCA9PSAwICYmIGluaXRpYWxfZ3JhcGUgJiYgc3RhdGUub3JpZ2luID09IGZvcm1hdCEoIiIpIHsKICAgICAgICByZXR1cm4gZmFsc2U7CiAgICB9CiAgICByZXR1cm4gdHJ1ZTsKfQoKZm4gY2hlY2tfdGVtcGVyYXR1cmVfaW5fcmFuZ2UodGVtcGVyYXR1cmU6IGYzMikgLT4gYm9vbCB7CiAgICBpZiB0ZW1wZXJhdHVyZSA+PSBURU1QRVJBVFVSRV9SQU5HRS4wICYmIHRlbXBlcmF0dXJlIDw9IFRFTVBFUkFUVVJFX1JBTkdFLjEgewogICAgICAgIHJldHVybiB0cnVlOwogICAgfQogICAgcmV0dXJuIGZhbHNlOwp9CgpmbiBjaGVja19pc19vcmdhbmljKGZlcnRpbGl6ZXJzX2NvbnRyb2w6IGJvb2wsIHBlc3RpY2lkZXNfY29udHJvbDogYm9vbCwgYW5hbHl0aWNzOiBib29sKSAtPiBib29sIHsKICAgIGlmIGZlcnRpbGl6ZXJzX2NvbnRyb2wgJiYgcGVzdGljaWRlc19jb250cm9sICYmIGFuYWx5dGljcyB7CiAgICAgICAgcmV0dXJuIHRydWU7CiAgICB9CiAgICByZXR1cm4gZmFsc2U7Cn0=\"},\"id\":\"Wine\",\"initial_value\":{\"grape\":null,\"harvest\":0,\"organic_certified\":null,\"origin\":\"\",\"temperature_control\":{\"last_check\":0,\"temperature_ok\":true}},\"schema\":{\"additionalProperties\":false,\"description\":\"Representationofabottleofwine\",\"properties\":{\"grape\":{\"description\":\"Typeofgrape\",\"enum\":[\"CabernetSauvignon\",\"Chardonnay\",\"PinotNoir\",null],\"type\":[\"string\",\"null\"]},\"harvest\":{\"description\":\"Harvestnumber\",\"type\":\"integer\"},\"organic_certified\":{\"description\":\"Certificateauthenticatingwhetheritisorganicornot\",\"type\":[\"boolean\",\"null\"]},\"origin\":{\"description\":\"Originofthegrape\",\"type\":\"string\"},\"temperature_control\":{\"additionalProperties\":false,\"description\":\"Valuestobechangedinthetemperaturecontrolevent\",\"properties\":{\"last_check\":{\"description\":\"Timestampoflastcheck\",\"type\":\"integer\"},\"temperature_ok\":{\"description\":\"Valuethatcorroborateswhetherthewinecoldchainhasbeencompliedwith\",\"type\":\"boolean\"}},\"required\":[\"last_check\",\"temperature_ok\"],\"type\":\"object\"}},\"required\":[\"harvest\",\"grape\",\"origin\",\"organic_certified\",\"temperature_control\"],\"type\":\"object\"}}]}"
 ```
 
-El resultado obtenido será el siguiente:
+The result obtained will be as follows:
 
 ```json
 [
@@ -592,7 +591,7 @@ El resultado obtenido será el siguiente:
 ]
 ```
 
-Ahora, es el momento de llamar al método del contrato de la gobernanza que se encarga de la actualización de sus propiedades. Para ello, ejecutaremos lo siguiente:
+Now, it's time to call the method of the governance contract responsible for updating its properties. To do this, we will execute the following:
 
 ```bash title="Node: WPO"
 curl --request POST 'http://localhost:3000/api/event-requests' \
@@ -709,13 +708,13 @@ curl --request POST 'http://localhost:3000/api/event-requests' \
 }'
 ```
 
-Una vez emitido el evento, será necesario obtener la nueva solicitud de actualización. Para hacerlo, ejecutamos lo siguiente:
+Once the event is emitted, we need to obtain the new update request. To do this, we run the following:
 
 ```bash title="Node: WPO"
 curl --request GET 'http://localhost:3000/api/approval-requests?status=Pending'
 ```
 
-Compiaremos el valor del campo `id` y acepateremos la solicitud actualización de la gobernanza:
+We copy the value of the `id` field and accept the governance update request:
 
 ```bash title="Node: WPO"
 curl --request PATCH 'http://localhost:3000/api/approval-requests/{{PREVIUS-ID}}' \
@@ -723,8 +722,7 @@ curl --request PATCH 'http://localhost:3000/api/approval-requests/{{PREVIUS-ID}}
 --data-raw '{"approvalType": "Accept"}'
 ```
 
-
-Por último, realizaremos una consulta a la gobernanza para verificar que el cambio se haya efectuado correctamente. Si todo se ha realizado según lo previsto, ahora debería tener `sn` 2 y debería aparecer la nueva política, el esquema, el estado inicial de los sujetos *Wine* y el *smart contract*:
+Finally, we query the governance to verify that the change has been successfully applied. If everything has gone according to plan, it should now have an `sn` of 2, and the new policy, schema, initial state for *Wine* subjects, and the smart contract should be present:
 
 ```bash title="Node: WPO"
 curl --request GET 'http://localhost:3000/api/subjects/{{GOVERNANCE-ID}}'

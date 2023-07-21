@@ -1,11 +1,10 @@
 # Creating a governance
 
-Una vez que **WPO** dispone de un nodo en la red TAPLE, es el momento de definir el caso de uso,  que incluye los participantes, las reglas de interacción, los modelos de información, entre otros aspectos. En la red TAPLE, esto se realiza mediante la creación de una [gobernanza](../../discover/governance.md), donde se especifica la funcionalidad concreta del caso de uso.
+Once the **WPO** has a node in the TAPLE network, it's time to define the use case, which includes participants, interaction rules, information models, among other aspects. In the TAPLE network, this is accomplished by creating a [governance](../../discover/governance.md), where the specific functionality of the use case is specified.
 
+To create a basic governance, the following steps are required:
 
-Para crear una gobernanza básica se requiere de la realización de los siguientes pasos:
-
-* Para comenzar, ejecutamos el siguiente comando para crear una versión básica de una gobernanza:
+* To begin, execute the following command to create a basic version of a governance:
 
   ```bash title="Node: WPO"
   curl --request POST 'http://localhost:3000/api/event-requests' \
@@ -22,13 +21,13 @@ Para crear una gobernanza básica se requiere de la realización de los siguient
   }'
   ```
 
-* Como resultado de la acción anterior se nos devolverá un `request-id`, debemos copiarlo y utilizar en el siguiente comando: 
+* As a result of the previous action, a `request-id` will be returned. Copy and use it in the following command:
 
   ```bash title="Node: WPO"
   curl --request GET 'http://localhost:3000/api/event-requests/{{REQUEST-ID}}/state'
   ```
 
-  Este último comando nos proporcionará una respuesta como la siguiente:
+  This last command will provide a response like the following:
 
   ```json
   {
@@ -41,16 +40,16 @@ Para crear una gobernanza básica se requiere de la realización de los siguient
   ```
 
   :::note
-  Guarda el `subject_id` de la **gobernanza**, ya que se necesitará en pasos posteriores del tutorial.
+  Save the `subject_id` of the **governance**, as it will be needed in next steps of the tutorial.
   :::
 
-* Podemos consultar la gobernanza creada utilizando el siguiente comando:
+* We can check the created governance using the following command:
 
   ```bash title="Node: WPO"
   curl --request GET 'http://localhost:3000/api/subjects/{{GOVERNANCE-ID}}'
   ```
 
-  El resultado obtenido debería ser similar al siguiente:
+  The obtained result should be similar to the following:
 
   ```json
   {

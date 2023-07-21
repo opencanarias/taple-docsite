@@ -1,10 +1,10 @@
 # End of life
 
-Para concluir con el tutorial, vamos a establecer un último escenario: cuando las botellas no cumplen con los estándares de calidad, deben ser retiradas del mercado para evitar su distribución.
+To conclude the tutorial, let's set up one last scenario: when bottles do not meet quality standards, they must be withdrawn from the market to prevent distribution.
 
-Para abordar esta situación, en Taple disponemos de una solución: el uso del evento [**EOL**](../../discover/events.md#end-of-life-event-eol). Este evento nos permite dar por finalizado el ciclo de vida de un sujeto en la red, lo que impide que se puedan emitir más eventos sobre él en el futuro.
+To address this situation, Taple provides a solution: the use of the [**EOL**](../../discover/events.md#end-of-life-event-eol) event. This event allows us to terminate the lifecycle of a subject in the network, preventing any future events from being issued on it.
 
-Para probarlo, lo aplicaremos a la última botella que hemos creado (la Española). Para hacerlo, ejecutaremos lo siguiente:
+To test this, we will apply it to the last bottle we created (the Spanish one). To do this, execute the following command:
 
 ```bash title="Node: Premium Wines"
 curl --location --request POST 'http://localhost:3001/api/event-requests' \
@@ -18,7 +18,7 @@ curl --location --request POST 'http://localhost:3001/api/event-requests' \
 }'
 ```
 
-Si todo ha ido correctamente, al realizar una solicitud de consulta de sujetos, debería aparecer la botella con un valor de `sn` igual a 3 y el campo `active` establecido en `false`:
+If everything went well, when you request a list of subjects, you should see the bottle with a `sn` value of 3 and the `active` field set to `false`:
 
 ```bash title="Node: Premium Wines"
 curl --location --request GET 'http://localhost:3001/api/subjects/{{SUBJECT-ID}}'
@@ -49,7 +49,7 @@ curl --location --request GET 'http://localhost:3001/api/subjects/{{SUBJECT-ID}}
 }
 ```
 
-Lo que ocurriría ahora es que si intentáramos lanzar un nuevo evento sobre este sujeto, no se nos permitiría hacerlo. Para demostrarlo, intentaremos nuevamente lanzar un evento **EOL**:
+Now, if you try to launch a new event on this subject, it will not be allowed. To demonstrate this, let's try to launch an **EOL** event again:
 
 ```bash title="Node: Premium Wines"
 curl --location --request POST 'http://localhost:3001/api/event-requests' \
@@ -63,7 +63,7 @@ curl --location --request POST 'http://localhost:3001/api/event-requests' \
 }'
 ```
 
-En este caso, nos devolvería un mensaje indicando que no se puede lanzar un evento sobre un sujeto que ha alcanzado el final de su ciclo de vida.
+In this case, it will return a message indicating that an event cannot be launched on a subject that has reached the end of its lifecycle:
 
 ```
 Subject Life Ended: {{SUBJECT-ID}}

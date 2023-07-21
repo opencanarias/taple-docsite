@@ -1,21 +1,19 @@
 # Segmentation
 
-Actualmente, hemos logrado tener testigos y aprobadores para los sujetos de tipo *Wine*. Sin embargo, surge un problema con uno de los nodos que hemos agregado, **SFO**, ya que este es específico de España y no nos interesa que pueda influir en decisiones que se tomen en otros países.
+Currently, we have witnesses and approvers for the *Wine* subjects. However, a problem arises with one of the nodes we added, **SFO**, as it is specific to Spain, and we do not want it to influence decisions made in other countries.
 
-Para abordar esta necesidad, surge el concepto de segmentación por namespace. Esta permite definir permisos y roles específicos para determinados namespaces, permitiendo que únicamente los nodos que consideremos como validos puedan acceder a una información u otra en función de nuestros intereses.
+To address this need, the concept of segmentation by namespace emerges. This allows us to define specific permissions and roles for certain namespaces, ensuring that only nodes we consider valid can access specific information based on our interests.
 
-Con este nuevo conocimiento, es hora de seguir adaptando nuestro caso de uso. *PremiumWines* no solo tiene viñedos en España, sino también en Francia, lo que le permite producir botellas con diferentes orígenes. Como ya sabemos, en España existe un organismo (**SFO**) capaz de aprobar el análisis de calidad del producto, pero en el caso de Francia no es así, por lo que esta responsabilidad recae en **WFO**.
+With this new knowledge, it is time to continue adapting our use case. *PremiumWines* not only has vineyards in Spain but also in France, allowing them to produce bottles with different origins. As we know, in Spain, there is an organization (**SFO**) capable of approving the quality analysis of the product, but this is not the case in France, where this responsibility falls on **WFO**.
 
-Para lograr lo que proponemos, debemos realizar algunos cambios en el esquema actual. Estos son:
+To achieve what we propose, we need to make some changes to the current schema:
 
-- *PremiumWines* debe poder crear sujetos en ambos países, por lo tanto, debe ser creador en los *namespaces* "Spain" y "France".
-- *WFO* pasa a ser testigo y aprobador de los vinos tanto en España como en Francia.
-- Las invocaciones externas deben poder realizarse tanto en España como en Francia.
-- *SFO* solo será aprobador y testigo de los vinos españoles.
+- *PremiumWines* should be able to create subjects in both countries, so it must be a creator in the "Spain" and "France" namespaces.
+- *WFO* becomes a witness and approver for wines in both Spain and France.
+- External invocations should be allowed in both Spain and France.
+- *SFO* will only be an approver and witness for Spanish wines.
 
-Procederemos a modificar las propiedades de la gobernanza para implementar estos cambios. Para ello, seguiremos estos pasos:
-
-Comenzaremos comprobando el aspecto de los roles de la gobernanza antes de realizar estos cambios:
+First, let's check the roles of the governance before making these changes:
 
 ```json
 {
@@ -120,7 +118,7 @@ Comenzaremos comprobando el aspecto de los roles de la gobernanza antes de reali
 }
 ```
 
-Realizaremos los cambios en los roles declarados en la gobernanza. A continuación, se muestra cómo deberían quedar las propiedades:
+We will make changes to the roles declared in the governance. Here's how the properties should look after the modifications:
 
 ```json
 {
@@ -273,13 +271,13 @@ Realizaremos los cambios en los roles declarados en la gobernanza. A continuaci�
 }
 ```
 
-Para generar dichos cambios, utilizaremos nuestra herramienta [**TAPLE-Patch**](../../learn/client-tools.md#taple-patch) siguiendo este procedimiento:
+To generate these changes, we will use our tool [**TAPLE-Patch**](../../learn/client-tools.md#taple-patch) following this procedure:
 
 ```bash title="Another terminal"
 taple-patch "{\"roles\":[{\"namespace\":\"\",\"role\":\"WITNESS\",\"schema\":{\"ID\":\"governance\"},\"who\":\"MEMBERS\"},{\"namespace\":\"\",\"role\":\"APPROVER\",\"schema\":{\"ID\":\"governance\"},\"who\":{\"NAME\":\"WPO\"}},{\"namespace\":\"\",\"role\":\"CREATOR\",\"schema\":{\"ID\":\"Wine\"},\"who\":{\"NAME\":\"PremiumWines\"}},{\"namespace\":\"\",\"role\":\"APPROVER\",\"schema\":{\"ID\":\"governance\"},\"who\":{\"NAME\":\"WFO\"}},{\"namespace\":\"\",\"role\":\"VALIDATOR\",\"schema\":{\"ID\":\"governance\"},\"who\":{\"NAME\":\"WFO\"}},{\"namespace\":\"\",\"role\":\"EVALUATOR\",\"schema\":{\"ID\":\"governance\"},\"who\":{\"NAME\":\"WFO\"}},{\"namespace\":\"\",\"role\":\"WITNESS\",\"schema\":{\"ID\":\"Wine\"},\"who\":{\"NAME\":\"WFO\"}},{\"namespace\":\"\",\"role\":\"ISSUER\",\"schema\":{\"ID\":\"Wine\"},\"who\":\"NOT_MEMBERS\"},{\"namespace\":\"\",\"role\":\"WITNESS\",\"schema\":{\"ID\":\"Wine\"},\"who\":{\"NAME\":\"SFO\"}},{\"namespace\":\"\",\"role\":\"APPROVER\",\"schema\":{\"ID\":\"Wine\"},\"who\":{\"NAME\":\"SFO\"}}]}" "{\"roles\":[{\"namespace\":\"\",\"role\":\"WITNESS\",\"schema\":{\"ID\":\"governance\"},\"who\":\"MEMBERS\"},{\"namespace\":\"\",\"role\":\"APPROVER\",\"schema\":{\"ID\":\"governance\"},\"who\":{\"NAME\":\"WPO\"}},{\"namespace\":\"Spain\",\"role\":\"CREATOR\",\"schema\":{\"ID\":\"Wine\"},\"who\":{\"NAME\":\"PremiumWines\"}},{\"namespace\":\"France\",\"role\":\"CREATOR\",\"schema\":{\"ID\":\"Wine\"},\"who\":{\"NAME\":\"PremiumWines\"}},{\"namespace\":\"\",\"role\":\"APPROVER\",\"schema\":{\"ID\":\"governance\"},\"who\":{\"NAME\":\"WFO\"}},{\"namespace\":\"\",\"role\":\"VALIDATOR\",\"schema\":{\"ID\":\"governance\"},\"who\":{\"NAME\":\"WFO\"}},{\"namespace\":\"\",\"role\":\"EVALUATOR\",\"schema\":{\"ID\":\"governance\"},\"who\":{\"NAME\":\"WFO\"}},{\"namespace\":\"Spain\",\"role\":\"WITNESS\",\"schema\":{\"ID\":\"Wine\"},\"who\":{\"NAME\":\"WFO\"}},{\"namespace\":\"France\",\"role\":\"WITNESS\",\"schema\":{\"ID\":\"Wine\"},\"who\":{\"NAME\":\"WFO\"}},{\"namespace\":\"Spain\",\"role\":\"APPROVER\",\"schema\":{\"ID\":\"Wine\"},\"who\":{\"NAME\":\"WFO\"}},{\"namespace\":\"France\",\"role\":\"APPROVER\",\"schema\":{\"ID\":\"Wine\"},\"who\":{\"NAME\":\"WFO\"}},{\"namespace\":\"Spain\",\"role\":\"ISSUER\",\"schema\":{\"ID\":\"Wine\"},\"who\":\"NOT_MEMBERS\"},{\"namespace\":\"France\",\"role\":\"ISSUER\",\"schema\":{\"ID\":\"Wine\"},\"who\":\"NOT_MEMBERS\"},{\"namespace\":\"Spain\",\"role\":\"WITNESS\",\"schema\":{\"ID\":\"Wine\"},\"who\":{\"NAME\":\"SFO\"}},{\"namespace\":\"Spain\",\"role\":\"APPROVER\",\"schema\":{\"ID\":\"Wine\"},\"who\":{\"NAME\":\"SFO\"}}]}"
 ```
 
-El resultado obtenido será:
+The result obtained will be:
 
 ```json
 [
@@ -434,7 +432,7 @@ El resultado obtenido será:
 ]
 ```
 
-Luego, invocaremos el método del contrato de gobernanza responsable de actualizar sus propiedades:
+Next, we will invoke the governance contract method responsible for updating its properties:
 
 ```bash title="Node: WPO"
 curl --request POST 'http://localhost:3000/api/event-requests' \
@@ -602,13 +600,13 @@ curl --request POST 'http://localhost:3000/api/event-requests' \
 }'
 ```
 
-Después de enviar la solicitud de actualización de la gobernanza, obtendremos la notificación de aprobación. Para ello, ejecutaremos el siguiente comando:
+After sending the governance update request, we will receive an approval notification. To do this, run the following command:
 
 ```bash title="Node: WPO"
 curl --request GET 'http://localhost:3000/api/approval-requests?status=Pending'
 ```
 
-Copiaremos el valor del campo `id` de la notificación y solicitaremos la aprobación a **WPO** y **WFO**:
+Copy the value of the `id` field from the notification and request approval from **WPO** and **WFO**:
 
 ```bash title="Node: WPO"
 curl --request PATCH 'http://localhost:3000/api/approval-requests/{{PREVIUS-ID}}' \
@@ -622,7 +620,7 @@ curl --request PATCH 'http://localhost:3002/api/approval-requests/{{PREVIUS-ID}}
 --data-raw '{"approvalType": "Accept"}'
 ```
 
-Si todo ha ido correctamente, al ejecutar el siguiente comando, el `sn` de la gobernanza debería ser 7 y se mostrarán los cambios realizados anteriormente:
+If everything went well, when you execute the following command, the governance `sn` should be 7, and the changes made earlier should be displayed:
 
 ```bash title="Node: WPO"
 curl --request GET 'http://localhost:3000/api/subjects?subject_type=governances'
@@ -914,9 +912,9 @@ curl --request GET 'http://localhost:3000/api/subjects?subject_type=governances'
 }
 ```
 
-Una vez que hemos implementado la segmentación por *namespace*, procederemos a realizar pruebas para comprobar su correcto funcionamiento.
+Once we have implemented *namespace* segmentation, we will perform tests to verify its correct functioning.
 
-Crearemos una botella de vino francesa utilizando el siguiente comando:
+Let's create a French wine bottle using the following command:
 
 ```bash title="Node: Premium Wines"
 curl --request POST 'http://localhost:3001/api/event-requests' \
@@ -933,13 +931,13 @@ curl --request POST 'http://localhost:3001/api/event-requests' \
 }'
 ```
 
-Al realizar esta acción, recibiremos un `request-id`, el cual debemos copiar y utilizar en el siguiente comando:
+When you perform this action, you will receive a `request-id`, which you should copy and use in the following command:
 
 ```bash title="Node: Premium wines"
 curl --request GET 'http://localhost:3001/api/event-requests/{{REQUEST-ID}}/state'
 ```
 
-Este último comando nos proporcionará una respuesta como la siguiente:
+This last command will give you a response similar to the following:
 
 ```json
 {
@@ -952,10 +950,10 @@ Este último comando nos proporcionará una respuesta como la siguiente:
 ```
 
 :::note
-Guarda el `subject_id` del **sujeto**, ya que lo necesitaremos en pasos posteriores del tutorial.
+Save the `subject_id` of the **subject**, as you will need it for subsequent steps in the tutorial.
 :::
 
-Para comprobar nuestra nueva botella de vino ejecutaremos el siguiente comando:
+To check our new wine bottle, execute the following command:
 
 ```bash title="Node: WPO"
 curl --request GET 'http://localhost:3000/api/subjects/{{SUBJECT-ID}}'
@@ -987,10 +985,10 @@ curl --request GET 'http://localhost:3000/api/subjects/{{SUBJECT-ID}}'
 ```
 
 :::caution
-Debemos copiar su `subject_id`, ya que será necesario para los siguientes pasos.
+Copy its `subject_id` as it will be necessary for the following steps.
 :::
 
-Inicializaremos la botella antes de probar la emisión del evento de certificación:
+Initialize the bottle before testing the certification event issuance:
 
 ```bash title="Node: Premium Wines"
 curl --request POST 'http://localhost:3001/api/event-requests' \
@@ -1011,7 +1009,7 @@ curl --request POST 'http://localhost:3001/api/event-requests' \
 }'
 ```
 
-Ahora, al ejecutar nuevamente la consulta del sujeto, debería tener un valor de `sn` igual a 1 y mostrar la información previamente mencionada:
+Now, when you execute the subject query again, it should have a `sn` value of 1 and display the previously mentioned information:
 
 ```bash title="Node: Premium Wines"
 curl --request GET 'http://localhost:3001/api/subjects/{{SUBJECT-ID}}'
@@ -1042,13 +1040,13 @@ curl --request GET 'http://localhost:3001/api/subjects/{{SUBJECT-ID}}'
 }
 ```
 
-Probaremos a emitir el evento de certificación. Para ello, generaremos la firma del evento que deseamos emitir utilizando [TAPLE-Sign](../../learn/client-tools.md#taple-sign), con el siguiente formato, reemplazando `subject_id` por el identificador de nuestro sujeto de vino:
+We will test issuing the certification event. To do this, we will generate the event signature we want to issue using [TAPLE-Sign](../../learn/client-tools.md#taple-sign), with the following format, replacing `subject_id` with the identifier of our wine subject:
 
 ```bash title="Another terminal"
 taple-sign "f855c6736463a65f515afe7b85d1418c096ed73852b42bbe4c332eb43d532326" "{\"Fact\":{\"subject_id\":\"{{SUBJECT-ID}}\",\"payload\":{\"OrganicCertification\":{\"fertilizers_control\":false,\"pesticides_control\":false,\"analytics\":false,\"additional_info\":\"test\"}}}}"
 ```
 
-El resultado de esta ejecución se incluirá en la siguiente solicitud:
+The result of this execution will be included in the following request:
 
 ```bash title="Node: Premium Wines"
 curl --request POST 'http://localhost:3001/api/event-requests' \
@@ -1056,7 +1054,7 @@ curl --request POST 'http://localhost:3001/api/event-requests' \
 --data-raw 'SIGN-RESULT'
 ```
 
-Esto nos dará como resultado algo similar a lo siguiente:
+This will give us a result similar to the following:
 
 ```bash title="Node: Premium Wines"
 curl --request POST 'http://localhost:3001/api/event-requests' \
@@ -1083,13 +1081,13 @@ curl --request POST 'http://localhost:3001/api/event-requests' \
 }'
 ```
 
-Si la segmentación se ha realizado correctamente, el mensaje de aprobación para este sujeto solo debería haber sido recibido por **WFO**. Para consultarlo, ejecutaremos el siguiente comando:
+If the segmentation has been successfully applied, the approval message for this subject should only have been received by **WFO**. To check it, execute the following command:
 
 ```bash title="Node: WFO"
 curl --request GET 'http://localhost:3002/api/approval-requests?status=pending'
 ```
 
-Copiaremos su `id` y lo utilizaremos para aceptarla mediante la siguiente solicitud:
+Copy its `id` and use it to accept it with the following request:
 
 ```bash title="Node: WFO"
 curl --request PATCH 'http://localhost:3002/api/approval-requests/{{PREVIUS-ID}}' \
@@ -1097,7 +1095,7 @@ curl --request PATCH 'http://localhost:3002/api/approval-requests/{{PREVIUS-ID}}
 --data-raw '{"approvalType": "Accept"}'
 ```
 
-Ahora, al consultar una vez más el sujeto, debería mostrarse un valor de `sn` igual a 2 y el campo `organic_certified` debería ser `false`:
+Now, when you query the subject again, it should show a `sn` value of 2, and the `organic_certified` field should be `false`:
 
 ```bash title="Node: Premium Wines"
 curl --request GET 'http://localhost:3001/api/subjects?subject_type=all&governanceid={{GOVERNANCE-ID}}'

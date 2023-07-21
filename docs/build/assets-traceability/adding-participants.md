@@ -2,9 +2,9 @@
 
 ## Premium wines
 
-Excelente, ahora disponemos del esquema necesario para crear sujetos del tipo *Wine*. Sin embargo, al reflexionar sobre ello, nos damos cuenta de que no hay nadie capacitado para crear y emitir eventos relacionados con este nuevo esquema. Por lo tanto, debemos agregar un nuevo participante a nuestra red que se encargue de esta tarea.
+Excellent, now we have the necessary schema to create *Wine* type subjects. However, upon reflection, we realize that there is no one authorized to create and emit events related to this new schema. Therefore, we need to add a new participant to our network responsible for this task.
 
-Comenzaremos levantando el nodo correspondiente:
+Let's start by setting up the corresponding node:
 
 ```bash title="Node: Premium wines"
 docker run opencanarias/taple-client:0.2 \
@@ -16,13 +16,13 @@ docker run opencanarias/taple-client:0.2 \
     -e TAPLE_NETWORK_KNOWN_NODE=/ip4/172.17.0.1/tcp/50000/p2p/12D3KooWHHjN5vKSKeCWiBG3gHaDRDp6YzsEgu9iTesYqrWxAgFk 
 ```
 
-A continuación, procederemos a actualizar la gobernanza para incluir a este nuevo miembro y permitirle la creación de sujetos del tipo *Wine*.
+Next, we'll proceed to update the governance to include this new member and allow them to create *Wine* type subjects.
 
 :::note
-No es necesario asignarle el rol de testigo, ya que el propietario del sujeto lo es por defecto.
+It's not necessary to assign them the role of a witness, as the subject's owner is the default witness.
 :::
 
-Verifiquemos los cambios que deseamos realizar en las propiedades de la gobernanza. En este punto, nuestra gobernanza debería tener el siguiente aspecto:
+Let's verify the changes we want to make in the governance properties. At this point, our governance should look like the following:
 
 ```json
 {
@@ -160,7 +160,7 @@ Verifiquemos los cambios que deseamos realizar en las propiedades de la gobernan
 }
 ```
 
-Ahora, debemos incorporar los cambios mencionados anteriormente:
+Now, we need to incorporate the mentioned changes:
 
 ```json
 {
@@ -312,13 +312,13 @@ Ahora, debemos incorporar los cambios mencionados anteriormente:
 }
 ```
 
-Utilizaremos nuestra herramienta [**TAPLE-Patch**](../../learn/client-tools.md#taple-patch) para generar dichos cambios, siguiendo el siguiente procedimiento:
+We'll use our [**TAPLE-Patch**](../../learn/client-tools.md#taple-patch) tool to generate these changes, following the procedure below:
 
 ```bash title="Another terminal"
 taple-patch "{\"members\":[{\"id\":\"EbwR0yYrCYpTzlN5i5GX_MtAbKRw5y2euv3TqiTgwggs\",\"name\":\"WPO\"}],\"policies\":[{\"approve\":{\"quorum\":\"MAJORITY\"},\"evaluate\":{\"quorum\":\"MAJORITY\"},\"id\":\"governance\",\"validate\":{\"quorum\":\"MAJORITY\"}},{\"approve\":{\"quorum\":\"MAJORITY\"},\"evaluate\":{\"quorum\":\"MAJORITY\"},\"id\":\"Wine\",\"validate\":{\"quorum\":\"MAJORITY\"}}],\"roles\":[{\"namespace\":\"\",\"role\":\"WITNESS\",\"schema\":{\"ID\":\"governance\"},\"who\":\"MEMBERS\"},{\"namespace\":\"\",\"role\":\"APPROVER\",\"schema\":{\"ID\":\"governance\"},\"who\":{\"NAME\":\"WPO\"}}],\"schemas\":[{\"contract\":{\"raw\":\"dXNlIHRhcGxlX3NjX3J1c3QgYXMgc2RrOw0KdXNlIHNlcmRlOjp7RGVzZXJpYWxpemUsIFNlcmlhbGl6ZX07DQoNCiNbZGVyaXZlKFNlcmlhbGl6ZSwgRGVzZXJpYWxpemUsIENsb25lLCBQYXJ0aWFsRXEpXSANCmVudW0gR3JhcGUgew0KICAgIENhYmVybmV0U2F1dmlnbm9uLA0KICAgIENoYXJkb25uYXksDQogICAgUGlub3ROb2lyLA0KfQ0KDQojW2Rlcml2ZShTZXJpYWxpemUsIERlc2VyaWFsaXplLCBDbG9uZSldDQpzdHJ1Y3QgVGVtcGVyYXR1cmVDb250cm9sIHsNCiAgICBwdWIgbGFzdF9jaGVjazogdTMyLA0KICAgIHB1YiB0ZW1wZXJhdHVyZV9vazogYm9vbCwNCn0NCg0KI1tkZXJpdmUoU2VyaWFsaXplLCBEZXNlcmlhbGl6ZSwgQ2xvbmUpXQ0Kc3RydWN0IFN0YXRlIHsNCiAgICBwdWIgaGFydmVzdDogdTMyLA0KICAgIHB1YiBncmFwZTogT3B0aW9uPEdyYXBlPiwNCiAgICBwdWIgb3JpZ2luOiBTdHJpbmcsDQogICAgcHViIG9yZ2FuaWNfY2VydGlmaWVkOiBPcHRpb248Ym9vbD4sDQogICAgcHViIHRlbXBlcmF0dXJlX2NvbnRyb2w6IFRlbXBlcmF0dXJlQ29udHJvbCwNCn0NCg0KI1tkZXJpdmUoU2VyaWFsaXplLCBEZXNlcmlhbGl6ZSldDQplbnVtIFN0YXRlRXZlbnQgew0KICAgIEluaXQgew0KICAgICAgICBoYXJ2ZXN0OiB1MzIsDQogICAgICAgIGdyYXBlOiBTdHJpbmcsDQogICAgICAgIG9yaWdpbjogU3RyaW5nLA0KICAgIH0sDQogICAgVGVtcGVyYXR1cmVDb250cm9sIHsNCiAgICAgICAgdGVtcGVyYXR1cmU6IGYzMiwNCiAgICAgICAgdGltZXN0YW1wOiB1MzIsDQogICAgfSwNCiAgICBPcmdhbmljQ2VydGlmaWNhdGlvbiB7DQogICAgICAgIGZlcnRpbGl6ZXJzX2NvbnRyb2w6IGJvb2wsDQogICAgICAgIHBlc3RpY2lkZXNfY29udHJvbDogYm9vbCwNCiAgICAgICAgYW5hbHl0aWNzOiBib29sLA0KICAgICAgICBhZGRpdGlvbmFsX2luZm86IFN0cmluZywNCiAgICB9LA0KfQ0KDQpjb25zdCBURU1QRVJBVFVSRV9SQU5HRTogKGYzMiwgZjMyKSA9ICgxMC4wLCAxNi4wKTsNCg0KI1tub19tYW5nbGVdDQpwdWIgdW5zYWZlIGZuIG1haW5fZnVuY3Rpb24oc3RhdGVfcHRyOiBpMzIsIGV2ZW50X3B0cjogaTMyLCBpc19vd25lcjogaTMyKSAtPiB1MzIgew0KICAgIHNkazo6ZXhlY3V0ZV9jb250cmFjdChzdGF0ZV9wdHIsIGV2ZW50X3B0ciwgaXNfb3duZXIsIGNvbnRyYWN0X2xvZ2ljKQ0KfQ0KDQpmbiBjb250cmFjdF9sb2dpYygNCiAgICBjb250ZXh0OiAmc2RrOjpDb250ZXh0PFN0YXRlLCBTdGF0ZUV2ZW50PiwNCiAgICBjb250cmFjdF9yZXN1bHQ6ICZtdXQgc2RrOjpDb250cmFjdFJlc3VsdDxTdGF0ZT4sDQopIHsNCiAgICBsZXQgc3RhdGUgPSAmbXV0IGNvbnRyYWN0X3Jlc3VsdC5maW5hbF9zdGF0ZTsNCiAgICBtYXRjaCAmY29udGV4dC5ldmVudCB7DQogICAgICAgIFN0YXRlRXZlbnQ6OkluaXQgew0KICAgICAgICAgICAgaGFydmVzdCwNCiAgICAgICAgICAgIGdyYXBlLA0KICAgICAgICAgICAgb3JpZ2luLA0KICAgICAgICB9ID0+IHsNCiAgICAgICAgICAgIGlmIGNvbnRleHQuaXNfb3duZXIgJiYgIWNoZWNrX3N1YmplY3RfaGFzX2JlZW5faW5pdGlhdGVkKHN0YXRlKSB7IC8vIFNvbG8gbG8gcHVlZGRlIGhhY2VyIGVsIHByb3BpZXRhcmlvw6cNCiAgICAgICAgICAgICAgICBsZXQgZ3JhcGUgPSBtYXRjaCBncmFwZS5hc19zdHIoKSB7DQogICAgICAgICAgICAgICAgICAgICJDYWJlcm5ldFNhdXZpZ25vbiIgPT4gU29tZShHcmFwZTo6Q2FiZXJuZXRTYXV2aWdub24pLA0KICAgICAgICAgICAgICAgICAgICAiQ2hhcmRvbm5heSIgPT4gU29tZShHcmFwZTo6Q2hhcmRvbm5heSksDQogICAgICAgICAgICAgICAgICAgICJQaW5vdE5vaXIiID0+IFNvbWUoR3JhcGU6OlBpbm90Tm9pciksDQogICAgICAgICAgICAgICAgICAgIF8gPT4gTm9uZSwNCiAgICAgICAgICAgICAgICB9Ow0KICAgICAgICAgICAgICAgIGlmIGdyYXBlLmlzX3NvbWUoKSB7DQogICAgICAgICAgICAgICAgICAgIHN0YXRlLmhhcnZlc3QgPSAqaGFydmVzdDsNCiAgICAgICAgICAgICAgICAgICAgc3RhdGUuZ3JhcGUgPSBncmFwZTsNCiAgICAgICAgICAgICAgICAgICAgc3RhdGUub3JpZ2luID0gb3JpZ2luLnRvX3N0cmluZygpOw0KICAgICAgICAgICAgICAgICAgICBjb250cmFjdF9yZXN1bHQuc3VjY2VzcyA9IHRydWU7DQogICAgICAgICAgICAgICAgfQ0KICAgICAgICAgICAgfQ0KICAgICAgICB9DQogICAgICAgIFN0YXRlRXZlbnQ6OlRlbXBlcmF0dXJlQ29udHJvbCB7DQogICAgICAgICAgICB0ZW1wZXJhdHVyZSwNCiAgICAgICAgICAgIHRpbWVzdGFtcCwNCiAgICAgICAgfSA9PiB7DQogICAgICAgICAgICBpZiBjb250ZXh0LmlzX293bmVyICYmIGNoZWNrX3N1YmplY3RfaGFzX2JlZW5faW5pdGlhdGVkKHN0YXRlKSB7DQogICAgICAgICAgICAgICAgaWYgY2hlY2tfdGVtcGVyYXR1cmVfaW5fcmFuZ2UoKnRlbXBlcmF0dXJlKQ0KICAgICAgICAgICAgICAgICAgICAmJiBzdGF0ZS50ZW1wZXJhdHVyZV9jb250cm9sLnRlbXBlcmF0dXJlX29rDQogICAgICAgICAgICAgICAgew0KICAgICAgICAgICAgICAgICAgICBzdGF0ZS50ZW1wZXJhdHVyZV9jb250cm9sLmxhc3RfY2hlY2sgPSAqdGltZXN0YW1wOw0KICAgICAgICAgICAgICAgIH0gZWxzZSB7DQogICAgICAgICAgICAgICAgICAgIHN0YXRlLnRlbXBlcmF0dXJlX2NvbnRyb2wudGVtcGVyYXR1cmVfb2sgPSBmYWxzZTsNCiAgICAgICAgICAgICAgICAgICAgc3RhdGUudGVtcGVyYXR1cmVfY29udHJvbC5sYXN0X2NoZWNrID0gKnRpbWVzdGFtcDsNCiAgICAgICAgICAgICAgICB9DQogICAgICAgICAgICAgICAgY29udHJhY3RfcmVzdWx0LnN1Y2Nlc3MgPSB0cnVlOw0KICAgICAgICAgICAgfQ0KICAgICAgICB9DQogICAgICAgIFN0YXRlRXZlbnQ6Ok9yZ2FuaWNDZXJ0aWZpY2F0aW9uIHsNCiAgICAgICAgICAgIGZlcnRpbGl6ZXJzX2NvbnRyb2wsDQogICAgICAgICAgICBwZXN0aWNpZGVzX2NvbnRyb2wsDQogICAgICAgICAgICBhbmFseXRpY3MsDQogICAgICAgICAgICBhZGRpdGlvbmFsX2luZm8sDQogICAgICAgIH0gPT4gew0KICAgICAgICAgICAgaWYgY2hlY2tfc3ViamVjdF9oYXNfYmVlbl9pbml0aWF0ZWQoc3RhdGUpIHsNCiAgICAgICAgICAgICAgICBtYXRjaCBzdGF0ZS5vcmdhbmljX2NlcnRpZmllZCB7DQogICAgICAgICAgICAgICAgICAgIFNvbWUob3JnYW5pY19jZXJpZmllZCkgPT4gew0KICAgICAgICAgICAgICAgICAgICAgICAgaWYgb3JnYW5pY19jZXJpZmllZA0KICAgICAgICAgICAgICAgICAgICAgICAgICAgICYmICFjaGVja19pc19vcmdhbmljKA0KICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAqZmVydGlsaXplcnNfY29udHJvbCwNCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgKnBlc3RpY2lkZXNfY29udHJvbCwNCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgKmFuYWx5dGljcywNCiAgICAgICAgICAgICAgICAgICAgICAgICAgICApDQogICAgICAgICAgICAgICAgICAgICAgICB7DQogICAgICAgICAgICAgICAgICAgICAgICAgICAgc3RhdGUub3JnYW5pY19jZXJ0aWZpZWQgPSBTb21lKGZhbHNlKTsNCiAgICAgICAgICAgICAgICAgICAgICAgIH0NCiAgICAgICAgICAgICAgICAgICAgfQ0KICAgICAgICAgICAgICAgICAgICBOb25lID0+IHsNCiAgICAgICAgICAgICAgICAgICAgICAgIGlmIGNoZWNrX2lzX29yZ2FuaWMoKmZlcnRpbGl6ZXJzX2NvbnRyb2wsICpwZXN0aWNpZGVzX2NvbnRyb2wsICphbmFseXRpY3MpIHsNCiAgICAgICAgICAgICAgICAgICAgICAgICAgICBzdGF0ZS5vcmdhbmljX2NlcnRpZmllZCA9IFNvbWUodHJ1ZSk7DQogICAgICAgICAgICAgICAgICAgICAgICB9IGVsc2Ugew0KICAgICAgICAgICAgICAgICAgICAgICAgICAgIHN0YXRlLm9yZ2FuaWNfY2VydGlmaWVkID0gU29tZShmYWxzZSk7DQogICAgICAgICAgICAgICAgICAgICAgICB9DQogICAgICAgICAgICAgICAgICAgIH0NCiAgICAgICAgICAgICAgICB9DQogICAgICAgICAgICAgICAgY29udHJhY3RfcmVzdWx0LnN1Y2Nlc3MgPSB0cnVlOw0KICAgICAgICAgICAgfQ0KICAgICAgICB9DQogICAgfQ0KfQ0KDQpmbiBjaGVja19zdWJqZWN0X2hhc19iZWVuX2luaXRpYXRlZChzdGF0ZTogJlN0YXRlKSAtPiBib29sIHsNCiAgICBsZXQgaW5pdGlhbF9ncmFwZSA9IG1hdGNoIHN0YXRlLmdyYXBlIHsNCiAgICAgICAgU29tZShfKSA9PiBmYWxzZSwNCiAgICAgICAgTm9uZSA9PiB0cnVlLA0KICAgIH07DQogICAgaWYgc3RhdGUuaGFydmVzdCA9PSAwICYmIGluaXRpYWxfZ3JhcGUgJiYgc3RhdGUub3JpZ2luID09IGZvcm1hdCEoIiIpIHsNCiAgICAgICAgcmV0dXJuIGZhbHNlOw0KICAgIH0NCiAgICByZXR1cm4gdHJ1ZTsNCn0NCg0KZm4gY2hlY2tfdGVtcGVyYXR1cmVfaW5fcmFuZ2UodGVtcGVyYXR1cmU6IGYzMikgLT4gYm9vbCB7DQogICAgaWYgdGVtcGVyYXR1cmUgPj0gVEVNUEVSQVRVUkVfUkFOR0UuMCAmJiB0ZW1wZXJhdHVyZSA8PSBURU1QRVJBVFVSRV9SQU5HRS4xIHsNCiAgICAgICAgcmV0dXJuIHRydWU7DQogICAgfQ0KICAgIHJldHVybiBmYWxzZTsNCn0NCg0KZm4gY2hlY2tfaXNfb3JnYW5pYyhmZXJ0aWxpemVyc19jb250cm9sOiBib29sLCBwZXN0aWNpZGVzX2NvbnRyb2w6IGJvb2wsIGFuYWx5dGljczogYm9vbCkgLT4gYm9vbCB7DQogICAgaWYgZmVydGlsaXplcnNfY29udHJvbCAmJiBwZXN0aWNpZGVzX2NvbnRyb2wgJiYgYW5hbHl0aWNzIHsNCiAgICAgICAgcmV0dXJuIHRydWU7DQogICAgfQ0KICAgIHJldHVybiBmYWxzZTsNCn0=\"},\"id\":\"Wine\",\"initial_value\":{\"grape\":null,\"harvest\":0,\"organic_certified\":null,\"origin\":\"\",\"temperature_control\":{\"last_check\":0,\"temperature_ok\":true}},\"schema\":{\"additionalProperties\":false,\"description\":\"Representationofabottleofwine\",\"properties\":{\"grape\":{\"description\":\"Typeofgrape\",\"enum\":[\"CabernetSauvignon\",\"Chardonnay\",\"PinotNoir\",null],\"type\":[\"string\",\"null\"]},\"harvest\":{\"description\":\"Harvestnumber\",\"type\":\"integer\"},\"organic_certified\":{\"description\":\"Certificateauthenticatingwhetheritisorganicornot\",\"type\":[\"boolean\",\"null\"]},\"origin\":{\"description\":\"Originofthegrape\",\"type\":\"string\"},\"temperature_control\":{\"additionalProperties\":false,\"description\":\"Valuestobechangedinthetemperaturecontrolevent\",\"properties\":{\"last_check\":{\"description\":\"Timestampoflastcheck\",\"type\":\"integer\"},\"temperature_ok\":{\"description\":\"Valuethatcorroborateswhetherthewinecoldchainhasbeencompliedwith\",\"type\":\"boolean\"}},\"required\":[\"last_check\",\"temperature_ok\"],\"type\":\"object\"}},\"required\":[\"harvest\",\"grape\",\"origin\",\"organic_certified\",\"temperature_control\"],\"type\":\"object\"}}]}" "{\"members\":[{\"id\":\"EbwR0yYrCYpTzlN5i5GX_MtAbKRw5y2euv3TqiTgwggs\",\"name\":\"WPO\"},{\"id\":\"Ee-ZvImOQSgRBDR9XH0uQ5gbVv4828h_o5GuLbWFWaLI\",\"name\":\"PremiumWines\"}],\"policies\":[{\"approve\":{\"quorum\":\"MAJORITY\"},\"evaluate\":{\"quorum\":\"MAJORITY\"},\"id\":\"governance\",\"validate\":{\"quorum\":\"MAJORITY\"}},{\"approve\":{\"quorum\":\"MAJORITY\"},\"evaluate\":{\"quorum\":\"MAJORITY\"},\"id\":\"Wine\",\"validate\":{\"quorum\":\"MAJORITY\"}}],\"roles\":[{\"namespace\":\"\",\"role\":\"WITNESS\",\"schema\":{\"ID\":\"governance\"},\"who\":\"MEMBERS\"},{\"namespace\":\"\",\"role\":\"APPROVER\",\"schema\":{\"ID\":\"governance\"},\"who\":{\"NAME\":\"WPO\"}},{\"namespace\":\"\",\"role\":\"CREATOR\",\"schema\":{\"ID\":\"Wine\"},\"who\":{\"NAME\":\"PremiumWines\"}}],\"schemas\":[{\"contract\":{\"raw\":\"dXNlIHRhcGxlX3NjX3J1c3QgYXMgc2RrOw0KdXNlIHNlcmRlOjp7RGVzZXJpYWxpemUsIFNlcmlhbGl6ZX07DQoNCiNbZGVyaXZlKFNlcmlhbGl6ZSwgRGVzZXJpYWxpemUsIENsb25lLCBQYXJ0aWFsRXEpXSANCmVudW0gR3JhcGUgew0KICAgIENhYmVybmV0U2F1dmlnbm9uLA0KICAgIENoYXJkb25uYXksDQogICAgUGlub3ROb2lyLA0KfQ0KDQojW2Rlcml2ZShTZXJpYWxpemUsIERlc2VyaWFsaXplLCBDbG9uZSldDQpzdHJ1Y3QgVGVtcGVyYXR1cmVDb250cm9sIHsNCiAgICBwdWIgbGFzdF9jaGVjazogdTMyLA0KICAgIHB1YiB0ZW1wZXJhdHVyZV9vazogYm9vbCwNCn0NCg0KI1tkZXJpdmUoU2VyaWFsaXplLCBEZXNlcmlhbGl6ZSwgQ2xvbmUpXQ0Kc3RydWN0IFN0YXRlIHsNCiAgICBwdWIgaGFydmVzdDogdTMyLA0KICAgIHB1YiBncmFwZTogT3B0aW9uPEdyYXBlPiwNCiAgICBwdWIgb3JpZ2luOiBTdHJpbmcsDQogICAgcHViIG9yZ2FuaWNfY2VydGlmaWVkOiBPcHRpb248Ym9vbD4sDQogICAgcHViIHRlbXBlcmF0dXJlX2NvbnRyb2w6IFRlbXBlcmF0dXJlQ29udHJvbCwNCn0NCg0KI1tkZXJpdmUoU2VyaWFsaXplLCBEZXNlcmlhbGl6ZSldDQplbnVtIFN0YXRlRXZlbnQgew0KICAgIEluaXQgew0KICAgICAgICBoYXJ2ZXN0OiB1MzIsDQogICAgICAgIGdyYXBlOiBTdHJpbmcsDQogICAgICAgIG9yaWdpbjogU3RyaW5nLA0KICAgIH0sDQogICAgVGVtcGVyYXR1cmVDb250cm9sIHsNCiAgICAgICAgdGVtcGVyYXR1cmU6IGYzMiwNCiAgICAgICAgdGltZXN0YW1wOiB1MzIsDQogICAgfSwNCiAgICBPcmdhbmljQ2VydGlmaWNhdGlvbiB7DQogICAgICAgIGZlcnRpbGl6ZXJzX2NvbnRyb2w6IGJvb2wsDQogICAgICAgIHBlc3RpY2lkZXNfY29udHJvbDogYm9vbCwNCiAgICAgICAgYW5hbHl0aWNzOiBib29sLA0KICAgICAgICBhZGRpdGlvbmFsX2luZm86IFN0cmluZywNCiAgICB9LA0KfQ0KDQpjb25zdCBURU1QRVJBVFVSRV9SQU5HRTogKGYzMiwgZjMyKSA9ICgxMC4wLCAxNi4wKTsNCg0KI1tub19tYW5nbGVdDQpwdWIgdW5zYWZlIGZuIG1haW5fZnVuY3Rpb24oc3RhdGVfcHRyOiBpMzIsIGV2ZW50X3B0cjogaTMyLCBpc19vd25lcjogaTMyKSAtPiB1MzIgew0KICAgIHNkazo6ZXhlY3V0ZV9jb250cmFjdChzdGF0ZV9wdHIsIGV2ZW50X3B0ciwgaXNfb3duZXIsIGNvbnRyYWN0X2xvZ2ljKQ0KfQ0KDQpmbiBjb250cmFjdF9sb2dpYygNCiAgICBjb250ZXh0OiAmc2RrOjpDb250ZXh0PFN0YXRlLCBTdGF0ZUV2ZW50PiwNCiAgICBjb250cmFjdF9yZXN1bHQ6ICZtdXQgc2RrOjpDb250cmFjdFJlc3VsdDxTdGF0ZT4sDQopIHsNCiAgICBsZXQgc3RhdGUgPSAmbXV0IGNvbnRyYWN0X3Jlc3VsdC5maW5hbF9zdGF0ZTsNCiAgICBtYXRjaCAmY29udGV4dC5ldmVudCB7DQogICAgICAgIFN0YXRlRXZlbnQ6OkluaXQgew0KICAgICAgICAgICAgaGFydmVzdCwNCiAgICAgICAgICAgIGdyYXBlLA0KICAgICAgICAgICAgb3JpZ2luLA0KICAgICAgICB9ID0+IHsNCiAgICAgICAgICAgIGlmIGNvbnRleHQuaXNfb3duZXIgJiYgIWNoZWNrX3N1YmplY3RfaGFzX2JlZW5faW5pdGlhdGVkKHN0YXRlKSB7IC8vIFNvbG8gbG8gcHVlZGRlIGhhY2VyIGVsIHByb3BpZXRhcmlvw6cNCiAgICAgICAgICAgICAgICBsZXQgZ3JhcGUgPSBtYXRjaCBncmFwZS5hc19zdHIoKSB7DQogICAgICAgICAgICAgICAgICAgICJDYWJlcm5ldFNhdXZpZ25vbiIgPT4gU29tZShHcmFwZTo6Q2FiZXJuZXRTYXV2aWdub24pLA0KICAgICAgICAgICAgICAgICAgICAiQ2hhcmRvbm5heSIgPT4gU29tZShHcmFwZTo6Q2hhcmRvbm5heSksDQogICAgICAgICAgICAgICAgICAgICJQaW5vdE5vaXIiID0+IFNvbWUoR3JhcGU6OlBpbm90Tm9pciksDQogICAgICAgICAgICAgICAgICAgIF8gPT4gTm9uZSwNCiAgICAgICAgICAgICAgICB9Ow0KICAgICAgICAgICAgICAgIGlmIGdyYXBlLmlzX3NvbWUoKSB7DQogICAgICAgICAgICAgICAgICAgIHN0YXRlLmhhcnZlc3QgPSAqaGFydmVzdDsNCiAgICAgICAgICAgICAgICAgICAgc3RhdGUuZ3JhcGUgPSBncmFwZTsNCiAgICAgICAgICAgICAgICAgICAgc3RhdGUub3JpZ2luID0gb3JpZ2luLnRvX3N0cmluZygpOw0KICAgICAgICAgICAgICAgICAgICBjb250cmFjdF9yZXN1bHQuc3VjY2VzcyA9IHRydWU7DQogICAgICAgICAgICAgICAgfQ0KICAgICAgICAgICAgfQ0KICAgICAgICB9DQogICAgICAgIFN0YXRlRXZlbnQ6OlRlbXBlcmF0dXJlQ29udHJvbCB7DQogICAgICAgICAgICB0ZW1wZXJhdHVyZSwNCiAgICAgICAgICAgIHRpbWVzdGFtcCwNCiAgICAgICAgfSA9PiB7DQogICAgICAgICAgICBpZiBjb250ZXh0LmlzX293bmVyICYmIGNoZWNrX3N1YmplY3RfaGFzX2JlZW5faW5pdGlhdGVkKHN0YXRlKSB7DQogICAgICAgICAgICAgICAgaWYgY2hlY2tfdGVtcGVyYXR1cmVfaW5fcmFuZ2UoKnRlbXBlcmF0dXJlKQ0KICAgICAgICAgICAgICAgICAgICAmJiBzdGF0ZS50ZW1wZXJhdHVyZV9jb250cm9sLnRlbXBlcmF0dXJlX29rDQogICAgICAgICAgICAgICAgew0KICAgICAgICAgICAgICAgICAgICBzdGF0ZS50ZW1wZXJhdHVyZV9jb250cm9sLmxhc3RfY2hlY2sgPSAqdGltZXN0YW1wOw0KICAgICAgICAgICAgICAgIH0gZWxzZSB7DQogICAgICAgICAgICAgICAgICAgIHN0YXRlLnRlbXBlcmF0dXJlX2NvbnRyb2wudGVtcGVyYXR1cmVfb2sgPSBmYWxzZTsNCiAgICAgICAgICAgICAgICAgICAgc3RhdGUudGVtcGVyYXR1cmVfY29udHJvbC5sYXN0X2NoZWNrID0gKnRpbWVzdGFtcDsNCiAgICAgICAgICAgICAgICB9DQogICAgICAgICAgICAgICAgY29udHJhY3RfcmVzdWx0LnN1Y2Nlc3MgPSB0cnVlOw0KICAgICAgICAgICAgfQ0KICAgICAgICB9DQogICAgICAgIFN0YXRlRXZlbnQ6Ok9yZ2FuaWNDZXJ0aWZpY2F0aW9uIHsNCiAgICAgICAgICAgIGZlcnRpbGl6ZXJzX2NvbnRyb2wsDQogICAgICAgICAgICBwZXN0aWNpZGVzX2NvbnRyb2wsDQogICAgICAgICAgICBhbmFseXRpY3MsDQogICAgICAgICAgICBhZGRpdGlvbmFsX2luZm8sDQogICAgICAgIH0gPT4gew0KICAgICAgICAgICAgaWYgY2hlY2tfc3ViamVjdF9oYXNfYmVlbl9pbml0aWF0ZWQoc3RhdGUpIHsNCiAgICAgICAgICAgICAgICBtYXRjaCBzdGF0ZS5vcmdhbmljX2NlcnRpZmllZCB7DQogICAgICAgICAgICAgICAgICAgIFNvbWUob3JnYW5pY19jZXJpZmllZCkgPT4gew0KICAgICAgICAgICAgICAgICAgICAgICAgaWYgb3JnYW5pY19jZXJpZmllZA0KICAgICAgICAgICAgICAgICAgICAgICAgICAgICYmICFjaGVja19pc19vcmdhbmljKA0KICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAqZmVydGlsaXplcnNfY29udHJvbCwNCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgKnBlc3RpY2lkZXNfY29udHJvbCwNCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgKmFuYWx5dGljcywNCiAgICAgICAgICAgICAgICAgICAgICAgICAgICApDQogICAgICAgICAgICAgICAgICAgICAgICB7DQogICAgICAgICAgICAgICAgICAgICAgICAgICAgc3RhdGUub3JnYW5pY19jZXJ0aWZpZWQgPSBTb21lKGZhbHNlKTsNCiAgICAgICAgICAgICAgICAgICAgICAgIH0NCiAgICAgICAgICAgICAgICAgICAgfQ0KICAgICAgICAgICAgICAgICAgICBOb25lID0+IHsNCiAgICAgICAgICAgICAgICAgICAgICAgIGlmIGNoZWNrX2lzX29yZ2FuaWMoKmZlcnRpbGl6ZXJzX2NvbnRyb2wsICpwZXN0aWNpZGVzX2NvbnRyb2wsICphbmFseXRpY3MpIHsNCiAgICAgICAgICAgICAgICAgICAgICAgICAgICBzdGF0ZS5vcmdhbmljX2NlcnRpZmllZCA9IFNvbWUodHJ1ZSk7DQogICAgICAgICAgICAgICAgICAgICAgICB9IGVsc2Ugew0KICAgICAgICAgICAgICAgICAgICAgICAgICAgIHN0YXRlLm9yZ2FuaWNfY2VydGlmaWVkID0gU29tZShmYWxzZSk7DQogICAgICAgICAgICAgICAgICAgICAgICB9DQogICAgICAgICAgICAgICAgICAgIH0NCiAgICAgICAgICAgICAgICB9DQogICAgICAgICAgICAgICAgY29udHJhY3RfcmVzdWx0LnN1Y2Nlc3MgPSB0cnVlOw0KICAgICAgICAgICAgfQ0KICAgICAgICB9DQogICAgfQ0KfQ0KDQpmbiBjaGVja19zdWJqZWN0X2hhc19iZWVuX2luaXRpYXRlZChzdGF0ZTogJlN0YXRlKSAtPiBib29sIHsNCiAgICBsZXQgaW5pdGlhbF9ncmFwZSA9IG1hdGNoIHN0YXRlLmdyYXBlIHsNCiAgICAgICAgU29tZShfKSA9PiBmYWxzZSwNCiAgICAgICAgTm9uZSA9PiB0cnVlLA0KICAgIH07DQogICAgaWYgc3RhdGUuaGFydmVzdCA9PSAwICYmIGluaXRpYWxfZ3JhcGUgJiYgc3RhdGUub3JpZ2luID09IGZvcm1hdCEoIiIpIHsNCiAgICAgICAgcmV0dXJuIGZhbHNlOw0KICAgIH0NCiAgICByZXR1cm4gdHJ1ZTsNCn0NCg0KZm4gY2hlY2tfdGVtcGVyYXR1cmVfaW5fcmFuZ2UodGVtcGVyYXR1cmU6IGYzMikgLT4gYm9vbCB7DQogICAgaWYgdGVtcGVyYXR1cmUgPj0gVEVNUEVSQVRVUkVfUkFOR0UuMCAmJiB0ZW1wZXJhdHVyZSA8PSBURU1QRVJBVFVSRV9SQU5HRS4xIHsNCiAgICAgICAgcmV0dXJuIHRydWU7DQogICAgfQ0KICAgIHJldHVybiBmYWxzZTsNCn0NCg0KZm4gY2hlY2tfaXNfb3JnYW5pYyhmZXJ0aWxpemVyc19jb250cm9sOiBib29sLCBwZXN0aWNpZGVzX2NvbnRyb2w6IGJvb2wsIGFuYWx5dGljczogYm9vbCkgLT4gYm9vbCB7DQogICAgaWYgZmVydGlsaXplcnNfY29udHJvbCAmJiBwZXN0aWNpZGVzX2NvbnRyb2wgJiYgYW5hbHl0aWNzIHsNCiAgICAgICAgcmV0dXJuIHRydWU7DQogICAgfQ0KICAgIHJldHVybiBmYWxzZTsNCn0=\"},\"id\":\"Wine\",\"initial_value\":{\"grape\":null,\"harvest\":0,\"organic_certified\":null,\"origin\":\"\",\"temperature_control\":{\"last_check\":0,\"temperature_ok\":true}},\"schema\":{\"additionalProperties\":false,\"description\":\"Representationofabottleofwine\",\"properties\":{\"grape\":{\"description\":\"Typeofgrape\",\"enum\":[\"CabernetSauvignon\",\"Chardonnay\",\"PinotNoir\",null],\"type\":[\"string\",\"null\"]},\"harvest\":{\"description\":\"Harvestnumber\",\"type\":\"integer\"},\"organic_certified\":{\"description\":\"Certificateauthenticatingwhetheritisorganicornot\",\"type\":[\"boolean\",\"null\"]},\"origin\":{\"description\":\"Originofthegrape\",\"type\":\"string\"},\"temperature_control\":{\"additionalProperties\":false,\"description\":\"Valuestobechangedinthetemperaturecontrolevent\",\"properties\":{\"last_check\":{\"description\":\"Timestampoflastcheck\",\"type\":\"integer\"},\"temperature_ok\":{\"description\":\"Valuethatcorroborateswhetherthewinecoldchainhasbeencompliedwith\",\"type\":\"boolean\"}},\"required\":[\"last_check\",\"temperature_ok\"],\"type\":\"object\"}},\"required\":[\"harvest\",\"grape\",\"origin\",\"organic_certified\",\"temperature_control\"],\"type\":\"object\"}}]}"
 ```
 
-El resultado obtenido será el siguiente:
+The result obtained will be as follows:
 
 ```json
 [
@@ -347,7 +347,7 @@ El resultado obtenido será el siguiente:
 ]
 ```
 
-Llegó el momento de invocar el método del contrato de la gobernanza responsable de la actualización de sus propiedades. Para ello, ejecutaremos lo siguiente:
+Now, it's time to call the method of the governance contract responsible for updating its properties. To do this, we'll execute the following:
 
 ```bash title="Node: WPO"
 curl --request POST 'http://localhost:3000/api/event-requests' \
@@ -387,13 +387,13 @@ curl --request POST 'http://localhost:3000/api/event-requests' \
 }'
 ```
 
-Una vez emitido el evento, será necesario obtener la nueva petición de actualización, para ello ejecutamos:
+Once the event is emitted, we need to obtain the new update request. To do this, we run the following:
 
 ```bash title="Node: WPO"
 curl --request GET 'http://localhost:3000/api/approval-requests?status=Pending'
 ```
 
-Compiaremos el valor del campo `id` y acepateremos la solicitud actualización de la gobernanza:
+We copy the value of the `id` field and accept the governance update request:
 
 ```bash title="Node: WPO"
 curl --request PATCH 'http://localhost:3000/api/approval-requests/{{PREVIUS-ID}}' \
@@ -401,23 +401,23 @@ curl --request PATCH 'http://localhost:3000/api/approval-requests/{{PREVIUS-ID}}
 --data-raw '{"approvalType": "Accept"}'
 ```
 
-Consultamos la gobernanza desde el nuevo nodo:
+We query the governance from the new node:
 
 ```bash title="Node: Premium Wines"
 curl --request GET 'http://localhost:3001/api/subjects/{{GOVERNANCE-ID}}'
 ```
 
-Y obtendremos:
+And we will get:
 
 ```
 Not found Subject JLblI3wVzvQZPxQlz-GE1p_6OmYuKr_WyFFV97wyQV54
 ```
 
-¿Un error? ¿Pero no acabamos de incluir al nuevo nodo a la gobernanza y es testigo de ella?. 
+An error? But didn't we just include the new node in the governance, and it's a witness of it?
 
-Si bien esta última afirmación es cierta, debemos considerar lo siguiente: el nodo Taple, por razones de seguridad, rechaza todos los sujetos que no hayan sido enviados explícitamente, a menos que se cumpla una de las dos condiciones siguientes: que la gobernanza esté configurada para considerarlo como testigo, o que autoricemos al sujeto de manera explícita. En el caso de la gobernanza, es especial, ya que no hay una gobernanza previa que lo autorice, por lo tanto, la única forma de acceder a ella es autorizándola de manera explícita.
+While the last statement is true, we must consider the following: for security reasons, the Taple node rejects all subjects that have not been explicitly sent, unless one of the following two conditions is met: the governance is configured to consider it a witness, or we explicitly authorize the subject. In the case of the governance, it's special since there's no prior governance to authorize it, so the only way to access it is by explicitly authorizing it.
 
-Por lo tanto, debemos ejecutar lo siguiente para recibir la información de la gobernanza:
+Therefore, we need to execute the following to receive governance information:
 
 ```bash title="Node: Premium Wines"
 curl --request PUT 'http://localhost:3001/api/allowed-subjects/{{GOVERNANCE-ID}}' \
@@ -427,7 +427,7 @@ curl --request PUT 'http://localhost:3001/api/allowed-subjects/{{GOVERNANCE-ID}}
 }'
 ```
 
-Ahora al intentar consultar la gobernanza desde el nuevo nodo, se nos proporcionará la información esperada:
+Now, when trying to query the governance from the new node, we will get the expected information:
 
 ```bash title="Node: Premium Wines"
 curl --request GET 'http://localhost:3001/api/subjects/{{GOVERNANCE-ID}}'
@@ -597,11 +597,11 @@ curl --request GET 'http://localhost:3001/api/subjects/{{GOVERNANCE-ID}}'
 
 ## World Food Organization
 
-En la actualidad, **WPO** es la única entidad propietaria de la gobernanza y tiene el poder exclusivo de aprobar cambios en la misma. Sin embargo, esto plantea un problema, ya que su poder es absoluto y, por ejemplo,en todo el mundo no tienen representación ni influencia en los cambios que se realizan en esta gobernanza. Por lo tanto, surge la necesidad de agregar un nuevo miembro a la gobernanza, *World Food Organization* (**WFO**), que actuará como segundo validador y evitará el monopolio existente por parte de **WPO**.
+Currently, **WPO** is the only owner of the governance and has the exclusive power to approve changes to it. However, this poses a problem since its power is absolute, and, for example, it lacks representation or influence from around the world on the changes made to this governance. Therefore, there is a need to add a new member to the governance, *World Food Organization* (**WFO**), which will act as the second validator and prevent the existing monopoly by **WPO**.
 
-Para ello, permitiremos que la **WFO** desempeñe los roles de aprobador, validador y evaluador de la gobernanza. Además, se le permitirá actuar como testigo de los sujetos del tipo *Wine*, ya que está interesado en recopilar estadísticas de consumo.
+To achieve this, we'll allow **WFO** to take on the roles of an approver, validator, and evaluator of the governance. Furthermore, it will be allowed to act as a witness to *Wine* type subjects since it's interested in collecting consumption statistics.
 
-Comenzaremos levantando el nodo **WFO**:
+Let's start by setting up the **WFO** node:
 
 ```bash title="Node: WFO"
 docker run opencanarias/taple-client:0.2 \
@@ -613,7 +613,7 @@ docker run opencanarias/taple-client:0.2 \
     -e TAPLE_NETWORK_KNOWN_NODE=/ip4/172.17.0.1/tcp/50000/p2p/12D3KooWHHjN5vKSKeCWiBG3gHaDRDp6YzsEgu9iTesYqrWxAgFk 
 ```
 
-A continuación, procederemos a actualizar la gobernanza para otorgarle las propiedades mecionadas anteriormente:
+Next, we'll proceed to update the governance to grant it the mentioned properties:
 
 ```bash bash title="Node: WFO"
 curl --request POST 'http://localhost:3000/api/event-requests' \
@@ -696,16 +696,16 @@ curl --request POST 'http://localhost:3000/api/event-requests' \
 ```
 
 :::note
-En este punto, no se describen los pasos para generar el nuevo *json-patch* de la gobernanza, ya que se encuentran detallados en el [apartado anterior](#premium-wines).
+At this point, the steps to generate the new *json-patch* for the governance are not described since they are detailed in the [previous section](#premium-wines).
 :::
 
-Una vez ejecutado este comando, deberemos obtener nuevamente la solicitud de actualización. Para ello, ejecutamos:
+Once this command is executed, we should obtain the update request again. To do this, we run:
 
 ```bash title="Node: WPO"
 curl --request GET 'http://localhost:3000/api/approval-requests?status=Pending'
 ```
 
-Copiaremos el valor del campo `id` y aceptaremos la solicitud de actualización de la gobernanza:
+We copy the value of the `id` field and accept the governance update request:
 
 ```bash title="Node: WPO"
 curl --request PATCH 'http://localhost:3000/api/approval-requests/{{PREVIUS-ID}}' \
@@ -713,7 +713,7 @@ curl --request PATCH 'http://localhost:3000/api/approval-requests/{{PREVIUS-ID}}
 --data-raw '{"approvalType": "Accept"}'
 ```
 
-En este punto, nos encontraremos en una situación similar a la descrita en el [apartado anterior](#premium-wines). Aunque el nuevo nodo forma parte de la gobernanza, no es capaz de recibir su información, por lo que debemos realizar su preautorización. Para ello, ejecutaremos el siguiente comando:
+At this point, we'll find ourselves in a situation similar to the one described in the [previous section](#premium-wines). Although the new node is part of the governance, it's not able to receive its information, so we need to perform its pre-authorization. To do this, we'll execute the following command:
 
 ```bash title="Node: WFO"
 curl --request PUT 'http://localhost:3002/api/allowed-subjects/{{GOVERNANCE-ID}}' \
@@ -723,7 +723,7 @@ curl --request PUT 'http://localhost:3002/api/allowed-subjects/{{GOVERNANCE-ID}}
 }'
 ```
 
-Si todo ha ido según lo esperado, podremos consultar la gobernanza desde el nuevo nodo y ahora debería tener un valor `sn` de 4, así como el cambio realizado en los miembros y roles.
+If everything has gone as expected, we can now query the governance from the new node, and it should now have an `sn` value of 4, as well as the change made in members and roles.
 
 ```bash title="Node: WFO"
 curl --request GET 'http://localhost:3002/api/subjects/{{GOVERNANCE-ID}}'

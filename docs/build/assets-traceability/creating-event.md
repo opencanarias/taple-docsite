@@ -1,12 +1,12 @@
 # Creating an event
 
-Una vez que hemos inicializado nuestra gobernanza para comenzar a formalizar el caso de uso del ciclo de vida del vino, es necesario llenarla y adaptarla a nuestras necesidades. Para realizar estas modificaciones, debemos generar un evento en la red. En *Taple*, existen diferentes tipos de eventos, como el evento de **génesis**, que se utiliza para crear la gobernanza. Sin embargo, en este caso, necesitamos generar un evento de tipo **hecho**, que permite modificar el estado de un sujeto en la red.
+Once we have initialized our governance to begin formalizing the use case for the wine life cycle, it's necessary to fill it and adapt it to our needs. To make these modifications, we must generate an event in the network. In *Taple*, there are different types of events, such as the **genesis** event, which is used to create the governance. However, in this case, we need to generate an event of type **fact**, which allows modifying the state of a subject in the network.
 
-Estos eventos de **hecho** interactúan con las operaciones definidas en el *smart contract* del sujeto y actúan sobre ellas. En el caso de la gobernanza, su contrato es especial, ya que tanto su esquema como su contrato son [internos de Taple](../../learn/governance-schema-and-contract.md).
+These **fact** events interact with the operations defined in the subject's *smart contract* and act upon them. In the case of governance, its contract is special, as both its schema and contract are [internal to Taple](../../learn/governance-schema-and-contract.md).
 
-El contrato de la gobernanza expone solo un método para modificarla, que se debe utilizar mediante *json-patch*.
+The governance contract exposes only one method for modification, which must be used through *json-patch*.
 
-Comenzaremos verificando los cambios que deseamos realizar en las propiedades de la gobernanza. Al final del paso anterior, nuestra gobernanza debería tener un aspecto similar al siguiente:
+Let's start by verifying the changes we want to make in the governance properties. At the end of the previous step, our governance should look similar to the following:
 
 ```json
 {
@@ -39,7 +39,7 @@ Comenzaremos verificando los cambios que deseamos realizar en las propiedades de
 }
 ```
 
-Ahora, necesitamos incluir al miembro que creó la gobernanza, lo cual daría lugar a un *json* como este:
+Now, we need to include the member who created the governance, which would result in a *json* like this:
 
 ```json
 {
@@ -87,13 +87,13 @@ Ahora, necesitamos incluir al miembro que creó la gobernanza, lo cual daría lu
 }
 ```
 
-Para generar los cambios mencionados, utilizaremos nuestra herramienta [**TAPLE-Patch**](../../learn/client-tools.md#taple-patch) de la siguiente manera:
+To generate the mentioned changes, we will use our [**TAPLE-Patch**](../../learn/client-tools.md#taple-patch) tool as follows:
 
 ```bash title="Another terminal"
 taple-patch "{\"members\":[],\"policies\":[{\"approve\":{\"quorum\":\"MAJORITY\"},\"evaluate\":{\"quorum\":\"MAJORITY\"},\"id\":\"governance\",\"validate\":{\"quorum\":\"MAJORITY\"}}],\"roles\":[{\"namespace\":\"\",\"role\":\"WITNESS\",\"schema\":{\"ID\":\"governance\"},\"who\":\"MEMBERS\"}],\"schemas\":[]}" "{\"members\":[{\"id\":\"EbwR0yYrCYpTzlN5i5GX_MtAbKRw5y2euv3TqiTgwggs\",\"name\":\"WPO\"}],\"policies\":[{\"approve\":{\"quorum\":\"MAJORITY\"},\"evaluate\":{\"quorum\":\"MAJORITY\"},\"id\":\"governance\",\"validate\":{\"quorum\":\"MAJORITY\"}}],\"roles\":[{\"namespace\":\"\",\"role\":\"WITNESS\",\"schema\":{\"ID\":\"governance\"},\"who\":\"MEMBERS\"},{\"namespace\":\"\",\"role\":\"APPROVER\",\"schema\":{\"ID\":\"governance\"},\"who\":{\"NAME\":\"WPO\"}}],\"schemas\":[]}"
 ```
 
-El resultado será el siguiente:
+The result will be as follows:
 
 ```json
 [
@@ -122,7 +122,7 @@ El resultado será el siguiente:
 ]
 ```
 
-Ahora, es el momento de llamar al método del contrato de la gobernanza que se encarga de la actualización de sus propiedades. Para ello, ejecutaremos lo siguiente:
+Now, it's time to call the method of the governance contract responsible for updating its properties. To do this, we will execute the following:
 
 ```bash title="Node: WPO"
 curl --request POST 'http://localhost:3000/api/event-requests' \
@@ -165,18 +165,18 @@ curl --request POST 'http://localhost:3000/api/event-requests' \
 ```
 
 :::info
-Tenga en cuenta que los cambios que se encuentran dentro de la lista `data` son los cambios que se realizarán en la gobernanza mediante *json-patch*.
+Please note that the changes found within the `data` list are the changes that will be made to the governance through *json-patch*.
 :::
 
-En este punto, debemos hablar sobre un nuevo concepto: [la emisión de ciertos eventos requieren de aprobación](../../discover/event-approval-process.md), lo cual se define a nivel del contrato inteligente para un sujeto. En el caso de la gobernanza, sus cambios deben ser aprobados por aquellos miembros cuyo rol dentro de la gobernanza ha sido especificado como aprobador. En caso de no existir aprobadores definidos, el propietario de la gobernanza asume este papel.
+At this point, we need to discuss a new concept: [emitting certain events requires approval](../../discover/event-approval-process.md), which is defined at the smart contract level for a subject. In the case of governance, its changes must be approved by those members whose role within the governance has been specified as an approver. If no approvers are defined, the owner of the governance assumes this role.
 
-Por lo tanto, debemos consultar nuestra lista de solicitudes de aprobación pendientes en el sistema:
+Therefore, we must check our list of pending approval requests in the system:
 
 ```bash title="Node: WPO"
 curl --request GET 'http://localhost:3000/api/approval-requests?status=pending'
 ```
 
-El resultado de esta operación será una lista con un único elemento, que representa el evento que espera ser aprobado. Para aprobar esta solicitud de actualización de la gobernanza, copiaremos el valor que aparece en su campo `id` y ejecutaremos el siguiente comando:
+The result of this operation will be a list with a single element, representing the event waiting to be approved. To approve this request to update the governance, copy the value shown in its `id` field and execute the following command:
 
 ```bash title="Node: WPO"
 curl --request PATCH 'http://localhost:3000/api/approval-requests/{{PREVIOUS-ID}}' \
@@ -184,7 +184,7 @@ curl --request PATCH 'http://localhost:3000/api/approval-requests/{{PREVIOUS-ID}
 --data-raw '{"approvalType": "Accept"}'
 ```
 
-Luego, consultamos la gobernanza nuevamente para verificar los cambios. El resultado debería mostrar un campo `sn` igual a 1 y la inclusión del nuevo miembro:
+Then, we check the governance again to verify the changes. The result should show an `sn` field equal to 1 and the inclusion of the new member:
 
 ```bash title="Node: WPO"
 curl --request GET 'http://localhost:3000/api/subjects/{{GOVERNANCE-ID}}'

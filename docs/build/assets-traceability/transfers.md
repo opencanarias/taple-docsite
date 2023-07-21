@@ -1,10 +1,10 @@
 # Transfers
 
-En esta sección, abordaremos la transferencia de la propiedad de un sujeto de tipo *Wine* a un **ciudadano** interesado en adquirirlo.
+In this section, we will address the transfer of ownership of a subject of type *Wine* to a **citizen** interested in acquiring it.
 
-Cualquier sujeto que no haya completado su ciclo de vida en Taple puede ser transferido a un nuevo propietario, independientemente de si este último forma parte o no de la gobernanza en la que se ha declarado.
+Any subject that has not completed its lifecycle in Taple can be transferred to a new owner, regardless of whether the new owner is part of the governance or not.
 
-Para llevar a cabo esta transferencia, necesitamos configurar un nuevo nodo que actuará como el nuevo propietario externo a la gobernanza. Para ello, seguiremos estos pasos:
+To carry out this transfer, we need to set up a new node that will act as the new external owner outside the governance. We will follow these steps:
 
 ```bash title="Node: Citizen"
 docker run opencanarias/taple-client:0.2 \
@@ -16,18 +16,18 @@ docker run opencanarias/taple-client:0.2 \
     -e TAPLE_NETWORK_KNOWN_NODE=/ip4/172.17.0.1/tcp/50000/p2p/12D3KooWHHjN5vKSKeCWiBG3gHaDRDp6YzsEgu9iTesYqrWxAgFk 
 ```
 
-Hasta este punto, al crear el sujeto, no hemos tenido que declarar su clave pública, aunque siempre hemos tenido la posibilidad de hacerlo. Sin embargo, en este caso es diferente, ya que al realizar una transferencia, el nuevo propietario debe generar una clave pública con la que desee gestionar el sujeto que se le transferirá. Para lograrlo, debe ejecutar lo siguiente:
+Up to this point, when creating the subject, we have not had to declare its public key, although we always had the possibility to do so. However, in this case, it's different because, during the transfer, the new owner must generate a public key with which they want to manage the subject being transferred to them. To do this, they must execute the following:
 
-```bash
+```bash title="Node: Citizen"
 curl --request POST 'http://localhost:3004/api/keys' \
 --form 'algorithm="Ed25519"'
 ```
 
-Esto generará una `public_key`, que debe ser copiada y guardada para su uso posterior.
+This will generate a `public_key`, which must be copied and saved for later use.
 
-Activaremos la preautorización de la gobernanza desde la que deseamos transferir el sujeto. Dentro de los `providers`, especificaremos el nodo propietario de la misma. Debido a que no somos miembros de la gobernanza, nadie nos la enviará automáticamente, por lo que debemos autorizarla y, al mismo tiempo, informar a nuestro nodo de sus posibles proveedores. En este caso, solicitaremos la gobernanza al nodo **WPO**, ya que es su dueño:
+Next, we will activate the preauthorization of the governance from which we want to transfer the subject. Within the `providers`, we will specify the node that owns it. Since we are not members of the governance, no one will send it to us automatically, so we must authorize it and inform our node of its possible providers. In this case, we will request the governance from the **WPO** node, as it is the owner:
 
-```bash
+```bash title="Node: Citizen"
 curl --request PUT 'http://localhost:3004/api/allowed-subjects/{{GOVERNANCE-ID}}' \
 --header 'Content-Type: application/json' \
 --data-raw '{
@@ -35,9 +35,9 @@ curl --request PUT 'http://localhost:3004/api/allowed-subjects/{{GOVERNANCE-ID}}
 }'
 ```
 
-Además de lo anterior, también será necesario preautorizar el sujeto que deseamos recibir, yaa que no somos testigos ni de la gobernanza ni de los sujetos de tipo *Wine*:
+In addition to the above, it will also be necessary to preauthorize the subject that we want to receive since we are not witnesses to either the governance or the subjects of type *Wine*:
 
-```bash
+```bash title="Node: Citizen"
 curl --request PUT 'http://localhost:3004/api/allowed-subjects/{{SUBJECT-ID}}' \
 --header 'Content-Type: application/json' \
 --data-raw '{
@@ -45,13 +45,13 @@ curl --request PUT 'http://localhost:3004/api/allowed-subjects/{{SUBJECT-ID}}' \
 }'
 ```
 
-Ahora debemos firmar la solicitud de transferencia con el material del nuevo nodo. Para ello, ejecutaremos lo siguiente:
+Now, we need to sign the transfer request with the material from the new node. To do this, we will use our [TAPLE-Sign tool](../../learn/client-tools.md#taple-sign) and execute the following command:
 
 ```bash title="Another terminal"
 taple-sing "2a71a0aff12c2de9e21d76e0538741aa9ac6da9ff7f467cf8b7211bd008a3198" "{\"Transfer\":{\"subject_id\":\"{{SUBJECT-ID}}\",\"public_key\":\"{{PUBLIC-KEY}}\"}}"
 ```
 
-El resultado de esta ejecución se incluirá en la siguiente solicitud:
+The result of this execution will be included in the following request:
 
 ```bash title="Node: Premium Wines"
 curl --request POST 'http://localhost:3001/api/event-requests' \
@@ -59,7 +59,7 @@ curl --request POST 'http://localhost:3001/api/event-requests' \
 --data-raw {{SIGN-RESULT}}
 ```
 
-Esto generará un resultado similar a lo siguiente:
+This will generate a result similar to the following:
 
 ```bash title="Node: Premium Wines"
 curl --request POST 'http://localhost:3001/api/event-requests' \
@@ -79,7 +79,7 @@ curl --request POST 'http://localhost:3001/api/event-requests' \
 }'
 ```
 
-Una vez completados los pasos anteriores, el nuevo nodo debería ser capaz de visualizar este sujeto, y la identidad del propietario debería corresponderse con la del nodo **Citizen**:
+Once the above steps are completed, the new node should be able to view this subject, and the owner's identity should correspond to the **Citizen** node:
 
 ```bash title="Node: Citizen"
 curl --request GET 'http://localhost:3004/api/subjects/{{SUBJECT-ID}}'
