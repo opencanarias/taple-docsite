@@ -274,7 +274,7 @@ We will make changes to the roles declared in the governance. Here's how the pro
 To generate these changes, we will use our tool [**TAPLE-Patch**](../../learn/client-tools.md#taple-patch) following this procedure:
 
 ```bash title="Another terminal"
-taple-patch "{\"roles\":[{\"namespace\":\"\",\"role\":\"WITNESS\",\"schema\":{\"ID\":\"governance\"},\"who\":\"MEMBERS\"},{\"namespace\":\"\",\"role\":\"APPROVER\",\"schema\":{\"ID\":\"governance\"},\"who\":{\"NAME\":\"WPO\"}},{\"namespace\":\"\",\"role\":\"CREATOR\",\"schema\":{\"ID\":\"Wine\"},\"who\":{\"NAME\":\"PremiumWines\"}},{\"namespace\":\"\",\"role\":\"APPROVER\",\"schema\":{\"ID\":\"governance\"},\"who\":{\"NAME\":\"WFO\"}},{\"namespace\":\"\",\"role\":\"VALIDATOR\",\"schema\":{\"ID\":\"governance\"},\"who\":{\"NAME\":\"WFO\"}},{\"namespace\":\"\",\"role\":\"EVALUATOR\",\"schema\":{\"ID\":\"governance\"},\"who\":{\"NAME\":\"WFO\"}},{\"namespace\":\"\",\"role\":\"WITNESS\",\"schema\":{\"ID\":\"Wine\"},\"who\":{\"NAME\":\"WFO\"}},{\"namespace\":\"\",\"role\":\"ISSUER\",\"schema\":{\"ID\":\"Wine\"},\"who\":\"NOT_MEMBERS\"},{\"namespace\":\"\",\"role\":\"WITNESS\",\"schema\":{\"ID\":\"Wine\"},\"who\":{\"NAME\":\"SFO\"}},{\"namespace\":\"\",\"role\":\"APPROVER\",\"schema\":{\"ID\":\"Wine\"},\"who\":{\"NAME\":\"SFO\"}}]}" "{\"roles\":[{\"namespace\":\"\",\"role\":\"WITNESS\",\"schema\":{\"ID\":\"governance\"},\"who\":\"MEMBERS\"},{\"namespace\":\"\",\"role\":\"APPROVER\",\"schema\":{\"ID\":\"governance\"},\"who\":{\"NAME\":\"WPO\"}},{\"namespace\":\"Spain\",\"role\":\"CREATOR\",\"schema\":{\"ID\":\"Wine\"},\"who\":{\"NAME\":\"PremiumWines\"}},{\"namespace\":\"France\",\"role\":\"CREATOR\",\"schema\":{\"ID\":\"Wine\"},\"who\":{\"NAME\":\"PremiumWines\"}},{\"namespace\":\"\",\"role\":\"APPROVER\",\"schema\":{\"ID\":\"governance\"},\"who\":{\"NAME\":\"WFO\"}},{\"namespace\":\"\",\"role\":\"VALIDATOR\",\"schema\":{\"ID\":\"governance\"},\"who\":{\"NAME\":\"WFO\"}},{\"namespace\":\"\",\"role\":\"EVALUATOR\",\"schema\":{\"ID\":\"governance\"},\"who\":{\"NAME\":\"WFO\"}},{\"namespace\":\"Spain\",\"role\":\"WITNESS\",\"schema\":{\"ID\":\"Wine\"},\"who\":{\"NAME\":\"WFO\"}},{\"namespace\":\"France\",\"role\":\"WITNESS\",\"schema\":{\"ID\":\"Wine\"},\"who\":{\"NAME\":\"WFO\"}},{\"namespace\":\"Spain\",\"role\":\"APPROVER\",\"schema\":{\"ID\":\"Wine\"},\"who\":{\"NAME\":\"WFO\"}},{\"namespace\":\"France\",\"role\":\"APPROVER\",\"schema\":{\"ID\":\"Wine\"},\"who\":{\"NAME\":\"WFO\"}},{\"namespace\":\"Spain\",\"role\":\"ISSUER\",\"schema\":{\"ID\":\"Wine\"},\"who\":\"NOT_MEMBERS\"},{\"namespace\":\"France\",\"role\":\"ISSUER\",\"schema\":{\"ID\":\"Wine\"},\"who\":\"NOT_MEMBERS\"},{\"namespace\":\"Spain\",\"role\":\"WITNESS\",\"schema\":{\"ID\":\"Wine\"},\"who\":{\"NAME\":\"SFO\"}},{\"namespace\":\"Spain\",\"role\":\"APPROVER\",\"schema\":{\"ID\":\"Wine\"},\"who\":{\"NAME\":\"SFO\"}}]}"
+taple-patch '{"roles":[{"namespace":"","role":"WITNESS","schema":{"ID":"governance"},"who":"MEMBERS"},{"namespace":"","role":"APPROVER","schema":{"ID":"governance"},"who":{"NAME":"WPO"}},{"namespace":"","role":"CREATOR","schema":{"ID":"Wine"},"who":{"NAME":"PremiumWines"}},{"namespace":"","role":"APPROVER","schema":{"ID":"governance"},"who":{"NAME":"WFO"}},{"namespace":"","role":"VALIDATOR","schema":{"ID":"governance"},"who":{"NAME":"WFO"}},{"namespace":"","role":"EVALUATOR","schema":{"ID":"governance"},"who":{"NAME":"WFO"}},{"namespace":"","role":"WITNESS","schema":{"ID":"Wine"},"who":{"NAME":"WFO"}},{"namespace":"","role":"ISSUER","schema":{"ID":"Wine"},"who":"NOT_MEMBERS"},{"namespace":"","role":"WITNESS","schema":{"ID":"Wine"},"who":{"NAME":"SFO"}},{"namespace":"","role":"APPROVER","schema":{"ID":"Wine"},"who":{"NAME":"SFO"}}]}' '{"roles":[{"namespace":"","role":"WITNESS","schema":{"ID":"governance"},"who":"MEMBERS"},{"namespace":"","role":"APPROVER","schema":{"ID":"governance"},"who":{"NAME":"WPO"}},{"namespace":"Spain","role":"CREATOR","schema":{"ID":"Wine"},"who":{"NAME":"PremiumWines"}},{"namespace":"France","role":"CREATOR","schema":{"ID":"Wine"},"who":{"NAME":"PremiumWines"}},{"namespace":"","role":"APPROVER","schema":{"ID":"governance"},"who":{"NAME":"WFO"}},{"namespace":"","role":"VALIDATOR","schema":{"ID":"governance"},"who":{"NAME":"WFO"}},{"namespace":"","role":"EVALUATOR","schema":{"ID":"governance"},"who":{"NAME":"WFO"}},{"namespace":"Spain","role":"WITNESS","schema":{"ID":"Wine"},"who":{"NAME":"WFO"}},{"namespace":"France","role":"WITNESS","schema":{"ID":"Wine"},"who":{"NAME":"WFO"}},{"namespace":"Spain","role":"APPROVER","schema":{"ID":"Wine"},"who":{"NAME":"WFO"}},{"namespace":"France","role":"APPROVER","schema":{"ID":"Wine"},"who":{"NAME":"WFO"}},{"namespace":"Spain","role":"ISSUER","schema":{"ID":"Wine"},"who":"NOT_MEMBERS"},{"namespace":"France","role":"ISSUER","schema":{"ID":"Wine"},"who":"NOT_MEMBERS"},{"namespace":"Spain","role":"WITNESS","schema":{"ID":"Wine"},"who":{"NAME":"SFO"}},{"namespace":"Spain","role":"APPROVER","schema":{"ID":"Wine"},"who":{"NAME":"SFO"}}]}'
 ```
 
 The result obtained will be:
@@ -611,13 +611,13 @@ Copy the value of the `id` field from the notification and request approval from
 ```bash title="Node: WPO"
 curl --request PATCH 'http://localhost:3000/api/approval-requests/{{PREVIUS-ID}}' \
 --header 'Content-Type: application/json' \
---data-raw '{"approvalType": "Accept"}'
+--data-raw '{"state": "RespondedAccepted"}'
 ```
 
 ```bash title="Node: WFO"
 curl --request PATCH 'http://localhost:3002/api/approval-requests/{{PREVIUS-ID}}' \
 --header 'Content-Type: application/json' \
---data-raw '{"approvalType": "Accept"}'
+--data-raw '{"state": "RespondedAccepted"}'
 ```
 
 If everything went well, when you execute the following command, the governance `sn` should be 7, and the changes made earlier should be displayed:
@@ -625,6 +625,9 @@ If everything went well, when you execute the following command, the governance 
 ```bash title="Node: WPO"
 curl --request GET 'http://localhost:3000/api/subjects?subject_type=governances'
 ```
+
+<details>
+ <summary>Click to look at the full governance.</summary>
 
 ```json
 {
@@ -912,6 +915,8 @@ curl --request GET 'http://localhost:3000/api/subjects?subject_type=governances'
 }
 ```
 
+</details>
+
 Once we have implemented *namespace* segmentation, we will perform tests to verify its correct functioning.
 
 Let's create a French wine bottle using the following command:
@@ -1043,7 +1048,7 @@ curl --request GET 'http://localhost:3001/api/subjects/{{SUBJECT-ID}}'
 We will test issuing the certification event. To do this, we will generate the event signature we want to issue using [TAPLE-Sign](../../learn/client-tools.md#taple-sign), with the following format, replacing `subject_id` with the identifier of our wine subject:
 
 ```bash title="Another terminal"
-taple-sign "f855c6736463a65f515afe7b85d1418c096ed73852b42bbe4c332eb43d532326" "{\"Fact\":{\"subject_id\":\"{{SUBJECT-ID}}\",\"payload\":{\"OrganicCertification\":{\"fertilizers_control\":false,\"pesticides_control\":false,\"analytics\":false,\"additional_info\":\"test\"}}}}"
+taple-sign 'f855c6736463a65f515afe7b85d1418c096ed73852b42bbe4c332eb43d532326' '{"Fact":{"subject_id":"{{SUBJECT-ID}}","payload":{"OrganicCertification":{"fertilizers_control":false,"pesticides_control":false,"analytics":false,"additional_info":"test"}}}}'
 ```
 
 The result of this execution will be included in the following request:
@@ -1092,7 +1097,7 @@ Copy its `id` and use it to accept it with the following request:
 ```bash title="Node: WFO"
 curl --request PATCH 'http://localhost:3002/api/approval-requests/{{PREVIUS-ID}}' \
 --header 'Content-Type: application/json' \
---data-raw '{"approvalType": "Accept"}'
+--data-raw '{"state": "RespondedAccepted"}'
 ```
 
 Now, when you query the subject again, it should show a `sn` value of 2, and the `organic_certified` field should be `false`:

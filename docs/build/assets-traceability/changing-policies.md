@@ -75,7 +75,7 @@ We will make the necessary change in the policies for the *Wine* subjects:
 To generate these changes, we will use our tool [**TAPLE-Patch**](../../learn/client-tools.md#taple-patch) following this procedure:
 
 ```bash title="Another terminal"
-taple-patch "{\"policies\":[{\"approve\":{\"quorum\":\"MAJORITY\"},\"evaluate\":{\"quorum\":\"MAJORITY\"},\"id\":\"governance\",\"validate\":{\"quorum\":\"MAJORITY\"}},{\"approve\":{\"quorum\":\"MAJORITY\"},\"evaluate\":{\"quorum\":\"MAJORITY\"},\"id\":\"Wine\",\"validate\":{\"quorum\":\"MAJORITY\"}}]}" "{\"policies\":[{\"approve\":{\"quorum\":\"MAJORITY\"},\"evaluate\":{\"quorum\":\"MAJORITY\"},\"id\":\"governance\",\"validate\":{\"quorum\":\"MAJORITY\"}},{\"approve\":{\"quorum\":\"MAJORITY\"},\"evaluate\":{\"quorum\":\"MAJORITY\"},\"id\":\"Wine\",\"validate\":{\"quorum\":{\"FIXED\":1}}}]}"
+taple-patch '{"policies":[{"approve":{"quorum":"MAJORITY"},"evaluate":{"quorum":"MAJORITY"},"id":"governance","validate":{"quorum":"MAJORITY"}},{"approve":{"quorum":"MAJORITY"},"evaluate":{"quorum":"MAJORITY"},"id":"Wine","validate":{"quorum":"MAJORITY"}}]}' '{"policies":[{"approve":{"quorum":"MAJORITY"},"evaluate":{"quorum":"MAJORITY"},"id":"governance","validate":{"quorum":"MAJORITY"}},{"approve":{"quorum":"MAJORITY"},"evaluate":{"quorum":"MAJORITY"},"id":"Wine","validate":{"quorum":{"FIXED":1}}}]}'
 ```
 
 The result obtained will be:
@@ -130,13 +130,13 @@ Copy the value of the `id` field, but this time, approval from **WFO** will also
 ```bash title="Node: WPO"
 curl --request PATCH 'http://localhost:3000/api/approval-requests/{{PREVIUS-ID}}' \
 --header 'Content-Type: application/json' \
---data-raw '{"approvalType": "Accept"}'
+--data-raw '{"state": "RespondedAccepted"}'
 ```
 
 ```bash title="Node: WFO"
 curl --request PATCH 'http://localhost:3002/api/approval-requests/{{PREVIUS-ID}}' \
 --header 'Content-Type: application/json' \
---data-raw '{"approvalType": "Accept"}'
+--data-raw '{"state": "RespondedAccepted"}'
 ```
 
 If everything went well, when you execute the following command, the governance `sn` should be 8, and the changes made earlier should be displayed:
@@ -144,6 +144,9 @@ If everything went well, when you execute the following command, the governance 
 ```bash title="Node: WPO"
 curl --request GET 'http://localhost:3000/api/subjects/{{GOVERNANCE-ID}}'
 ```
+
+<details>
+ <summary>Click to look at the full governance.</summary>
 
 ```json
 {
@@ -433,6 +436,8 @@ curl --request GET 'http://localhost:3000/api/subjects/{{GOVERNANCE-ID}}'
 }
 ```
 
+</details>
+
 Now, let's create a new wine bottle subject in Spain to test our change:
 
 ```bash title="Node: Premium Wines"
@@ -527,7 +532,7 @@ curl --request GET 'http://localhost:3001/api/subjects/{{SUBJECT-ID}}'
 Now, we will test issuing the certification event. To do this, we will generate the event signature we want to issue using [**TAPLE-Sign**](../../learn/client-tools.md#taple-sign), with the following format, replacing `subject_id` with the identifier of our *Wine* subject:
 
 ```bash title="Another terminal"
-taple-sign "f855c6736463a65f515afe7b85d1418c096ed73852b42bbe4c332eb43d532326" "{\"Fact\":{\"subject_id\":\"{{SUBJECT-ID}}\",\"payload\":{\"OrganicCertification\":{\"fertilizers_control\":false,\"pesticides_control\":false,\"analytics\":false,\"additional_info\":\"test\"}}}}"
+taple-sign 'f855c6736463a65f515afe7b85d1418c096ed73852b42bbe4c332eb43d532326' '{"Fact":{"subject_id":"{{SUBJECT-ID}}","payload":{"OrganicCertification":{"fertilizers_control":false,"pesticides_control":false,"analytics":false,"additional_info":"test"}}}}'
 ```
 
 The result of this execution will be included in the following request:
@@ -554,7 +559,7 @@ We will try to approve it on one of the two nodes, for example, on **SFO**:
 ```bash title="Node: SFO"
 curl --request PATCH 'http://localhost:3003/api/approval-requests/{{PREVIUS-ID}}' \
 --header 'Content-Type: application/json' \
---data-raw '{"approvalType": "Accept"}'
+--data-raw '{"state": "RespondedAccepted"}'
 ```
 
 If everything went well, when you launch the subject query request, it should appear with `sn` 2 and the `organic_certified` set to false:
