@@ -10,7 +10,7 @@ The validation process is the last step before achieving a valid event that can 
 
 What the validators sign is called proof of validation, the event itself is not directly signed. This is done to ensure the privacy of the event's data and at the same time add additional information that allows the validation process to be safer. In turn, when the owners of the subjects send the proof to the validators, it is also signed with the subject's cryptographic material. It has this form:
 
-```Rust
+```rust
 pub struct ValidationProof {
     /// The identifier of the subject being validated.
     pub subject_id: DigestIdentifier,
@@ -43,7 +43,7 @@ If the validator has the previous proof, they can validate certain aspects, such
 
 Another interesting point is the case where validators do not have the previous proof to validate the new one. There is no scenario where validators always have the previous proof, since even when the quorum requires 100% of the signatures, if a change in governance adds a new validator, they will not have the previous proof. This is why when a validation is requested, it should send:
 
-```Rust
+```rust
 pub struct ValidationEvent {
     pub proof: ValidationProof,
     pub subject_signature: Signature,

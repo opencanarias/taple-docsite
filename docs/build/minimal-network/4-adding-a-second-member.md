@@ -68,11 +68,11 @@ The first node is going to be sending the events of the governance subject to th
 
 ```bash
 docker run -p 3001:3000 -p 50001:50000 \ 
--e TAPLE_SECRET_KEY=388e07385cfd8871f990fe05f82610af1989f7abf5d4e42884c8337498086ba0 \ 
--e TAPLE_HTTP=true \ 
+-e TAPLE_ID_PRIVATE_KEY=388e07385cfd8871f990fe05f82610af1989f7abf5d4e42884c8337498086ba0 \ 
+-e TAPLE_HTTP=true opencanarias/taple-client:0.2 \ 
 -e TAPLE_NETWORK_KNOWN_NODE=/ip4/127.0.0.1/tcp/50000/p2p/12D3KooWLXexpg81PjdjnrhmHUxN7U5EtfXJgr9cahei1SJ9Ub3B \ 
 -e TAPLE_NETWORK_LISTEN_ADDR=/ip4/0.0.0.0/tcp/50000 \
-opencanarias/taple-client:0.2
+opencanarias/taple-client:0.2.0
 ```
 
 Replace addr with the ip that the second node can find the first. It depends on whether the containers are launched on a docker network, on the host network... here we are assuming that they are on the host network.
