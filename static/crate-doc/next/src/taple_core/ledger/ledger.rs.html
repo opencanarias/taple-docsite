@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `core/src/ledger/ledger.rs`."><title>ledger.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-ba5701c5741a7b69.css" id="mainThemeStyle"><div id="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="taple_core" data-themes="" data-resource-suffix="" data-rustdoc-version="1.70.0 (90c541806 2023-05-31)" data-search-js="search-e077946657036a58.js" data-settings-js="settings-298e1ea74db45b39.js" data-settings-css="settings-7bfb4c59cc6bc502.css" data-theme-light-css="light-0f8c037637f9eb3e.css" data-theme-dark-css="dark-1097f8e92a01e3cf.css" data-theme-ayu-css="ayu-614652228113ac93.css" ></div><script src="../../../static.files/storage-62ce34ea385b278a.js"></script><script defer src="../../../static.files/source-script-905937fbbdc8e9ea.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../static.files/main-f61008743c98d196.js"></script><noscript><link rel="stylesheet" media="(prefers-color-scheme:light)" href="../../../static.files/light-0f8c037637f9eb3e.css"><link rel="stylesheet" media="(prefers-color-scheme:dark)" href="../../../static.files/dark-1097f8e92a01e3cf.css"><link rel="stylesheet" href="../../../static.files/noscript-13285aec31fa243e.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../../taple_core/index.html"><img class="rust-logo" src="../../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `core/src/ledger/ledger.rs`."><title>ledger.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-f3501f0f5ae15dfb.css" id="mainThemeStyle"><div id="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="taple_core" data-themes="" data-resource-suffix="" data-rustdoc-version="1.71.0 (8ede3aae2 2023-07-12)" data-search-js="search-4926e5fc22a5646a.js" data-settings-js="settings-de11bff964e9d4e5.js" data-settings-css="settings-8c76f75bfb6bd192.css" data-theme-light-css="light-0f8c037637f9eb3e.css" data-theme-dark-css="dark-1097f8e92a01e3cf.css" data-theme-ayu-css="ayu-614652228113ac93.css" ></div><script src="../../../static.files/storage-62ce34ea385b278a.js"></script><script defer src="../../../static.files/source-script-11255107d0a65077.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../static.files/main-f0540c1d82cde29b.js"></script><noscript><link rel="stylesheet" media="(prefers-color-scheme:light)" href="../../../static.files/light-0f8c037637f9eb3e.css"><link rel="stylesheet" media="(prefers-color-scheme:dark)" href="../../../static.files/dark-1097f8e92a01e3cf.css"><link rel="stylesheet" href="../../../static.files/noscript-13285aec31fa243e.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../../taple_core/index.html"><img class="rust-logo" src="../../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -2855,35 +2855,126 @@
 <a href="#2855" id="2855">2855</a>
 <a href="#2856" id="2856">2856</a>
 <a href="#2857" id="2857">2857</a>
-</pre></div><pre class="rust"><code><span class="kw">use </span>std::collections::{hash_map::Entry, HashMap, HashSet};
-
-<span class="kw">use </span><span class="kw">crate</span>::commons::crypto::KeyGenerator;
-<span class="kw">use </span><span class="kw">crate</span>::commons::models::approval::ApprovalStatus;
+<a href="#2858" id="2858">2858</a>
+<a href="#2859" id="2859">2859</a>
+<a href="#2860" id="2860">2860</a>
+<a href="#2861" id="2861">2861</a>
+<a href="#2862" id="2862">2862</a>
+<a href="#2863" id="2863">2863</a>
+<a href="#2864" id="2864">2864</a>
+<a href="#2865" id="2865">2865</a>
+<a href="#2866" id="2866">2866</a>
+<a href="#2867" id="2867">2867</a>
+<a href="#2868" id="2868">2868</a>
+<a href="#2869" id="2869">2869</a>
+<a href="#2870" id="2870">2870</a>
+<a href="#2871" id="2871">2871</a>
+<a href="#2872" id="2872">2872</a>
+<a href="#2873" id="2873">2873</a>
+<a href="#2874" id="2874">2874</a>
+<a href="#2875" id="2875">2875</a>
+<a href="#2876" id="2876">2876</a>
+<a href="#2877" id="2877">2877</a>
+<a href="#2878" id="2878">2878</a>
+<a href="#2879" id="2879">2879</a>
+<a href="#2880" id="2880">2880</a>
+<a href="#2881" id="2881">2881</a>
+<a href="#2882" id="2882">2882</a>
+<a href="#2883" id="2883">2883</a>
+<a href="#2884" id="2884">2884</a>
+<a href="#2885" id="2885">2885</a>
+<a href="#2886" id="2886">2886</a>
+<a href="#2887" id="2887">2887</a>
+<a href="#2888" id="2888">2888</a>
+<a href="#2889" id="2889">2889</a>
+<a href="#2890" id="2890">2890</a>
+<a href="#2891" id="2891">2891</a>
+<a href="#2892" id="2892">2892</a>
+<a href="#2893" id="2893">2893</a>
+<a href="#2894" id="2894">2894</a>
+<a href="#2895" id="2895">2895</a>
+<a href="#2896" id="2896">2896</a>
+<a href="#2897" id="2897">2897</a>
+<a href="#2898" id="2898">2898</a>
+<a href="#2899" id="2899">2899</a>
+<a href="#2900" id="2900">2900</a>
+<a href="#2901" id="2901">2901</a>
+<a href="#2902" id="2902">2902</a>
+<a href="#2903" id="2903">2903</a>
+<a href="#2904" id="2904">2904</a>
+<a href="#2905" id="2905">2905</a>
+<a href="#2906" id="2906">2906</a>
+<a href="#2907" id="2907">2907</a>
+<a href="#2908" id="2908">2908</a>
+<a href="#2909" id="2909">2909</a>
+<a href="#2910" id="2910">2910</a>
+<a href="#2911" id="2911">2911</a>
+<a href="#2912" id="2912">2912</a>
+<a href="#2913" id="2913">2913</a>
+<a href="#2914" id="2914">2914</a>
+<a href="#2915" id="2915">2915</a>
+<a href="#2916" id="2916">2916</a>
+<a href="#2917" id="2917">2917</a>
+<a href="#2918" id="2918">2918</a>
+<a href="#2919" id="2919">2919</a>
+<a href="#2920" id="2920">2920</a>
+<a href="#2921" id="2921">2921</a>
+<a href="#2922" id="2922">2922</a>
+<a href="#2923" id="2923">2923</a>
+<a href="#2924" id="2924">2924</a>
+<a href="#2925" id="2925">2925</a>
+<a href="#2926" id="2926">2926</a>
+<a href="#2927" id="2927">2927</a>
+<a href="#2928" id="2928">2928</a>
+<a href="#2929" id="2929">2929</a>
+<a href="#2930" id="2930">2930</a>
+<a href="#2931" id="2931">2931</a>
+<a href="#2932" id="2932">2932</a>
+<a href="#2933" id="2933">2933</a>
+<a href="#2934" id="2934">2934</a>
+<a href="#2935" id="2935">2935</a>
+<a href="#2936" id="2936">2936</a>
+<a href="#2937" id="2937">2937</a>
+<a href="#2938" id="2938">2938</a>
+<a href="#2939" id="2939">2939</a>
+<a href="#2940" id="2940">2940</a>
+<a href="#2941" id="2941">2941</a>
+<a href="#2942" id="2942">2942</a>
+<a href="#2943" id="2943">2943</a>
+<a href="#2944" id="2944">2944</a>
+<a href="#2945" id="2945">2945</a>
+<a href="#2946" id="2946">2946</a>
+<a href="#2947" id="2947">2947</a>
+<a href="#2948" id="2948">2948</a>
+<a href="#2949" id="2949">2949</a>
+<a href="#2950" id="2950">2950</a>
+<a href="#2951" id="2951">2951</a>
+<a href="#2952" id="2952">2952</a>
+</pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::commons::crypto::KeyGenerator;
+<span class="kw">use </span><span class="kw">crate</span>::commons::models::approval::ApprovalState;
 <span class="kw">use </span><span class="kw">crate</span>::commons::models::state::generate_subject_id;
+<span class="kw">use </span><span class="kw">crate</span>::crypto::Secp256k1KeyPair;
 <span class="kw">use </span><span class="kw">crate</span>::request::{RequestState, TapleRequest};
+<span class="kw">use </span><span class="kw">crate</span>::signature::Signed;
 <span class="kw">use crate</span>::{
     commons::{
         channel::SenderEnd,
-        models::{
-            approval::Approval,
-            event::ValidationProof,
-            event_preevaluation::{Context, EventPreEvaluation},
-            state::Subject,
-        },
+        models::{evaluation::SubjectContext, state::Subject, validation::ValidationProof},
     },
     crypto::{Ed25519KeyPair, KeyMaterial, KeyPair},
     database::{Error <span class="kw">as </span>DbError, DB},
     distribution::{error::DistributionErrorResponses, DistributionMessagesNew},
-    event_content::Metadata,
-    event_request::{EventRequest, EventRequestType},
     governance::{stage::ValidationStage, GovernanceAPI, GovernanceInterface},
     identifier::{Derivable, DigestIdentifier, KeyIdentifier},
     message::{MessageConfig, MessageTaskCommand},
     protocol::protocol_message_manager::TapleMessages,
+    request::EventRequest,
     signature::Signature,
     utils::message::ledger::{request_event, request_gov_event},
-    DatabaseCollection, Event,
+    DatabaseCollection,
 };
+<span class="kw">use crate</span>::{ApprovalResponse, Event, KeyDerivator, Metadata, Notification, ValueWrapper};
+<span class="kw">use </span>std::collections::{hash_map::Entry, HashMap, HashSet};
 
 <span class="kw">use </span><span class="kw">super</span>::errors::LedgerError;
 
@@ -2902,6 +2993,7 @@
     distribution_channel:
         SenderEnd&lt;DistributionMessagesNew, <span class="prelude-ty">Result</span>&lt;(), DistributionErrorResponses&gt;&gt;,
     our_id: KeyIdentifier,
+    notification_sender: tokio::sync::broadcast::Sender&lt;Notification&gt;,
 }
 
 <span class="kw">impl</span>&lt;C: DatabaseCollection&gt; Ledger&lt;C&gt; {
@@ -2914,6 +3006,7 @@
             <span class="prelude-ty">Result</span>&lt;(), DistributionErrorResponses&gt;,
         &gt;,
         our_id: KeyIdentifier,
+        notification_sender: tokio::sync::broadcast::Sender&lt;Notification&gt;,
     ) -&gt; <span class="self">Self </span>{
         <span class="self">Self </span>{
             gov_api,
@@ -2923,6 +3016,7 @@
             message_channel,
             distribution_channel,
             our_id,
+            notification_sender,
         }
     }
 
@@ -2987,47 +3081,46 @@
                 <span class="kw">let </span>las_event = last_two_events.pop().unwrap();
                 (las_event, pre_last_event)
             };
-            <span class="kw">if </span>last_event.content.event_proposal.proposal.sn
-                == pre_last_event.content.event_proposal.proposal.sn + <span class="number">1
-            </span>{
-                <span class="kw">if </span>subject.sn != last_event.content.event_proposal.proposal.sn {
+            <span class="kw">if </span>last_event.content.sn == pre_last_event.content.sn + <span class="number">1 </span>{
+                <span class="kw">if </span>subject.sn != last_event.content.sn {
                     <span class="kw">return </span><span class="prelude-val">Err</span>(LedgerError::WrongSnInSubject(subject.subject_id.to_str()));
                 }
                 <span class="self">self</span>.ledger_state.insert(
                     subject.subject_id,
                     LedgerState {
-                        current_sn: <span class="prelude-val">Some</span>(last_event.content.event_proposal.proposal.sn),
+                        current_sn: <span class="prelude-val">Some</span>(last_event.content.sn),
                         head: <span class="prelude-val">None</span>,
                     },
                 );
             } <span class="kw">else </span>{
-                <span class="kw">if </span>subject.sn != pre_last_event.content.event_proposal.proposal.sn {
+                <span class="kw">if </span>subject.sn != pre_last_event.content.sn {
                     <span class="kw">return </span><span class="prelude-val">Err</span>(LedgerError::WrongSnInSubject(subject.subject_id.to_str()));
                 }
                 <span class="self">self</span>.ledger_state.insert(
                     subject.subject_id,
                     LedgerState {
-                        current_sn: <span class="prelude-val">Some</span>(pre_last_event.content.event_proposal.proposal.sn),
-                        head: <span class="prelude-val">Some</span>(last_event.content.event_proposal.proposal.sn),
+                        current_sn: <span class="prelude-val">Some</span>(pre_last_event.content.sn),
+                        head: <span class="prelude-val">Some</span>(last_event.content.sn),
                     },
                 );
             }
         }
-        <span class="macro">log::warn!</span>(<span class="string">&quot;TENGO {} sujetos pendietes&quot;</span>, <span class="self">self</span>.ledger_state.len());
         <span class="prelude-val">Ok</span>(())
     }
 
     <span class="kw">fn </span>set_finished_request(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         request_id: <span class="kw-2">&amp;</span>DigestIdentifier,
-        event_request: EventRequest,
+        event_request: Signed&lt;EventRequest&gt;,
         sn: u64,
         subject_id: DigestIdentifier,
+        success: bool,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;(), LedgerError&gt; {
         <span class="kw">let </span><span class="kw-2">mut </span>taple_request: TapleRequest = event_request.clone().try_into()<span class="question-mark">?</span>;
         taple_request.sn = <span class="prelude-val">Some</span>(sn);
         taple_request.subject_id = <span class="prelude-val">Some</span>(subject_id.clone());
         taple_request.state = RequestState::Finished;
+        taple_request.success = <span class="prelude-val">Some</span>(success);
         <span class="self">self</span>.database
             .set_taple_request(<span class="kw-2">&amp;</span>request_id, <span class="kw-2">&amp;</span>taple_request)<span class="question-mark">?</span>;
         <span class="prelude-val">Ok</span>(())
@@ -3035,16 +3128,14 @@
 
     <span class="kw">pub async fn </span>genesis(
         <span class="kw-2">&amp;mut </span><span class="self">self</span>,
-        event: Event,
+        event: Signed&lt;Event&gt;,
         signatures: HashSet&lt;Signature&gt;,
         validation_proof: ValidationProof,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;(), LedgerError&gt; {
-        <span class="kw">let </span>request_id = DigestIdentifier::from_serializable_borsh(
-            <span class="kw-2">&amp;</span>event.content.event_proposal.proposal.event_request,
-        )
-        .map_err(|<span class="kw">_</span>| LedgerError::CryptoError(<span class="string">&quot;Error generating request hash&quot;</span>.to_owned()))<span class="question-mark">?</span>;
+        <span class="kw">let </span>request_id = DigestIdentifier::from_serializable_borsh(<span class="kw-2">&amp;</span>event.content.event_request)
+            .map_err(|<span class="kw">_</span>| LedgerError::CryptoError(<span class="string">&quot;Error generating request hash&quot;</span>.to_owned()))<span class="question-mark">?</span>;
         <span class="comment">// Añadir a subject_is_gov si es una governance y no está
-        </span><span class="kw">let </span>EventRequestType::Create(create_request) = event.content.event_proposal.proposal.event_request.request.clone() <span class="kw">else </span>{
+        </span><span class="kw">let </span>EventRequest::Create(create_request) = event.content.event_request.content.clone() <span class="kw">else </span>{
             <span class="kw">return </span><span class="prelude-val">Err</span>(LedgerError::StateInGenesis)
         };
         <span class="kw">let </span>governance_version = <span class="kw">if </span>create_request.schema_id == <span class="string">&quot;governance&quot;
@@ -3067,12 +3158,18 @@
                 governance_version,
             )
             .<span class="kw">await</span><span class="question-mark">?</span>;
-        <span class="kw">let </span>init_state_string = serde_json::to_string(<span class="kw-2">&amp;</span>init_state)
-            .map_err(|<span class="kw">_</span>| LedgerError::ErrorParsingJsonString(<span class="string">&quot;Init State&quot;</span>.to_owned()))<span class="question-mark">?</span>;
+        <span class="kw">let </span>subject_keys = <span class="kw">match </span><span class="self">self</span>.database.get_keys(<span class="kw-2">&amp;</span>create_request.public_key) {
+            <span class="prelude-val">Ok</span>(keys) =&gt; keys,
+            <span class="prelude-val">Err</span>(<span class="kw">_</span>) =&gt; {
+                <span class="kw">return </span><span class="prelude-val">Err</span>(LedgerError::CryptoError(
+                    <span class="string">&quot;Error getting keys from database&quot;</span>.to_owned(),
+                ))
+            }
+        };
         <span class="comment">// Crear sujeto a partir de genesis y evento
-        </span><span class="kw">let </span>subject = Subject::from_genesis_event(event.clone(), init_state_string)
+        </span><span class="kw">let </span>subject = Subject::from_genesis_event(event.clone(), init_state, <span class="prelude-val">Some</span>(subject_keys))
             .map_err(LedgerError::SubjectError)<span class="question-mark">?</span>;
-        <span class="kw">let </span>sn = event.content.event_proposal.proposal.sn;
+        <span class="kw">let </span>sn = event.content.sn;
         <span class="comment">// Añadir sujeto y evento a base de datos
         </span><span class="kw">let </span>subject_id = subject.subject_id.clone();
         <span class="kw">if </span><span class="kw-2">&amp;</span>create_request.schema_id == <span class="string">&quot;governance&quot; </span>{
@@ -3084,18 +3181,31 @@
         } <span class="kw">else </span>{
             <span class="self">self</span>.subject_is_gov.insert(subject_id.clone(), <span class="bool-val">false</span>);
         }
-        <span class="kw">let </span>ev_request = event.content.event_proposal.proposal.event_request.clone();
+        <span class="kw">let </span>ev_request = event.content.event_request.clone();
         <span class="self">self</span>.database
             .set_governance_index(<span class="kw-2">&amp;</span>subject_id, <span class="kw-2">&amp;</span>subject.governance_id)<span class="question-mark">?</span>;
         <span class="self">self</span>.database.set_subject(<span class="kw-2">&amp;</span>subject_id, subject)<span class="question-mark">?</span>;
+        <span class="kw">let _ </span>= <span class="self">self
+            </span>.notification_sender
+            .send(Notification::NewSubject {
+                subject_id: subject_id.to_str(),
+            })
+            .map_err(|<span class="kw">_</span>| LedgerError::NotificationChannelError);
         <span class="self">self</span>.database.set_signatures(
             <span class="kw-2">&amp;</span>subject_id,
-            event.content.event_proposal.proposal.sn,
+            event.content.sn,
             signatures,
             validation_proof, <span class="comment">// Current Owner
         </span>)<span class="question-mark">?</span>;
         <span class="self">self</span>.database.set_event(<span class="kw-2">&amp;</span>subject_id, event)<span class="question-mark">?</span>;
-        <span class="self">self</span>.set_finished_request(<span class="kw-2">&amp;</span>request_id, ev_request, sn, subject_id.clone())<span class="question-mark">?</span>;
+        <span class="kw">let _ </span>= <span class="self">self
+            </span>.notification_sender
+            .send(Notification::NewEvent {
+                sn,
+                subject_id: subject_id.to_str(),
+            })
+            .map_err(|<span class="kw">_</span>| LedgerError::NotificationChannelError);
+        <span class="self">self</span>.set_finished_request(<span class="kw-2">&amp;</span>request_id, ev_request, sn, subject_id.clone(), <span class="bool-val">true</span>)<span class="question-mark">?</span>;
         <span class="comment">// Actualizar Ledger State
         </span><span class="kw">match </span><span class="self">self</span>.ledger_state.entry(subject_id.clone()) {
             Entry::Occupied(<span class="kw-2">mut </span>ledger_state) =&gt; {
@@ -3116,10 +3226,16 @@
         <span class="prelude-val">Ok</span>(())
     }
 
-    <span class="kw">pub async fn </span>generate_key(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;KeyIdentifier, LedgerError&gt; {
+    <span class="kw">pub async fn </span>generate_key(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        derivator: KeyDerivator,
+    ) -&gt; <span class="prelude-ty">Result</span>&lt;KeyIdentifier, LedgerError&gt; {
         <span class="comment">// Generar material criptográfico y guardarlo en BBDD asociado al subject_id
         // TODO: Hacer la eleccion del MC dinámica. Es necesario primero hacer el cambio a nivel de state.rs
-        </span><span class="kw">let </span>keys = KeyPair::Ed25519(Ed25519KeyPair::new());
+        </span><span class="kw">let </span>keys = <span class="kw">match </span>derivator {
+            KeyDerivator::Ed25519 =&gt; KeyPair::Ed25519(Ed25519KeyPair::new()),
+            KeyDerivator::Secp256k1 =&gt; KeyPair::Secp256k1(Secp256k1KeyPair::new()),
+        };
         <span class="kw">let </span>public_key = KeyIdentifier::new(keys.get_key_derivator(), <span class="kw-2">&amp;</span>keys.public_key_bytes());
         <span class="self">self</span>.database.set_keys(<span class="kw-2">&amp;</span>public_key, keys)<span class="question-mark">?</span>;
         <span class="prelude-val">Ok</span>(public_key)
@@ -3132,16 +3248,16 @@
 
     <span class="kw">pub async fn </span>event_validated(
         <span class="kw-2">&amp;mut </span><span class="self">self</span>,
-        event: Event,
+        event: Signed&lt;Event&gt;,
         signatures: HashSet&lt;Signature&gt;,
         validation_proof: ValidationProof,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;(), LedgerError&gt; {
-        <span class="kw">let </span>event_request = event.content.event_proposal.proposal.event_request.clone();
+        <span class="kw">let </span>event_request = event.content.event_request.clone();
         <span class="kw">let </span>request_id = DigestIdentifier::from_serializable_borsh(<span class="kw-2">&amp;</span>event_request)
             .map_err(|<span class="kw">_</span>| LedgerError::CryptoError(<span class="string">&quot;Error generating request hash&quot;</span>.to_owned()))<span class="question-mark">?</span>;
-        <span class="kw">let </span>sn = event.content.event_proposal.proposal.sn;
-        <span class="kw">let </span>subject_id = <span class="kw">match </span><span class="kw-2">&amp;</span>event_request.request {
-            EventRequestType::Fact(state_request) =&gt; {
+        <span class="kw">let </span>sn = event.content.sn;
+        <span class="kw">let </span>subject_id = <span class="kw">match </span><span class="kw-2">&amp;</span>event_request.content {
+            EventRequest::Fact(state_request) =&gt; {
                 <span class="kw">let </span>subject_id = state_request.subject_id.clone();
                 <span class="comment">// Aplicar event sourcing
                 </span><span class="kw">let </span><span class="kw-2">mut </span>subject =
@@ -3155,13 +3271,34 @@
                         })<span class="question-mark">?</span>;
                 <span class="self">self</span>.database.set_signatures(
                     <span class="kw-2">&amp;</span>subject_id,
-                    event.content.event_proposal.proposal.sn,
+                    event.content.sn,
                     signatures,
                     validation_proof, <span class="comment">// Current Owner
                 </span>)<span class="question-mark">?</span>;
-                <span class="kw">let </span>json_patch = event.content.event_proposal.proposal.json_patch.as_str();
-                subject.update_subject(json_patch, event.content.event_proposal.proposal.sn)<span class="question-mark">?</span>;
+                <span class="kw">let </span>json_patch = event.content.patch.clone();
+                <span class="kw">if </span>subject.sn != event.content.sn - <span class="number">1 </span>{
+                    <span class="kw">return </span><span class="prelude-val">Err</span>(LedgerError::WrongSnInSubject(subject_id.to_str()));
+                }
+                <span class="kw">if </span>event.content.approved {
+                    subject.update_subject(json_patch, event.content.sn)<span class="question-mark">?</span>;
+                } <span class="kw">else </span>{
+                    subject.sn = event.content.sn;
+                }
+                <span class="kw">let _ </span>= <span class="self">self
+                    </span>.notification_sender
+                    .send(Notification::StateUpdated {
+                        sn: event.content.sn,
+                        subject_id: subject.subject_id.to_str(),
+                    })
+                    .map_err(|<span class="kw">_</span>| LedgerError::NotificationChannelError);
                 <span class="self">self</span>.database.set_event(<span class="kw-2">&amp;</span>subject_id, event.clone())<span class="question-mark">?</span>;
+                <span class="kw">let _ </span>= <span class="self">self
+                    </span>.notification_sender
+                    .send(Notification::NewEvent {
+                        sn,
+                        subject_id: subject_id.to_str(),
+                    })
+                    .map_err(|<span class="kw">_</span>| LedgerError::NotificationChannelError);
                 <span class="self">self</span>.database.set_subject(<span class="kw-2">&amp;</span>subject_id, subject)<span class="question-mark">?</span>;
                 <span class="comment">// Comprobar is_gov
                 </span><span class="kw">let </span>is_gov = <span class="self">self</span>.subject_is_gov.get(<span class="kw-2">&amp;</span>subject_id);
@@ -3191,8 +3328,8 @@
                 }
                 state_request.subject_id.clone()
             }
-            EventRequestType::Create(<span class="kw">_</span>) =&gt; <span class="kw">return </span><span class="prelude-val">Err</span>(LedgerError::StateInGenesis),
-            EventRequestType::Transfer(transfer_request) =&gt; {
+            EventRequest::Create(<span class="kw">_</span>) =&gt; <span class="kw">return </span><span class="prelude-val">Err</span>(LedgerError::StateInGenesis),
+            EventRequest::Transfer(transfer_request) =&gt; {
                 <span class="kw">let </span>subject_id = transfer_request.subject_id.clone();
                 <span class="comment">// Aplicar event sourcing
                 </span><span class="kw">let </span><span class="kw-2">mut </span>subject =
@@ -3204,26 +3341,30 @@
                             }
                             <span class="kw">_ </span>=&gt; LedgerError::DatabaseError(error),
                         })<span class="question-mark">?</span>;
+                <span class="comment">// Cambiar clave pública del sujeto y eliminar material criptográfico
+                </span>subject.public_key = transfer_request.public_key.clone();
+                subject.owner = event.content.event_request.signature.signer.clone();
+                <span class="kw">if </span>subject.owner == <span class="self">self</span>.our_id {
+                    <span class="kw">let </span>keys = <span class="self">self</span>.database.get_keys(<span class="kw-2">&amp;</span>transfer_request.public_key)<span class="question-mark">?</span>;
+                    subject.keys = <span class="prelude-val">Some</span>(keys);
+                } <span class="kw">else </span>{
+                    subject.keys = <span class="prelude-val">None</span>;
+                }
                 <span class="self">self</span>.database.set_signatures(
                     <span class="kw-2">&amp;</span>subject_id,
-                    event.content.event_proposal.proposal.sn,
+                    event.content.sn,
                     signatures,
                     validation_proof,
                 )<span class="question-mark">?</span>;
                 <span class="self">self</span>.database.set_event(<span class="kw-2">&amp;</span>subject_id, event.clone())<span class="question-mark">?</span>;
-                <span class="comment">// Cambiar clave pública del sujeto y eliminar material criptográfico
-                </span>subject.public_key = transfer_request.public_key.clone();
-                subject.owner = event
-                    .content
-                    .event_proposal
-                    .proposal
-                    .event_request
-                    .signature
-                    .content
-                    .signer
-                    .clone();
-                subject.keys = <span class="prelude-val">None</span>;
-                subject.sn = event.content.event_proposal.proposal.sn;
+                <span class="kw">let _ </span>= <span class="self">self
+                    </span>.notification_sender
+                    .send(Notification::NewEvent {
+                        sn,
+                        subject_id: subject_id.to_str(),
+                    })
+                    .map_err(|<span class="kw">_</span>| LedgerError::NotificationChannelError);
+                subject.sn = event.content.sn;
                 <span class="self">self</span>.database.set_subject(<span class="kw-2">&amp;</span>subject_id, subject)<span class="question-mark">?</span>;
                 <span class="kw">let </span>is_gov = <span class="self">self</span>.subject_is_gov.get(<span class="kw-2">&amp;</span>subject_id);
                 <span class="kw">match </span>is_gov {
@@ -3243,7 +3384,7 @@
                 }
                 transfer_request.subject_id.clone()
             }
-            EventRequestType::EOL(eol_request) =&gt; {
+            EventRequest::EOL(eol_request) =&gt; {
                 <span class="kw">let </span>subject_id = eol_request.subject_id.clone();
                 <span class="comment">// Aplicar event sourcing
                 </span><span class="kw">let </span><span class="kw-2">mut </span>subject =
@@ -3257,17 +3398,26 @@
                         })<span class="question-mark">?</span>;
                 <span class="self">self</span>.database.set_signatures(
                     <span class="kw-2">&amp;</span>subject_id,
-                    event.content.event_proposal.proposal.sn,
+                    event.content.sn,
                     signatures,
                     validation_proof,
                 )<span class="question-mark">?</span>;
                 <span class="self">self</span>.database.set_event(<span class="kw-2">&amp;</span>subject_id, event.clone())<span class="question-mark">?</span>;
+                <span class="kw">let _ </span>= <span class="self">self
+                    </span>.notification_sender
+                    .send(Notification::NewEvent {
+                        sn,
+                        subject_id: subject_id.to_str(),
+                    })
+                    .map_err(|<span class="kw">_</span>| LedgerError::NotificationChannelError);
                 <span class="self">self</span>.set_finished_request(
                     <span class="kw-2">&amp;</span>request_id,
                     event_request.clone(),
                     sn,
                     subject_id.clone(),
+                    <span class="bool-val">true</span>,
                 )<span class="question-mark">?</span>;
+                subject.sn = sn;
                 subject.eol_event();
                 <span class="self">self</span>.database.set_subject(<span class="kw-2">&amp;</span>subject_id, subject)<span class="question-mark">?</span>;
                 <span class="comment">// Comprobar is_gov
@@ -3302,8 +3452,9 @@
         <span class="self">self</span>.set_finished_request(
             <span class="kw-2">&amp;</span>request_id,
             event_request.clone(),
-            event.content.event_proposal.proposal.sn,
+            event.content.sn,
             subject_id.clone(),
+            event.content.eval_success &amp;&amp; event.content.approved,
         )<span class="question-mark">?</span>;
         <span class="comment">// Actualizar Ledger State
         </span><span class="kw">match </span><span class="self">self</span>.ledger_state.entry(subject_id.clone()) {
@@ -3328,20 +3479,18 @@
 
     <span class="kw">pub async fn </span>external_event(
         <span class="kw-2">&amp;mut </span><span class="self">self</span>,
-        event: Event,
+        event: Signed&lt;Event&gt;,
         signatures: HashSet&lt;Signature&gt;,
         sender: KeyIdentifier,
         validation_proof: ValidationProof,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;(), LedgerError&gt; {
-        <span class="macro">log::warn!</span>(
-            <span class="string">&quot;LLEGA EVENTO CON SN {}&quot;</span>,
-            event.content.event_proposal.proposal.sn
-        );
         <span class="comment">// log::error!(&quot;External event: Event: {:?}&quot;, event);
         // Comprobar que no existe una request con el mismo hash
-        </span><span class="kw">let </span>event_request = event.content.event_proposal.proposal.event_request.clone();
+        </span><span class="kw">let </span>event_request = event.content.event_request.clone();
         <span class="kw">let </span>request_id = DigestIdentifier::from_serializable_borsh(<span class="kw-2">&amp;</span>event_request)
             .map_err(|<span class="kw">_</span>| LedgerError::CryptoError(<span class="string">&quot;Error generating request hash&quot;</span>.to_owned()))<span class="question-mark">?</span>;
+        <span class="kw">let </span>event_hash = DigestIdentifier::from_serializable_borsh(<span class="kw-2">&amp;</span>event.content)
+            .map_err(|<span class="kw">_</span>| LedgerError::CryptoError(<span class="string">&quot;Error generating event hash&quot;</span>.to_owned()))<span class="question-mark">?</span>;
         <span class="kw">match </span><span class="self">self</span>.database.get_taple_request(<span class="kw-2">&amp;</span>request_id) {
             <span class="prelude-val">Ok</span>(<span class="kw">_</span>) =&gt; <span class="kw">return </span><span class="prelude-val">Err</span>(LedgerError::RepeatedRequestId(request_id.to_str())),
             <span class="prelude-val">Err</span>(error) =&gt; <span class="kw">match </span>error {
@@ -3350,18 +3499,10 @@
             },
         }
         <span class="comment">// Comprobaciones criptográficas
-        </span><span class="macro">log::warn!</span>(<span class="string">&quot;ANTES DE CHECK SIGNATURES&quot;</span>);
-        event.check_signatures()<span class="question-mark">?</span>;
+        </span>event.verify_signatures()<span class="question-mark">?</span>;
         <span class="comment">// Comprobar si es genesis o state
-        </span><span class="kw">match </span>event
-            .content
-            .event_proposal
-            .proposal
-            .event_request
-            .request
-            .clone()
-        {
-            EventRequestType::Transfer(transfer_request) =&gt; {
+        </span><span class="kw">match </span>event.content.event_request.content.clone() {
+            EventRequest::Transfer(transfer_request) =&gt; {
                 <span class="comment">// Ledger state == None =&gt; No hay ni sujeto ni evento
                 // CurrentSN == None =&gt; hay LCE pero no has recibido 0
                 // CurrentSN == Some =&gt; Indica por dónde va el sujeto. Caché
@@ -3380,9 +3521,11 @@
                 <span class="kw">let </span>metadata = validation_proof.get_metadata();
                 <span class="kw">match </span>ledger_state {
                     <span class="prelude-val">Some</span>(ledger_state) =&gt; {
+                        <span class="macro">log::error!</span>(<span class="string">&quot;{:?}&quot;</span>, ledger_state);
+                        <span class="macro">log::error!</span>(<span class="string">&quot;ENTRA EN SOME&quot;</span>);
                         <span class="kw">match </span>ledger_state.current_sn {
                             <span class="prelude-val">Some</span>(current_sn) =&gt; {
-                                <span class="kw">if </span>event.content.event_proposal.proposal.sn &lt;= current_sn {
+                                <span class="kw">if </span>event.content.sn &lt;= current_sn {
                                     <span class="kw">return </span><span class="prelude-val">Err</span>(LedgerError::EventAlreadyExists);
                                 }
                             }
@@ -3423,6 +3566,7 @@
                         <span class="kw">if </span>!subject.active {
                             <span class="kw">return </span><span class="prelude-val">Err</span>(LedgerError::SubjectLifeEnd(subject.subject_id.to_str()));
                         }
+                        <span class="macro">log::error!</span>(<span class="string">&quot;LEDGER 1&quot;</span>);
                         <span class="kw">let </span>is_gov = <span class="self">self
                             </span>.subject_is_gov
                             .get(<span class="kw-2">&amp;</span>transfer_request.subject_id)
@@ -3431,7 +3575,7 @@
                             <span class="comment">// Comprobamos si existe head
                             </span><span class="kw">if let </span><span class="prelude-val">Some</span>(head) = ledger_state.head {
                                 <span class="comment">// Comprobamos si head == event.sn
-                                </span><span class="kw">if </span>head == event.content.event_proposal.proposal.sn {
+                                </span><span class="kw">if </span>head == event.content.sn {
                                     <span class="comment">// Pedimos el siguiente evento al que nosotros tenemos
                                     </span><span class="kw">let </span>msg = request_gov_event(
                                         <span class="self">self</span>.our_id.clone(),
@@ -3455,6 +3599,7 @@
                                 }
                             }
                         }
+                        <span class="macro">log::error!</span>(<span class="string">&quot;LEDGER 2&quot;</span>);
                         <span class="comment">// Comprobar que las firmas son válidas y suficientes
                         // Si es el evento siguiente puedo obtener metadata de mi sistema, si es LCE lo tengo que obtener de la prueba de validación por si ha habido cambios de propietario u otros cambios
                         </span><span class="kw">let </span><span class="kw-2">mut </span>witnesses = <span class="self">self</span>.get_witnesses(metadata.clone()).<span class="kw">await</span><span class="question-mark">?</span>;
@@ -3466,6 +3611,7 @@
                                 <span class="prelude-val">Ok</span>(<span class="kw">_</span>) =&gt; {}
                                 <span class="prelude-val">Err</span>(error) =&gt; <span class="kw">match </span>error {
                                     <span class="kw">crate</span>::DbError::EntryNotFound =&gt; {
+                                        <span class="macro">log::error!</span>(<span class="string">&quot;{}&quot;</span>, error);
                                         <span class="kw">return </span><span class="prelude-val">Err</span>(LedgerError::WeAreNotWitnesses(
                                             transfer_request.subject_id.to_str(),
                                         ));
@@ -3476,97 +3622,97 @@
                                 },
                             }
                         }
+                        <span class="macro">log::error!</span>(<span class="string">&quot;LEDGER 3&quot;</span>);
                         <span class="self">self</span>.check_transfer_event(event.clone())<span class="question-mark">?</span>;
+                        <span class="macro">log::error!</span>(<span class="string">&quot;LEDGER 3.1&quot;</span>);
                         <span class="comment">// Si no está en el mapa, añadirlo y enviar mensaje a gov de subject updated con el id y el sn
                         </span><span class="kw">let </span>subject_id = transfer_request.subject_id.clone();
                         <span class="kw">let </span>(signers, quorum) = <span class="self">self
                             </span>.get_signers_and_quorum(metadata.clone(), ValidationStage::Validate)
                             .<span class="kw">await</span><span class="question-mark">?</span>;
-                        <span class="kw">let </span>prev_event_hash = <span class="kw">if </span>event.content.event_proposal.proposal.sn == <span class="number">0 </span>{
-                            <span class="kw">return </span><span class="prelude-val">Err</span>(LedgerError::StateEventWithZeroSNDetected);
-                        } <span class="kw">else </span>{
-                            <span class="self">self</span>.database
-                                .get_event(
-                                    <span class="kw-2">&amp;</span>subject.subject_id,
-                                    event.content.event_proposal.proposal.sn - <span class="number">1</span>,
-                                )<span class="question-mark">?
-                                </span>.signature
-                                .content
-                                .event_content_hash
-                        };
-                        <span class="kw">let </span>validation_proof = ValidationProof::new_from_transfer_event(
-                            <span class="kw-2">&amp;</span>subject,
-                            event.content.event_proposal.proposal.sn,
-                            prev_event_hash,
-                            event.signature.content.event_content_hash.clone(),
-                            event.content.event_proposal.proposal.gov_version,
-                            transfer_request.public_key.clone(),
-                        );
-                        <span class="comment">// let validation_proof = ValidationProof::new(
-                        //     &amp;subject,7 7
-                        //     event.content.event_proposal.proposal.sn,
+                        <span class="macro">log::error!</span>(<span class="string">&quot;LEDGER 3.2&quot;</span>);
+                        <span class="comment">// let _prev_event_hash = if event.content.sn == 0 {
+                        //     return Err(LedgerError::StateEventWithZeroSNDetected);
+                        // } else {
+                        //     let a = &amp;self
+                        //         .database
+                        //         .get_event(&amp;subject.subject_id, event.content.sn - 1);
+                        //     if a.is_err() {
+                        //         log::error!(&quot;SN {}&quot;, event.content.sn - 1);
+                        //         log::error!(&quot;{:?}&quot;, a);
+                        //     }
+                        //     DigestIdentifier::from_serializable_borsh(
+                        //         &amp;self
+                        //             .database
+                        //             .get_event(&amp;subject.subject_id, event.content.sn - 1)?
+                        //             .content,
+                        //     )
+                        //     .map_err(|_| {
+                        //         LedgerError::CryptoError(String::from(
+                        //             &quot;Error al calcular el hash del evento anterior&quot;,
+                        //         ))
+                        //     })?
+                        // };
+                        </span><span class="macro">log::error!</span>(<span class="string">&quot;LEDGER 4&quot;</span>);
+                        <span class="comment">// let validation_proof_new = ValidationProof::new_from_transfer_event(
+                        //     &amp;subject,
+                        //     event.content.sn,
                         //     prev_event_hash,
-                        //     event.signature.content.event_content_hash.clone(),
-                        //     state_hash,
-                        //     event.content.event_proposal.proposal.gov_version,
+                        //     event_hash.clone(),
+                        //     event.content.gov_version,
+                        //     transfer_request.public_key.clone(),
                         // );
-                        </span><span class="kw">let </span>notary_hash = DigestIdentifier::from_serializable_borsh(
-                            <span class="kw-2">&amp;</span>validation_proof,
-                        )
-                        .map_err(|<span class="kw">_</span>| {
-                            LedgerError::CryptoError(String::from(
-                                <span class="string">&quot;Error calculating the hash of the serializable&quot;</span>,
-                            ))
-                        })<span class="question-mark">?</span>;
-                        verify_signatures(<span class="kw-2">&amp;</span>signatures, <span class="kw-2">&amp;</span>signers, quorum, <span class="kw-2">&amp;</span>notary_hash)<span class="question-mark">?</span>;
+                        // // let validation_proof = ValidationProof::new(
+                        // //     &amp;subject,7 7
+                        // //     event.content.sn,
+                        // //     prev_event_hash,
+                        // //     event.signature.content.event_content_hash.clone(),
+                        // //     state_hash,
+                        // //     event.content.gov_version,
+                        // // );
+                        // let notary_hash = DigestIdentifier::from_serializable_borsh(
+                        //     &amp;validation_proof,
+                        // )
+                        // .map_err(|_| {
+                        //     LedgerError::CryptoError(String::from(
+                        //         &quot;Error calculating the hash of the serializable&quot;,
+                        //     ))
+                        // })?;
+                        </span>verify_signatures(<span class="kw-2">&amp;</span>signatures, <span class="kw-2">&amp;</span>signers, quorum, <span class="kw-2">&amp;</span>validation_proof)<span class="question-mark">?</span>;
                         <span class="comment">// Comprobar si es evento siguiente o LCE
-                        </span><span class="kw">if </span>event.content.event_proposal.proposal.sn == subject.sn + <span class="number">1
-                            </span>&amp;&amp; ledger_state.head.is_none()
-                        {
+                        </span><span class="kw">if </span>event.content.sn == subject.sn + <span class="number">1 </span>&amp;&amp; ledger_state.head.is_none() {
+                            <span class="macro">log::error!</span>(<span class="string">&quot;LEDGER 5&quot;</span>);
                             <span class="comment">// Caso Evento Siguiente
                             // Comprobar ValidationProof
                             </span><span class="self">self</span>.check_validation_proof(
                                 <span class="kw-2">&amp;</span>validation_proof,
                                 <span class="kw-2">&amp;</span>subject,
-                                <span class="kw-2">&amp;</span>event.signature.content.event_content_hash,
+                                <span class="kw-2">&amp;</span>event_hash,
+                                <span class="kw-2">&amp;</span>transfer_request.public_key,
                             )<span class="question-mark">?</span>;
-                            <span class="kw">let </span>sn: u64 = event.content.event_proposal.proposal.sn;
+                            <span class="kw">let </span>sn: u64 = event.content.sn;
                             <span class="comment">// Comprobamos si estamos esperando la transferencia y si esta es a nosotros
-                            </span><span class="kw">let </span>(keypair, to_delete) = <span class="kw">if </span>event
-                                .content
-                                .event_proposal
-                                .proposal
-                                .event_request
-                                .signature
-                                .content
-                                .signer
-                                == <span class="self">self</span>.our_id
-                            {
-                                <span class="comment">// TODO: ANALIZAR QUE DEBERÍAMOS HACER SI SE NOS TRANSFIERE Y NO LO QUEREMOS
-                                // La transferencia es a nosotros
-                                </span><span class="kw">match </span><span class="self">self</span>.database.get_keys(<span class="kw-2">&amp;</span>transfer_request.public_key) {
-                                    <span class="prelude-val">Ok</span>(keypair) =&gt; (<span class="prelude-val">Some</span>(keypair), <span class="bool-val">true</span>),
-                                    <span class="prelude-val">Err</span>(DbError::EntryNotFound) =&gt; {
-                                        <span class="kw">return </span><span class="prelude-val">Err</span>(LedgerError::UnexpectedTransfer);
+                            </span><span class="kw">let </span>(keypair, to_delete) =
+                                <span class="kw">if </span>event.content.event_request.signature.signer == <span class="self">self</span>.our_id {
+                                    <span class="comment">// TODO: ANALIZAR QUE DEBERÍAMOS HACER SI SE NOS TRANSFIERE Y NO LO QUEREMOS
+                                    // La transferencia es a nosotros
+                                    </span><span class="kw">match </span><span class="self">self</span>.database.get_keys(<span class="kw-2">&amp;</span>transfer_request.public_key) {
+                                        <span class="prelude-val">Ok</span>(keypair) =&gt; (<span class="prelude-val">Some</span>(keypair), <span class="bool-val">true</span>),
+                                        <span class="prelude-val">Err</span>(DbError::EntryNotFound) =&gt; {
+                                            <span class="kw">return </span><span class="prelude-val">Err</span>(LedgerError::UnexpectedTransfer);
+                                        }
+                                        <span class="prelude-val">Err</span>(error) =&gt; {
+                                            <span class="kw">return </span><span class="prelude-val">Err</span>(LedgerError::DatabaseError(error))
+                                        }
                                     }
-                                    <span class="prelude-val">Err</span>(error) =&gt; <span class="kw">return </span><span class="prelude-val">Err</span>(LedgerError::DatabaseError(error)),
-                                }
-                            } <span class="kw">else </span>{
-                                (<span class="prelude-val">None</span>, <span class="bool-val">false</span>)
-                            };
+                                } <span class="kw">else </span>{
+                                    (<span class="prelude-val">None</span>, <span class="bool-val">false</span>)
+                                };
                             subject.transfer_subject(
-                                event
-                                    .content
-                                    .event_proposal
-                                    .proposal
-                                    .event_request
-                                    .signature
-                                    .content
-                                    .signer
-                                    .clone(),
+                                event.content.event_request.signature.signer.clone(),
                                 transfer_request.public_key.clone(),
                                 keypair,
-                                event.content.event_proposal.proposal.sn,
+                                event.content.sn,
                             );
                             <span class="self">self</span>.database.set_signatures(
                                 <span class="kw-2">&amp;</span>transfer_request.subject_id,
@@ -3574,19 +3720,21 @@
                                 signatures,
                                 validation_proof.clone(),
                             )<span class="question-mark">?</span>;
-                            <span class="self">self</span>.database
-                                .set_event(<span class="kw-2">&amp;</span>transfer_request.subject_id, event)<span class="question-mark">?</span>;
                             <span class="self">self</span>.set_finished_request(
                                 <span class="kw-2">&amp;</span>request_id,
                                 event_request.clone(),
-                                sn,
+                                event.content.sn,
                                 subject_id.clone(),
+                                <span class="bool-val">true</span>,
                             )<span class="question-mark">?</span>;
+                            <span class="self">self</span>.database
+                                .set_event(<span class="kw-2">&amp;</span>transfer_request.subject_id, event)<span class="question-mark">?</span>;
                             <span class="self">self</span>.database
                                 .set_subject(<span class="kw-2">&amp;</span>transfer_request.subject_id, subject)<span class="question-mark">?</span>;
                             <span class="kw">if </span>to_delete {
                                 <span class="self">self</span>.database.del_keys(<span class="kw-2">&amp;</span>transfer_request.public_key)<span class="question-mark">?</span>;
                             }
+                            <span class="macro">log::error!</span>(<span class="string">&quot;LEDGER 6&quot;</span>);
                             <span class="kw">if </span><span class="self">self</span>.subject_is_gov.get(<span class="kw-2">&amp;</span>subject_id).unwrap().to_owned() {
                                 <span class="comment">// Enviar mensaje a gov de governance updated con el id y el sn
                                 </span><span class="kw">let </span>msg = request_gov_event(
@@ -3626,10 +3774,12 @@
                                     sn,
                                 })
                                 .<span class="kw">await</span><span class="question-mark">?</span>;
-                        <span class="comment">// } else if event.content.event_proposal.proposal.sn == subject.sn + 1 {
-                        // Caso en el que el LCE es S + 1
-                        // TODO:
-                        </span>} <span class="kw">else if </span>event.content.event_proposal.proposal.sn &gt; subject.sn {
+                            <span class="comment">// } else if event.content.sn == subject.sn + 1 {
+                            // Caso en el que el LCE es S + 1
+                            // TODO:
+                            </span><span class="macro">log::error!</span>(<span class="string">&quot;LEDGER 7&quot;</span>);
+                        } <span class="kw">else if </span>event.content.sn &gt; subject.sn {
+                            <span class="macro">log::error!</span>(<span class="string">&quot;LEDGER 8&quot;</span>);
                             <span class="comment">// Caso LCE
                             </span><span class="kw">let </span>is_gov = <span class="self">self</span>.subject_is_gov.get(<span class="kw-2">&amp;</span>subject_id).unwrap().to_owned();
                             <span class="kw">if </span>is_gov {
@@ -3657,7 +3807,7 @@
                             <span class="comment">// Comprobar que LCE es mayor y quedarnos con el mas peque si tenemos otro
                             </span><span class="kw">let </span>last_lce = <span class="kw">match </span>ledger_state.head {
                                 <span class="prelude-val">Some</span>(head) =&gt; {
-                                    <span class="kw">if </span>event.content.event_proposal.proposal.sn &gt; head {
+                                    <span class="kw">if </span>event.content.sn &gt; head {
                                         <span class="kw">return </span><span class="prelude-val">Err</span>(LedgerError::LCEBiggerSN);
                                     }
                                     <span class="prelude-val">Some</span>(head)
@@ -3668,21 +3818,22 @@
                                 </span>}
                             };
                             <span class="comment">// Si hemos llegado aquí es porque va a ser nuevo LCE
-                            </span><span class="kw">let </span>sn = event.content.event_proposal.proposal.sn;
+                            </span><span class="kw">let </span>sn = event.content.sn;
                             <span class="self">self</span>.database.set_signatures(
                                 <span class="kw-2">&amp;</span>transfer_request.subject_id,
                                 sn,
                                 signatures,
                                 validation_proof.clone(),
                             )<span class="question-mark">?</span>;
-                            <span class="self">self</span>.database
-                                .set_event(<span class="kw-2">&amp;</span>transfer_request.subject_id, event)<span class="question-mark">?</span>;
                             <span class="self">self</span>.set_finished_request(
                                 <span class="kw-2">&amp;</span>request_id,
                                 event_request.clone(),
-                                sn,
+                                event.content.sn,
                                 subject_id.clone(),
+                                event.content.eval_success &amp;&amp; event.content.approved,
                             )<span class="question-mark">?</span>;
+                            <span class="self">self</span>.database
+                                .set_event(<span class="kw-2">&amp;</span>transfer_request.subject_id, event)<span class="question-mark">?</span>;
                             <span class="self">self</span>.database.set_lce_validation_proof(
                                 <span class="kw-2">&amp;</span>transfer_request.subject_id,
                                 validation_proof,
@@ -3726,7 +3877,6 @@
                         }
                     }
                     <span class="prelude-val">None </span>=&gt; {
-                        <span class="macro">log::warn!</span>(<span class="string">&quot;Pasa por NONE&quot;</span>);
                         <span class="comment">// Hacer comprobaciones con la ValidationProof
                         // Comprobar que las firmas son válidas y suficientes
                         </span><span class="kw">let </span>subject_id = transfer_request.subject_id.clone();
@@ -3774,25 +3924,30 @@
                         <span class="self">self</span>.check_transfer_event(event.clone())<span class="question-mark">?</span>;
                         <span class="comment">// self.check_event(event.clone(), metadata.clone()).await?;
                         // Si no está en el mapa, añadirlo y enviar mensaje a gov de subject updated con el id y el sn
-                        </span><span class="kw">let </span>notary_hash = DigestIdentifier::from_serializable_borsh(
-                            <span class="kw-2">&amp;</span>validation_proof,
-                        )
-                        .map_err(|<span class="kw">_</span>| {
-                            LedgerError::CryptoError(String::from(
-                                <span class="string">&quot;Error calculating the hash of the serializable&quot;</span>,
-                            ))
-                        })<span class="question-mark">?</span>;
-                        <span class="kw">let </span>(signers, quorum) = <span class="self">self
+                        // let notary_hash = DigestIdentifier::from_serializable_borsh(
+                        //     &amp;validation_proof,
+                        // )
+                        // .map_err(|_| {
+                        //     LedgerError::CryptoError(String::from(
+                        //         &quot;Error calculating the hash of the serializable&quot;,
+                        //     ))
+                        // })?;
+                        </span><span class="kw">let </span>(signers, quorum) = <span class="self">self
                             </span>.get_signers_and_quorum(metadata.clone(), ValidationStage::Validate)
                             .<span class="kw">await</span><span class="question-mark">?</span>;
-                        verify_signatures(<span class="kw-2">&amp;</span>signatures, <span class="kw-2">&amp;</span>signers, quorum, <span class="kw-2">&amp;</span>notary_hash)<span class="question-mark">?</span>;
-                        <span class="kw">let </span>sn = event.content.event_proposal.proposal.sn;
+                        verify_signatures(<span class="kw-2">&amp;</span>signatures, <span class="kw-2">&amp;</span>signers, quorum, <span class="kw-2">&amp;</span>validation_proof)<span class="question-mark">?</span>;
+                        <span class="kw">let </span>sn = event.content.sn;
                         <span class="self">self</span>.database.set_signatures(
                             <span class="kw-2">&amp;</span>transfer_request.subject_id,
                             sn,
                             signatures,
+                            validation_proof.clone(),
+                        )<span class="question-mark">?</span>;
+                        <span class="self">self</span>.database.set_lce_validation_proof(
+                            <span class="kw-2">&amp;</span>transfer_request.subject_id,
                             validation_proof,
                         )<span class="question-mark">?</span>;
+                        <span class="kw">let </span>success = event.content.eval_success &amp;&amp; event.content.approved;
                         <span class="self">self</span>.database
                             .set_event(<span class="kw-2">&amp;</span>transfer_request.subject_id, event)<span class="question-mark">?</span>;
                         <span class="self">self</span>.set_finished_request(
@@ -3800,6 +3955,7 @@
                             event_request.clone(),
                             sn,
                             subject_id.clone(),
+                            success,
                         )<span class="question-mark">?</span>;
                         <span class="self">self</span>.ledger_state.insert(
                             transfer_request.subject_id.clone(),
@@ -3825,11 +3981,11 @@
                     }
                 };
             }
-            EventRequestType::Create(create_request) =&gt; {
+            EventRequest::Create(create_request) =&gt; {
                 <span class="comment">// Comprobar que evaluation es None
-                </span><span class="kw">if </span>event.content.event_proposal.proposal.evaluation.is_some() {
+                </span><span class="kw">if </span>!event.content.eval_success {
                     <span class="kw">return </span><span class="prelude-val">Err</span>(LedgerError::ErrorParsingJsonString(
-                        <span class="string">&quot;Evaluation should be None in external genesis event&quot;</span>.to_owned(),
+                        <span class="string">&quot;Evaluation Success should be true in external genesis event&quot;</span>.to_owned(),
                     ));
                 }
                 <span class="comment">// Comprobaciones criptográficas
@@ -3838,7 +3994,7 @@
                     <span class="kw-2">&amp;</span>create_request.schema_id,
                     create_request.public_key.to_str(),
                     create_request.governance_id.to_str(),
-                    event.content.event_proposal.proposal.gov_version,
+                    event.content.gov_version,
                 )<span class="question-mark">?</span>;
                 <span class="kw">match </span><span class="self">self</span>.database.get_subject(<span class="kw-2">&amp;</span>subject_id) {
                     <span class="prelude-val">Ok</span>(<span class="kw">_</span>) =&gt; {
@@ -3892,35 +4048,6 @@
                         .<span class="kw">await</span><span class="question-mark">?</span>;
                     <span class="self">self</span>.subject_is_gov.insert(subject_id.clone(), <span class="bool-val">true</span>);
                 } <span class="kw">else </span>{
-                    <span class="comment">// Comprobar que invoker tiene permisos de creación
-                    </span><span class="kw">let </span>creators = <span class="self">self
-                        </span>.gov_api
-                        .get_signers(metadata.clone(), ValidationStage::Create)
-                        .<span class="kw">await
-                        </span>.map_err(LedgerError::GovernanceError)<span class="question-mark">?</span>;
-                    <span class="kw">if </span>!creators.contains(
-                        <span class="kw-2">&amp;</span>event
-                            .content
-                            .event_proposal
-                            .proposal
-                            .event_request
-                            .signature
-                            .content
-                            .signer,
-                    ) {
-                        <span class="kw">return </span><span class="prelude-val">Err</span>(LedgerError::Unauthorized(<span class="macro">format!</span>(
-                            <span class="string">&quot;Creation unauthorized for KeyId: {}&quot;</span>,
-                            event
-                                .content
-                                .event_proposal
-                                .proposal
-                                .event_request
-                                .signature
-                                .content
-                                .signer
-                                .to_str()
-                        )));
-                    }
                     <span class="kw">let </span>witnesses = <span class="self">self</span>.get_witnesses(metadata).<span class="kw">await</span><span class="question-mark">?</span>;
                     <span class="kw">if </span>!witnesses.contains(<span class="kw-2">&amp;</span><span class="self">self</span>.our_id) {
                         <span class="kw">match </span><span class="self">self
@@ -3962,16 +4089,20 @@
                     .tell(DistributionMessagesNew::SignaturesNeeded { subject_id, sn: <span class="number">0 </span>})
                     .<span class="kw">await</span><span class="question-mark">?</span>;
             }
-            EventRequestType::Fact(state_request) =&gt; {
+            EventRequest::Fact(state_request) =&gt; {
+                <span class="kw">let </span>is_gov = <span class="self">self
+                    </span>.subject_is_gov
+                    .get(<span class="kw-2">&amp;</span>state_request.subject_id)
+                    .unwrap_or(<span class="kw-2">&amp;</span><span class="bool-val">false</span>);
                 <span class="comment">// Comprobaciones criptográficas
                 </span><span class="kw">let </span>ledger_state = <span class="self">self</span>.ledger_state.get(<span class="kw-2">&amp;</span>state_request.subject_id);
                 <span class="kw">let </span>metadata = validation_proof.get_metadata();
+                <span class="kw">let </span>sn = event.content.sn;
                 <span class="kw">match </span>ledger_state {
                     <span class="prelude-val">Some</span>(ledger_state) =&gt; {
-                        <span class="macro">log::warn!</span>(<span class="string">&quot;Pasa por SOME&quot;</span>);
                         <span class="kw">match </span>ledger_state.current_sn {
                             <span class="prelude-val">Some</span>(current_sn) =&gt; {
-                                <span class="kw">if </span>event.content.event_proposal.proposal.sn &lt;= current_sn {
+                                <span class="kw">if </span>event.content.sn &lt;= current_sn {
                                     <span class="kw">return </span><span class="prelude-val">Err</span>(LedgerError::EventAlreadyExists);
                                 }
                             }
@@ -4005,44 +4136,19 @@
                                 <span class="kw">return </span><span class="prelude-val">Err</span>(LedgerError::DatabaseError(error));
                             }
                         };
+                        <span class="kw">let </span>gov_id = subject.governance_id.clone();
+                        <span class="kw">let </span>approval_request_hash =
+                            <span class="kw-2">&amp;</span>event.content.get_approval_hash(gov_id).map_err(|<span class="kw">_</span>| {
+                                LedgerError::CryptoError(
+                                    <span class="string">&quot;Error generating approval request hash&quot;</span>.to_owned(),
+                                )
+                            })<span class="question-mark">?</span>;
                         <span class="kw">if </span>!subject.active {
                             <span class="kw">return </span><span class="prelude-val">Err</span>(LedgerError::SubjectLifeEnd(subject.subject_id.to_str()));
                         }
-                        <span class="comment">// Comprobar que invoker tiene permisos de invocación
-                        </span><span class="kw">let </span>invokers = <span class="self">self
-                            </span>.gov_api
-                            .get_signers(metadata.clone(), ValidationStage::Invoke)
-                            .<span class="kw">await
-                            </span>.map_err(LedgerError::GovernanceError)<span class="question-mark">?</span>;
-                        <span class="kw">if </span>!invokers.contains(
-                            <span class="kw-2">&amp;</span>event
-                                .content
-                                .event_proposal
-                                .proposal
-                                .event_request
-                                .signature
-                                .content
-                                .signer,
-                        ) {
-                            <span class="kw">return </span><span class="prelude-val">Err</span>(LedgerError::Unauthorized(<span class="macro">format!</span>(
-                                <span class="string">&quot;Invokation unauthorized for KeyId: {}&quot;</span>,
-                                event
-                                    .content
-                                    .event_proposal
-                                    .proposal
-                                    .event_request
-                                    .signature
-                                    .content
-                                    .signer
-                                    .to_str()
-                            )));
-                        }
-                        <span class="kw">let </span>is_gov = <span class="self">self</span>.subject_is_gov.get(<span class="kw-2">&amp;</span>state_request.subject_id).unwrap();
-                        <span class="macro">log::warn!</span>(<span class="string">&quot;EL SUJETO ES  IS GOV: {}&quot;</span>, is_gov);
                         <span class="kw">if </span><span class="kw-2">*</span>is_gov {
-                            <span class="macro">log::error!</span>(<span class="string">&quot;State NO DEBERÍA&quot;</span>);
                             <span class="comment">// Al ser gov no tiene HEAD. Debemos comprobar si se trata del sn + 1
-                            </span><span class="kw">if </span>event.content.event_proposal.proposal.sn &gt; subject.sn + <span class="number">1 </span>{
+                            </span><span class="kw">if </span>event.content.sn &gt; subject.sn + <span class="number">1 </span>{
                                 <span class="comment">// Pedimos el siguiente evento al que nosotros tenemos
                                 </span><span class="kw">let </span>msg = request_gov_event(
                                     <span class="self">self</span>.our_id.clone(),
@@ -4065,14 +4171,26 @@
                                 ));
                             }
                         }
+                        <span class="comment">// Comprobar que invoker tiene permisos de invocación
+                        </span><span class="kw">if </span>subject.owner != event.content.event_request.signature.signer
+                            &amp;&amp; !<span class="self">self
+                                </span>.gov_api
+                                .get_invoke_info(
+                                    metadata.clone(),
+                                    ValidationStage::Invoke,
+                                    event.content.event_request.signature.signer.clone(),
+                                )
+                                .<span class="kw">await
+                                </span>.map_err(LedgerError::GovernanceError)<span class="question-mark">?
+                        </span>{
+                            <span class="kw">return </span><span class="prelude-val">Err</span>(LedgerError::Unauthorized(<span class="macro">format!</span>(
+                                <span class="string">&quot;Invokation unauthorized for KeyId: {}&quot;</span>,
+                                event.content.event_request.signature.signer.to_str()
+                            )));
+                        }
                         <span class="comment">// Comprobar que las firmas son válidas y suficientes
                         // Si es el evento siguiente puedo obtener metadata de mi sistema, si es LCE lo tengo que obtener de la prueba de validación por si ha habido cambios de propietario u otros cambios
-                        </span><span class="macro">log::warn!</span>(
-                            <span class="string">&quot;ME LLEGA EL EVENTO CON SN {}&quot;</span>,
-                            event.content.event_proposal.proposal.sn
-                        );
-                        <span class="kw">let </span><span class="kw-2">mut </span>witnesses = <span class="self">self</span>.get_witnesses(metadata.clone()).<span class="kw">await</span><span class="question-mark">?</span>;
-                        <span class="macro">log::warn!</span>(<span class="string">&quot;GET TESTIGOS&quot;</span>);
+                        </span><span class="kw">let </span><span class="kw-2">mut </span>witnesses = <span class="self">self</span>.get_witnesses(metadata.clone()).<span class="kw">await</span><span class="question-mark">?</span>;
                         <span class="kw">if </span>!witnesses.contains(<span class="kw-2">&amp;</span><span class="self">self</span>.our_id) {
                             <span class="kw">match </span><span class="self">self
                                 </span>.database
@@ -4091,72 +4209,80 @@
                                 },
                             }
                         }
-                        <span class="self">self</span>.check_event(event.clone(), metadata.clone()).<span class="kw">await</span><span class="question-mark">?</span>;
+                        <span class="self">self</span>.check_event(
+                            event.clone(),
+                            metadata.clone(),
+                            subject.get_subject_context(
+                                event.content.event_request.signature.signer.clone(),
+                            ),
+                        )
+                        .<span class="kw">await</span><span class="question-mark">?</span>;
                         <span class="comment">// Si no está en el mapa, añadirlo y enviar mensaje a gov de subject updated con el id y el sn
                         </span><span class="kw">let </span>subject_id = state_request.subject_id.clone();
                         <span class="kw">let </span>(signers, quorum) = <span class="self">self
                             </span>.get_signers_and_quorum(metadata.clone(), ValidationStage::Validate)
                             .<span class="kw">await</span><span class="question-mark">?</span>;
-                        <span class="kw">let </span>prev_event_hash = <span class="kw">if </span>event.content.event_proposal.proposal.sn == <span class="number">0 </span>{
-                            DigestIdentifier::default()
-                        } <span class="kw">else </span>{
-                            <span class="self">self</span>.database
-                                .get_event(
-                                    <span class="kw-2">&amp;</span>subject.subject_id,
-                                    event.content.event_proposal.proposal.sn - <span class="number">1</span>,
-                                )<span class="question-mark">?
-                                </span>.signature
-                                .content
-                                .event_content_hash
-                        };
-                        <span class="kw">let </span>notary_hash = DigestIdentifier::from_serializable_borsh(
-                            <span class="kw-2">&amp;</span>validation_proof,
-                        )
-                        .map_err(|<span class="kw">_</span>| {
-                            LedgerError::CryptoError(String::from(
-                                <span class="string">&quot;Error calculating the hash of the serializable&quot;</span>,
-                            ))
-                        })<span class="question-mark">?</span>;
-                        <span class="macro">log::warn!</span>(<span class="string">&quot;NOTARY HASH QUE ME LLEGA {}&quot;</span>, notary_hash.to_str());
-                        <span class="macro">log::warn!</span>(<span class="string">&quot;VALIDATION PROOF {:?}&quot;</span>, validation_proof);
-                        <span class="macro">log::warn!</span>(<span class="string">&quot;SIGNATURES SIZE: {}&quot;</span>, signatures.len());
-                        <span class="macro">log::warn!</span>(<span class="string">&quot;SIGNERS SIZE {}&quot;</span>, signers.len());
-                        verify_signatures(<span class="kw-2">&amp;</span>signatures, <span class="kw-2">&amp;</span>signers, quorum, <span class="kw-2">&amp;</span>notary_hash)<span class="question-mark">?</span>;
-                        <span class="macro">log::warn!</span>(<span class="string">&quot;PASA POR VERIFY&quot;</span>);
+                        <span class="comment">// let _prev_event_hash = if event.content.sn == 0 {
+                        //     DigestIdentifier::default()
+                        // } else {
+                        //     DigestIdentifier::from_serializable_borsh(
+                        //         &amp;self
+                        //             .database
+                        //             .get_event(&amp;subject.subject_id, event.content.sn - 1)?
+                        //             .content,
+                        //     )
+                        //     .map_err(|_| {
+                        //         LedgerError::CryptoError(String::from(
+                        //             &quot;Error calculating the hash of the serializable&quot;,
+                        //         ))
+                        //     })?
+                        // };
+                        </span>verify_signatures(<span class="kw-2">&amp;</span>signatures, <span class="kw-2">&amp;</span>signers, quorum, <span class="kw-2">&amp;</span>validation_proof)<span class="question-mark">?</span>;
                         <span class="comment">// Comprobar si es evento siguiente o LCE
-                        </span><span class="macro">log::warn!</span>(<span class="string">&quot;EL LEDGER STATE ACTUAL ES {:?}&quot;</span>, ledger_state);
-                        <span class="kw">if </span>event.content.event_proposal.proposal.sn == subject.sn + <span class="number">1
-                            </span>&amp;&amp; ledger_state.head.is_none()
-                        {
-                            <span class="macro">log::error!</span>(<span class="string">&quot;EN EXTERNAL EVENT SE HACE E.SN == S.SN + 1&quot;</span>);
+                        </span><span class="kw">if </span>event.content.sn == subject.sn + <span class="number">1 </span>&amp;&amp; ledger_state.head.is_none() {
                             <span class="comment">// Caso Evento Siguiente
                             // Comprobar ValidationProof
                             </span><span class="self">self</span>.check_validation_proof(
                                 <span class="kw-2">&amp;</span>validation_proof,
                                 <span class="kw-2">&amp;</span>subject,
-                                <span class="kw-2">&amp;</span>event.signature.content.event_content_hash,
+                                <span class="kw-2">&amp;</span>event_hash,
+                                <span class="kw-2">&amp;</span>subject.public_key,
                             )<span class="question-mark">?</span>;
-                            check_context(<span class="kw-2">&amp;</span>event, <span class="kw-2">&amp;</span>subject, metadata, subject.properties.clone())<span class="question-mark">?</span>;
-                            <span class="kw">let </span>sn: u64 = event.content.event_proposal.proposal.sn;
-                            <span class="kw">let </span>json_patch =
-                                event.content.event_proposal.proposal.json_patch.as_str();
-                            subject.update_subject(
-                                json_patch,
-                                event.content.event_proposal.proposal.sn,
-                            )<span class="question-mark">?</span>;
+                            <span class="kw">let </span>sn: u64 = event.content.sn;
+                            <span class="kw">let </span>json_patch = event.content.patch.clone();
+                            <span class="kw">if </span>event.content.approved {
+                                subject.update_subject(json_patch, event.content.sn)<span class="question-mark">?</span>;
+                            } <span class="kw">else </span>{
+                                subject.sn = event.content.sn;
+                            }
+                            <span class="kw">let _ </span>= <span class="self">self
+                                </span>.notification_sender
+                                .send(Notification::StateUpdated {
+                                    sn: event.content.sn,
+                                    subject_id: subject.subject_id.to_str(),
+                                })
+                                .map_err(|<span class="kw">_</span>| LedgerError::NotificationChannelError);
                             <span class="self">self</span>.database.set_signatures(
                                 <span class="kw-2">&amp;</span>state_request.subject_id,
                                 sn,
                                 signatures,
                                 validation_proof,
                             )<span class="question-mark">?</span>;
-                            <span class="self">self</span>.database.set_event(<span class="kw-2">&amp;</span>state_request.subject_id, event)<span class="question-mark">?</span>;
                             <span class="self">self</span>.set_finished_request(
                                 <span class="kw-2">&amp;</span>request_id,
                                 event_request.clone(),
-                                sn,
+                                event.content.sn,
                                 subject_id.clone(),
+                                event.content.eval_success &amp;&amp; event.content.approved,
                             )<span class="question-mark">?</span>;
+                            <span class="self">self</span>.database.set_event(<span class="kw-2">&amp;</span>state_request.subject_id, event)<span class="question-mark">?</span>;
+                            <span class="kw">let _ </span>= <span class="self">self
+                                </span>.notification_sender
+                                .send(Notification::NewEvent {
+                                    sn,
+                                    subject_id: subject_id.to_str(),
+                                })
+                                .map_err(|<span class="kw">_</span>| LedgerError::NotificationChannelError);
                             <span class="self">self</span>.database
                                 .set_subject(<span class="kw-2">&amp;</span>state_request.subject_id, subject)<span class="question-mark">?</span>;
                             <span class="kw">if </span><span class="self">self</span>.subject_is_gov.get(<span class="kw-2">&amp;</span>subject_id).unwrap().to_owned() {
@@ -4198,16 +4324,12 @@
                                     sn,
                                 })
                                 .<span class="kw">await</span><span class="question-mark">?</span>;
-                        <span class="comment">// } else if event.content.event_proposal.proposal.sn == subject.sn + 1 {
+                        <span class="comment">// } else if event.content.sn == subject.sn + 1 {
                         // Caso en el que el LCE es S + 1
                         // TODO:
-                        </span>} <span class="kw">else if </span>event.content.event_proposal.proposal.sn &gt; subject.sn {
-                            <span class="macro">log::error!</span>(<span class="string">&quot;EN EXTERNAL EVENT SE HACE CASO LCE&quot;</span>);
-                            <span class="macro">log::error!</span>(<span class="string">&quot;SN EVENTO {}&quot;</span>, event.content.event_proposal.proposal.sn);
-                            <span class="macro">log::error!</span>(<span class="string">&quot;SN SUBJECT {}&quot;</span>, subject.sn);
+                        </span>} <span class="kw">else if </span>event.content.sn &gt; subject.sn {
                             <span class="comment">// Caso LCE
-                            </span><span class="macro">log::warn!</span>(<span class="string">&quot;DEBERÍA EJECUTARSE ESTO&quot;</span>);
-                            <span class="kw">let </span>is_gov = <span class="self">self</span>.subject_is_gov.get(<span class="kw-2">&amp;</span>subject_id).unwrap().to_owned();
+                            </span><span class="kw">let </span>is_gov = <span class="self">self</span>.subject_is_gov.get(<span class="kw-2">&amp;</span>subject_id).unwrap().to_owned();
                             <span class="kw">if </span>is_gov {
                                 <span class="comment">// No me valen los LCE de Gov
                                 </span><span class="kw">let </span>msg = request_gov_event(
@@ -4233,7 +4355,7 @@
                             <span class="comment">// Comprobar que LCE es mayor y quedarnos con el mas peque si tenemos otro
                             </span><span class="kw">let </span>last_lce = <span class="kw">match </span>ledger_state.head {
                                 <span class="prelude-val">Some</span>(head) =&gt; {
-                                    <span class="kw">if </span>event.content.event_proposal.proposal.sn &gt; head {
+                                    <span class="kw">if </span>event.content.sn &gt; head {
                                         <span class="kw">return </span><span class="prelude-val">Err</span>(LedgerError::LCEBiggerSN);
                                     }
                                     <span class="prelude-val">Some</span>(head)
@@ -4244,7 +4366,7 @@
                                 </span>}
                             };
                             <span class="comment">// Si hemos llegado aquí es porque va a ser nuevo LCE
-                            </span><span class="kw">let </span>sn = event.content.event_proposal.proposal.sn;
+                            </span><span class="kw">let </span>sn = event.content.sn;
                             <span class="self">self</span>.database.set_signatures(
                                 <span class="kw-2">&amp;</span>state_request.subject_id,
                                 sn,
@@ -4255,13 +4377,21 @@
                                 <span class="kw-2">&amp;</span>state_request.subject_id,
                                 validation_proof,
                             )<span class="question-mark">?</span>;
-                            <span class="self">self</span>.database.set_event(<span class="kw-2">&amp;</span>state_request.subject_id, event)<span class="question-mark">?</span>;
                             <span class="self">self</span>.set_finished_request(
                                 <span class="kw-2">&amp;</span>request_id,
                                 event_request.clone(),
-                                sn,
+                                event.content.sn,
                                 subject_id.clone(),
+                                event.content.eval_success &amp;&amp; event.content.approved,
                             )<span class="question-mark">?</span>;
+                            <span class="self">self</span>.database.set_event(<span class="kw-2">&amp;</span>state_request.subject_id, event)<span class="question-mark">?</span>;
+                            <span class="kw">let _ </span>= <span class="self">self
+                                </span>.notification_sender
+                                .send(Notification::NewEvent {
+                                    sn,
+                                    subject_id: subject_id.to_str(),
+                                })
+                                .map_err(|<span class="kw">_</span>| LedgerError::NotificationChannelError);
                             <span class="kw">if </span>last_lce.is_some() {
                                 <span class="kw">let </span>last_lce_sn = last_lce.unwrap();
                                 <span class="self">self</span>.database
@@ -4299,6 +4429,29 @@
                             <span class="comment">// Caso evento repetido
                             </span><span class="kw">return </span><span class="prelude-val">Err</span>(LedgerError::EventAlreadyExists);
                         }
+                        <span class="comment">// PONER Aprobaciones como finalizadas y borrar de índice de pendientes
+                        </span><span class="kw">match </span><span class="self">self</span>.database.get_approval(<span class="kw-2">&amp;</span>approval_request_hash) {
+                            <span class="prelude-val">Ok</span>(<span class="kw-2">mut </span>data) =&gt; {
+                                <span class="kw">if let </span>ApprovalState::Pending = data.state {
+                                    data.state = ApprovalState::Obsolete;
+                                    <span class="self">self</span>.database.set_approval(<span class="kw-2">&amp;</span>approval_request_hash, data)<span class="question-mark">?</span>;
+                                    <span class="kw">let _ </span>= <span class="self">self
+                                        </span>.notification_sender
+                                        .send(Notification::ObsoletedApproval {
+                                            id: approval_request_hash.to_str(),
+                                            subject_id: subject_id.to_str(),
+                                            sn,
+                                        })
+                                        .map_err(|<span class="kw">_</span>| LedgerError::NotificationChannelError);
+                                }
+                            }
+                            <span class="prelude-val">Err</span>(error) =&gt; <span class="kw">match </span>error {
+                                DbError::EntryNotFound =&gt; {}
+                                <span class="kw">_ </span>=&gt; {
+                                    <span class="kw">return </span><span class="prelude-val">Err</span>(LedgerError::DatabaseError(error));
+                                }
+                            },
+                        };
                     }
                     <span class="prelude-val">None </span>=&gt; {
                         <span class="comment">// Hacer comprobaciones con la ValidationProof
@@ -4306,7 +4459,6 @@
                         </span><span class="kw">let </span>subject_id = state_request.subject_id.clone();
                         <span class="kw">let </span>metadata = validation_proof.get_metadata();
                         <span class="kw">if </span><span class="kw-2">&amp;</span>metadata.schema_id == <span class="string">&quot;governance&quot; </span>{
-                            <span class="macro">log::error!</span>(<span class="string">&quot;State 3&quot;</span>);
                             <span class="self">self</span>.subject_is_gov.insert(subject_id.clone(), <span class="bool-val">true</span>);
                             <span class="comment">// PEDIR GÉNESIS
                             </span><span class="kw">let </span>msg = request_gov_event(<span class="self">self</span>.our_id.clone(), subject_id, <span class="number">0</span>);
@@ -4346,33 +4498,54 @@
                                 },
                             }
                         }
-                        <span class="self">self</span>.check_event(event.clone(), metadata.clone()).<span class="kw">await</span><span class="question-mark">?</span>;
-                        <span class="comment">// Si no está en el mapa, añadirlo y enviar mensaje a gov de subject updated con el id y el sn
-                        </span><span class="kw">let </span>notary_hash = DigestIdentifier::from_serializable_borsh(
-                            <span class="kw-2">&amp;</span>validation_proof,
-                        )
-                        .map_err(|<span class="kw">_</span>| {
-                            LedgerError::CryptoError(String::from(
-                                <span class="string">&quot;Error calculating the hash of the serializable&quot;</span>,
-                            ))
-                        })<span class="question-mark">?</span>;
-                        <span class="kw">let </span>(signers, quorum) = <span class="self">self
+                        <span class="comment">// YA NO SE PUEDE HACER COMPROACION PORQUE VALIDATION PROOF NO INDICA QUIEN ES EL OWNER
+                        // self.check_event(
+                        //     event.clone(),
+                        //     metadata.clone(),
+                        //     subject.get_subject_context(
+                        //         event.content.event_request.signature.signer.clone(),
+                        //     ),
+                        // )
+                        // .await?;
+                        // Si no está en el mapa, añadirlo y enviar mensaje a gov de subject updated con el id y el sn
+                        // let notary_hash = DigestIdentifier::from_serializable_borsh(
+                        //     &amp;validation_proof,
+                        // )
+                        // .map_err(|_| {
+                        //     LedgerError::CryptoError(String::from(
+                        //         &quot;Error calculating the hash of the serializable&quot;,
+                        //     ))
+                        // })?;
+                        </span><span class="kw">let </span>(signers, quorum) = <span class="self">self
                             </span>.get_signers_and_quorum(metadata.clone(), ValidationStage::Validate)
                             .<span class="kw">await</span><span class="question-mark">?</span>;
-                        verify_signatures(<span class="kw-2">&amp;</span>signatures, <span class="kw-2">&amp;</span>signers, quorum, <span class="kw-2">&amp;</span>notary_hash)<span class="question-mark">?</span>;
-                        <span class="kw">let </span>sn = event.content.event_proposal.proposal.sn;
+                        verify_signatures(<span class="kw-2">&amp;</span>signatures, <span class="kw-2">&amp;</span>signers, quorum, <span class="kw-2">&amp;</span>validation_proof)<span class="question-mark">?</span>;
+                        <span class="kw">let </span>sn = event.content.sn;
                         <span class="self">self</span>.database.set_signatures(
                             <span class="kw-2">&amp;</span>state_request.subject_id,
                             sn,
                             signatures,
+                            validation_proof.clone(),
+                        )<span class="question-mark">?</span>;
+                        <span class="self">self</span>.database.set_lce_validation_proof(
+                            <span class="kw-2">&amp;</span>state_request.subject_id,
                             validation_proof,
                         )<span class="question-mark">?</span>;
+                        <span class="kw">let </span>success = event.content.eval_success &amp;&amp; event.content.approved;
                         <span class="self">self</span>.database.set_event(<span class="kw-2">&amp;</span>state_request.subject_id, event)<span class="question-mark">?</span>;
+                        <span class="kw">let _ </span>= <span class="self">self
+                            </span>.notification_sender
+                            .send(Notification::NewEvent {
+                                sn,
+                                subject_id: subject_id.to_str(),
+                            })
+                            .map_err(|<span class="kw">_</span>| LedgerError::NotificationChannelError);
                         <span class="self">self</span>.set_finished_request(
                             <span class="kw-2">&amp;</span>request_id,
                             event_request.clone(),
                             sn,
                             subject_id.clone(),
+                            success,
                         )<span class="question-mark">?</span>;
                         <span class="self">self</span>.ledger_state.insert(
                             state_request.subject_id.clone(),
@@ -4397,7 +4570,7 @@
                     }
                 };
             }
-            EventRequestType::EOL(eol_request) =&gt; {
+            EventRequest::EOL(eol_request) =&gt; {
                 <span class="kw">let </span>ledger_state = <span class="self">self</span>.ledger_state.get(<span class="kw-2">&amp;</span>eol_request.subject_id);
                 <span class="kw">let </span>metadata = validation_proof.get_metadata();
                 <span class="comment">// Comprobar que invoker tiene permisos de invocación
@@ -4405,7 +4578,7 @@
                     <span class="prelude-val">Some</span>(ledger_state) =&gt; {
                         <span class="kw">match </span>ledger_state.current_sn {
                             <span class="prelude-val">Some</span>(current_sn) =&gt; {
-                                <span class="kw">if </span>event.content.event_proposal.proposal.sn &lt;= current_sn {
+                                <span class="kw">if </span>event.content.sn &lt;= current_sn {
                                     <span class="kw">return </span><span class="prelude-val">Err</span>(LedgerError::EventAlreadyExists);
                                 }
                             }
@@ -4441,34 +4614,16 @@
                         <span class="kw">if </span>!subject.active {
                             <span class="kw">return </span><span class="prelude-val">Err</span>(LedgerError::SubjectLifeEnd(subject.subject_id.to_str()));
                         }
-                        <span class="kw">if </span>subject.creator
-                            != event
-                                .content
-                                .event_proposal
-                                .proposal
-                                .event_request
-                                .signature
-                                .content
-                                .signer
-                        {
+                        <span class="kw">if </span>subject.creator != event.content.event_request.signature.signer {
                             <span class="kw">return </span><span class="prelude-val">Err</span>(LedgerError::Unauthorized(<span class="macro">format!</span>(
                                 <span class="string">&quot;Invokation unauthorized for KeyId: {}&quot;</span>,
-                                event
-                                    .content
-                                    .event_proposal
-                                    .proposal
-                                    .event_request
-                                    .signature
-                                    .content
-                                    .signer
-                                    .to_str()
+                                event.content.event_request.signature.signer.to_str()
                             )));
                         }
                         <span class="kw">let </span>is_gov = <span class="self">self</span>.subject_is_gov.get(<span class="kw-2">&amp;</span>eol_request.subject_id).unwrap();
-                        <span class="macro">log::warn!</span>(<span class="string">&quot;EL SUJETO ES  IS GOV: {}&quot;</span>, is_gov);
                         <span class="kw">if </span><span class="kw-2">*</span>is_gov {
                             <span class="comment">// Al ser gov no tiene HEAD. Debemos comprobar si se trata del sn + 1
-                            </span><span class="kw">if </span>event.content.event_proposal.proposal.sn &gt; subject.sn + <span class="number">1 </span>{
+                            </span><span class="kw">if </span>event.content.sn &gt; subject.sn + <span class="number">1 </span>{
                                 <span class="comment">// Pedimos el siguiente evento al que nosotros tenemos
                                 </span><span class="kw">let </span>msg = request_gov_event(
                                     <span class="self">self</span>.our_id.clone(),
@@ -4493,12 +4648,7 @@
                         }
                         <span class="comment">// Comprobar que las firmas son válidas y suficientes
                         // Si es el evento siguiente puedo obtener metadata de mi sistema, si es LCE lo tengo que obtener de la prueba de validación por si ha habido cambios de propietario u otros cambios
-                        </span><span class="macro">log::warn!</span>(
-                            <span class="string">&quot;ME LLEGA EL EVENTO CON SN {}&quot;</span>,
-                            event.content.event_proposal.proposal.sn
-                        );
-                        <span class="kw">let </span><span class="kw-2">mut </span>witnesses = <span class="self">self</span>.get_witnesses(metadata.clone()).<span class="kw">await</span><span class="question-mark">?</span>;
-                        <span class="macro">log::warn!</span>(<span class="string">&quot;GET TESTIGOS&quot;</span>);
+                        </span><span class="kw">let </span><span class="kw-2">mut </span>witnesses = <span class="self">self</span>.get_witnesses(metadata.clone()).<span class="kw">await</span><span class="question-mark">?</span>;
                         <span class="kw">if </span>!witnesses.contains(<span class="kw-2">&amp;</span><span class="self">self</span>.our_id) {
                             <span class="kw">match </span><span class="self">self
                                 </span>.database
@@ -4517,54 +4667,42 @@
                                 },
                             }
                         }
-                        <span class="self">self</span>.check_event(event.clone(), metadata.clone()).<span class="kw">await</span><span class="question-mark">?</span>;
-                        <span class="macro">log::warn!</span>(<span class="string">&quot;CHECK EVENT&quot;</span>);
+                        <span class="self">self</span>.check_event(
+                            event.clone(),
+                            metadata.clone(),
+                            subject.get_subject_context(
+                                event.content.event_request.signature.signer.clone(),
+                            ),
+                        )
+                        .<span class="kw">await</span><span class="question-mark">?</span>;
                         <span class="comment">// Si no está en el mapa, añadirlo y enviar mensaje a gov de subject updated con el id y el sn
                         </span><span class="kw">let </span>subject_id = eol_request.subject_id.clone();
                         <span class="kw">let </span>(signers, quorum) = <span class="self">self
                             </span>.get_signers_and_quorum(metadata.clone(), ValidationStage::Validate)
                             .<span class="kw">await</span><span class="question-mark">?</span>;
-                        <span class="macro">log::warn!</span>(<span class="string">&quot;GET SIGNERS AND QUORUM&quot;</span>);
-                        <span class="kw">let </span>state_hash = subject.state_hash_after_apply(
-                            <span class="kw-2">&amp;</span>event.content.event_proposal.proposal.json_patch,
-                        )<span class="question-mark">?</span>;
-
-                        <span class="kw">let </span>notary_hash = DigestIdentifier::from_serializable_borsh(
-                            <span class="kw-2">&amp;</span>validation_proof,
-                        )
-                        .map_err(|<span class="kw">_</span>| {
-                            LedgerError::CryptoError(String::from(
-                                <span class="string">&quot;Error calculating the hash of the serializable&quot;</span>,
-                            ))
-                        })<span class="question-mark">?</span>;
-
-                        <span class="macro">log::warn!</span>(<span class="string">&quot;NOTARY HASH QUE ME LLEGA {}&quot;</span>, notary_hash.to_str());
-                        <span class="macro">log::warn!</span>(<span class="string">&quot;VALIDATION PROOF {:?}&quot;</span>, validation_proof);
-                        <span class="kw">let </span>notary_hash = DigestIdentifier::from_serializable_borsh(
-                            <span class="kw-2">&amp;</span>validation_proof,
-                        )
-                        .map_err(|<span class="kw">_</span>| {
-                            LedgerError::CryptoError(String::from(
-                                <span class="string">&quot;Error calculating the hash of the serializable&quot;</span>,
-                            ))
-                        })<span class="question-mark">?</span>;
-                        <span class="macro">log::warn!</span>(<span class="string">&quot;SIGNATURES SIZE: {}&quot;</span>, signatures.len());
-                        <span class="macro">log::warn!</span>(<span class="string">&quot;SIGNERS SIZE {}&quot;</span>, signers.len());
-                        verify_signatures(<span class="kw-2">&amp;</span>signatures, <span class="kw-2">&amp;</span>signers, quorum, <span class="kw-2">&amp;</span>notary_hash)<span class="question-mark">?</span>;
-                        <span class="macro">log::warn!</span>(<span class="string">&quot;PASA POR VERIFY&quot;</span>);
+                        <span class="comment">// let state_hash =
+                        //     subject.state_hash_after_apply(event.content.patch.clone())?;
+                        // let notary_hash = DigestIdentifier::from_serializable_borsh(
+                        //     &amp;validation_proof,
+                        // )
+                        // .map_err(|_| {
+                        //     LedgerError::CryptoError(String::from(
+                        //         &quot;Error calculating the hash of the serializable&quot;,
+                        //     ))
+                        // })?;
+                        </span>verify_signatures(<span class="kw-2">&amp;</span>signatures, <span class="kw-2">&amp;</span>signers, quorum, <span class="kw-2">&amp;</span>validation_proof)<span class="question-mark">?</span>;
                         <span class="comment">// Comprobar si es evento siguiente o LCE
-                        </span><span class="kw">if </span>event.content.event_proposal.proposal.sn == subject.sn + <span class="number">1
-                            </span>&amp;&amp; ledger_state.head.is_none()
-                        {
+                        </span><span class="kw">if </span>event.content.sn == subject.sn + <span class="number">1 </span>&amp;&amp; ledger_state.head.is_none() {
                             <span class="comment">// Caso Evento Siguiente
                             // Comprobar ValidationProof
                             </span><span class="self">self</span>.check_validation_proof(
                                 <span class="kw-2">&amp;</span>validation_proof,
                                 <span class="kw-2">&amp;</span>subject,
-                                <span class="kw-2">&amp;</span>event.signature.content.event_content_hash,
+                                <span class="kw-2">&amp;</span>event_hash,
+                                <span class="kw-2">&amp;</span>subject.public_key,
                             )<span class="question-mark">?</span>;
-                            check_context(<span class="kw-2">&amp;</span>event, <span class="kw-2">&amp;</span>subject, metadata, subject.properties.clone())<span class="question-mark">?</span>;
-                            <span class="kw">let </span>sn: u64 = event.content.event_proposal.proposal.sn;
+                            <span class="kw">let </span>sn: u64 = event.content.sn;
+                            subject.sn = sn;
                             subject.eol_event();
                             <span class="self">self</span>.database.set_signatures(
                                 <span class="kw-2">&amp;</span>eol_request.subject_id,
@@ -4572,13 +4710,21 @@
                                 signatures,
                                 validation_proof,
                             )<span class="question-mark">?</span>;
-                            <span class="self">self</span>.database.set_event(<span class="kw-2">&amp;</span>eol_request.subject_id, event)<span class="question-mark">?</span>;
                             <span class="self">self</span>.set_finished_request(
                                 <span class="kw-2">&amp;</span>request_id,
                                 event_request.clone(),
-                                sn,
+                                event.content.sn,
                                 subject_id.clone(),
+                                <span class="bool-val">true</span>,
                             )<span class="question-mark">?</span>;
+                            <span class="self">self</span>.database.set_event(<span class="kw-2">&amp;</span>eol_request.subject_id, event)<span class="question-mark">?</span>;
+                            <span class="kw">let _ </span>= <span class="self">self
+                                </span>.notification_sender
+                                .send(Notification::NewEvent {
+                                    sn,
+                                    subject_id: subject_id.to_str(),
+                                })
+                                .map_err(|<span class="kw">_</span>| LedgerError::NotificationChannelError);
                             <span class="self">self</span>.database
                                 .set_subject(<span class="kw-2">&amp;</span>eol_request.subject_id, subject)<span class="question-mark">?</span>;
                             <span class="kw">if </span><span class="self">self</span>.subject_is_gov.get(<span class="kw-2">&amp;</span>subject_id).unwrap().to_owned() {
@@ -4620,10 +4766,10 @@
                                     sn,
                                 })
                                 .<span class="kw">await</span><span class="question-mark">?</span>;
-                        <span class="comment">// } else if event.content.event_proposal.proposal.sn == subject.sn + 1 {
+                        <span class="comment">// } else if event.content.sn == subject.sn + 1 {
                         // Caso en el que el LCE es S + 1
                         // TODO:
-                        </span>} <span class="kw">else if </span>event.content.event_proposal.proposal.sn &gt; subject.sn {
+                        </span>} <span class="kw">else if </span>event.content.sn &gt; subject.sn {
                             <span class="comment">// Caso LCE
                             </span><span class="kw">let </span>is_gov = <span class="self">self</span>.subject_is_gov.get(<span class="kw-2">&amp;</span>subject_id).unwrap().to_owned();
                             <span class="kw">if </span>is_gov {
@@ -4651,7 +4797,7 @@
                             <span class="comment">// Comprobar que LCE es mayor y quedarnos con el mas peque si tenemos otro
                             </span><span class="kw">let </span>last_lce = <span class="kw">match </span>ledger_state.head {
                                 <span class="prelude-val">Some</span>(head) =&gt; {
-                                    <span class="kw">if </span>event.content.event_proposal.proposal.sn &gt; head {
+                                    <span class="kw">if </span>event.content.sn &gt; head {
                                         <span class="kw">return </span><span class="prelude-val">Err</span>(LedgerError::LCEBiggerSN);
                                     } <span class="kw">else </span>{
                                         <span class="kw">return </span><span class="prelude-val">Err</span>(LedgerError::EOLWhenActiveLCE(
@@ -4665,7 +4811,7 @@
                                 </span>}
                             };
                             <span class="comment">// Si hemos llegado aquí es porque va a ser nuevo LCE
-                            </span><span class="kw">let </span>sn = event.content.event_proposal.proposal.sn;
+                            </span><span class="kw">let </span>sn = event.content.sn;
                             <span class="self">self</span>.database.set_signatures(
                                 <span class="kw-2">&amp;</span>eol_request.subject_id,
                                 sn,
@@ -4676,13 +4822,21 @@
                                 <span class="kw-2">&amp;</span>eol_request.subject_id,
                                 validation_proof,
                             )<span class="question-mark">?</span>;
-                            <span class="self">self</span>.database.set_event(<span class="kw-2">&amp;</span>eol_request.subject_id, event)<span class="question-mark">?</span>;
                             <span class="self">self</span>.set_finished_request(
                                 <span class="kw-2">&amp;</span>request_id,
                                 event_request.clone(),
-                                sn,
+                                event.content.sn,
                                 subject_id.clone(),
+                                event.content.eval_success &amp;&amp; event.content.approved,
                             )<span class="question-mark">?</span>;
+                            <span class="self">self</span>.database.set_event(<span class="kw-2">&amp;</span>eol_request.subject_id, event)<span class="question-mark">?</span>;
+                            <span class="kw">let _ </span>= <span class="self">self
+                                </span>.notification_sender
+                                .send(Notification::NewEvent {
+                                    sn,
+                                    subject_id: subject_id.to_str(),
+                                })
+                                .map_err(|<span class="kw">_</span>| LedgerError::NotificationChannelError);
                             <span class="kw">if </span>last_lce.is_some() {
                                 <span class="kw">let </span>last_lce_sn = last_lce.unwrap();
                                 <span class="self">self</span>.database
@@ -4766,48 +4920,54 @@
                                 },
                             }
                         }
-                        <span class="self">self</span>.check_event(event.clone(), metadata.clone()).<span class="kw">await</span><span class="question-mark">?</span>;
-                        <span class="comment">// Si no está en el mapa, añadirlo y enviar mensaje a gov de subject updated con el id y el sn
-                        </span><span class="kw">let </span>notary_hash = DigestIdentifier::from_serializable_borsh(
-                            <span class="kw-2">&amp;</span>validation_proof,
-                        )
-                        .map_err(|<span class="kw">_</span>| {
-                            LedgerError::CryptoError(String::from(
-                                <span class="string">&quot;Error calculating the hash of the serializable&quot;</span>,
-                            ))
-                        })<span class="question-mark">?</span>;
-                        <span class="kw">let </span>(signers, quorum) = <span class="self">self
+                        <span class="comment">// YA NO SE PUEDE HACER COMPROACION PORQUE VALIDATION PROOF NO INDICA QUIEN ES EL OWNER
+                        // self.check_event(
+                        //     event.clone(),
+                        //     metadata.clone(),
+                        //     subject.get_subject_context(
+                        //         event.content.event_request.signature.signer.clone(),
+                        //     ),
+                        // )
+                        // .await?;
+                        // Si no está en el mapa, añadirlo y enviar mensaje a gov de subject updated con el id y el sn
+                        // let notary_hash = DigestIdentifier::from_serializable_borsh(
+                        //     &amp;validation_proof,
+                        // )
+                        // .map_err(|_| {
+                        //     LedgerError::CryptoError(String::from(
+                        //         &quot;Error calculating the hash of the serializable&quot;,
+                        //     ))
+                        // })?;
+                        </span><span class="kw">let </span>(signers, quorum) = <span class="self">self
                             </span>.get_signers_and_quorum(metadata.clone(), ValidationStage::Validate)
                             .<span class="kw">await</span><span class="question-mark">?</span>;
-                        verify_signatures(<span class="kw-2">&amp;</span>signatures, <span class="kw-2">&amp;</span>signers, quorum, <span class="kw-2">&amp;</span>notary_hash)<span class="question-mark">?</span>;
-                        <span class="kw">let </span>sn = event.content.event_proposal.proposal.sn;
+                        verify_signatures(<span class="kw-2">&amp;</span>signatures, <span class="kw-2">&amp;</span>signers, quorum, <span class="kw-2">&amp;</span>validation_proof)<span class="question-mark">?</span>;
+                        <span class="kw">let </span>sn = event.content.sn;
                         <span class="self">self</span>.database.set_signatures(
                             <span class="kw-2">&amp;</span>eol_request.subject_id,
                             sn,
                             signatures,
-                            validation_proof,
+                            validation_proof.clone(),
                         )<span class="question-mark">?</span>;
-                        <span class="kw">let </span>sn = event.content.event_proposal.proposal.sn;
-                        <span class="kw">let </span>proposal_hash = event
-                            .content
-                            .event_proposal
-                            .subject_signature
-                            .content
-                            .event_content_hash
-                            .clone();
+                        <span class="self">self</span>.database
+                            .set_lce_validation_proof(<span class="kw-2">&amp;</span>eol_request.subject_id, validation_proof)<span class="question-mark">?</span>;
+                        <span class="kw">let </span>sn = event.content.sn;
+                        <span class="kw">let </span>success = event.content.eval_success &amp;&amp; event.content.approved;
                         <span class="self">self</span>.database.set_event(<span class="kw-2">&amp;</span>eol_request.subject_id, event)<span class="question-mark">?</span>;
+                        <span class="kw">let _ </span>= <span class="self">self
+                            </span>.notification_sender
+                            .send(Notification::NewEvent {
+                                sn,
+                                subject_id: subject_id.to_str(),
+                            })
+                            .map_err(|<span class="kw">_</span>| LedgerError::NotificationChannelError);
                         <span class="self">self</span>.set_finished_request(
                             <span class="kw-2">&amp;</span>request_id,
                             event_request.clone(),
                             sn,
                             subject_id.clone(),
+                            success,
                         )<span class="question-mark">?</span>;
-                        <span class="comment">// PONER Aprobaciones como finalizadas y borrar de índice de pendientes
-                        </span><span class="kw">let </span>data = <span class="self">self</span>.database.get_approval(<span class="kw-2">&amp;</span>proposal_hash)<span class="question-mark">?</span>;
-                        <span class="kw">if let </span>ApprovalStatus::Pending = data.<span class="number">1 </span>{
-                            <span class="self">self</span>.database
-                                .set_approval(<span class="kw-2">&amp;</span>proposal_hash, (data.<span class="number">0</span>, ApprovalStatus::Finished))<span class="question-mark">?</span>;
-                        }
                         <span class="self">self</span>.ledger_state.insert(
                             eol_request.subject_id.clone(),
                             LedgerState {
@@ -4835,8 +4995,11 @@
         <span class="prelude-val">Ok</span>(())
     }
 
-    <span class="kw">pub async fn </span>external_intermediate_event(<span class="kw-2">&amp;mut </span><span class="self">self</span>, event: Event) -&gt; <span class="prelude-ty">Result</span>&lt;(), LedgerError&gt; {
-        <span class="kw">let </span>event_request = event.content.event_proposal.proposal.event_request.clone();
+    <span class="kw">pub async fn </span>external_intermediate_event(
+        <span class="kw-2">&amp;mut </span><span class="self">self</span>,
+        event: Signed&lt;Event&gt;,
+    ) -&gt; <span class="prelude-ty">Result</span>&lt;(), LedgerError&gt; {
+        <span class="kw">let </span>event_request = event.content.event_request.clone();
         <span class="kw">let </span>request_id = DigestIdentifier::from_serializable_borsh(<span class="kw-2">&amp;</span>event_request)
             .map_err(|<span class="kw">_</span>| LedgerError::CryptoError(<span class="string">&quot;Error generating request hash&quot;</span>.to_owned()))<span class="question-mark">?</span>;
         <span class="kw">match </span><span class="self">self</span>.database.get_taple_request(<span class="kw-2">&amp;</span>request_id) {
@@ -4847,27 +5010,32 @@
             },
         }
         <span class="comment">// Comprobaciones criptográficas
-        </span>event.check_signatures()<span class="question-mark">?</span>;
+        </span>event.verify_signatures()<span class="question-mark">?</span>;
+        <span class="kw">let </span>event_hash = DigestIdentifier::from_serializable_borsh(<span class="kw-2">&amp;</span>event.content)
+            .map_err(|<span class="kw">_</span>| LedgerError::CryptoError(<span class="string">&quot;Error generating event hash&quot;</span>.to_owned()))<span class="question-mark">?</span>;
         <span class="comment">// Comprobar si es genesis o state
-        </span><span class="kw">let </span>subject_id = <span class="kw">match </span><span class="kw-2">&amp;</span>event.content.event_proposal.proposal.event_request.request {
-            EventRequestType::Create(create_request) =&gt; {
+        </span><span class="kw">let </span>subject_id = <span class="kw">match </span><span class="kw-2">&amp;</span>event.content.event_request.content {
+            EventRequest::Create(create_request) =&gt; {
                 <span class="comment">// Comprobar si había un LCE previo o es genesis puro, si es genesis puro rechazar y que manden por la otra petición aunque sea con hashset de firmas vacío
                 </span>generate_subject_id(
                     <span class="kw-2">&amp;</span>create_request.namespace,
                     <span class="kw-2">&amp;</span>create_request.schema_id,
                     create_request.public_key.to_str(),
                     create_request.governance_id.to_str(),
-                    event.content.event_proposal.proposal.gov_version,
+                    event.content.gov_version,
                 )<span class="question-mark">?
             </span>}
-            EventRequestType::Fact(state_request) =&gt; state_request.subject_id.clone(),
-            EventRequestType::Transfer(transfer_request) =&gt; transfer_request.subject_id.clone(),
-            EventRequestType::EOL(eol_request) =&gt; {
+            EventRequest::Fact(state_request) =&gt; state_request.subject_id.clone(),
+            EventRequest::Transfer(transfer_request) =&gt; transfer_request.subject_id.clone(),
+            EventRequest::EOL(eol_request) =&gt; {
                 <span class="kw">return </span><span class="prelude-val">Err</span>(LedgerError::IntermediateEOL(
                     eol_request.subject_id.to_str(),
                 ))
             }
         };
+        <span class="kw">if </span>subject_id != event.content.subject_id {
+            <span class="kw">return </span><span class="prelude-val">Err</span>(LedgerError::SubjectIdError);
+        }
         <span class="kw">let </span>ledger_state = <span class="self">self</span>.ledger_state.get(<span class="kw-2">&amp;</span>subject_id);
         <span class="kw">match </span>ledger_state {
             <span class="prelude-val">Some</span>(ledger_state) =&gt; {
@@ -4889,65 +5057,88 @@
                                     namespace: subject.namespace.clone(),
                                     subject_id: subject.subject_id.clone(),
                                     governance_id: subject.governance_id.clone(),
-                                    governance_version: event
-                                        .content
-                                        .event_proposal
-                                        .proposal
-                                        .gov_version,
+                                    governance_version: event.content.gov_version,
                                     schema_id: subject.schema_id.clone(),
                                 };
                                 <span class="comment">// Comprobar que el evento es el siguiente
-                                </span><span class="kw">if </span>event.content.event_proposal.proposal.sn == current_sn + <span class="number">1 </span>{
+                                </span><span class="kw">if </span>event.content.sn == current_sn + <span class="number">1 </span>{
                                     <span class="comment">// Comprobar que el evento es el que necesito
-                                    </span><span class="kw">match </span><span class="kw-2">&amp;</span>event
-                                        .content
-                                        .event_proposal
-                                        .proposal
-                                        .event_request
-                                        .request
-                                    {
-                                        EventRequestType::Create(<span class="kw">_</span>) =&gt; {
+                                    </span><span class="kw">match </span><span class="kw-2">&amp;</span>event.content.event_request.content {
+                                        EventRequest::Create(<span class="kw">_</span>) =&gt; {
                                             <span class="kw">return </span><span class="prelude-val">Err</span>(LedgerError::UnexpectedCreateEvent)
                                         }
-                                        EventRequestType::Fact(<span class="kw">_</span>) =&gt; {
-                                            <span class="self">self</span>.check_event(event.clone(), metadata.clone())
-                                                .<span class="kw">await</span><span class="question-mark">?</span>;
-                                            check_context(
-                                                <span class="kw-2">&amp;</span>event,
-                                                <span class="kw-2">&amp;</span>subject,
+                                        EventRequest::Fact(<span class="kw">_</span>) =&gt; {
+                                            <span class="self">self</span>.check_event(
+                                                event.clone(),
                                                 metadata.clone(),
-                                                subject.properties.clone(),
-                                            )<span class="question-mark">?</span>;
+                                                subject.get_subject_context(
+                                                    event
+                                                        .content
+                                                        .event_request
+                                                        .signature
+                                                        .signer
+                                                        .clone(),
+                                                ),
+                                            )
+                                            .<span class="kw">await</span><span class="question-mark">?</span>;
                                         }
-                                        EventRequestType::Transfer(<span class="kw">_</span>) =&gt; {
+                                        EventRequest::Transfer(<span class="kw">_</span>) =&gt; {
                                             <span class="self">self</span>.check_transfer_event(event.clone())<span class="question-mark">?</span>;
                                         }
-                                        EventRequestType::EOL(<span class="kw">_</span>) =&gt; <span class="macro">unreachable!</span>(),
+                                        EventRequest::EOL(<span class="kw">_</span>) =&gt; <span class="macro">unreachable!</span>(),
                                     }
                                     <span class="self">self</span>.database.set_event(<span class="kw-2">&amp;</span>subject_id, event.clone())<span class="question-mark">?</span>;
+                                    <span class="kw">let _ </span>= <span class="self">self
+                                        </span>.notification_sender
+                                        .send(Notification::NewEvent {
+                                            sn: event.content.sn,
+                                            subject_id: subject_id.to_str(),
+                                        })
+                                        .map_err(|<span class="kw">_</span>| LedgerError::NotificationChannelError);
                                     <span class="self">self</span>.set_finished_request(
                                         <span class="kw-2">&amp;</span>request_id,
                                         event_request.clone(),
-                                        event.content.event_proposal.proposal.sn,
+                                        event.content.sn,
                                         subject_id.clone(),
+                                        event.content.eval_success &amp;&amp; event.content.approved,
                                     )<span class="question-mark">?</span>;
                                     <span class="comment">// PONER Aprobaciones como finalizadas y borrar de índice de pendientes
-                                    </span><span class="kw">let </span>proposal_hash = event
+                                    </span><span class="kw">let </span>approval_request_hash = <span class="kw-2">&amp;</span>event
                                         .content
-                                        .event_proposal
-                                        .subject_signature
-                                        .content
-                                        .event_content_hash
-                                        .clone();
-                                    <span class="kw">let </span>data = <span class="self">self</span>.database.get_approval(<span class="kw-2">&amp;</span>proposal_hash)<span class="question-mark">?</span>;
-                                    <span class="kw">if let </span>ApprovalStatus::Pending = data.<span class="number">1 </span>{
-                                        <span class="self">self</span>.database.set_approval(
-                                            <span class="kw-2">&amp;</span>proposal_hash,
-                                            (data.<span class="number">0</span>, ApprovalStatus::Finished),
-                                        )<span class="question-mark">?</span>;
-                                    }
-                                    <span class="self">self</span>.event_sourcing(event.clone())<span class="question-mark">?</span>;
+                                        .get_approval_hash(subject.governance_id.clone())
+                                        .map_err(|<span class="kw">_</span>| {
+                                            LedgerError::CryptoError(
+                                                <span class="string">&quot;Error generating approval request hash&quot;</span>.to_owned(),
+                                            )
+                                        })<span class="question-mark">?</span>;
+                                    <span class="kw">match </span><span class="self">self</span>.database.get_approval(<span class="kw-2">&amp;</span>approval_request_hash) {
+                                        <span class="prelude-val">Ok</span>(<span class="kw-2">mut </span>data) =&gt; {
+                                            <span class="kw">if let </span>ApprovalState::Pending = data.state {
+                                                data.state = ApprovalState::Obsolete;
+                                                <span class="self">self</span>.database
+                                                    .set_approval(<span class="kw-2">&amp;</span>approval_request_hash, data)<span class="question-mark">?</span>;
+                                                <span class="kw">let _ </span>= <span class="self">self
+                                                    </span>.notification_sender
+                                                    .send(Notification::ObsoletedApproval {
+                                                        id: approval_request_hash.to_str(),
+                                                        subject_id: subject_id.to_str(),
+                                                        sn: event.content.sn,
+                                                    })
+                                                    .map_err(|<span class="kw">_</span>| {
+                                                        LedgerError::NotificationChannelError
+                                                    });
+                                            }
+                                        }
+                                        <span class="prelude-val">Err</span>(error) =&gt; <span class="kw">match </span>error {
+                                            DbError::EntryNotFound =&gt; {}
+                                            <span class="kw">_ </span>=&gt; {
+                                                <span class="kw">return </span><span class="prelude-val">Err</span>(LedgerError::DatabaseError(error));
+                                            }
+                                        },
+                                    };
+                                    <span class="kw">let </span>subject = <span class="self">self</span>.event_sourcing(event.clone())<span class="question-mark">?</span>;
                                     <span class="kw">if </span>head == current_sn + <span class="number">2 </span>{
+                                        <span class="macro">log::error!</span>(<span class="string">&quot;PASA POR SN + 2&quot;</span>);
                                         <span class="comment">// Hacer event sourcing del LCE tambien y actualizar subject
                                         </span><span class="kw">let </span>head_event = <span class="self">self
                                             </span>.database
@@ -4962,10 +5153,26 @@
                                         </span><span class="kw">let </span>validation_proof =
                                             <span class="self">self</span>.database.get_lce_validation_proof(<span class="kw-2">&amp;</span>subject_id)<span class="question-mark">?</span>;
                                         <span class="comment">// TODO: Si falla aquí inutilizamos sujeto???
-                                        </span><span class="self">self</span>.check_validation_proof(
+                                        </span><span class="kw">let </span>public_key = <span class="kw">if let </span>EventRequest::Transfer(data) =
+                                            <span class="kw-2">&amp;</span>head_event.content.event_request.content
+                                        {
+                                            data.public_key.clone()
+                                        } <span class="kw">else </span>{
+                                            subject.public_key.clone()
+                                        };
+                                        <span class="kw">let </span>event_hash = DigestIdentifier::from_serializable_borsh(
+                                            <span class="kw-2">&amp;</span>head_event.content,
+                                        )
+                                        .map_err(|<span class="kw">_</span>| {
+                                            LedgerError::CryptoError(
+                                                <span class="string">&quot;Error generating event hash&quot;</span>.to_owned(),
+                                            )
+                                        })<span class="question-mark">?</span>;
+                                        <span class="self">self</span>.check_validation_proof(
                                             <span class="kw-2">&amp;</span>validation_proof,
                                             <span class="kw-2">&amp;</span>subject,
-                                            <span class="kw-2">&amp;</span>head_event.signature.content.event_content_hash,
+                                            <span class="kw-2">&amp;</span>event_hash,
+                                            <span class="kw-2">&amp;</span>public_key,
                                         )<span class="question-mark">?</span>;
                                         <span class="self">self</span>.event_sourcing(head_event)<span class="question-mark">?</span>;
                                         <span class="self">self</span>.ledger_state.insert(
@@ -4992,6 +5199,8 @@
                                                 head: <span class="prelude-val">Some</span>(head),
                                             },
                                         );
+                                        <span class="kw">let </span>_subject_owner =
+                                            <span class="self">self</span>.database.get_subject(<span class="kw-2">&amp;</span>subject_id)<span class="question-mark">?</span>.owner;
                                         <span class="comment">// No se llega hasta el LCE con el event sourcing
                                         // Pedir siguiente evento
                                         </span><span class="kw">let </span><span class="kw-2">mut </span>witnesses =
@@ -5024,7 +5233,7 @@
                                 <span class="comment">// TODO: Comprobar antes del event sourcing si el LCE ES 1.
 
                                 // El siguiente es el evento 0
-                                </span><span class="kw">if </span>event.content.event_proposal.proposal.sn == <span class="number">0 </span>{
+                                </span><span class="kw">if </span>event.content.sn == <span class="number">0 </span>{
                                     <span class="comment">// Comprobar que el evento 0 es el que necesito
                                     </span><span class="kw">let </span>metadata = <span class="self">self
                                         </span>.check_genesis(event.clone(), subject_id.clone())
@@ -5046,6 +5255,7 @@
                                     //     }
                                     // };
                                     </span><span class="kw">if </span>head == <span class="number">1 </span>{
+                                        <span class="macro">log::error!</span>(<span class="string">&quot;PASA POR HEAD&quot;</span>);
                                         <span class="kw">let </span>subject = <span class="self">self</span>.database.get_subject(<span class="kw-2">&amp;</span>subject_id)<span class="question-mark">?</span>;
                                         <span class="kw">let </span>head_event = <span class="self">self
                                             </span>.database
@@ -5060,10 +5270,26 @@
                                         </span><span class="kw">let </span>validation_proof =
                                             <span class="self">self</span>.database.get_lce_validation_proof(<span class="kw-2">&amp;</span>subject_id)<span class="question-mark">?</span>;
                                         <span class="comment">// TODO: Si falla aquí inutilizamos sujeto???
-                                        </span><span class="self">self</span>.check_validation_proof(
+                                        </span><span class="kw">let </span>public_key = <span class="kw">if let </span>EventRequest::Transfer(data) =
+                                            <span class="kw-2">&amp;</span>head_event.content.event_request.content
+                                        {
+                                            data.public_key.clone()
+                                        } <span class="kw">else </span>{
+                                            subject.public_key.clone()
+                                        };
+                                        <span class="kw">let </span>event_hash = DigestIdentifier::from_serializable_borsh(
+                                            <span class="kw-2">&amp;</span>head_event.content,
+                                        )
+                                        .map_err(|<span class="kw">_</span>| {
+                                            LedgerError::CryptoError(
+                                                <span class="string">&quot;Error generating event hash&quot;</span>.to_owned(),
+                                            )
+                                        })<span class="question-mark">?</span>;
+                                        <span class="self">self</span>.check_validation_proof(
                                             <span class="kw-2">&amp;</span>validation_proof,
                                             <span class="kw-2">&amp;</span>subject,
-                                            <span class="kw-2">&amp;</span>head_event.signature.content.event_content_hash,
+                                            <span class="kw-2">&amp;</span>event_hash,
+                                            <span class="kw-2">&amp;</span>public_key,
                                         )<span class="question-mark">?</span>;
                                         <span class="comment">// Hacer event sourcing del evento 1 tambien y actualizar subject
                                         </span><span class="self">self</span>.event_sourcing(head_event)<span class="question-mark">?</span>;
@@ -5096,16 +5322,8 @@
                                         </span><span class="kw">let </span><span class="kw-2">mut </span>witnesses =
                                             <span class="self">self</span>.get_witnesses(metadata.clone()).<span class="kw">await</span><span class="question-mark">?</span>;
                                         <span class="comment">// Añadir owner
-                                        </span>witnesses.insert(
-                                            event
-                                                .content
-                                                .event_proposal
-                                                .proposal
-                                                .event_request
-                                                .signature
-                                                .content
-                                                .signer,
-                                        );
+                                        </span>witnesses
+                                            .insert(event.content.event_request.signature.signer);
                                         <span class="kw">let </span>msg = request_event(<span class="self">self</span>.our_id.clone(), subject_id, <span class="number">1</span>);
                                         <span class="self">self</span>.message_channel
                                             .tell(MessageTaskCommand::Request(
@@ -5139,7 +5357,7 @@
         who_asked: KeyIdentifier,
         subject_id: DigestIdentifier,
         sn: u64,
-    ) -&gt; <span class="prelude-ty">Result</span>&lt;Event, LedgerError&gt; {
+    ) -&gt; <span class="prelude-ty">Result</span>&lt;Signed&lt;Event&gt;, LedgerError&gt; {
         <span class="kw">let </span>event = <span class="self">self</span>.database.get_event(<span class="kw-2">&amp;</span>subject_id, sn)<span class="question-mark">?</span>;
         <span class="self">self</span>.message_channel
             .tell(MessageTaskCommand::Request(
@@ -5159,10 +5377,7 @@
         who_asked: KeyIdentifier,
         subject_id: DigestIdentifier,
         sn: u64,
-    ) -&gt; <span class="prelude-ty">Result</span>&lt;(Event, HashSet&lt;Signature&gt;), LedgerError&gt; {
-        <span class="macro">log::warn!</span>(<span class="string">&quot;GET NEXT GOV&quot;</span>);
-        <span class="macro">log::info!</span>(<span class="string">&quot;Getting NG: {}..............{}&quot;</span>, subject_id.to_str(), sn);
-        <span class="macro">log::info!</span>(<span class="string">&quot;Who Asked: {}&quot;</span>, who_asked.to_str());
+    ) -&gt; <span class="prelude-ty">Result</span>&lt;(Signed&lt;Event&gt;, HashSet&lt;Signature&gt;), LedgerError&gt; {
         <span class="kw">let </span>event = <span class="self">self</span>.database.get_event(<span class="kw-2">&amp;</span>subject_id, sn)<span class="question-mark">?</span>;
         <span class="kw">let </span>(signatures, validation_proof) = <span class="kw">match </span><span class="self">self</span>.database.get_signatures(<span class="kw-2">&amp;</span>subject_id, sn) {
             <span class="prelude-val">Ok</span>((s, validation_proof)) =&gt; (s, validation_proof),
@@ -5188,9 +5403,7 @@
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         who_asked: KeyIdentifier,
         subject_id: DigestIdentifier,
-    ) -&gt; <span class="prelude-ty">Result</span>&lt;(Event, HashSet&lt;Signature&gt;), LedgerError&gt; {
-        <span class="macro">log::info!</span>(<span class="string">&quot;Getting LCE: {}&quot;</span>, subject_id.to_str());
-        <span class="macro">log::info!</span>(<span class="string">&quot;Who Asked: {}&quot;</span>, who_asked.to_str());
+    ) -&gt; <span class="prelude-ty">Result</span>&lt;(Signed&lt;Event&gt;, HashSet&lt;Signature&gt;), LedgerError&gt; {
         <span class="kw">let </span>subject = <span class="self">self</span>.database.get_subject(<span class="kw-2">&amp;</span>subject_id)<span class="question-mark">?</span>;
         <span class="kw">let </span>event = <span class="self">self</span>.database.get_event(<span class="kw-2">&amp;</span>subject_id, subject.sn)<span class="question-mark">?</span>;
         <span class="kw">let </span>(signatures, validation_proof) =
@@ -5245,9 +5458,16 @@
         validation_proof: <span class="kw-2">&amp;</span>ValidationProof,
         subject: <span class="kw-2">&amp;</span>Subject,
         event_hash: <span class="kw-2">&amp;</span>DigestIdentifier,
+        public_key: <span class="kw-2">&amp;</span>KeyIdentifier,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;(), LedgerError&gt; {
         <span class="kw">let </span>hash_prev_event = <span class="kw">match </span><span class="self">self</span>.database.get_event(<span class="kw-2">&amp;</span>subject.subject_id, subject.sn) {
-            <span class="prelude-val">Ok</span>(event) =&gt; event.signature.content.event_content_hash.clone(),
+            <span class="prelude-val">Ok</span>(event) =&gt; {
+                DigestIdentifier::from_serializable_borsh(<span class="kw-2">&amp;</span>event.content).map_err(|<span class="kw">_</span>| {
+                    LedgerError::ValidationProofError(
+                        <span class="string">&quot;Error parsing prev event content&quot;</span>.to_string(),
+                    )
+                })<span class="question-mark">?
+            </span>}
             <span class="prelude-val">Err</span>(error) =&gt; <span class="kw">match </span>error {
                 <span class="kw">crate</span>::DbError::EntryNotFound =&gt; {
                     <span class="kw">if </span>subject.sn == <span class="number">0 </span>{
@@ -5287,7 +5507,7 @@
             <span class="kw">return </span><span class="prelude-val">Err</span>(LedgerError::ValidationProofError(
                 <span class="string">&quot;Hash Event does not match&quot;</span>.to_string(),
             ));
-        } <span class="kw">else if </span>validation_proof.subject_public_key != subject.public_key {
+        } <span class="kw">else if </span>validation_proof.subject_public_key != <span class="kw-2">*</span>public_key {
             <span class="kw">return </span><span class="prelude-val">Err</span>(LedgerError::ValidationProofError(
                 <span class="string">&quot;Subject Public Key does not match&quot;</span>.to_string(),
             ));
@@ -5305,27 +5525,19 @@
 
     <span class="kw">async fn </span>check_genesis(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        event: Event,
+        event: Signed&lt;Event&gt;,
         subject_id: DigestIdentifier,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;Metadata, LedgerError&gt; {
-        <span class="kw">let </span>EventRequestType::Create(create_request) = <span class="kw-2">&amp;</span>event.content.event_proposal.proposal.event_request.request <span class="kw">else </span>{
+        <span class="kw">let </span>EventRequest::Create(create_request) = <span class="kw-2">&amp;</span>event.content.event_request.content <span class="kw">else </span>{
             <span class="kw">return </span><span class="prelude-val">Err</span>(LedgerError::StateInGenesis);
         };
 
-        <span class="kw">let </span>invoker = event
-            .content
-            .event_proposal
-            .proposal
-            .event_request
-            .signature
-            .content
-            .signer
-            .clone();
+        <span class="kw">let </span>invoker = event.content.event_request.signature.signer.clone();
         <span class="kw">let </span>metadata = Metadata {
             namespace: create_request.namespace.clone(),
             subject_id: subject_id.clone(),
             governance_id: create_request.governance_id.clone(),
-            governance_version: event.content.event_proposal.proposal.gov_version,
+            governance_version: event.content.gov_version,
             schema_id: create_request.schema_id.clone(),
         };
         <span class="comment">// Ignoramos las firmas por ahora
@@ -5333,9 +5545,9 @@
         </span><span class="kw">if </span><span class="kw-2">&amp;</span>create_request.schema_id != <span class="string">&quot;governance&quot; </span>{
             <span class="kw">let </span>creation_roles = <span class="self">self
                 </span>.gov_api
-                .get_signers(metadata.clone(), ValidationStage::Create)
+                .get_invoke_info(metadata.clone(), ValidationStage::Create, invoker)
                 .<span class="kw">await</span><span class="question-mark">?</span>;
-            <span class="kw">if </span>!creation_roles.contains(<span class="kw-2">&amp;</span>invoker) {
+            <span class="kw">if </span>!creation_roles {
                 <span class="kw">return </span><span class="prelude-val">Err</span>(LedgerError::Unauthorized(<span class="string">&quot;Crreator not allowed&quot;</span>.into()));
             } <span class="comment">// TODO: No estamos comprobando que pueda ser un external el que cree el subject y lo permitamos si tenia permisos.
         </span>}
@@ -5348,48 +5560,68 @@
                 metadata.governance_version.clone(),
             )
             .<span class="kw">await</span><span class="question-mark">?</span>;
-        <span class="kw">let </span>init_state = serde_json::to_string(<span class="kw-2">&amp;</span>init_state)
-            .map_err(|<span class="kw">_</span>| LedgerError::ErrorParsingJsonString(<span class="string">&quot;Init state&quot;</span>.to_owned()))<span class="question-mark">?</span>;
-        <span class="kw">let </span>subject = Subject::from_genesis_event(event.clone(), init_state)<span class="question-mark">?</span>;
+        <span class="kw">let </span>subject = Subject::from_genesis_event(event.clone(), init_state, <span class="prelude-val">None</span>)<span class="question-mark">?</span>;
         <span class="self">self</span>.database
             .set_governance_index(<span class="kw-2">&amp;</span>subject_id, <span class="kw-2">&amp;</span>subject.governance_id)<span class="question-mark">?</span>;
-        <span class="kw">let </span>event_request = event.content.event_proposal.proposal.event_request.clone();
+        <span class="kw">let </span>event_request = event.content.event_request.clone();
         <span class="kw">let </span>request_id = DigestIdentifier::from_serializable_borsh(<span class="kw-2">&amp;</span>event_request)
             .map_err(|<span class="kw">_</span>| LedgerError::CryptoError(<span class="string">&quot;Error generating request hash&quot;</span>.to_owned()))<span class="question-mark">?</span>;
-        <span class="kw">let </span>sn = event.content.event_proposal.proposal.sn;
+        <span class="kw">let </span>sn = event.content.sn;
+        <span class="kw">let </span>success = event.content.eval_success &amp;&amp; event.content.approved;
         <span class="self">self</span>.database.set_event(<span class="kw-2">&amp;</span>subject_id, event)<span class="question-mark">?</span>;
-        <span class="self">self</span>.set_finished_request(<span class="kw-2">&amp;</span>request_id, event_request.clone(), sn, subject_id.clone())<span class="question-mark">?</span>;
+        <span class="kw">let _ </span>= <span class="self">self
+            </span>.notification_sender
+            .send(Notification::NewEvent {
+                sn,
+                subject_id: subject_id.to_str(),
+            })
+            .map_err(|<span class="kw">_</span>| LedgerError::NotificationChannelError);
+        <span class="self">self</span>.set_finished_request(
+            <span class="kw-2">&amp;</span>request_id,
+            event_request.clone(),
+            sn,
+            subject_id.clone(),
+            success,
+        )<span class="question-mark">?</span>;
         <span class="self">self</span>.database.set_subject(<span class="kw-2">&amp;</span>subject_id, subject)<span class="question-mark">?</span>;
+        <span class="kw">let _ </span>= <span class="self">self
+            </span>.notification_sender
+            .send(Notification::NewSubject {
+                subject_id: subject_id.to_str(),
+            })
+            .map_err(|<span class="kw">_</span>| LedgerError::NotificationChannelError);
         <span class="prelude-val">Ok</span>(metadata)
     }
 
-    <span class="kw">fn </span>event_sourcing_eol(<span class="kw-2">&amp;</span><span class="self">self</span>, event: Event) -&gt; <span class="prelude-ty">Result</span>&lt;(), LedgerError&gt; {
+    <span class="kw">fn </span>event_sourcing_eol(<span class="kw-2">&amp;</span><span class="self">self</span>, event: Signed&lt;Event&gt;) -&gt; <span class="prelude-ty">Result</span>&lt;Subject, LedgerError&gt; {
         <span class="kw">let </span>subject_id = {
-            <span class="kw">match </span>event.content.event_proposal.proposal.event_request.request {
-                EventRequestType::EOL(eol_request) =&gt; eol_request.subject_id.clone(),
+            <span class="kw">match </span>event.content.event_request.content {
+                EventRequest::EOL(eol_request) =&gt; eol_request.subject_id.clone(),
                 <span class="kw">_ </span>=&gt; <span class="kw">return </span><span class="prelude-val">Err</span>(LedgerError::EventDoesNotFitHash),
             }
         };
-        <span class="kw">let </span>sn = event.content.event_proposal.proposal.sn;
-        <span class="kw">let </span>prev_event =
-            <span class="self">self</span>.database
+        <span class="kw">let </span>sn = event.content.sn;
+        <span class="kw">let </span>prev_event_hash = DigestIdentifier::from_serializable_borsh(
+            <span class="kw-2">&amp;</span><span class="self">self
+                </span>.database
                 .get_event(<span class="kw-2">&amp;</span>subject_id, sn - <span class="number">1</span>)
                 .map_err(|error| <span class="kw">match </span>error {
                     <span class="kw">crate</span>::database::Error::EntryNotFound =&gt; {
                         LedgerError::UnexpectEventMissingInEventSourcing
                     }
                     <span class="kw">_ </span>=&gt; LedgerError::DatabaseError(error),
-                })<span class="question-mark">?</span>;
+                })<span class="question-mark">?
+                </span>.content,
+        )
+        .map_err(|<span class="kw">_</span>| LedgerError::CryptoError(<span class="string">&quot;Error generating hash&quot;</span>.to_owned()))<span class="question-mark">?</span>;
         <span class="comment">// Comprobar evento previo encaja
-        </span><span class="kw">if </span>event.content.event_proposal.proposal.hash_prev_event
-            != prev_event.signature.content.event_content_hash
-        {
+        </span><span class="kw">if </span>event.content.hash_prev_event != prev_event_hash {
             <span class="kw">return </span><span class="prelude-val">Err</span>(LedgerError::EventDoesNotFitHash);
         }
         <span class="kw">let </span><span class="kw-2">mut </span>subject = <span class="self">self</span>.database.get_subject(<span class="kw-2">&amp;</span>subject_id)<span class="question-mark">?</span>;
         subject.eol_event();
-        <span class="self">self</span>.database.set_subject(<span class="kw-2">&amp;</span>subject_id, subject)<span class="question-mark">?</span>;
-        <span class="prelude-val">Ok</span>(())
+        <span class="self">self</span>.database.set_subject(<span class="kw-2">&amp;</span>subject_id, subject.clone())<span class="question-mark">?</span>;
+        <span class="prelude-val">Ok</span>(subject)
     }
 
     <span class="kw">fn </span>event_sourcing_transfer(
@@ -5398,16 +5630,20 @@
         sn: u64,
         owner: KeyIdentifier,
         public_key: KeyIdentifier,
-    ) -&gt; <span class="prelude-ty">Result</span>&lt;(), LedgerError&gt; {
-        <span class="kw">let </span>prev_event =
-            <span class="self">self</span>.database
+    ) -&gt; <span class="prelude-ty">Result</span>&lt;Subject, LedgerError&gt; {
+        <span class="kw">let </span>prev_event_hash = DigestIdentifier::from_serializable_borsh(
+            <span class="kw-2">&amp;</span><span class="self">self
+                </span>.database
                 .get_event(<span class="kw-2">&amp;</span>subject_id, sn - <span class="number">1</span>)
                 .map_err(|error| <span class="kw">match </span>error {
                     <span class="kw">crate</span>::database::Error::EntryNotFound =&gt; {
                         LedgerError::UnexpectEventMissingInEventSourcing
                     }
                     <span class="kw">_ </span>=&gt; LedgerError::DatabaseError(error),
-                })<span class="question-mark">?</span>;
+                })<span class="question-mark">?
+                </span>.content,
+        )
+        .map_err(|<span class="kw">_</span>| LedgerError::CryptoError(<span class="string">&quot;Error generating hash&quot;</span>.to_owned()))<span class="question-mark">?</span>;
         <span class="kw">let </span>event = <span class="self">self
             </span>.database
             .get_event(<span class="kw-2">&amp;</span>subject_id, sn)
@@ -5418,22 +5654,11 @@
                 <span class="kw">_ </span>=&gt; LedgerError::DatabaseError(error),
             })<span class="question-mark">?</span>;
         <span class="comment">// Comprobar evento previo encaja
-        </span><span class="kw">if </span>event.content.event_proposal.proposal.hash_prev_event
-            != prev_event.signature.content.event_content_hash
-        {
+        </span><span class="kw">if </span>event.content.hash_prev_event != prev_event_hash {
             <span class="kw">return </span><span class="prelude-val">Err</span>(LedgerError::EventDoesNotFitHash);
         }
         <span class="kw">let </span><span class="kw-2">mut </span>subject = <span class="self">self</span>.database.get_subject(<span class="kw-2">&amp;</span>subject_id)<span class="question-mark">?</span>;
-        <span class="kw">let </span>(keypair, to_delete) = <span class="kw">if </span>event
-            .content
-            .event_proposal
-            .proposal
-            .event_request
-            .signature
-            .content
-            .signer
-            == <span class="self">self</span>.our_id
-        {
+        <span class="kw">let </span>(keypair, to_delete) = <span class="kw">if </span>event.content.event_request.signature.signer == <span class="self">self</span>.our_id {
             <span class="comment">// TODO: ANALIZAR QUE DEBERÍAMOS HACER SI SE NOS TRANSFIERE Y NO LO QUEREMOS
             // La transferencia es a nosotros
             </span><span class="kw">match </span><span class="self">self</span>.database.get_keys(<span class="kw-2">&amp;</span>public_key) {
@@ -5446,64 +5671,92 @@
         } <span class="kw">else </span>{
             (<span class="prelude-val">None</span>, <span class="bool-val">false</span>)
         };
-        subject.transfer_subject(
-            owner,
-            public_key.clone(),
-            keypair,
-            event.content.event_proposal.proposal.sn,
-        );
-        <span class="self">self</span>.database.set_subject(<span class="kw-2">&amp;</span>subject_id, subject)<span class="question-mark">?</span>;
+        subject.transfer_subject(owner, public_key.clone(), keypair, event.content.sn);
+        <span class="self">self</span>.database.set_subject(<span class="kw-2">&amp;</span>subject_id, subject.clone())<span class="question-mark">?</span>;
         <span class="kw">if </span>to_delete {
             <span class="self">self</span>.database.del_keys(<span class="kw-2">&amp;</span>public_key)<span class="question-mark">?</span>;
         }
-        <span class="prelude-val">Ok</span>(())
+        <span class="prelude-val">Ok</span>(subject)
     }
 
-    <span class="kw">fn </span>event_sourcing(<span class="kw-2">&amp;</span><span class="self">self</span>, event: Event) -&gt; <span class="prelude-ty">Result</span>&lt;(), LedgerError&gt; {
-        <span class="kw">match </span><span class="kw-2">&amp;</span>event.content.event_proposal.proposal.event_request.request {
-            EventRequestType::Transfer(transfer_request) =&gt; <span class="self">self</span>.event_sourcing_transfer(
-                transfer_request.subject_id.clone(),
-                event.content.event_proposal.proposal.sn,
-                event
-                    .content
-                    .event_proposal
-                    .proposal
-                    .event_request
-                    .signature
-                    .content
-                    .signer
-                    .clone(),
-                transfer_request.public_key.clone(),
-            ),
-            EventRequestType::Create(<span class="kw">_</span>) =&gt; <span class="kw">return </span><span class="prelude-val">Err</span>(LedgerError::UnexpectedCreateEvent),
-            EventRequestType::Fact(state_request) =&gt; <span class="self">self</span>.event_sourcing_state(
-                state_request.subject_id.clone(),
-                event.content.event_proposal.proposal.sn,
-                event,
-            ),
-            EventRequestType::EOL(eol_request) =&gt; <span class="self">self</span>.event_sourcing_eol(event),
+    <span class="kw">fn </span>event_sourcing(<span class="kw-2">&amp;</span><span class="self">self</span>, event: Signed&lt;Event&gt;) -&gt; <span class="prelude-ty">Result</span>&lt;Subject, LedgerError&gt; {
+        <span class="kw">if </span>!event.content.approved {
+            <span class="self">self</span>.event_sourcing_rejected_event(event)
+        } <span class="kw">else </span>{
+            <span class="kw">match </span><span class="kw-2">&amp;</span>event.content.event_request.content {
+                EventRequest::Transfer(transfer_request) =&gt; <span class="self">self</span>.event_sourcing_transfer(
+                    transfer_request.subject_id.clone(),
+                    event.content.sn,
+                    event.content.event_request.signature.signer.clone(),
+                    transfer_request.public_key.clone(),
+                ),
+                EventRequest::Create(<span class="kw">_</span>) =&gt; <span class="kw">return </span><span class="prelude-val">Err</span>(LedgerError::UnexpectedCreateEvent),
+                EventRequest::Fact(state_request) =&gt; <span class="self">self</span>.event_sourcing_state(
+                    state_request.subject_id.clone(),
+                    event.content.sn,
+                    event,
+                ),
+                EventRequest::EOL(<span class="kw">_</span>) =&gt; <span class="self">self</span>.event_sourcing_eol(event),
+            }
         }
+    }
+
+    <span class="kw">fn </span>event_sourcing_rejected_event(<span class="kw-2">&amp;</span><span class="self">self</span>, event: Signed&lt;Event&gt;) -&gt; <span class="prelude-ty">Result</span>&lt;Subject, LedgerError&gt; {
+        <span class="kw">let </span>prev_event_hash = DigestIdentifier::from_serializable_borsh(
+            <span class="kw-2">&amp;</span><span class="self">self
+                </span>.database
+                .get_event(<span class="kw-2">&amp;</span>event.content.subject_id, event.content.sn - <span class="number">1</span>)
+                .map_err(|error| <span class="kw">match </span>error {
+                    <span class="kw">crate</span>::database::Error::EntryNotFound =&gt; {
+                        LedgerError::UnexpectEventMissingInEventSourcing
+                    }
+                    <span class="kw">_ </span>=&gt; LedgerError::DatabaseError(error),
+                })<span class="question-mark">?
+                </span>.content,
+        )
+        .map_err(|<span class="kw">_</span>| LedgerError::CryptoError(<span class="string">&quot;Error generating hash&quot;</span>.to_owned()))<span class="question-mark">?</span>;
+        <span class="comment">// Comprobar evento previo encaja
+        </span><span class="kw">if </span>event.content.hash_prev_event != prev_event_hash {
+            <span class="kw">return </span><span class="prelude-val">Err</span>(LedgerError::EventDoesNotFitHash);
+        }
+        <span class="kw">let </span><span class="kw-2">mut </span>subject = <span class="self">self</span>.database.get_subject(<span class="kw-2">&amp;</span>event.content.subject_id)<span class="question-mark">?</span>;
+        <span class="kw">if </span>event.content.sn != subject.sn + <span class="number">1 </span>{
+            <span class="kw">return </span><span class="prelude-val">Err</span>(LedgerError::EventNotNext);
+        }
+        subject.sn = event.content.sn;
+        <span class="kw">let _ </span>= <span class="self">self
+            </span>.notification_sender
+            .send(Notification::StateUpdated {
+                sn: event.content.sn,
+                subject_id: subject.subject_id.to_str(),
+            })
+            .map_err(|<span class="kw">_</span>| LedgerError::NotificationChannelError);
+        <span class="self">self</span>.database
+            .set_subject(<span class="kw-2">&amp;</span>event.content.subject_id, subject.clone())<span class="question-mark">?</span>;
+        <span class="prelude-val">Ok</span>(subject)
     }
 
     <span class="kw">fn </span>event_sourcing_state(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         subject_id: DigestIdentifier,
         sn: u64,
-        event: Event,
-    ) -&gt; <span class="prelude-ty">Result</span>&lt;(), LedgerError&gt; {
-        <span class="kw">let </span>prev_event =
-            <span class="self">self</span>.database
+        event: Signed&lt;Event&gt;,
+    ) -&gt; <span class="prelude-ty">Result</span>&lt;Subject, LedgerError&gt; {
+        <span class="kw">let </span>prev_event_hash = DigestIdentifier::from_serializable_borsh(
+            <span class="kw-2">&amp;</span><span class="self">self
+                </span>.database
                 .get_event(<span class="kw-2">&amp;</span>subject_id, sn - <span class="number">1</span>)
                 .map_err(|error| <span class="kw">match </span>error {
                     <span class="kw">crate</span>::database::Error::EntryNotFound =&gt; {
                         LedgerError::UnexpectEventMissingInEventSourcing
                     }
                     <span class="kw">_ </span>=&gt; LedgerError::DatabaseError(error),
-                })<span class="question-mark">?</span>;
+                })<span class="question-mark">?
+                </span>.content,
+        )
+        .map_err(|<span class="kw">_</span>| LedgerError::CryptoError(<span class="string">&quot;Error generating hash&quot;</span>.to_owned()))<span class="question-mark">?</span>;
         <span class="comment">// Comprobar evento previo encaja
-        </span><span class="kw">if </span>event.content.event_proposal.proposal.hash_prev_event
-            != prev_event.signature.content.event_content_hash
-        {
+        </span><span class="kw">if </span>event.content.hash_prev_event != prev_event_hash {
             <span class="kw">return </span><span class="prelude-val">Err</span>(LedgerError::EventDoesNotFitHash);
         }
         <span class="kw">let </span><span class="kw-2">mut </span>subject = <span class="self">self</span>.database.get_subject(<span class="kw-2">&amp;</span>subject_id)<span class="question-mark">?</span>;
@@ -5511,149 +5764,91 @@
         //     namespace: subject.namespace.clone(),
         //     subject_id: subject.subject_id.clone(),
         //     governance_id: subject.governance_id.clone(),
-        //     governance_version: event.content.event_proposal.proposal.gov_version,
+        //     governance_version: event.content.gov_version,
         //     schema_id: subject.schema_id.clone(),
         //     owner: subject.owner.clone(),
         //     creator: subject.creator.clone(),
         // };
         // check_context(&amp;event, metadata, subject.properties.clone())?;
-        </span>subject.update_subject(
-            <span class="kw-2">&amp;</span>event.content.event_proposal.proposal.json_patch,
-            event.content.event_proposal.proposal.sn,
-        )<span class="question-mark">?</span>;
-        <span class="self">self</span>.database.set_subject(<span class="kw-2">&amp;</span>subject_id, subject)<span class="question-mark">?</span>;
-        <span class="prelude-val">Ok</span>(())
+        </span>subject.update_subject(event.content.patch, event.content.sn)<span class="question-mark">?</span>;
+        <span class="kw">let _ </span>= <span class="self">self
+            </span>.notification_sender
+            .send(Notification::StateUpdated {
+                sn: event.content.sn,
+                subject_id: subject.subject_id.to_str(),
+            })
+            .map_err(|<span class="kw">_</span>| LedgerError::NotificationChannelError);
+        <span class="self">self</span>.database.set_subject(<span class="kw-2">&amp;</span>subject_id, subject.clone())<span class="question-mark">?</span>;
+        <span class="prelude-val">Ok</span>(subject)
     }
 
-    <span class="kw">fn </span>check_transfer_event(<span class="kw-2">&amp;</span><span class="self">self</span>, event: Event) -&gt; <span class="prelude-ty">Result</span>&lt;(), LedgerError&gt; {
-        <span class="kw">if </span>event.content.event_proposal.proposal.evaluation.is_some() {
+    <span class="kw">fn </span>check_transfer_event(<span class="kw-2">&amp;</span><span class="self">self</span>, event: Signed&lt;Event&gt;) -&gt; <span class="prelude-ty">Result</span>&lt;(), LedgerError&gt; {
+        <span class="kw">if </span>!event.content.eval_success
+            || event.content.patch
+                != ValueWrapper(serde_json::from_str(<span class="string">&quot;[]&quot;</span>).map_err(|<span class="kw">_</span>| {
+                    LedgerError::CryptoError(<span class="string">&quot;Error parsing empty json&quot;</span>.to_string())
+                })<span class="question-mark">?</span>)
+        {
             <span class="kw">return </span><span class="prelude-val">Err</span>(LedgerError::EvaluationInTransferEvent);
         }
-        <span class="kw">if </span>!event.content.approvals.is_empty() {
+        <span class="kw">if </span>event.content.appr_required || !event.content.approved {
             <span class="kw">return </span><span class="prelude-val">Err</span>(LedgerError::ApprovalInTransferEvent);
         }
         <span class="prelude-val">Ok</span>(())
     }
 
-    <span class="kw">async fn </span>check_event(<span class="kw-2">&amp;</span><span class="self">self</span>, event: Event, metadata: Metadata) -&gt; <span class="prelude-ty">Result</span>&lt;(), LedgerError&gt; {
+    <span class="kw">async fn </span>check_event(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        event: Signed&lt;Event&gt;,
+        metadata: Metadata,
+        subject_context: SubjectContext,
+    ) -&gt; <span class="prelude-ty">Result</span>&lt;(), LedgerError&gt; {
         <span class="comment">// Comprobar que las firmas de evaluación y/o aprobación hacen quorum
-        </span><span class="kw">let </span>(signers, quorum) = <span class="self">self
+        </span><span class="kw">let </span>(signers_eval, quorum_eval) = <span class="self">self
             </span>.get_signers_and_quorum(metadata.clone(), ValidationStage::Evaluate)
             .<span class="kw">await</span><span class="question-mark">?</span>;
-        <span class="kw">let </span>evaluation_hash = DigestIdentifier::from_serializable_borsh(
-            <span class="kw-2">&amp;</span>event
-                .content
-                .event_proposal
-                .proposal
-                .evaluation
-                .clone()
-                .unwrap(),
-        )
-        .map_err(|<span class="kw">_</span>| {
-            LedgerError::CryptoError(String::from(
-                <span class="string">&quot;Error calculating the hash of the serializable evaluation&quot;</span>,
-            ))
-        })<span class="question-mark">?</span>;
-        verify_signatures(
-            <span class="kw-2">&amp;</span>event.content.event_proposal.proposal.evaluation_signatures,
-            <span class="kw-2">&amp;</span>signers,
-            quorum,
-            <span class="kw-2">&amp;</span>evaluation_hash,
+        <span class="kw">let </span>quorum_neg_eval = (signers_eval.len() <span class="kw">as </span>u32 - quorum_eval) + <span class="number">1</span>;
+        <span class="kw">let </span>(signers, quorum) = <span class="self">self
+            </span>.get_signers_and_quorum(metadata, ValidationStage::Approve)
+            .<span class="kw">await</span><span class="question-mark">?</span>;
+        <span class="kw">let </span>quorum_neg = (signers.len() <span class="kw">as </span>u32 - quorum) + <span class="number">1</span>;
+        event.verify_eval_appr(
+            subject_context,
+            (<span class="kw-2">&amp;</span>signers_eval, quorum_eval, quorum_neg_eval),
+            (<span class="kw-2">&amp;</span>signers, quorum, quorum_neg),
         )<span class="question-mark">?</span>;
-        <span class="kw">if </span>event
-            .content
-            .event_proposal
-            .proposal
-            .evaluation
-            .clone()
-            .unwrap()
-            .approval_required
-        {
-            <span class="kw">let </span>(signers, quorum) = <span class="self">self
-                </span>.get_signers_and_quorum(metadata, ValidationStage::Approve)
-                .<span class="kw">await</span><span class="question-mark">?</span>;
-            verify_approval_signatures(<span class="kw-2">&amp;</span>event.content.approvals, <span class="kw-2">&amp;</span>signers, quorum)<span class="question-mark">?</span>;
-        }
         <span class="prelude-val">Ok</span>(())
     }
 }
 
-<span class="kw">fn </span>check_context(
-    event: <span class="kw-2">&amp;</span>Event,
-    subject: <span class="kw-2">&amp;</span>Subject,
-    metadata: Metadata,
-    prev_properties: String,
-) -&gt; <span class="prelude-ty">Result</span>&lt;(), LedgerError&gt; {
-    <span class="kw">let </span>event_preevaluation = EventPreEvaluation {
-        event_request: event.content.event_proposal.proposal.event_request.clone(),
-        context: Context {
-            governance_id: metadata.governance_id,
-            schema_id: metadata.schema_id,
-            creator: subject.creator.clone(),
-            owner: subject.owner.clone(),
-            actual_state: prev_properties,
-            namespace: metadata.namespace,
-            governance_version: event.content.event_proposal.proposal.gov_version,
-        },
-        sn: event.content.event_proposal.proposal.sn,
-    };
-    <span class="kw">let </span>event_preevaluation_hash = DigestIdentifier::from_serializable_borsh(<span class="kw-2">&amp;</span>event_preevaluation)
-        .map_err(|<span class="kw">_</span>| {
-            LedgerError::CryptoError(String::from(
-                <span class="string">&quot;Error calculating the hash of the event pre-evaluation&quot;</span>,
-            ))
-        })<span class="question-mark">?</span>;
-    <span class="kw">if </span>event_preevaluation_hash
-        != event
-            .content
-            .event_proposal
-            .proposal
-            .evaluation
-            .as_ref()
-            .unwrap()
-            .preevaluation_hash
-    {
-        <span class="kw">return </span><span class="prelude-val">Err</span>(LedgerError::CryptoError(String::from(
-            <span class="string">&quot;The hash of the event pre-evaluation calculed does not match with the one in the event&quot;</span>,
-        )));
-    }
-    <span class="prelude-val">Ok</span>(())
-}
-
-<span class="kw">fn </span>verify_approval_signatures(
-    approvals: <span class="kw-2">&amp;</span>HashSet&lt;Approval&gt;,
+<span class="attr">#[allow(dead_code)]
+</span><span class="kw">fn </span>verify_approval_signatures(
+    approvals: <span class="kw-2">&amp;</span>HashSet&lt;Signed&lt;ApprovalResponse&gt;&gt;,
     signers: <span class="kw-2">&amp;</span>HashSet&lt;KeyIdentifier&gt;,
     quorum_size: u32,
+    event_proposal_hash: DigestIdentifier,
 ) -&gt; <span class="prelude-ty">Result</span>&lt;(), LedgerError&gt; {
     <span class="kw">let </span><span class="kw-2">mut </span>actual_signers = HashSet::new();
     <span class="kw">for </span>approval <span class="kw">in </span>approvals.iter() {
-        <span class="kw">let </span>approval_hash =
-            DigestIdentifier::from_serializable_borsh(<span class="kw-2">&amp;</span>approval.content).map_err(|<span class="kw">_</span>| {
-                LedgerError::CryptoError(String::from(
-                    <span class="string">&quot;Error calculating the hash of the serializable approval&quot;</span>,
-                ))
-            })<span class="question-mark">?</span>;
-        <span class="kw">let </span>signature = approval.signature.clone();
-        <span class="kw">let </span>signer = signature.content.signer.clone();
-        <span class="kw">if </span><span class="kw-2">&amp;</span>signature.content.event_content_hash != <span class="kw-2">&amp;</span>approval_hash {
-            <span class="macro">log::error!</span>(<span class="string">&quot;Invalid Event Hash in Approval&quot;</span>);
+        <span class="kw">if </span>approval.content.appr_req_hash != event_proposal_hash {
+            <span class="macro">log::error!</span>(<span class="string">&quot;Invalid Event Proposal Hash in Approval&quot;</span>);
             <span class="kw">continue</span>;
         }
-        <span class="kw">match </span>signature.verify() {
+        <span class="kw">match </span>approval.verify() {
             <span class="prelude-val">Ok</span>(<span class="kw">_</span>) =&gt; (),
             <span class="prelude-val">Err</span>(<span class="kw">_</span>) =&gt; {
                 <span class="macro">log::error!</span>(<span class="string">&quot;Invalid Signature Detected&quot;</span>);
                 <span class="kw">continue</span>;
             }
         }
-        <span class="kw">if </span>!signers.contains(<span class="kw-2">&amp;</span>signer) {
-            <span class="macro">log::error!</span>(<span class="string">&quot;Signer {} not allowed&quot;</span>, signer.to_str());
+        <span class="kw">if </span>!signers.contains(<span class="kw-2">&amp;</span>approval.signature.signer) {
+            <span class="macro">log::error!</span>(<span class="string">&quot;Signer {} not allowed&quot;</span>, approval.signature.signer.to_str());
             <span class="kw">continue</span>;
         }
-        <span class="kw">if </span>!actual_signers.insert(signer.clone()) {
+        <span class="kw">if </span>!actual_signers.insert(approval.signature.signer.clone()) {
             <span class="macro">log::error!</span>(
                 <span class="string">&quot;Signer {} in more than one validation signature&quot;</span>,
-                signer.to_str()
+                approval.signature.signer.to_str()
             );
             <span class="kw">continue</span>;
         }
@@ -5673,17 +5868,12 @@
     signatures: <span class="kw-2">&amp;</span>HashSet&lt;Signature&gt;,
     signers: <span class="kw-2">&amp;</span>HashSet&lt;KeyIdentifier&gt;,
     quorum_size: u32,
-    event_hash: <span class="kw-2">&amp;</span>DigestIdentifier,
+    validation_proof: <span class="kw-2">&amp;</span>ValidationProof,
 ) -&gt; <span class="prelude-ty">Result</span>&lt;(), LedgerError&gt; {
-    <span class="macro">log::warn!</span>(<span class="string">&quot;EL EVENT HASH ES {}&quot;</span>, event_hash.to_str());
     <span class="kw">let </span><span class="kw-2">mut </span>actual_signers = HashSet::new();
     <span class="kw">for </span>signature <span class="kw">in </span>signatures.iter() {
-        <span class="kw">let </span>signer = signature.content.signer.clone();
-        <span class="kw">if </span><span class="kw-2">&amp;</span>signature.content.event_content_hash != event_hash {
-            <span class="macro">log::error!</span>(<span class="string">&quot;Invalid Event Hash in Signature&quot;</span>);
-            <span class="kw">continue</span>;
-        }
-        <span class="kw">match </span>signature.verify() {
+        <span class="kw">let </span>signer = signature.signer.clone();
+        <span class="kw">match </span>signature.verify(validation_proof) {
             <span class="prelude-val">Ok</span>(<span class="kw">_</span>) =&gt; (),
             <span class="prelude-val">Err</span>(<span class="kw">_</span>) =&gt; {
                 <span class="macro">log::error!</span>(<span class="string">&quot;Invalid Signature Detected&quot;</span>);
@@ -5708,7 +5898,7 @@
             quorum_size,
             actual_signers.len()
         );
-        <span class="kw">return </span><span class="prelude-val">Err</span>(LedgerError::NotEnoughSignatures(event_hash.to_str()));
+        <span class="kw">return </span><span class="prelude-val">Err</span>(LedgerError::NotEnoughSignatures(<span class="string">&quot;buenas tardes&quot;</span>.into()));
     }
     <span class="prelude-val">Ok</span>(())
 }

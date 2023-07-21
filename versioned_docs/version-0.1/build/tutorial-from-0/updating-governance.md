@@ -2,7 +2,7 @@
 
 ## Running the third node
 
-To set up a new node, we will follow the steps of this **[section](./governance-operations)** changing again the ports and generating a new private key with the **keygen** tool, as follows:
+To set up a new node, we will follow the steps of this **[section](./governance-operations.md)** changing again the ports and generating a new private key with the **keygen** tool, as follows:
 
 ```bash
     docker run -d --rm -e TAPLE_HTTPPORT=3002 \
@@ -19,7 +19,7 @@ To set up a new node, we will follow the steps of this **[section](./governance-
 
 ## Adding the third node to governance
 
-To add the third node to the governance it will be done in the same way as in this **[paragraph](./governance-operations/#adding-the-second-node-to-governance)** but in this case, unlike the first time, there are 2 nodes within the same governance, so it will be necessary the signature of acceptance of any of them to introduce the new node to the governance. Otherwise, the new node will not be introduced into the governance.
+To add the third node to the governance it will be done in the same way as in this **[paragraph](./governance-operations.md#adding-the-second-node-to-governance)** but in this case, unlike the first time, there are 2 nodes within the same governance, so it will be necessary the signature of acceptance of any of them to introduce the new node to the governance. Otherwise, the new node will not be introduced into the governance.
 
 ```bash
     curl --location --request POST 'http://localhost:3000/api/requests' \

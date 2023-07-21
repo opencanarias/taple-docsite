@@ -2,14 +2,14 @@
 
 ## SDK
 
-Para el correcto desarrollo de los contratos es necesario utilizar su **SDK**, proyecto que se peude encontrar en el [repositorio](https://github.com/opencanarias/taple-sc-rust/tree/main) oficial de TAPLE. El objetivo principal del mismo es abstraer al programador de la interacción con el contexto de la máquina evaluadora subyacente, facilitando en gran medida la obtención de los datos de entrada, así como el proceso de escritura del resultado del contrato.
+Para el correcto desarrollo de los contratos es necesario utilizar su **SDK**, proyecto que se puede encontrar en el [repositorio](https://github.com/opencanarias/taple-sc-rust/tree/main) oficial de TAPLE. El objetivo principal del mismo es abstraer al programador de la interacción con el contexto de la máquina evaluadora subyacente, facilitando en gran medida la obtención de los datos de entrada, así como el proceso de escritura del resultado del contrato.
 
 El proyecto SDK se puede dividir en tres secciones. Por un lado, un conjunto de funciones cuya enlazamiento se produce en tiempo de ejecución y que están dirigidas a poder interactuar con la máquina evaluadora, en concreto, para la lectura y escritura de datos a un buffer interno. Adicionalmente, también distinguimos un módulo que, empleando las funciones anteriores, se encarga de la serialización y deserialización de los datos, así como de aportar la función principal de cualquier contrato. Por último, destacamos una serie de funciones y estructuras de utilidad que pueden emplearse activamente en el código.
 
-Muchos de los elementos anteriores son privados, por lo que el usuario nunca tendrá oportunidad de emplearlos. Debido a ello, en esta documentación nos centraremos en aquellas que sí se exponen de cara al usuario y que este prodrá usar de manera activa en el desarrollo de sus contratos.
+Muchos de los elementos anteriores son privados, por lo que el usuario nunca tendrá oportunidad de emplearlos. Debido a ello, en esta documentación nos centraremos en aquellos que sí se exponen de cara al usuario y que este podrá usar de manera activa en el desarrollo de sus contratos.
 
 :::caution
-Téngase en cuenta de que no es posible ejecutar cualquier función o utilizar cualquier tipo de dato en un entorno de Web Assembly. Deberá informarse adecuadamente sobre las posibilidades del entorno. Así, a modo de ejemplo, cualquier interacción con el sistema operativo se encuentra deshabilitada.
+Téngase en cuenta de que no es posible ejecutar cualquier función o utilizar cualquier tipo de dato en un entorno de Web Assembly. Deberá informarse adecuadamente sobre las posibilidades del entorno. Así, a modo de ejemplo, cualquier interacción con el sistema operativo se encuentra deshabilitada, puesto que se trata de un entorno aislado y seguro.
 :::
 
 ### Estructuras auxiliares
@@ -63,20 +63,33 @@ Se trata de la última función pública del SDK y permite actualizar un estado 
 
 ## Your first smart contract
 
-A continuación se especificará cómo redactar un contrato inteligente, información que vendrá acompañada de un ejemplo básico.
+### Creación del proyecto
 
-### Dependencias
+Ubíquese en la ruta y/o directorios deseados y cree un nuevo paquete de cargo empleando `cargo new`. El proyecto deberá tratarse de una librería. Asegúrese pues, que cuenta con un fichero `lib.rs` y no un `main.rs`. 
 
-En los contratos solo se permite el uso de la librería estándar y de algunas librerías adicionales (además del SDK). El listado se concreta a continuación:
+Acto seguido, incluya en el ***Cargo.toml*** como dependencia el SDK de los contratos y el resto de dependencias que desee de entre la siguiente lista:
 
 -  **serde**: Versiones >=1.0.152 y <2.0.0.
 -  **serde_json**: Versiones >=1.0.92 y <2.0.0.
 -  **json_patch**: Versiones >=0.2 y <0.3.
 -  **thiserror**: Versiones >=1.0.0 y <2.0.0.
 
+```toml
+serde = { version = "=1.0.152", features = ["derive"] }
+serde_json = "=1.0.92"
+json-patch = "=0.2"
+thiserror = "=1.0"
+# Note: Change the label to the appropriate one
+taple-sc-rust = { git = "https://github.com/opencanarias/taple-sc-rust.git", tag = "0.2"}
+```
+
+A continuación se especificará cómo redactar un contrato inteligente, información que vendrá acompañada de un ejemplo básico.
+
 ### Redacción del contrato
 
-En nuestro caso, empezaremos el contrato **especificando las dependencias que vamos a utilizar**.
+Debido a que la compilación la realizará el nodo, **debemos escribir todo el contrato en el fichero lib.rs**.
+
+En nuestro caso, empezaremos el contrato **especificando los paquetes que vamos a utilizar**.
 
 ```rs
 use serde::{Serialize, Deserialize};
@@ -104,14 +117,17 @@ enum StateEvent {
 ```
 
 :::info
-La familia de eventos, por lo general, se definirá como un enumerado, aunque en la práctica nada impide que sea una estructura en caso de que así se requiere. Independientemente del caso, de emplear un enumerado, si las variantes de este reciben datos estos deben especificar mediante una estructura anónima y no mediante la sintaxis de tupla.
+La familia de eventos, por lo general, se definirá como un enumerado, aunque en la práctica nada impide que sea una estructura en caso de que así se requiera. Independientemente del caso, de emplear un enumerado, si las variantes de este reciben datos estos deben especificarse mediante una estructura anónima y no mediante la sintaxis de tupla.
+
+Destacar, además, que los eventos de la familia pueden ser subconjuntos de los eventos reales. Así, y a modo de ejemplo, el contrato aceptaría un evento ***StateEvent::ModOne*** que incluya más datos a parte del atributo *data*. El contrato, al ejecutarse, solo se quedará con los datos necesarios, descartando todos los demás en el proceso de deserialización. Esto podría emplearse para guardar información en la cadena que no es necesaria para la lógica del contrato.
+
 :::
 
 :::note
 Téngase en cuenta de que la implementación de los *trait Serialize y Deserialize* son obligatorios de especificar para el estado y los eventos. Adicionalmente, el primero deberá implementar también *Clone*.
 :::
 
-En siguiente lugar definiríamos la **función entrada del contrato**, la equivalente a la función **main**. Es importante que esta función tenga siempre el mismo nombre que la que aquí se especifica, pues se trata del identificador con la que la intentará ejecutar la máquina evaluadora, produciendo un error en caso de no encontrarla.
+En siguiente lugar definimos la **función entrada del contrato**, la equivalente a la función **main**. Es importante que esta función tenga siempre el mismo nombre que la que aquí se especifica, pues se trata del identificador con la que la intentará ejecutar la máquina evaluadora, produciendo un error en caso de no encontrarla.
 
 ```rs
 #[no_mangle]
@@ -120,13 +136,13 @@ pub unsafe fn main_function(state_ptr: i32, event_ptr: i32, is_owner: i32) -> u3
 }
 ```
 
-Esta función debe ir siempre acompañada del atributo ***#[no_mangle] y sus parámetros de entrada y de salida también deben coincidir con los del ejemplo. En concreto, esta función recibirá los punteros de los datos de entrada, que luego procesará la función del SDK. Como salida se genera un nuevo puntero al resultado del contrato, cuya generación, como mencionamos anteriormente, es responsabilidad del SDK y no del programador.
+Esta función debe ir siempre acompañada del atributo ***#[no_mangle]*** y sus parámetros de entrada y de salida también deben coincidir con los del ejemplo. En concreto, esta función recibirá los punteros de los datos de entrada, que luego procesará la función del SDK. Como salida se genera un nuevo puntero al resultado del contrato, cuya obtención, como mencionamos anteriormente, es responsabilidad del SDK y no del programador.
 
 :::info
 La modificación de los valores de los punteros en esta sección del código no logrará efecto alguno. Los punteros son con respecto al contexto compartido, que se corresponde con un buffer único por ejecución de contrato. Alterar los valores de los punteros no permite al programador acceder a información arbitraria ya sea de la máquina evaluadora o de otros contratos.
 :::
 
-Por último, especificamos la lógica de nuestro contrato, que puede estar definida por cuentras funciones deseemos. Preferiblemente se destacará una función principal no obstante, que será la que se ejecute como *callback* por parte de la función *execute_contract* del SDK. 
+Por último, especificamos la lógica de nuestro contrato, que puede estar definida por cuentras funciones deseemos. Preferiblemente se destacará una función principal, que será la que se ejecute como *callback* por parte de la función *execute_contract* del SDK. 
 
 ```rs
 fn contract_logic(

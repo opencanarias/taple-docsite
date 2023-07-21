@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `core/src/governance/inner_governance.rs`."><title>inner_governance.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-ba5701c5741a7b69.css" id="mainThemeStyle"><div id="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="taple_core" data-themes="" data-resource-suffix="" data-rustdoc-version="1.70.0 (90c541806 2023-05-31)" data-search-js="search-e077946657036a58.js" data-settings-js="settings-298e1ea74db45b39.js" data-settings-css="settings-7bfb4c59cc6bc502.css" data-theme-light-css="light-0f8c037637f9eb3e.css" data-theme-dark-css="dark-1097f8e92a01e3cf.css" data-theme-ayu-css="ayu-614652228113ac93.css" ></div><script src="../../../static.files/storage-62ce34ea385b278a.js"></script><script defer src="../../../static.files/source-script-905937fbbdc8e9ea.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../static.files/main-f61008743c98d196.js"></script><noscript><link rel="stylesheet" media="(prefers-color-scheme:light)" href="../../../static.files/light-0f8c037637f9eb3e.css"><link rel="stylesheet" media="(prefers-color-scheme:dark)" href="../../../static.files/dark-1097f8e92a01e3cf.css"><link rel="stylesheet" href="../../../static.files/noscript-13285aec31fa243e.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../../taple_core/index.html"><img class="rust-logo" src="../../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `core/src/governance/inner_governance.rs`."><title>inner_governance.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-f3501f0f5ae15dfb.css" id="mainThemeStyle"><div id="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="taple_core" data-themes="" data-resource-suffix="" data-rustdoc-version="1.71.0 (8ede3aae2 2023-07-12)" data-search-js="search-4926e5fc22a5646a.js" data-settings-js="settings-de11bff964e9d4e5.js" data-settings-css="settings-8c76f75bfb6bd192.css" data-theme-light-css="light-0f8c037637f9eb3e.css" data-theme-dark-css="dark-1097f8e92a01e3cf.css" data-theme-ayu-css="ayu-614652228113ac93.css" ></div><script src="../../../static.files/storage-62ce34ea385b278a.js"></script><script defer src="../../../static.files/source-script-11255107d0a65077.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../static.files/main-f0540c1d82cde29b.js"></script><noscript><link rel="stylesheet" media="(prefers-color-scheme:light)" href="../../../static.files/light-0f8c037637f9eb3e.css"><link rel="stylesheet" media="(prefers-color-scheme:dark)" href="../../../static.files/dark-1097f8e92a01e3cf.css"><link rel="stylesheet" href="../../../static.files/noscript-13285aec31fa243e.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../../taple_core/index.html"><img class="rust-logo" src="../../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -608,12 +608,6 @@
 <a href="#608" id="608">608</a>
 <a href="#609" id="609">609</a>
 <a href="#610" id="610">610</a>
-<a href="#611" id="611">611</a>
-<a href="#612" id="612">612</a>
-<a href="#613" id="613">613</a>
-<a href="#614" id="614">614</a>
-<a href="#615" id="615">615</a>
-<a href="#616" id="616">616</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>std::{
     collections::{HashMap, HashSet},
     str::FromStr,
@@ -623,13 +617,14 @@
     commons::{
         errors::ChannelErrors,
         identifier::{Derivable, DigestIdentifier, KeyIdentifier},
-        models::{event_content::Metadata, state::Subject},
+        models::{event::Metadata, state::Subject},
         schema_handler::{
             gov_models::{Contract, Quorum, Role, Schema, Who},
             initial_state::get_governance_initial_state,
         },
     },
     database::Error <span class="kw">as </span>DbError,
+    ValueWrapper,
 };
 <span class="kw">use </span>serde_json::Value;
 
@@ -666,7 +661,7 @@
         governance_id: DigestIdentifier,
         schema_id: String,
         governance_version: u64,
-    ) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="prelude-ty">Result</span>&lt;Value, RequestError&gt;, InternalError&gt; {
+    ) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="prelude-ty">Result</span>&lt;ValueWrapper, RequestError&gt;, InternalError&gt; {
         <span class="kw">if </span>governance_id.digest.is_empty() {
             <span class="kw">return </span><span class="prelude-val">Ok</span>(<span class="prelude-val">Ok</span>(get_governance_initial_state()));
         }
@@ -679,13 +674,13 @@
                 err =&gt; <span class="kw">return </span><span class="prelude-val">Ok</span>(<span class="prelude-val">Err</span>(err)),
             },
         };
-        <span class="kw">let </span>properties: Value = serde_json::from_str(<span class="kw-2">&amp;</span>governance.properties)
-            .map_err(|<span class="kw">_</span>| InternalError::DeserializationError)<span class="question-mark">?</span>;
-        <span class="kw">let </span>schemas = get_as_array(<span class="kw-2">&amp;</span>properties, <span class="string">&quot;schemas&quot;</span>)<span class="question-mark">?</span>;
+        <span class="kw">let </span>schemas = get_as_array(<span class="kw-2">&amp;</span>governance.properties.<span class="number">0</span>, <span class="string">&quot;schemas&quot;</span>)<span class="question-mark">?</span>;
         <span class="kw">for </span>schema <span class="kw">in </span>schemas {
             <span class="kw">let </span>tmp = get_as_str(schema, <span class="string">&quot;id&quot;</span>)<span class="question-mark">?</span>;
             <span class="kw">if </span>tmp == <span class="kw-2">&amp;</span>schema_id {
-                <span class="kw">return </span><span class="prelude-val">Ok</span>(<span class="prelude-val">Ok</span>(schema.get(<span class="string">&quot;initial_value&quot;</span>).unwrap().to_owned()));
+                <span class="kw">return </span><span class="prelude-val">Ok</span>(<span class="prelude-val">Ok</span>(ValueWrapper(
+                    schema.get(<span class="string">&quot;initial_value&quot;</span>).unwrap().to_owned(),
+                )));
             }
         }
         <span class="kw">return </span><span class="prelude-val">Ok</span>(<span class="prelude-val">Err</span>(RequestError::SchemaNotFound(schema_id)));
@@ -697,9 +692,9 @@
         governance_id: DigestIdentifier,
         schema_id: String,
         governance_version: u64,
-    ) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="prelude-ty">Result</span>&lt;Value, RequestError&gt;, InternalError&gt; {
-        <span class="kw">if </span>governance_id.digest.is_empty() {
-            <span class="kw">return </span><span class="prelude-val">Ok</span>(<span class="prelude-val">Ok</span>(<span class="self">self</span>.governance_schema.clone()));
+    ) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="prelude-ty">Result</span>&lt;ValueWrapper, RequestError&gt;, InternalError&gt; {
+        <span class="kw">if </span>schema_id == <span class="string">&quot;governance&quot; </span>{
+            <span class="kw">return </span><span class="prelude-val">Ok</span>(<span class="prelude-val">Ok</span>(ValueWrapper(<span class="self">self</span>.governance_schema.clone())));
         }
         <span class="kw">let </span>governance = <span class="kw">match </span><span class="self">self</span>.governance_event_sourcing(<span class="kw-2">&amp;</span>governance_id, governance_version) {
             <span class="prelude-val">Ok</span>(subject) =&gt; subject,
@@ -710,13 +705,11 @@
                 err =&gt; <span class="kw">return </span><span class="prelude-val">Ok</span>(<span class="prelude-val">Err</span>(err)),
             },
         };
-        <span class="kw">let </span>properties: Value = serde_json::from_str(<span class="kw-2">&amp;</span>governance.properties)
-            .map_err(|<span class="kw">_</span>| InternalError::DeserializationError)<span class="question-mark">?</span>;
-        <span class="kw">let </span>schemas = get_as_array(<span class="kw-2">&amp;</span>properties, <span class="string">&quot;schemas&quot;</span>)<span class="question-mark">?</span>;
+        <span class="kw">let </span>schemas = get_as_array(<span class="kw-2">&amp;</span>governance.properties.<span class="number">0</span>, <span class="string">&quot;schemas&quot;</span>)<span class="question-mark">?</span>;
         <span class="kw">for </span>schema <span class="kw">in </span>schemas {
             <span class="kw">let </span>tmp = get_as_str(schema, <span class="string">&quot;id&quot;</span>)<span class="question-mark">?</span>;
             <span class="kw">if </span>tmp == <span class="kw-2">&amp;</span>schema_id {
-                <span class="kw">return </span><span class="prelude-val">Ok</span>(<span class="prelude-val">Ok</span>(schema.get(<span class="string">&quot;schema&quot;</span>).unwrap().to_owned()));
+                <span class="kw">return </span><span class="prelude-val">Ok</span>(<span class="prelude-val">Ok</span>(ValueWrapper(schema.get(<span class="string">&quot;schema&quot;</span>).unwrap().to_owned())));
             }
         }
         <span class="kw">return </span><span class="prelude-val">Ok</span>(<span class="prelude-val">Err</span>(RequestError::SchemaNotFound(schema_id)));
@@ -734,19 +727,17 @@
         <span class="kw">for </span>role <span class="kw">in </span>roles {
             <span class="kw">match </span>stage {
                 ValidationStage::Witness =&gt; {
-                    <span class="kw">if </span>role.role != stage.to_str()
-                        &amp;&amp; role.role != ValidationStage::Approve.to_role()
-                    {
+                    <span class="kw">if </span>role.role != stage.to_role() {
                         <span class="kw">continue</span>;
                     }
                 }
                 ValidationStage::Create | ValidationStage::Invoke =&gt; {
                     <span class="kw">return </span><span class="prelude-val">Err</span>(RequestError::SearchingSignersQuorumInWrongStage(
-                        stage.to_str().to_owned(),
+                        stage.to_role().to_owned(),
                     ))
                 }
                 <span class="kw">_ </span>=&gt; {
-                    <span class="kw">if </span>role.role != stage.to_str() {
+                    <span class="kw">if </span>role.role != stage.to_role() {
                         <span class="kw">continue</span>;
                     }
                 }
@@ -789,9 +780,6 @@
                 Who::NOT_MEMBERS =&gt; <span class="kw">continue</span>,
             }
         }
-        <span class="kw">for </span>signer <span class="kw">in </span>signers.iter() {
-            <span class="macro">log::warn!</span>(<span class="string">&quot;FINAL SIGNERS: {}&quot;</span>, signer.to_str());
-        }
         <span class="prelude-val">Ok</span>(signers)
     }
 
@@ -810,22 +798,30 @@
         } <span class="kw">else </span>{
             is_gov = <span class="bool-val">false</span>;
         }
-        <span class="kw">let </span>schema_id = metadata.schema_id.clone();
-        <span class="kw">let </span>governance =
-            <span class="kw">match </span><span class="self">self</span>.governance_event_sourcing(<span class="kw-2">&amp;</span>governance_id, metadata.governance_version) {
-                <span class="prelude-val">Ok</span>(subject) =&gt; subject,
-                <span class="prelude-val">Err</span>(error) =&gt; <span class="kw">match </span>error {
-                    RequestError::DatabaseError(err) =&gt; {
-                        <span class="kw">return </span><span class="prelude-val">Err</span>(InternalError::DatabaseError { source: err })
-                    }
-                    err =&gt; <span class="kw">return </span><span class="prelude-val">Ok</span>(<span class="prelude-val">Err</span>(err)),
-                },
+        <span class="kw">let </span>governance_version = <span class="kw">if let </span>ValidationStage::Witness = stage {
+            <span class="kw">let </span>result = <span class="kw">match </span><span class="self">self</span>.repo_access.get_subject(<span class="kw-2">&amp;</span>governance_id) {
+                <span class="prelude-val">Ok</span>(data) =&gt; data,
+                <span class="prelude-val">Err</span>(DbError::EntryNotFound) =&gt; <span class="kw">return </span><span class="prelude-val">Ok</span>(<span class="prelude-val">Err</span>(RequestError::SubjectNotFound)),
+                <span class="prelude-val">Err</span>(data) =&gt; <span class="kw">return </span><span class="prelude-val">Err</span>(InternalError::DatabaseError { source: data }),
             };
-        <span class="kw">let </span>properties: Value = serde_json::from_str(<span class="kw-2">&amp;</span>governance.properties)
-            .map_err(|<span class="kw">_</span>| InternalError::DeserializationError)<span class="question-mark">?</span>;
-        <span class="kw">let </span>roles: Vec&lt;Role&gt; = serde_json::from_value(properties.get(<span class="string">&quot;roles&quot;</span>).unwrap().to_owned())
-            .map_err(|<span class="kw">_</span>| InternalError::DeserializationError)<span class="question-mark">?</span>;
-        <span class="kw">let </span>members = get_members_from_governance(<span class="kw-2">&amp;</span>properties)<span class="question-mark">?</span>;
+            result.sn
+        } <span class="kw">else </span>{
+            metadata.governance_version
+        };
+        <span class="kw">let </span>schema_id = metadata.schema_id.clone();
+        <span class="kw">let </span>governance = <span class="kw">match </span><span class="self">self</span>.governance_event_sourcing(<span class="kw-2">&amp;</span>governance_id, governance_version) {
+            <span class="prelude-val">Ok</span>(subject) =&gt; subject,
+            <span class="prelude-val">Err</span>(error) =&gt; <span class="kw">match </span>error {
+                RequestError::DatabaseError(err) =&gt; {
+                    <span class="kw">return </span><span class="prelude-val">Err</span>(InternalError::DatabaseError { source: err })
+                }
+                err =&gt; <span class="kw">return </span><span class="prelude-val">Ok</span>(<span class="prelude-val">Err</span>(err)),
+            },
+        };
+        <span class="kw">let </span>roles: Vec&lt;Role&gt; =
+            serde_json::from_value(governance.properties.get(<span class="string">&quot;roles&quot;</span>).unwrap().to_owned())
+                .map_err(|<span class="kw">_</span>| InternalError::DeserializationError)<span class="question-mark">?</span>;
+        <span class="kw">let </span>members = get_members_from_governance(<span class="kw-2">&amp;</span>governance.properties.<span class="number">0</span>)<span class="question-mark">?</span>;
         <span class="kw">let </span>get_signers_result = <span class="self">Self</span>::get_signers_aux(
             roles,
             <span class="kw-2">&amp;</span>schema_id,
@@ -857,7 +853,6 @@
             )));
         }
         <span class="kw">let </span><span class="kw-2">mut </span>governance_id = metadata.governance_id.clone();
-        <span class="macro">log::info!</span>(<span class="string">&quot;Quorum de: {}&quot;</span>, metadata.subject_id.to_str());
         <span class="kw">if </span>governance_id.digest.is_empty() {
             governance_id = metadata.subject_id.clone();
         }
@@ -872,9 +867,7 @@
                     err =&gt; <span class="kw">return </span><span class="prelude-val">Ok</span>(<span class="prelude-val">Err</span>(err)),
                 },
             };
-        <span class="kw">let </span>properties: Value = serde_json::from_str(<span class="kw-2">&amp;</span>governance.properties)
-            .map_err(|<span class="kw">_</span>| InternalError::DeserializationError)<span class="question-mark">?</span>;
-        <span class="kw">let </span>policies = get_as_array(<span class="kw-2">&amp;</span>properties, <span class="string">&quot;policies&quot;</span>)<span class="question-mark">?</span>;
+        <span class="kw">let </span>policies = get_as_array(<span class="kw-2">&amp;</span>governance.properties.<span class="number">0</span>, <span class="string">&quot;policies&quot;</span>)<span class="question-mark">?</span>;
         <span class="kw">let </span>schema_policy = get_schema_from_policies(policies, <span class="kw-2">&amp;</span>schema_id);
         <span class="kw">let </span><span class="prelude-val">Ok</span>(schema_policy) = schema_policy <span class="kw">else </span>{
             <span class="kw">return </span><span class="prelude-val">Ok</span>(<span class="prelude-val">Err</span>(schema_policy.unwrap_err()));
@@ -885,25 +878,18 @@
             <span class="kw">return </span><span class="prelude-val">Ok</span>(<span class="prelude-val">Err</span>(signers.unwrap_err()));
         };
         <span class="kw">match </span>quorum {
-            Quorum::MAJORITY(<span class="kw">_</span>) =&gt; {
-                <span class="macro">log::info!</span>(<span class="string">&quot;Quorum Majority&quot;</span>);
-
-                <span class="prelude-val">Ok</span>(<span class="prelude-val">Ok</span>((signers.len() <span class="kw">as </span>u32 / <span class="number">2</span>) + <span class="number">1</span>))
-            }
-            Quorum::FIXED { fixed } =&gt; {
-                <span class="macro">log::info!</span>(<span class="string">&quot;Quorum fijo: {}&quot;</span>, fixed);
-                <span class="prelude-val">Ok</span>(<span class="prelude-val">Ok</span>(fixed))
-            }
+            Quorum::MAJORITY =&gt; <span class="prelude-val">Ok</span>(<span class="prelude-val">Ok</span>((signers.len() <span class="kw">as </span>u32 / <span class="number">2</span>) + <span class="number">1</span>)),
+            Quorum::FIXED { fixed } =&gt; <span class="prelude-val">Ok</span>(<span class="prelude-val">Ok</span>(fixed)),
             Quorum::PORCENTAJE { porcentaje } =&gt; {
                 <span class="kw">let </span>result = (signers.len() <span class="kw">as </span>f64 * porcentaje).ceil() <span class="kw">as </span>u32;
                 <span class="prelude-val">Ok</span>(<span class="prelude-val">Ok</span>(result))
             }
-            Quorum::BFT { BFT } =&gt; <span class="macro">todo!</span>(),
+            Quorum::BFT { .. } =&gt; <span class="macro">todo!</span>(),
         }
     }
 
     <span class="comment">// NEW
-    </span><span class="kw">pub fn </span>get_invoke_create_info(
+    </span><span class="kw">pub fn </span>get_issue_create_info(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         metadata: Metadata,
         stage: ValidationStage,
@@ -933,12 +919,11 @@
                     err =&gt; <span class="kw">return </span><span class="prelude-val">Ok</span>(<span class="prelude-val">Err</span>(err)),
                 },
             };
-        <span class="kw">let </span>properties: Value = serde_json::from_str(<span class="kw-2">&amp;</span>governance.properties)
-            .map_err(|<span class="kw">_</span>| InternalError::DeserializationError)<span class="question-mark">?</span>;
-        <span class="kw">let </span>roles: Vec&lt;Role&gt; = serde_json::from_value(properties.get(<span class="string">&quot;roles&quot;</span>).unwrap().to_owned())
-            .map_err(|<span class="kw">_</span>| InternalError::DeserializationError)<span class="question-mark">?</span>;
-        <span class="kw">let </span>members = get_members_from_governance(<span class="kw-2">&amp;</span>properties)<span class="question-mark">?</span>;
-        <span class="kw">let </span>invoke_create_info_result = <span class="self">Self</span>::invoke_create_info(
+        <span class="kw">let </span>roles: Vec&lt;Role&gt; =
+            serde_json::from_value(governance.properties.get(<span class="string">&quot;roles&quot;</span>).unwrap().to_owned())
+                .map_err(|<span class="kw">_</span>| InternalError::DeserializationError)<span class="question-mark">?</span>;
+        <span class="kw">let </span>members = get_members_from_governance(<span class="kw-2">&amp;</span>governance.properties.<span class="number">0</span>)<span class="question-mark">?</span>;
+        <span class="kw">let </span>invoke_create_info_result = <span class="self">Self</span>::issue_create_info(
             roles,
             <span class="kw-2">&amp;</span>schema_id,
             <span class="kw-2">&amp;</span>metadata.namespace,
@@ -950,7 +935,7 @@
         <span class="prelude-val">Ok</span>(invoke_create_info_result)
     }
 
-    <span class="kw">fn </span>invoke_create_info(
+    <span class="kw">fn </span>issue_create_info(
         roles: Vec&lt;Role&gt;,
         schema_id: <span class="kw-2">&amp;</span>str,
         namespace: <span class="kw-2">&amp;</span>str,
@@ -961,7 +946,7 @@
     ) -&gt; <span class="prelude-ty">Result</span>&lt;bool, RequestError&gt; {
         <span class="kw">let </span>is_member = members.<span class="number">0</span>.contains(<span class="kw-2">&amp;</span>invoker);
         <span class="kw">for </span>role <span class="kw">in </span>roles {
-            <span class="kw">if </span>role.role != stage.to_str() {
+            <span class="kw">if </span><span class="kw-2">&amp;</span>role.role != stage.to_role() {
                 <span class="kw">continue</span>;
             }
             <span class="kw">match </span>role.schema {
@@ -997,7 +982,12 @@
                         <span class="kw">return </span><span class="prelude-val">Ok</span>(<span class="bool-val">true</span>);
                     }
                 }
-                Who::MEMBERS | Who::ALL =&gt; <span class="kw">return </span><span class="prelude-val">Ok</span>(<span class="bool-val">true</span>),
+                Who::MEMBERS =&gt; {
+                    <span class="kw">if </span>is_member {
+                        <span class="kw">return </span><span class="prelude-val">Ok</span>(<span class="bool-val">true</span>);
+                    }
+                }
+                Who::ALL =&gt; <span class="kw">return </span><span class="prelude-val">Ok</span>(<span class="bool-val">true</span>),
                 Who::NOT_MEMBERS =&gt; {
                     <span class="kw">if </span>!is_member {
                         <span class="kw">return </span><span class="prelude-val">Ok</span>(<span class="bool-val">true</span>);
@@ -1013,7 +1003,7 @@
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         governance_id: DigestIdentifier,
         governance_version: u64,
-    ) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="prelude-ty">Result</span>&lt;Vec&lt;Contract&gt;, RequestError&gt;, InternalError&gt; {
+    ) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="prelude-ty">Result</span>&lt;Vec&lt;(Contract, String)&gt;, RequestError&gt;, InternalError&gt; {
         <span class="kw">let </span>governance = <span class="kw">match </span><span class="self">self</span>.governance_event_sourcing(<span class="kw-2">&amp;</span>governance_id, governance_version) {
             <span class="prelude-val">Ok</span>(subject) =&gt; subject,
             <span class="prelude-val">Err</span>(error) =&gt; <span class="kw">match </span>error {
@@ -1023,18 +1013,19 @@
                 err =&gt; <span class="kw">return </span><span class="prelude-val">Ok</span>(<span class="prelude-val">Err</span>(err)),
             },
         };
-        <span class="kw">let </span>properties: Value = serde_json::from_str(<span class="kw-2">&amp;</span>governance.properties)
-            .map_err(|<span class="kw">_</span>| InternalError::DeserializationError)<span class="question-mark">?</span>;
-        <span class="kw">let </span>schemas = get_as_array(<span class="kw-2">&amp;</span>properties, <span class="string">&quot;schemas&quot;</span>)<span class="question-mark">?</span>;
+        <span class="kw">let </span>schemas = get_as_array(<span class="kw-2">&amp;</span>governance.properties.<span class="number">0</span>, <span class="string">&quot;schemas&quot;</span>)<span class="question-mark">?</span>;
         <span class="kw">let </span><span class="kw-2">mut </span>result = Vec::new();
         <span class="kw">for </span>schema <span class="kw">in </span>schemas {
+            <span class="kw">let </span>schema_id = schema[<span class="string">&quot;id&quot;</span>].as_str().unwrap();
             <span class="kw">let </span><span class="kw-2">mut </span>contract: Contract = serde_json::from_value(schema[<span class="string">&quot;contract&quot;</span>].clone())
                 .map_err(|<span class="kw">_</span>| InternalError::InvalidGovernancePayload(<span class="string">&quot;5&quot;</span>.into()))<span class="question-mark">?</span>;
+
             <span class="kw">let </span>decoded_bytes =
-                base64::decode(contract.content).map_err(|<span class="kw">_</span>| InternalError::Base64DecodingError)<span class="question-mark">?</span>;
-            contract.content =
+                base64::decode(contract.raw).map_err(|<span class="kw">_</span>| InternalError::Base64DecodingError)<span class="question-mark">?</span>;
+            contract.raw =
                 String::from_utf8(decoded_bytes).map_err(|<span class="kw">_</span>| InternalError::Base64DecodingError)<span class="question-mark">?</span>;
-            result.push(contract);
+
+            result.push((contract, schema_id.to_owned()));
         }
         <span class="prelude-val">Ok</span>(<span class="prelude-val">Ok</span>(result))
     }
@@ -1088,7 +1079,7 @@
                 governance_id: governance_id.clone(),
                 governance_version,
             })
-            .map_err(|e| InternalError::ChannelError {
+            .map_err(|<span class="kw">_</span>| InternalError::ChannelError {
                 source: ChannelErrors::ChannelClosed,
             })<span class="question-mark">?</span>;
         <span class="prelude-val">Ok</span>(<span class="prelude-val">Ok</span>(()))
@@ -1111,12 +1102,10 @@
         } <span class="kw">else if </span>gov_subject.sn &gt; governance_version {
             <span class="kw">let </span>gov_genesis = <span class="self">self</span>.repo_access.get_event(governance_id, <span class="number">0</span>)<span class="question-mark">?</span>;
             <span class="kw">let </span>init_state = get_governance_initial_state();
-            <span class="kw">let </span>init_state = serde_json::to_string(<span class="kw-2">&amp;</span>init_state)
-                .map_err(|<span class="kw">_</span>| RequestError::ErrorParsingJsonString(<span class="string">&quot;Init state&quot;</span>.to_owned()))<span class="question-mark">?</span>;
-            <span class="kw">let </span><span class="kw-2">mut </span>gov_subject = Subject::from_genesis_event(gov_genesis, init_state)<span class="question-mark">?</span>;
+            <span class="kw">let </span><span class="kw-2">mut </span>gov_subject = Subject::from_genesis_event(gov_genesis, init_state, <span class="prelude-val">None</span>)<span class="question-mark">?</span>;
             <span class="kw">for </span>i <span class="kw">in </span><span class="number">1</span>..=governance_version {
                 <span class="kw">let </span>event = <span class="self">self</span>.repo_access.get_event(governance_id, i)<span class="question-mark">?</span>;
-                gov_subject.update_subject(<span class="kw-2">&amp;</span>event.content.event_proposal.proposal.json_patch, i)<span class="question-mark">?</span>;
+                gov_subject.update_subject(event.content.patch, i)<span class="question-mark">?</span>;
             }
             <span class="prelude-val">Ok</span>(gov_subject)
         } <span class="kw">else </span>{
@@ -1160,9 +1149,7 @@
         .ok_or(InternalError::InvalidGovernancePayload(<span class="string">&quot;10&quot;</span>.into()))<span class="question-mark">?
         </span>.get(<span class="string">&quot;quorum&quot;</span>)
         .ok_or(InternalError::InvalidGovernancePayload(<span class="string">&quot;11&quot;</span>.into()))<span class="question-mark">?</span>;
-    <span class="macro">log::warn!</span>(<span class="string">&quot;QUORUM: {:?}&quot;</span>, json_data);
     <span class="kw">let </span>quorum: Quorum = serde_json::from_value(json_data.clone()).unwrap();
-    <span class="macro">log::warn!</span>(<span class="string">&quot;QUORUM: {:?}&quot;</span>, quorum);
     <span class="prelude-val">Ok</span>(quorum)
 }
 
@@ -1202,7 +1189,8 @@
     <span class="prelude-val">Ok</span>(member_ids_names)
 }
 
-<span class="kw">fn </span>contains_common_element(set1: <span class="kw-2">&amp;</span>HashSet&lt;String&gt;, vec2: <span class="kw-2">&amp;</span>[String]) -&gt; bool {
+<span class="attr">#[allow(dead_code)]
+</span><span class="kw">fn </span>contains_common_element(set1: <span class="kw-2">&amp;</span>HashSet&lt;String&gt;, vec2: <span class="kw-2">&amp;</span>[String]) -&gt; bool {
     vec2.iter().any(|s| set1.contains(s))
 }
 

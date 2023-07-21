@@ -16,4 +16,4 @@ Este módulo se encarga de almacenar los datos recopilados a través de la red, 
 
 ## API REST
 
-La API REST es un método de interacción directa con los nodos de TAPLE. Permite realizar acciones como crear y consultar sujetos, ejecutar eventos, aprobar cambios de estado, entre otras. Para obtener más información, consulte [este recurso](../api-rest/create-a-new-event-request.api.mdx).
+La API REST es un método de interacción directa con los nodos de TAPLE. Permite realizar acciones como crear y consultar sujetos, ejecutar eventos, aprobar cambios de estado, entre otras. Para obtener más información, consulte [este recurso](../api-rest/create-event-request.api.mdx).

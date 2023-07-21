@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `core/src/api/api.rs`."><title>api.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-ba5701c5741a7b69.css" id="mainThemeStyle"><div id="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="taple_core" data-themes="" data-resource-suffix="" data-rustdoc-version="1.70.0 (90c541806 2023-05-31)" data-search-js="search-e077946657036a58.js" data-settings-js="settings-298e1ea74db45b39.js" data-settings-css="settings-7bfb4c59cc6bc502.css" data-theme-light-css="light-0f8c037637f9eb3e.css" data-theme-dark-css="dark-1097f8e92a01e3cf.css" data-theme-ayu-css="ayu-614652228113ac93.css" ></div><script src="../../../static.files/storage-62ce34ea385b278a.js"></script><script defer src="../../../static.files/source-script-905937fbbdc8e9ea.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../static.files/main-f61008743c98d196.js"></script><noscript><link rel="stylesheet" media="(prefers-color-scheme:light)" href="../../../static.files/light-0f8c037637f9eb3e.css"><link rel="stylesheet" media="(prefers-color-scheme:dark)" href="../../../static.files/dark-1097f8e92a01e3cf.css"><link rel="stylesheet" href="../../../static.files/noscript-13285aec31fa243e.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../../taple_core/index.html"><img class="rust-logo" src="../../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `core/src/api/api.rs`."><title>api.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-f3501f0f5ae15dfb.css" id="mainThemeStyle"><div id="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="taple_core" data-themes="" data-resource-suffix="" data-rustdoc-version="1.71.0 (8ede3aae2 2023-07-12)" data-search-js="search-4926e5fc22a5646a.js" data-settings-js="settings-de11bff964e9d4e5.js" data-settings-css="settings-8c76f75bfb6bd192.css" data-theme-light-css="light-0f8c037637f9eb3e.css" data-theme-dark-css="dark-1097f8e92a01e3cf.css" data-theme-ayu-css="ayu-614652228113ac93.css" ></div><script src="../../../static.files/storage-62ce34ea385b278a.js"></script><script defer src="../../../static.files/source-script-11255107d0a65077.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../static.files/main-f0540c1d82cde29b.js"></script><noscript><link rel="stylesheet" media="(prefers-color-scheme:light)" href="../../../static.files/light-0f8c037637f9eb3e.css"><link rel="stylesheet" media="(prefers-color-scheme:dark)" href="../../../static.files/dark-1097f8e92a01e3cf.css"><link rel="stylesheet" href="../../../static.files/noscript-13285aec31fa243e.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../../taple_core/index.html"><img class="rust-logo" src="../../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -672,104 +672,33 @@
 <a href="#672" id="672">672</a>
 <a href="#673" id="673">673</a>
 <a href="#674" id="674">674</a>
-<a href="#675" id="675">675</a>
-<a href="#676" id="676">676</a>
-<a href="#677" id="677">677</a>
-<a href="#678" id="678">678</a>
-<a href="#679" id="679">679</a>
-<a href="#680" id="680">680</a>
-<a href="#681" id="681">681</a>
-<a href="#682" id="682">682</a>
-<a href="#683" id="683">683</a>
-<a href="#684" id="684">684</a>
-<a href="#685" id="685">685</a>
-<a href="#686" id="686">686</a>
-<a href="#687" id="687">687</a>
-<a href="#688" id="688">688</a>
-<a href="#689" id="689">689</a>
-<a href="#690" id="690">690</a>
-<a href="#691" id="691">691</a>
-<a href="#692" id="692">692</a>
-<a href="#693" id="693">693</a>
-<a href="#694" id="694">694</a>
-<a href="#695" id="695">695</a>
-<a href="#696" id="696">696</a>
-<a href="#697" id="697">697</a>
-<a href="#698" id="698">698</a>
-<a href="#699" id="699">699</a>
-<a href="#700" id="700">700</a>
-<a href="#701" id="701">701</a>
-<a href="#702" id="702">702</a>
-<a href="#703" id="703">703</a>
-<a href="#704" id="704">704</a>
-<a href="#705" id="705">705</a>
-<a href="#706" id="706">706</a>
-<a href="#707" id="707">707</a>
-<a href="#708" id="708">708</a>
-<a href="#709" id="709">709</a>
-<a href="#710" id="710">710</a>
-<a href="#711" id="711">711</a>
-<a href="#712" id="712">712</a>
-<a href="#713" id="713">713</a>
-<a href="#714" id="714">714</a>
-<a href="#715" id="715">715</a>
-<a href="#716" id="716">716</a>
-<a href="#717" id="717">717</a>
-<a href="#718" id="718">718</a>
-<a href="#719" id="719">719</a>
-<a href="#720" id="720">720</a>
-<a href="#721" id="721">721</a>
-<a href="#722" id="722">722</a>
-<a href="#723" id="723">723</a>
-<a href="#724" id="724">724</a>
-<a href="#725" id="725">725</a>
-<a href="#726" id="726">726</a>
-<a href="#727" id="727">727</a>
-<a href="#728" id="728">728</a>
-<a href="#729" id="729">729</a>
-<a href="#730" id="730">730</a>
-<a href="#731" id="731">731</a>
-<a href="#732" id="732">732</a>
-<a href="#733" id="733">733</a>
-<a href="#734" id="734">734</a>
-<a href="#735" id="735">735</a>
-<a href="#736" id="736">736</a>
-<a href="#737" id="737">737</a>
-<a href="#738" id="738">738</a>
-<a href="#739" id="739">739</a>
-<a href="#740" id="740">740</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>std::collections::HashSet;
 
 <span class="kw">use super</span>::{
     error::{APIInternalError, ApiError},
     inner_api::InnerAPI,
-    APICommands, ApiResponses,
+    APICommands, ApiResponses, GetAllowedSubjects,
 };
-<span class="kw">use super</span>::{GetEventsOfSubject, GetGovernanceSubjects};
+<span class="kw">use super</span>::{GetEvents, GetGovernanceSubjects};
 <span class="attr">#[cfg(feature = <span class="string">&quot;aproval&quot;</span>)]
 </span><span class="kw">use </span><span class="kw">crate</span>::approval::manager::ApprovalAPI;
-<span class="kw">use </span><span class="kw">crate</span>::authorized_subjecs::manager::AuthorizedSubjectsAPI;
-<span class="kw">use </span><span class="kw">crate</span>::commons::models::approval::ApprovalStatus;
-<span class="kw">use </span><span class="kw">crate</span>::commons::models::event::Event;
-<span class="kw">use </span><span class="kw">crate</span>::commons::models::event_request::EventRequest;
 <span class="kw">use </span><span class="kw">crate</span>::commons::models::request::TapleRequest;
 <span class="kw">use </span><span class="kw">crate</span>::commons::models::state::SubjectData;
 <span class="kw">use </span><span class="kw">crate</span>::commons::{
     channel::{ChannelData, MpscChannel, SenderEnd},
     config::TapleSettings,
-    crypto::KeyPair,
 };
 <span class="kw">use </span><span class="kw">crate</span>::event::manager::EventAPI;
 <span class="kw">use </span><span class="kw">crate</span>::ledger::manager::EventManagerAPI;
 <span class="kw">use </span><span class="kw">crate</span>::signature::Signature;
-<span class="kw">use </span><span class="kw">crate</span>::KeyIdentifier;
+<span class="attr">#[cfg(feature = <span class="string">&quot;aproval&quot;</span>)]
+</span><span class="kw">use </span><span class="kw">crate</span>::ApprovalEntity;
+<span class="kw">use </span><span class="kw">crate</span>::ValidationProof;
 <span class="kw">use crate</span>::{
-    approval::ApprovalPetitionData,
-    commons::models::Acceptance,
-    event_request::{CreateRequest, EventRequestType, FactRequest},
-    identifier::DigestIdentifier,
-    DatabaseCollection, DB,
+    authorized_subjecs::manager::AuthorizedSubjectsAPI, signature::Signed, Event, EventRequest,
 };
+<span class="kw">use crate</span>::{identifier::DigestIdentifier, DatabaseCollection, DB};
+<span class="kw">use crate</span>::{KeyDerivator, KeyIdentifier};
 <span class="kw">use </span>async_trait::async_trait;
 <span class="kw">use </span>tokio::sync::watch::Sender;
 
@@ -781,38 +710,10 @@
 /// to find out how many API queries have been made.
 </span><span class="attr">#[async_trait]
 </span><span class="kw">pub trait </span>ApiModuleInterface {
-    <span class="doccomment">/// Allows to generate a voting request in the system.
-    /// This request will be sent to the node that will be in charge of handling
-    /// the votes of the rest of the nodes belonging to the same governance.
-    /// # Possible errors
-    /// • [ApiError::InternalError] if an internal error occurs during operation execution.&lt;br /&gt;
-    /// • [ApiError::InvalidParameters] if the specified request identifier does not match a valid [DigestIdentifier].&lt;br /&gt;
-    </span><span class="kw">async fn </span>create_request(
-        <span class="kw-2">&amp;</span><span class="self">self</span>,
-        request_type: EventRequestType,
-    ) -&gt; <span class="prelude-ty">Result</span>&lt;DigestIdentifier, ApiError&gt;;
     <span class="doccomment">/// Allows to make a request to the node from an external Invoker
     </span><span class="kw">async fn </span>external_request(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        event_request: EventRequest,
-    ) -&gt; <span class="prelude-ty">Result</span>&lt;DigestIdentifier, ApiError&gt;;
-    <span class="doccomment">/// Allows adding a new event to the chain of a subject previously existing
-    /// in the node. The event identifier and its [payload](RequestPayload) are required.
-    /// This method returns the enumerated [CreateRequestResponse], being the identifier
-    /// of a request when the event intends to update a governance, in which case
-    /// it will be communicated to the rest of the nodes aware of the governance with
-    /// the intention that they vote the change contained in the request. In case the event
-    /// is from a conventional subject, the system returns the created event.
-    /// # Possible errors
-    /// This method will return [ApiError::EventCreationError] if it has not been possible
-    /// to create the event, while [ApiError::InternalError] will be obtained if an internal error
-    /// has occurred during the management of the operation. If it has not been possible to create
-    /// the signature accompanying the creation of the event with the node identity,
-    /// then [ApiError::SignError] will be obtained.
-    </span><span class="kw">async fn </span>create_event(
-        <span class="kw-2">&amp;</span><span class="self">self</span>,
-        subject_id: DigestIdentifier,
-        payload: String,
+        event_request: Signed&lt;EventRequest&gt;,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;DigestIdentifier, ApiError&gt;;
     <span class="doccomment">/// Allows to get all subjects that are known to the current node, regardless of their governance.
     /// Paging can be performed using the optional arguments `from` and `quantity`.
@@ -821,7 +722,7 @@
     /// also returns the subjects that model governance.
     /// # Possible errors
     /// • [ApiError::InternalError] if an internal error occurred during the execution of the operation.
-    </span><span class="kw">async fn </span>get_all_subjects(
+    </span><span class="kw">async fn </span>get_subjects(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         namespace: String,
         from: <span class="prelude-ty">Option</span>&lt;String&gt;,
@@ -830,9 +731,15 @@
     <span class="doccomment">/// It allows to obtain all the subjects that model existing governance in the node.
     /// # Possible errors
     /// • [ApiError::InternalError] if an internal error occurred during the execution of the operation.
-    </span><span class="kw">async fn </span>get_all_governances(
+    </span><span class="kw">async fn </span>get_governances(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         namespace: String,
+        from: <span class="prelude-ty">Option</span>&lt;String&gt;,
+        quantity: <span class="prelude-ty">Option</span>&lt;i64&gt;,
+    ) -&gt; <span class="prelude-ty">Result</span>&lt;Vec&lt;SubjectData&gt;, ApiError&gt;;
+    <span class="kw">async fn </span>get_subjects_by_governance(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        governance_id: DigestIdentifier,
         from: <span class="prelude-ty">Option</span>&lt;String&gt;,
         quantity: <span class="prelude-ty">Option</span>&lt;i64&gt;,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;Vec&lt;SubjectData&gt;, ApiError&gt;;
@@ -842,46 +749,23 @@
     /// the paging is performed in the opposite direction starting from the end of the string.
     /// # Possible errors
     /// • [ApiError::InvalidParameters] if the specified subject identifier does not match a valid [DigestIdentifier].
-    </span><span class="kw">async fn </span>get_event_of_subject(
+    </span><span class="kw">async fn </span>get_events(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         subject_id: DigestIdentifier,
         from: <span class="prelude-ty">Option</span>&lt;i64&gt;,
         quantity: <span class="prelude-ty">Option</span>&lt;i64&gt;,
-    ) -&gt; <span class="prelude-ty">Result</span>&lt;Vec&lt;Event&gt;, ApiError&gt;;
+    ) -&gt; <span class="prelude-ty">Result</span>&lt;Vec&lt;Signed&lt;Event&gt;&gt;, ApiError&gt;;
 
-    <span class="kw">async fn </span>get_event(<span class="kw-2">&amp;</span><span class="self">self</span>, subject_id: DigestIdentifier, sn: u64) -&gt; <span class="prelude-ty">Result</span>&lt;Event, ApiError&gt;;
-    <span class="doccomment">/// Allows to create a new subject in the node, being its owner the node in question.
-    /// # Possible errors
-    /// • [ApiError::InternalError] if an internal error occurred during the execution of the operation.&lt;br /&gt;
-    /// • [ApiError::SignError] if it has not been possible to create the signature that accompanies
-    /// the creation of the event with the identity of the node.&lt;br /&gt;
-    /// • [ApiError::EventCreationError] if it has not been possible to create the subject,
-    /// for example, because its governance does not exist.&lt;br /&gt;
-    /// • [ApiError::InvalidParameters] if the specified governance identifier does not match a valid [DigestIdentifier].
-    </span><span class="kw">async fn </span>create_subject(
+    <span class="kw">async fn </span>get_event(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        governance_id: DigestIdentifier,
-        schema_id: String,
-        namespace: String,
-        name: String,
-        public_key: KeyIdentifier,
-    ) -&gt; <span class="prelude-ty">Result</span>&lt;DigestIdentifier, ApiError&gt;;
+        subject_id: DigestIdentifier,
+        sn: u64,
+    ) -&gt; <span class="prelude-ty">Result</span>&lt;Signed&lt;Event&gt;, ApiError&gt;;
     <span class="doccomment">/// Allows to obtain a specified subject by specifying its identifier.
     /// # Possible errors
     /// • [ApiError::InvalidParameters] if the specified identifier does not match a valid [DigestIdentifier].&lt;br /&gt;
     /// • [ApiError::NotFound] if the subject does not exist.
     </span><span class="kw">async fn </span>get_subject(<span class="kw-2">&amp;</span><span class="self">self</span>, subject_id: DigestIdentifier) -&gt; <span class="prelude-ty">Result</span>&lt;SubjectData, ApiError&gt;;
-    <span class="doccomment">/// Method for creating governance in the system.
-    /// # Possible errors
-    /// • [ApiError::InternalError] if an internal error occurred during the execution of the operation.&lt;br /&gt;
-    /// • [ApiError::SignError] if it has not been possible to create the signature that accompanies
-    /// the creation of the event with the identity of the node.&lt;br /&gt;
-    /// • [ApiError::EventCreationError] if it has not been possible to create the governance.
-    </span><span class="kw">async fn </span>create_governance(
-        <span class="kw-2">&amp;</span><span class="self">self</span>,
-        name: String,
-        public_key: KeyIdentifier,
-    ) -&gt; <span class="prelude-ty">Result</span>&lt;DigestIdentifier, ApiError&gt;;
     <span class="doccomment">/// Stops the node, consuming the instance on the fly. This implies that any previously created API
     /// or [NotificationHandler] instances will no longer be functional.
     </span><span class="kw">async fn </span>shutdown(<span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;(), ApiError&gt;;
@@ -897,8 +781,8 @@
     </span><span class="kw">async fn </span>approval_request(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         request_id: DigestIdentifier,
-        acceptance: Acceptance,
-    ) -&gt; <span class="prelude-ty">Result</span>&lt;DigestIdentifier, ApiError&gt;;
+        acceptance: bool,
+    ) -&gt; <span class="prelude-ty">Result</span>&lt;ApprovalEntity, ApiError&gt;;
     <span class="doccomment">/// It allows to obtain all the voting requests pending to be resolved in the node.
     /// These requests are received from other nodes in the network when they try to update
     /// a governance subject. It is necessary to vote their agreement or disagreement with
@@ -906,7 +790,7 @@
     /// # Possible errors
     /// • [ApiError::InternalError] if an internal error occurs during operation execution.
     </span><span class="attr">#[cfg(feature = <span class="string">&quot;aproval&quot;</span>)]
-    </span><span class="kw">async fn </span>get_pending_requests(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;Vec&lt;ApprovalPetitionData&gt;, ApiError&gt;;
+    </span><span class="kw">async fn </span>get_pending_requests(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;Vec&lt;ApprovalEntity&gt;, ApiError&gt;;
     <span class="doccomment">/// It allows to obtain a single voting request pending to be resolved in the node.
     /// This request is received from other nodes in the network when they try to update
     /// a governance subject. It is necessary to vote its agreement or disagreement with
@@ -915,20 +799,22 @@
     /// • [ApiError::InternalError] if an internal error occurs during operation execution.
     /// • [ApiError::NotFound] if the requested request does not exist.
     </span><span class="attr">#[cfg(feature = <span class="string">&quot;aproval&quot;</span>)]
-    </span><span class="kw">async fn </span>get_single_request(
-        <span class="kw-2">&amp;</span><span class="self">self</span>,
-        id: DigestIdentifier,
-    ) -&gt; <span class="prelude-ty">Result</span>&lt;ApprovalPetitionData, ApiError&gt;;
+    </span><span class="kw">async fn </span>get_single_request(<span class="kw-2">&amp;</span><span class="self">self</span>, id: DigestIdentifier) -&gt; <span class="prelude-ty">Result</span>&lt;ApprovalEntity, ApiError&gt;;
     <span class="kw">async fn </span>add_preauthorize_subject(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         subject_id: <span class="kw-2">&amp;</span>DigestIdentifier,
         providers: <span class="kw-2">&amp;</span>HashSet&lt;KeyIdentifier&gt;,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;(), ApiError&gt;;
-    <span class="kw">async fn </span>generate_keys(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;KeyIdentifier, ApiError&gt;;
+    <span class="kw">async fn </span>get_all_allowed_subjects_and_providers(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        from: <span class="prelude-ty">Option</span>&lt;String&gt;,
+        quantity: <span class="prelude-ty">Option</span>&lt;i64&gt;,
+    ) -&gt; <span class="prelude-ty">Result</span>&lt;Vec&lt;(DigestIdentifier, HashSet&lt;KeyIdentifier&gt;)&gt;, ApiError&gt;;
+    <span class="kw">async fn </span>add_keys(<span class="kw-2">&amp;</span><span class="self">self</span>, derivator: KeyDerivator) -&gt; <span class="prelude-ty">Result</span>&lt;KeyIdentifier, ApiError&gt;;
     <span class="kw">async fn </span>get_validation_proof(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         subject_id: DigestIdentifier,
-    ) -&gt; <span class="prelude-ty">Result</span>&lt;HashSet&lt;Signature&gt;, ApiError&gt;;
+    ) -&gt; <span class="prelude-ty">Result</span>&lt;(HashSet&lt;Signature&gt;, ValidationProof), ApiError&gt;;
     <span class="kw">async fn </span>get_request(<span class="kw-2">&amp;</span><span class="self">self</span>, request_id: DigestIdentifier) -&gt; <span class="prelude-ty">Result</span>&lt;TapleRequest, ApiError&gt;;
     <span class="kw">async fn </span>get_governance_subjects(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
@@ -936,14 +822,15 @@
         from: <span class="prelude-ty">Option</span>&lt;String&gt;,
         quantity: <span class="prelude-ty">Option</span>&lt;i64&gt;,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;Vec&lt;SubjectData&gt;, ApiError&gt;;
-    <span class="kw">async fn </span>get_approval(
+    <span class="attr">#[cfg(feature = <span class="string">&quot;aproval&quot;</span>)]
+    </span><span class="kw">async fn </span>get_approval(<span class="kw-2">&amp;</span><span class="self">self</span>, request_id: DigestIdentifier) -&gt; <span class="prelude-ty">Result</span>&lt;ApprovalEntity, ApiError&gt;;
+    <span class="attr">#[cfg(feature = <span class="string">&quot;aproval&quot;</span>)]
+    </span><span class="kw">async fn </span>get_approvals(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        request_id: DigestIdentifier
-    ) -&gt; <span class="prelude-ty">Result</span>&lt;(ApprovalPetitionData, ApprovalStatus), ApiError&gt;;
-    <span class="kw">async fn </span>get_approvals(
-        <span class="kw-2">&amp;</span><span class="self">self</span>,
-        status: <span class="prelude-ty">Option</span>&lt;String&gt;,
-    ) -&gt; <span class="prelude-ty">Result</span>&lt;Vec&lt;ApprovalPetitionData&gt;, ApiError&gt;;
+        state: <span class="prelude-ty">Option</span>&lt;<span class="kw">crate</span>::ApprovalState&gt;,
+        from: <span class="prelude-ty">Option</span>&lt;String&gt;,
+        quantity: <span class="prelude-ty">Option</span>&lt;i64&gt;,
+    ) -&gt; <span class="prelude-ty">Result</span>&lt;Vec&lt;ApprovalEntity&gt;, ApiError&gt;;
 }
 
 <span class="doccomment">/// Object that allows interaction with a TAPLE node.
@@ -961,22 +848,6 @@
 <span class="doccomment">/// Feature that allows implementing the API Rest of an Taple node.
 </span><span class="attr">#[async_trait]
 </span><span class="kw">impl </span>ApiModuleInterface <span class="kw">for </span>NodeAPI {
-    <span class="kw">async fn </span>create_request(
-        <span class="kw-2">&amp;</span><span class="self">self</span>,
-        request_type: EventRequestType,
-    ) -&gt; <span class="prelude-ty">Result</span>&lt;DigestIdentifier, ApiError&gt; {
-        <span class="kw">let </span>response = <span class="self">self
-            </span>.sender
-            .ask(APICommands::HandleRequest(request_type))
-            .<span class="kw">await
-            </span>.unwrap();
-        <span class="kw">if let </span>ApiResponses::HandleRequest(data) = response {
-            data
-        } <span class="kw">else </span>{
-            <span class="macro">unreachable!</span>()
-        }
-    }
-
     <span class="kw">async fn </span>get_request(<span class="kw-2">&amp;</span><span class="self">self</span>, request_id: DigestIdentifier) -&gt; <span class="prelude-ty">Result</span>&lt;TapleRequest, ApiError&gt; {
         <span class="kw">let </span>response = <span class="self">self
             </span>.sender
@@ -992,7 +863,7 @@
 
     <span class="kw">async fn </span>external_request(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        event_request: EventRequest,
+        event_request: Signed&lt;EventRequest&gt;,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;DigestIdentifier, ApiError&gt; {
         <span class="kw">let </span>response = <span class="self">self
             </span>.sender
@@ -1007,7 +878,7 @@
     }
 
     <span class="attr">#[cfg(feature = <span class="string">&quot;aproval&quot;</span>)]
-    </span><span class="kw">async fn </span>get_pending_requests(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;Vec&lt;ApprovalPetitionData&gt;, ApiError&gt; {
+    </span><span class="kw">async fn </span>get_pending_requests(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;Vec&lt;ApprovalEntity&gt;, ApiError&gt; {
         <span class="kw">let </span>response = <span class="self">self
             </span>.sender
             .ask(APICommands::GetPendingRequests)
@@ -1021,10 +892,7 @@
     }
 
     <span class="attr">#[cfg(feature = <span class="string">&quot;aproval&quot;</span>)]
-    </span><span class="kw">async fn </span>get_single_request(
-        <span class="kw-2">&amp;</span><span class="self">self</span>,
-        id: DigestIdentifier,
-    ) -&gt; <span class="prelude-ty">Result</span>&lt;ApprovalPetitionData, ApiError&gt; {
+    </span><span class="kw">async fn </span>get_single_request(<span class="kw-2">&amp;</span><span class="self">self</span>, id: DigestIdentifier) -&gt; <span class="prelude-ty">Result</span>&lt;ApprovalEntity, ApiError&gt; {
         <span class="kw">let </span>response = <span class="self">self
             </span>.sender
             .ask(APICommands::GetSingleRequest(id))
@@ -1037,27 +905,7 @@
         }
     }
 
-    <span class="kw">async fn </span>create_event(
-        <span class="kw-2">&amp;</span><span class="self">self</span>,
-        subject_id: DigestIdentifier,
-        payload: String,
-    ) -&gt; <span class="prelude-ty">Result</span>&lt;DigestIdentifier, ApiError&gt; {
-        <span class="kw">let </span>request = EventRequestType::Fact(FactRequest {
-            subject_id,
-            payload: payload,
-        });
-        <span class="kw">let </span>response = <span class="self">self
-            </span>.sender
-            .ask(APICommands::HandleRequest(request))
-            .<span class="kw">await
-            </span>.unwrap();
-        <span class="kw">if let </span>ApiResponses::HandleRequest(data) = response {
-            data
-        } <span class="kw">else </span>{
-            <span class="macro">unreachable!</span>()
-        }
-    }
-    <span class="kw">async fn </span>get_all_subjects(
+    <span class="kw">async fn </span>get_subjects(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         namespace: String,
         from: <span class="prelude-ty">Option</span>&lt;String&gt;,
@@ -1065,42 +913,72 @@
     ) -&gt; <span class="prelude-ty">Result</span>&lt;Vec&lt;SubjectData&gt;, ApiError&gt; {
         <span class="kw">let </span>response = <span class="self">self
             </span>.sender
-            .ask(APICommands::GetAllSubjects(<span class="kw">super</span>::GetAllSubjects {
+            .ask(APICommands::GetSubjects(<span class="kw">super</span>::GetSubjects {
                 namespace,
                 from,
                 quantity,
             }))
             .<span class="kw">await
             </span>.unwrap();
-        <span class="kw">if let </span>ApiResponses::GetAllSubjects(data) = response {
-            data
-        } <span class="kw">else </span>{
-            <span class="macro">unreachable!</span>()
-        }
-    }
-    <span class="kw">async fn </span>get_all_governances(
-        <span class="kw-2">&amp;</span><span class="self">self</span>,
-        namespace: String,
-        from: <span class="prelude-ty">Option</span>&lt;String&gt;,
-        quantity: <span class="prelude-ty">Option</span>&lt;i64&gt;,
-    ) -&gt; <span class="prelude-ty">Result</span>&lt;Vec&lt;SubjectData&gt;, ApiError&gt; {
-        <span class="kw">let </span>response = <span class="self">self
-            </span>.sender
-            .ask(APICommands::GetAllGovernances(<span class="kw">super</span>::GetAllSubjects {
-                namespace,
-                from,
-                quantity,
-            }))
-            .<span class="kw">await
-            </span>.unwrap();
-        <span class="kw">if let </span>ApiResponses::GetAllGovernances(data) = response {
+        <span class="kw">if let </span>ApiResponses::GetSubjects(data) = response {
             data
         } <span class="kw">else </span>{
             <span class="macro">unreachable!</span>()
         }
     }
 
-    <span class="kw">async fn </span>get_event(<span class="kw-2">&amp;</span><span class="self">self</span>, subject_id: DigestIdentifier, sn: u64) -&gt; <span class="prelude-ty">Result</span>&lt;Event, ApiError&gt; {
+    <span class="kw">async fn </span>get_subjects_by_governance(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        governance_id: DigestIdentifier,
+        from: <span class="prelude-ty">Option</span>&lt;String&gt;,
+        quantity: <span class="prelude-ty">Option</span>&lt;i64&gt;,
+    ) -&gt; <span class="prelude-ty">Result</span>&lt;Vec&lt;SubjectData&gt;, ApiError&gt; {
+        <span class="kw">let </span>response = <span class="self">self
+            </span>.sender
+            .ask(APICommands::GetSubjectByGovernance(
+                <span class="kw">super</span>::GetSubjects {
+                    namespace: <span class="string">&quot;&quot;</span>.into(),
+                    from,
+                    quantity,
+                },
+                governance_id,
+            ))
+            .<span class="kw">await
+            </span>.unwrap();
+        <span class="kw">if let </span>ApiResponses::GetSubjectByGovernance(data) = response {
+            data
+        } <span class="kw">else </span>{
+            <span class="macro">unreachable!</span>()
+        }
+    }
+
+    <span class="kw">async fn </span>get_governances(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        namespace: String,
+        from: <span class="prelude-ty">Option</span>&lt;String&gt;,
+        quantity: <span class="prelude-ty">Option</span>&lt;i64&gt;,
+    ) -&gt; <span class="prelude-ty">Result</span>&lt;Vec&lt;SubjectData&gt;, ApiError&gt; {
+        <span class="kw">let </span>response = <span class="self">self
+            </span>.sender
+            .ask(APICommands::GetGovernances(<span class="kw">super</span>::GetSubjects {
+                namespace,
+                from,
+                quantity,
+            }))
+            .<span class="kw">await
+            </span>.unwrap();
+        <span class="kw">if let </span>ApiResponses::GetGovernances(data) = response {
+            data
+        } <span class="kw">else </span>{
+            <span class="macro">unreachable!</span>()
+        }
+    }
+
+    <span class="kw">async fn </span>get_event(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        subject_id: DigestIdentifier,
+        sn: u64,
+    ) -&gt; <span class="prelude-ty">Result</span>&lt;Signed&lt;Event&gt;, ApiError&gt; {
         <span class="kw">let </span>response = <span class="self">self
             </span>.sender
             .ask(APICommands::GetEvent(subject_id, sn))
@@ -1113,85 +991,35 @@
         }
     }
 
-    <span class="kw">async fn </span>get_event_of_subject(
+    <span class="kw">async fn </span>get_events(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         subject_id: DigestIdentifier,
         from: <span class="prelude-ty">Option</span>&lt;i64&gt;,
         quantity: <span class="prelude-ty">Option</span>&lt;i64&gt;,
-    ) -&gt; <span class="prelude-ty">Result</span>&lt;Vec&lt;Event&gt;, ApiError&gt; {
+    ) -&gt; <span class="prelude-ty">Result</span>&lt;Vec&lt;Signed&lt;Event&gt;&gt;, ApiError&gt; {
         <span class="kw">let </span>response = <span class="self">self
             </span>.sender
-            .ask(APICommands::GetEventsOfSubject(GetEventsOfSubject {
+            .ask(APICommands::GetEvents(GetEvents {
                 subject_id,
                 from,
                 quantity,
             }))
             .<span class="kw">await
             </span>.unwrap();
-        <span class="kw">if let </span>ApiResponses::GetEventsOfSubject(data) = response {
+        <span class="kw">if let </span>ApiResponses::GetEvents(data) = response {
             data
         } <span class="kw">else </span>{
             <span class="macro">unreachable!</span>()
         }
     }
-    <span class="kw">async fn </span>create_subject(
-        <span class="kw-2">&amp;</span><span class="self">self</span>,
-        governance_id: DigestIdentifier,
-        schema_id: String,
-        namespace: String,
-        name: String,
-        public_key: KeyIdentifier,
-    ) -&gt; <span class="prelude-ty">Result</span>&lt;DigestIdentifier, ApiError&gt; {
-        <span class="kw">let </span>request = EventRequestType::Create(CreateRequest {
-            governance_id,
-            schema_id,
-            namespace,
-            name,
-            public_key,
-        });
-        <span class="kw">let </span>response = <span class="self">self
-            </span>.sender
-            .ask(APICommands::HandleRequest(request))
-            .<span class="kw">await
-            </span>.unwrap();
-        <span class="kw">if let </span>ApiResponses::HandleRequest(data) = response {
-            data
-        } <span class="kw">else </span>{
-            <span class="macro">unreachable!</span>()
-        }
-    }
+
     <span class="kw">async fn </span>get_subject(<span class="kw-2">&amp;</span><span class="self">self</span>, subject_id: DigestIdentifier) -&gt; <span class="prelude-ty">Result</span>&lt;SubjectData, ApiError&gt; {
         <span class="kw">let </span>response = <span class="self">self
             </span>.sender
-            .ask(APICommands::GetSingleSubject(<span class="kw">super</span>::GetSingleSubject {
-                subject_id,
-            }))
+            .ask(APICommands::GetSubject(<span class="kw">super</span>::GetSubject { subject_id }))
             .<span class="kw">await
             </span>.unwrap();
-        <span class="kw">if let </span>ApiResponses::GetSingleSubject(data) = response {
-            data
-        } <span class="kw">else </span>{
-            <span class="macro">unreachable!</span>()
-        }
-    }
-    <span class="kw">async fn </span>create_governance(
-        <span class="kw-2">&amp;</span><span class="self">self</span>,
-        name: String,
-        public_key: KeyIdentifier,
-    ) -&gt; <span class="prelude-ty">Result</span>&lt;DigestIdentifier, ApiError&gt; {
-        <span class="kw">let </span>request = EventRequestType::Create(CreateRequest {
-            governance_id: DigestIdentifier::default(),
-            schema_id: <span class="string">&quot;governance&quot;</span>.into(),
-            namespace: <span class="string">&quot;&quot;</span>.into(),
-            name,
-            public_key,
-        });
-        <span class="kw">let </span>response = <span class="self">self
-            </span>.sender
-            .ask(APICommands::HandleRequest(request))
-            .<span class="kw">await
-            </span>.unwrap();
-        <span class="kw">if let </span>ApiResponses::HandleRequest(data) = response {
+        <span class="kw">if let </span>ApiResponses::GetSubject(data) = response {
             data
         } <span class="kw">else </span>{
             <span class="macro">unreachable!</span>()
@@ -1202,8 +1030,8 @@
     </span><span class="kw">async fn </span>approval_request(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         request_id: DigestIdentifier,
-        acceptance: Acceptance,
-    ) -&gt; <span class="prelude-ty">Result</span>&lt;DigestIdentifier, ApiError&gt; {
+        acceptance: bool,
+    ) -&gt; <span class="prelude-ty">Result</span>&lt;ApprovalEntity, ApiError&gt; {
         <span class="kw">let </span>response = <span class="self">self
             </span>.sender
             .ask(APICommands::VoteResolve(acceptance, request_id))
@@ -1245,9 +1073,32 @@
         }
     }
 
-    <span class="kw">async fn </span>generate_keys(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;KeyIdentifier, ApiError&gt; {
-        <span class="kw">let </span>response = <span class="self">self</span>.sender.ask(APICommands::GenerateKeys).<span class="kw">await</span>.unwrap();
-        <span class="kw">if let </span>ApiResponses::GenerateKeys(data) = response {
+    <span class="kw">async fn </span>get_all_allowed_subjects_and_providers(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        from: <span class="prelude-ty">Option</span>&lt;String&gt;,
+        quantity: <span class="prelude-ty">Option</span>&lt;i64&gt;,
+    ) -&gt; <span class="prelude-ty">Result</span>&lt;Vec&lt;(DigestIdentifier, HashSet&lt;KeyIdentifier&gt;)&gt;, ApiError&gt; {
+        <span class="kw">let </span>response = <span class="self">self
+            </span>.sender
+            .ask(APICommands::GetAllPreauthorizedSubjects(
+                GetAllowedSubjects { from, quantity },
+            ))
+            .<span class="kw">await
+            </span>.unwrap();
+        <span class="kw">if let </span>ApiResponses::GetAllPreauthorizedSubjects(data) = response {
+            data
+        } <span class="kw">else </span>{
+            <span class="macro">unreachable!</span>()
+        }
+    }
+
+    <span class="kw">async fn </span>add_keys(<span class="kw-2">&amp;</span><span class="self">self</span>, derivator: KeyDerivator) -&gt; <span class="prelude-ty">Result</span>&lt;KeyIdentifier, ApiError&gt; {
+        <span class="kw">let </span>response = <span class="self">self
+            </span>.sender
+            .ask(APICommands::AddKeys(derivator))
+            .<span class="kw">await
+            </span>.unwrap();
+        <span class="kw">if let </span>ApiResponses::AddKeys(data) = response {
             data
         } <span class="kw">else </span>{
             <span class="macro">unreachable!</span>()
@@ -1257,7 +1108,7 @@
     <span class="kw">async fn </span>get_validation_proof(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         subject_id: DigestIdentifier,
-    ) -&gt; <span class="prelude-ty">Result</span>&lt;HashSet&lt;Signature&gt;, ApiError&gt; {
+    ) -&gt; <span class="prelude-ty">Result</span>&lt;(HashSet&lt;Signature&gt;, ValidationProof), ApiError&gt; {
         <span class="kw">let </span>response = <span class="self">self
             </span>.sender
             .ask(APICommands::GetValidationProof(subject_id))
@@ -1292,12 +1143,10 @@
         }
     }
 
-    <span class="kw">async fn </span>get_approval(
-        <span class="kw-2">&amp;</span><span class="self">self</span>,
-        request_id: DigestIdentifier
-    ) -&gt; <span class="prelude-ty">Result</span>&lt;(ApprovalPetitionData, ApprovalStatus), ApiError&gt; {
-        <span class="kw">let </span>response = <span class="self">self</span>.
-        sender
+    <span class="attr">#[cfg(feature = <span class="string">&quot;aproval&quot;</span>)]
+    </span><span class="kw">async fn </span>get_approval(<span class="kw-2">&amp;</span><span class="self">self</span>, request_id: DigestIdentifier) -&gt; <span class="prelude-ty">Result</span>&lt;ApprovalEntity, ApiError&gt; {
+        <span class="kw">let </span>response = <span class="self">self
+            </span>.sender
             .ask(APICommands::GetApproval(request_id))
             .<span class="kw">await
             </span>.unwrap();
@@ -1308,13 +1157,20 @@
         }
     }
 
-    <span class="kw">async fn </span>get_approvals(
+    <span class="attr">#[cfg(feature = <span class="string">&quot;aproval&quot;</span>)]
+    </span><span class="kw">async fn </span>get_approvals(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        status: <span class="prelude-ty">Option</span>&lt;String&gt;,
-    ) -&gt; <span class="prelude-ty">Result</span>&lt;Vec&lt;ApprovalPetitionData&gt;, ApiError&gt; {
-        <span class="kw">let </span>response = <span class="self">self</span>.
-        sender
-            .ask(APICommands::GetApprovals(status))
+        state: <span class="prelude-ty">Option</span>&lt;<span class="kw">crate</span>::ApprovalState&gt;,
+        from: <span class="prelude-ty">Option</span>&lt;String&gt;,
+        quantity: <span class="prelude-ty">Option</span>&lt;i64&gt;,
+    ) -&gt; <span class="prelude-ty">Result</span>&lt;Vec&lt;ApprovalEntity&gt;, ApiError&gt; {
+        <span class="kw">let </span>response = <span class="self">self
+            </span>.sender
+            .ask(APICommands::GetApprovals(<span class="kw">super</span>::GetApprovals {
+                state,
+                from,
+                quantity,
+            }))
             .<span class="kw">await
             </span>.unwrap();
         <span class="kw">if let </span>ApiResponses::GetApprovals(data) = response {
@@ -1341,8 +1197,6 @@
         authorized_subjects_api: AuthorizedSubjectsAPI,
         ledger_api: EventManagerAPI,
         settings_sender: Sender&lt;TapleSettings&gt;,
-        initial_settings: TapleSettings,
-        keys: KeyPair,
         shutdown_sender: tokio::sync::broadcast::Sender&lt;()&gt;,
         shutdown_receiver: tokio::sync::broadcast::Receiver&lt;()&gt;,
         db: DB&lt;C&gt;,
@@ -1351,8 +1205,6 @@
             input,
             _settings_sender: settings_sender,
             inner_api: InnerAPI::new(
-                keys,
-                <span class="kw-2">&amp;</span>initial_settings,
                 event_api,
                 authorized_subjects_api,
                 db,
@@ -1388,6 +1240,7 @@
                         }
                     };
                     <span class="kw">if </span>must_shutdown {
+                        <span class="macro">log::error!</span>(<span class="string">&quot;must shutdown before unwrap&quot;</span>);
                         <span class="kw">let </span>sender = <span class="self">self</span>.shutdown_sender.take().unwrap();
                         sender.send(()).expect(<span class="string">&quot;Shutdown Channel Closed&quot;</span>);
                         drop(sender);
@@ -1418,16 +1271,14 @@
                     APICommands::Shutdown =&gt; {
                         <span class="kw">return </span><span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(sx));
                     }
-                    APICommands::GetAllSubjects(data) =&gt; <span class="self">self</span>.inner_api.get_all_subjects(data),
-                    APICommands::GetAllGovernances(data) =&gt; {
+                    APICommands::GetSubjects(data) =&gt; <span class="self">self</span>.inner_api.get_all_subjects(data),
+                    APICommands::GetGovernances(data) =&gt; {
                         <span class="self">self</span>.inner_api.get_all_governances(data).<span class="kw">await
                     </span>}
-                    APICommands::GetEventsOfSubject(data) =&gt; {
+                    APICommands::GetEvents(data) =&gt; {
                         <span class="self">self</span>.inner_api.get_events_of_subject(data).<span class="kw">await
                     </span>}
-                    APICommands::GetSingleSubject(data) =&gt; {
-                        <span class="self">self</span>.inner_api.get_single_subject(data).<span class="kw">await
-                    </span>}
+                    APICommands::GetSubject(data) =&gt; <span class="self">self</span>.inner_api.get_single_subject(data).<span class="kw">await</span>,
                     APICommands::GetRequest(request_id) =&gt; {
                         <span class="self">self</span>.inner_api.get_request(request_id).<span class="kw">await
                     </span>}
@@ -1444,7 +1295,6 @@
                     </span>APICommands::GetSingleRequest(data) =&gt; {
                         <span class="self">self</span>.inner_api.get_single_request(data).<span class="kw">await
                     </span>}
-                    APICommands::HandleRequest(data) =&gt; <span class="self">self</span>.inner_api.handle_request(data).<span class="kw">await</span><span class="question-mark">?</span>,
                     APICommands::ExternalRequest(event_request) =&gt; {
                         <span class="kw">let </span>response = <span class="self">self</span>.inner_api.handle_external_request(event_request).<span class="kw">await</span>;
                         response<span class="question-mark">?
@@ -1454,19 +1304,37 @@
                             .set_preauthorized_subject(subject_id, providers)
                             .<span class="kw">await</span><span class="question-mark">?
                     </span>}
-                    APICommands::GenerateKeys =&gt; <span class="self">self</span>.inner_api.generate_keys().<span class="kw">await</span><span class="question-mark">?</span>,
+                    APICommands::AddKeys(derivator) =&gt; {
+                        <span class="self">self</span>.inner_api.generate_keys(derivator).<span class="kw">await</span><span class="question-mark">?
+                    </span>}
                     APICommands::GetValidationProof(subject_id) =&gt; {
                         <span class="self">self</span>.inner_api.get_validation_proof(subject_id).<span class="kw">await
                     </span>}
                     APICommands::GetGovernanceSubjects(data) =&gt; {
                         <span class="self">self</span>.inner_api.get_governance_subjects(data).<span class="kw">await
                     </span>}
-                    APICommands::GetApproval(request_id) =&gt; {
+                    <span class="attr">#[cfg(feature = <span class="string">&quot;aproval&quot;</span>)]
+                    </span>APICommands::GetApproval(request_id) =&gt; {
                         <span class="self">self</span>.inner_api.get_approval(request_id).<span class="kw">await
                     </span>}
-                    APICommands::GetApprovals(status) =&gt; {
-                        <span class="self">self</span>.inner_api.get_approvals(status).<span class="kw">await
+                    <span class="attr">#[cfg(feature = <span class="string">&quot;aproval&quot;</span>)]
+                    </span>APICommands::GetApprovals(get_approvals) =&gt; {
+                        <span class="self">self</span>.inner_api
+                            .get_approvals(
+                                get_approvals.state,
+                                get_approvals.from,
+                                get_approvals.quantity,
+                            )
+                            .<span class="kw">await
                     </span>}
+                    APICommands::GetAllPreauthorizedSubjects(data) =&gt; {
+                        <span class="self">self</span>.inner_api
+                            .get_all_preauthorized_subjects_and_providers(data)
+                            .<span class="kw">await</span><span class="question-mark">?
+                    </span>}
+                    APICommands::GetSubjectByGovernance(params, gov_id) =&gt; {
+                        <span class="self">self</span>.inner_api.get_subjects_by_governance(params, gov_id)
+                    }
                 };
                 sx.send(response)
                     .map_err(|<span class="kw">_</span>| APIInternalError::OneshotUnavailable)<span class="question-mark">?</span>;

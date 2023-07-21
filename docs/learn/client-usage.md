@@ -13,8 +13,12 @@ Los parámetros mínimos necesarios para iniciar un nodo de Taple son los siguie
   * **secret key**:  Es la clave privada que poseerá el nodo al iniciarse. Es de gran importancia ya que permite identificar al nodo dentro de la red. Puede generarse utilizando `taple-keygen`.
   * **network listen addr**: Es la dirección a través de la cual el nodo recibirá los mensajes enviados por la red. En la mayoría de la documentación, esta dirección será `0.0.0.0`, que es el valor predeterminado que permite escuchar todos los mensajes de la red. El puerto *P2P* por convenio hemos hecho que empece siempre en el 5000.
 
-:::caution
 Para obtener más información sobre todas las opciones disponibles para iniciar nuestro nodo, consulte [esta sección](client-config.md).
+
+:::warning Exposing services
+
+We note that the REST API is likely useful for your internal network. However, if you choose to expose the REST API endpoint publicly, you should deploy an additional authentication or rate-limiting mechanism to prevent abuse. Remember that event requests, if not signed, will be signed with the node's own identity. 
+
 :::
 
 ### Running with binary
@@ -81,7 +85,7 @@ curl --location --request GET 'http://localhost:3001/api/doc/json'
 ```
 
 :::note
-Para consultar todos los endpoints de esta versión de Taple sin abandonar la documentación, puede consultar [esta sección](../api-rest/create-a-new-event-request.api.mdx).
+Para consultar todos los endpoints de esta versión de Taple sin abandonar la documentación, puede consultar [esta sección](../api-rest/create-event-request.api.mdx).
 :::
 
 ## Backups

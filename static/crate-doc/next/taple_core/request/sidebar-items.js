@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"enum":["RequestState"],"struct":["TapleRequest"]};
+window.SIDEBAR_ITEMS = {"enum":["EventRequest","RequestState"],"struct":["EOLRequest","FactRequest","StartRequest","TapleRequest","TransferRequest"]};
