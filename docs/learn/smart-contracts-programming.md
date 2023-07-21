@@ -14,7 +14,7 @@ Téngase en cuenta de que no es posible ejecutar cualquier función o utilizar c
 
 ### Estructuras auxiliares
 
-```rs
+```rust
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Context<State, Event> {
     pub initial_state: State,
@@ -25,7 +25,7 @@ pub struct Context<State, Event> {
 
 Esta estructura contiene los tres datos de entrada de todo contrato: el estado inicial o actual del sujeto, el evento entrante y un flag que nos indica si el que solicita el evento es o no el propietario del sujeto. Nótese el uso de génericos para el estado y el evento.
 
-```rs
+```rust
 #[derive(Serialize, Deserialize, Debug)]
 pub struct ContractResult<State> {
     pub final_state: State,
@@ -37,7 +37,7 @@ pub struct ContractResult<State> {
 Contiene el resultado de la ejecución del contrato, siendo este una conjunción del estado resultante y de dos flags que indican, por un lado si la ejecución ha sido existosa según los criterios que establezca el programador (o bien si se ha producido un error en la carga de datos); y por otro, si el evento requiere o no [aprobación](../discover/roles.md#approver).
 
 
-```rs
+```rust
 pub fn execute_contract<F, State, Event>(
     state_ptr: i32,
     event_ptr: i32,
@@ -52,7 +52,7 @@ where
 
 Esta función es la principal del SDK y, así mismo, la más importante. En concreto se encarga de la obtención de los datos de entrada, datos que obtiene del contexto que comparte con la máquina evaluadora. La función, que inicialmente recibirá un puntero a cada uno de estos datos, será la encargada de extraerlos del contexto y de deserializarlos a las estructuras de estado y evento que espera recibir el contrato, especificables mediante genéricos. Dichos datos, una vez obtenidos, se encapsulan en la estructura de *Context* presente anteriormente y se pasan como argumentos a una función callback que gestiona la lógica del contrato, es decir, sabe qué hacer con los datos recibidos. Por último, independientemente de si la ejecución ha sido exitosa o no, la función se encargará de escribir el resultado en el contexto, para que este pueda ser utilizado por la máquina evaluadora.
 
-```rs
+```rust
 pub fn apply_patch<State: for<'a> Deserialize<'a> + Serialize>(
     patch_arg: Value,
     state: &State,
@@ -91,7 +91,7 @@ Debido a que la compilación la realizará el nodo, **debemos escribir todo el c
 
 En nuestro caso, empezaremos el contrato **especificando los paquetes que vamos a utilizar**.
 
-```rs
+```rust
 use serde::{Serialize, Deserialize};
 
 use taple_sc_rust as sdk;
@@ -99,7 +99,7 @@ use taple_sc_rust as sdk;
 
 Acto seguido, es necesario especificar la estructura de datos que representará el estado de nuestros sujetos así como la familia de eventos que recibiremos. Para este ejemplo se supondrá un caso muy sencillo, en concreto, un estado formado por tres números y una familia de eventos que permite modificar cada uno de ellos por separados o todos en su conjunto.
 
-```rs
+```rust
 #[derive(Serialize, Deserialize, Clone)]
 struct State {
   pub one: u32,
@@ -129,7 +129,7 @@ Téngase en cuenta de que la implementación de los *trait Serialize y Deseriali
 
 En siguiente lugar definimos la **función entrada del contrato**, la equivalente a la función **main**. Es importante que esta función tenga siempre el mismo nombre que la que aquí se especifica, pues se trata del identificador con la que la intentará ejecutar la máquina evaluadora, produciendo un error en caso de no encontrarla.
 
-```rs
+```rust
 #[no_mangle]
 pub unsafe fn main_function(state_ptr: i32, event_ptr: i32, is_owner: i32) -> u32 {
     sdk::execute_contract(state_ptr, event_ptr, is_owner, contract_logic)
@@ -144,7 +144,7 @@ La modificación de los valores de los punteros en esta sección del código no 
 
 Por último, especificamos la lógica de nuestro contrato, que puede estar definida por cuentras funciones deseemos. Preferiblemente se destacará una función principal, que será la que se ejecute como *callback* por parte de la función *execute_contract* del SDK. 
 
-```rs
+```rust
 fn contract_logic(
   context: &sdk::Context<State, StateEvent>,
   contract_result: &mut sdk::ContractResult<State>,
@@ -177,7 +177,7 @@ Esta función principal recibe los datos de entrada del contrato encapsulados en
 
 Al tratarse de código Rust, podemos crear una batería de tests unitarios en el propio código del contrato para comprobar su funcionamiento utilizando los recursos del propio lenguaje. También sería posible especificarlos en un fichero diferente. 
 
-```rs
+```rust
 #[test]
 fn contract_test() {
   let initial_state = State {

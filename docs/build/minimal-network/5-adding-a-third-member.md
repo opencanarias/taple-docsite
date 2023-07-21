@@ -14,7 +14,7 @@ To launch the docker:
 
 ```bash
 docker run -p 3002:3000 -p 50002:50000 \ 
--e TAPLE_SECRET_KEY=984af9a964bd6534418696814fa96244e7d719d51877e8e449514e941ff0c7d6 \ 
+-e TAPLE_ID_PRIVATE_KEY=984af9a964bd6534418696814fa96244e7d719d51877e8e449514e941ff0c7d6 \ 
 -e TAPLE_HTTP=true opencanarias/taple-client:0.2 \ 
 -e TAPLE_NETWORK_KNOWN_NODE=/ip4/{addr}/tcp/50000/p2p/12D3KooWLXexpg81PjdjnrhmHUxN7U5EtfXJgr9cahei1SJ9Ub3B \ 
 -e TAPLE_NETWORK_LISTEN_ADDR=/ip4/0.0.0.0/tcp/50000
@@ -142,27 +142,25 @@ In node 1 we will approve it but in node 2 we will reject it. As the quorum is M
 Node 1:
 
 ```json
-{"approvalType": "Accept"}
+{"state": "RespondedAccepted"}
 ```
 
 ```bash
 curl --silent --request PATCH 'http://localhost:3000/api/approval-requests/J8NvGJ6XzV3ThfWdDN4epwXDFTY9hB2NKcyGEPbVViO4' \
---header 'x-api-key: 1453' \
 --header 'Content-Type: application/json' \
---data '{"approvalType": "Accept"}'
+--data '{"state": "RespondedAccepted"}'
 ```
 
 Node 2:
 
 ```json
-{"approvalType": "Reject"}
+{"state": "RespondedRejected"}
 ```
 
 ```bash
 curl --silent --request PATCH 'http://localhost:3001/api/approval-requests/J8NvGJ6XzV3ThfWdDN4epwXDFTY9hB2NKcyGEPbVViO4' \
---header 'x-api-key: 1453' \
 --header 'Content-Type: application/json' \
---data '{"approvalType": "Reject"}'
+--data '{"state": "RespondedRejected"}'
 ```
 
 We verify that the state has not been modified by looking for our subjects, however, the sn of the subject will have increased by 1:
@@ -233,7 +231,6 @@ We can also search for a specific event with the event api: **/api/subjects/{id}
 
 ```bash
 curl --silent 'http://localhost:3000/api/subjects/Jz6RNP5F7wNoSeCH65MXYuNVInyuhLvjKb5IpRiH_J6M/events/4' \
---header 'X-API-KEY: 1234'
 ```
 
 ```json
