@@ -38,5 +38,6 @@ Once we have these two variables, we will be able to launch the node with the mi
 docker run -p 3000:3000 -p 50000:50000 \ 
 -e TAPLE_ID_PRIVATE_KEY=f78e9b42c3f265d0c5bf613f47bf4fb8fa3f18b3b38dd4e90ca7eed497e3394a \ 
 -e TAPLE_HTTP=true opencanarias/taple-client:0.2 \ 
--e TAPLE_NETWORK_LISTEN_ADDR=/ip4/0.0.0.0/tcp/50000
+-e TAPLE_NETWORK_LISTEN_ADDR=/ip4/0.0.0.0/tcp/50000 \
+opencanarias/taple-client:0.2
 ```
