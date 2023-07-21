@@ -40,7 +40,6 @@ The response we get when launching the event request is the id of the request it
 
 ```bash
 curl --silent 'http://127.0.0.1:3000/api/event-requests/Jr4kWJOgdIhdtUMTqyLbu676-k8-eVCd8VQ9ZmLWpSdg/state' \
---header 'X-API-KEY: 1234'
 ```
 
 Response:
@@ -184,7 +183,6 @@ The id of the json response is what we must use to approve it. At **/api/approva
 
 ```bash
 curl --silent --request PATCH 'http://localhost:3000/api/approval-requests/JYHOLieD0u6Q-GjURtjZ_JAXDgP6h87fMB9h2FiYk1OQ' \
---header 'x-api-key: 1453' \
 --header 'Content-Type: application/json' \
 --data '{"state": "RespondedAccepted"}'
 ```
