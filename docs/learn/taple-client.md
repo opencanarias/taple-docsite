@@ -1,19 +1,25 @@
 # TAPLE Client
 
-El Cliente de TAPLE es una aplicación gratuita y de código abierto que se ejecuta a través de la línea de comandos. Permite construir un nodo con el que se puede interactuar mediante su API REST.
+Internamente TAPLE-Client se estructura en los siguientes módulos:
 
-La estructura del cliente se representa de la siguiente manera:
+TAPLE Core is not a standalone application; it is a library that should be imported into another application called TAPLE Client. The latter is an open-source implementation for creating a Taple Node and represents the simplest way to work with our technology, providing all the necessary elements to build a node. Some of its functions include:
+
+* Using the TAPLE Core library.
+* Implementing a REST API to interact with the TAPLE network in an uncomplicated manner.
+* Allowing the configuration of various mechanisms: configuration files, startup parameters, and environment variables.
+
+Internally, TAPLE Client is structured into the following modules:
 
 ![taple-client](../img/taple-client.svg)
 
 ## TAPLE Core
 
-El núcleo de TAPLE es la tecnología central que se encarga de las comunicaciones de la red. Implementa la codificación y decodificación de la información, interpreta los mensajes recibidos y realiza otras funciones. Para obtener más información, consulte [este recurso](core-architecture.md).
+Reference library written in Rust that implements most of the TAPLE functionality. Implement the encoding and decoding of information, interprets received messages, and performs other functions. For more information, refer to [this resource](core-architecture.md).
 
 ## Database
 
-Este módulo se encarga de almacenar los datos recopilados a través de la red, permitiendo la persistencia de los datos entre las diferentes ejecuciones de TAPLE. Todos los datos se almacenan en una base de datos *Leveldb*. Por lo tanto, se recomienda encarecidamente realizar [copias de seguridad](client-usage#backups) para evitar la pérdida de datos.
+This module is responsible for storing the data collected through the network, enabling data persistence between different TAPLE executions. All data is stored in a [*Leveldb* database](https://github.com/google/leveldb).
 
 ## API REST
 
-La API REST es un método de interacción directa con los nodos de TAPLE. Permite realizar acciones como crear y consultar sujetos, ejecutar eventos, aprobar cambios de estado, entre otras. Para obtener más información, consulte [este recurso](../api-rest/create-event-request.api.mdx).
+The REST API is a direct interaction method with TAPLE Client. It allows performing actions such as creating and querying subjects, executing events, approving state changes, among others. For more information, refer to [this resource](../api-rest/create-event-request.api.mdx).

@@ -1,32 +1,35 @@
-<mxfile host="65bd71144e" modified="2023-07-17T12:05:15.829Z" agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Code/1.80.0 Chrome/108.0.5359.215 Electron/22.3.14 Safari/537.36" etag="zSk1Y0nJskTeNq-64QBp" version="21.6.2" type="embed">
+<mxfile host="65bd71144e" modified="2023-07-21T13:47:07.630Z" agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Code/1.80.1 Chrome/108.0.5359.215 Electron/22.3.14 Safari/537.36" etag="2AkoLolZFidvMwnU4HSr" version="21.6.5" type="embed">
     <diagram id="2izP-0pvtHL-6ZI8SSJ8" name="Page-1">
-        <mxGraphModel dx="1496" dy="940" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+        <mxGraphModel dx="44" dy="24" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
             <root>
                 <mxCell id="0"/>
                 <mxCell id="1" parent="0"/>
-                <mxCell id="33" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FF9933;strokeColor=none;" parent="1" vertex="1">
-                    <mxGeometry x="69" y="60" width="681" height="340" as="geometry"/>
+                <mxCell id="77" value="" style="verticalLabelPosition=bottom;verticalAlign=top;html=1;shape=mxgraph.basic.corner_round_rect;dx=14;whiteSpace=wrap;fillColor=#EBBC8D;strokeColor=#FFFFFF;strokeWidth=5;" vertex="1" parent="1">
+                    <mxGeometry x="150" y="140" width="260" height="160" as="geometry"/>
                 </mxCell>
-                <mxCell id="44" value="&lt;font style=&quot;font-size: 20px;&quot; color=&quot;#ffffff&quot;&gt;&lt;b&gt;TAPLE CLIENT&lt;/b&gt;&lt;/font&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
-                    <mxGeometry x="311.5" y="70" width="196" height="20" as="geometry"/>
+                <mxCell id="78" value="" style="verticalLabelPosition=bottom;verticalAlign=top;html=1;shape=mxgraph.basic.corner_round_rect;dx=14;whiteSpace=wrap;fillColor=#FF9D00;strokeColor=#FFFFFF;rotation=-180;strokeWidth=5;" vertex="1" parent="1">
+                    <mxGeometry x="410" y="300" width="260" height="160" as="geometry"/>
                 </mxCell>
-                <mxCell id="52" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFB570;strokeColor=none;" vertex="1" parent="1">
-                    <mxGeometry x="430" y="120" width="300" height="120" as="geometry"/>
+                <mxCell id="79" value="" style="verticalLabelPosition=bottom;verticalAlign=top;html=1;shape=mxgraph.basic.corner_round_rect;dx=14;whiteSpace=wrap;fillColor=#FF9D00;strokeColor=#FFFFFF;rotation=-180;flipH=1;strokeWidth=5;" vertex="1" parent="1">
+                    <mxGeometry x="150" y="300" width="260" height="160" as="geometry"/>
                 </mxCell>
-                <mxCell id="53" value="&lt;font style=&quot;font-size: 18px;&quot;&gt;&lt;b&gt;API REST&lt;/b&gt;&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFD966;strokeColor=none;" vertex="1" parent="1">
-                    <mxGeometry x="440" y="130" width="280" height="100" as="geometry"/>
+                <mxCell id="80" value="" style="verticalLabelPosition=bottom;verticalAlign=top;html=1;shape=mxgraph.basic.corner_round_rect;dx=14;whiteSpace=wrap;fillColor=#FF8500;strokeColor=#FFFFFF;rotation=0;flipH=1;strokeWidth=5;" vertex="1" parent="1">
+                    <mxGeometry x="410" y="140" width="260" height="160" as="geometry"/>
                 </mxCell>
-                <mxCell id="54" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFB570;strokeColor=none;" vertex="1" parent="1">
-                    <mxGeometry x="90" y="260" width="640" height="120" as="geometry"/>
+                <mxCell id="81" value="&lt;font size=&quot;1&quot; color=&quot;#ffffff&quot;&gt;&lt;b style=&quot;font-size: 21px;&quot;&gt;TAPLE CLIENT&lt;/b&gt;&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;strokeColor=#FFFFFF;strokeWidth=5;fillColor=#999999;fontColor=#333333;" vertex="1" parent="1">
+                    <mxGeometry x="320" y="250" width="180" height="90" as="geometry"/>
                 </mxCell>
-                <mxCell id="56" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFB570;strokeColor=none;" vertex="1" parent="1">
-                    <mxGeometry x="90" y="120" width="300" height="120" as="geometry"/>
+                <mxCell id="83" value="&lt;font style=&quot;font-size: 21px;&quot;&gt;API REST&lt;/font&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;strokeWidth=5;fontSize=21;fontColor=#FFFFFF;fontStyle=1" vertex="1" parent="1">
+                    <mxGeometry x="475" y="204.5" width="130" height="30" as="geometry"/>
                 </mxCell>
-                <mxCell id="57" value="&lt;font style=&quot;font-size: 18px;&quot;&gt;&lt;b&gt;DATABASE&lt;/b&gt;&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFD966;strokeColor=none;" vertex="1" parent="1">
-                    <mxGeometry x="100" y="130" width="280" height="100" as="geometry"/>
+                <mxCell id="84" value="&lt;font style=&quot;font-size: 21px;&quot;&gt;DATABASE&lt;/font&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;strokeWidth=5;fontSize=21;fontColor=#FFFFFF;fontStyle=1" vertex="1" parent="1">
+                    <mxGeometry x="222" y="204.5" width="116" height="31" as="geometry"/>
                 </mxCell>
-                <mxCell id="58" value="&lt;font style=&quot;font-size: 18px;&quot;&gt;&lt;b&gt;TAPLE CORE&lt;/b&gt;&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFD966;strokeColor=none;" vertex="1" parent="1">
-                    <mxGeometry x="100" y="270" width="620" height="100" as="geometry"/>
+                <mxCell id="87" value="" style="rounded=0;whiteSpace=wrap;html=1;strokeColor=none;fillColor=#FF9D00;" vertex="1" parent="1">
+                    <mxGeometry x="390" y="343" width="40" height="114.5" as="geometry"/>
+                </mxCell>
+                <mxCell id="82" value="TAPLE CORE" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;strokeWidth=5;fontSize=21;fontColor=#FFFFFF;fontStyle=1" vertex="1" parent="1">
+                    <mxGeometry x="330" y="370.25" width="160" height="60" as="geometry"/>
                 </mxCell>
             </root>
         </mxGraphModel>
