@@ -68,6 +68,7 @@ actor Owner as Owner
 actor Validator1 as Validator 1
 actor Validator2 as Validator 2
 actor Validator3 as Validator 3
+actor Witness as Witness
 
 Owner->>Validator1: Send ValidationEvent
 Owner->>Validator2: Send ValidationEvent
