@@ -209,6 +209,8 @@
 <a href="#209" id="209">209</a>
 <a href="#210" id="210">210</a>
 <a href="#211" id="211">211</a>
+<a href="#212" id="212">212</a>
+<a href="#213" id="213">213</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">super</span>::Error;
 <span class="kw">use crate</span>::{test_database_manager_trait, DatabaseCollection, DatabaseManager};
 <span class="kw">use </span>std::{
@@ -247,7 +249,8 @@
     }
 }
 
-<span class="kw">pub struct </span>MemoryManager {
+<span class="doccomment">/// In-memory database implementation for TAPLE.
+</span><span class="kw">pub struct </span>MemoryManager {
     data: RwLock&lt;HashMap&lt;String, Arc&lt;DataStore&gt;&gt;&gt;,
 }
 
@@ -280,7 +283,8 @@
     }
 }
 
-<span class="kw">pub struct </span>MemoryCollection {
+<span class="doccomment">/// Collection for in-memory database implementation. It must be created through [MemoryManager].
+</span><span class="kw">pub struct </span>MemoryCollection {
     data: Arc&lt;DataStore&gt;,
 }
 

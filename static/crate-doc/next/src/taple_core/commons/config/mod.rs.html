@@ -263,6 +263,13 @@
 <a href="#263" id="263">263</a>
 <a href="#264" id="264">264</a>
 <a href="#265" id="265">265</a>
+<a href="#266" id="266">266</a>
+<a href="#267" id="267">267</a>
+<a href="#268" id="268">268</a>
+<a href="#269" id="269">269</a>
+<a href="#270" id="270">270</a>
+<a href="#271" id="271">271</a>
+<a href="#272" id="272">272</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>std::collections::HashMap;
 
 <span class="kw">use super</span>::{
@@ -294,16 +301,20 @@
 
 <span class="kw">const </span>DEFAULT_PORT: u32 = <span class="number">40040</span>;
 
-<span class="attr">#[derive(Debug, Deserialize, Clone)]
+<span class="doccomment">/// Represents a valid listening address for TAPLE. Internally, they are constituted as a MultiAddr.
+</span><span class="attr">#[derive(Debug, Deserialize, Clone)]
 </span><span class="kw">pub enum </span>ListenAddr {
-    Memory {
+    <span class="doccomment">/// Represents in-memory addressing.
+    </span>Memory {
         port: <span class="prelude-ty">Option</span>&lt;u32&gt;,
     },
-    IP4 {
+    <span class="doccomment">/// Represents an ip4 address
+    </span>IP4 {
         addr: <span class="prelude-ty">Option</span>&lt;std::net::Ipv4Addr&gt;,
         port: <span class="prelude-ty">Option</span>&lt;u32&gt;,
     },
-    IP6 {
+    <span class="doccomment">/// Represents an ip6 address
+    </span>IP6 {
         addr: <span class="prelude-ty">Option</span>&lt;std::net::Ipv6Addr&gt;,
         port: <span class="prelude-ty">Option</span>&lt;u32&gt;,
     },
@@ -319,7 +330,8 @@
 }
 
 <span class="kw">impl </span>ListenAddr {
-    <span class="kw">pub fn </span>get_port(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;u32&gt; {
+    <span class="doccomment">/// Allows to obtain the port of the listening address
+    </span><span class="kw">pub fn </span>get_port(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;u32&gt; {
         <span class="kw">match </span><span class="self">self </span>{
             <span class="self">Self</span>::IP4 { port, .. } =&gt; port.clone(),
             <span class="self">Self</span>::IP6 { port, .. } =&gt; port.clone(),
@@ -327,7 +339,8 @@
         }
     }
 
-    <span class="kw">pub fn </span>increment_port(<span class="kw-2">&amp;mut </span><span class="self">self</span>, offset: u32) {
+    <span class="doccomment">/// Allows to increment the port of the listening address by a specified value.
+    </span><span class="kw">pub fn </span>increment_port(<span class="kw-2">&amp;mut </span><span class="self">self</span>, offset: u32) {
         <span class="kw">match </span><span class="self">self </span>{
             <span class="self">Self</span>::IP4 { port, .. } =&gt; port.as_mut().map(|p| <span class="kw-2">*</span>p += offset),
             <span class="self">Self</span>::IP6 { port, .. } =&gt; port.as_mut().map(|p| <span class="kw-2">*</span>p += offset),
@@ -335,7 +348,8 @@
         };
     }
 
-    <span class="kw">pub fn </span>to_string(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;String, ListenAddrErrors&gt; {
+    <span class="doccomment">/// Allows to obtain, as a string, the listening address in MultiAddr format.
+    </span><span class="kw">pub fn </span>to_string(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;String, ListenAddrErrors&gt; {
         <span class="kw">let </span>result = <span class="kw">match </span><span class="self">self </span>{
             ListenAddr::Memory { port } =&gt; {
                 <span class="kw">let </span><span class="kw-2">mut </span>result = <span class="macro">format!</span>(<span class="string">&quot;/memory&quot;</span>);

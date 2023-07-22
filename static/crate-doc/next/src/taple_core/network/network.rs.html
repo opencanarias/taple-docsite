@@ -833,7 +833,6 @@
 <a href="#833" id="833">833</a>
 <a href="#834" id="834">834</a>
 <a href="#835" id="835">835</a>
-<a href="#836" id="836">836</a>
 </pre></div><pre class="rust"><code><span class="kw">use super</span>::{
     error::NetworkErrors,
     reqres::{codec::TapleCodec, create_request_response_behaviour},
@@ -1480,7 +1479,6 @@
                 }
             }
             Command::SendMessage { receptor, message } =&gt; {
-                <span class="macro">log::info!</span>(<span class="string">&quot;Sending message in NETWORK&quot;</span>);
                 <span class="comment">// Check if we are the receptor
                 </span><span class="kw">if </span>receptor == <span class="self">self</span>.node_public_key {
                     <span class="comment">// It is not needed to send the message

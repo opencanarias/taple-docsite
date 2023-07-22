@@ -93,29 +93,6 @@
 <a href="#93" id="93">93</a>
 <a href="#94" id="94">94</a>
 <a href="#95" id="95">95</a>
-<a href="#96" id="96">96</a>
-<a href="#97" id="97">97</a>
-<a href="#98" id="98">98</a>
-<a href="#99" id="99">99</a>
-<a href="#100" id="100">100</a>
-<a href="#101" id="101">101</a>
-<a href="#102" id="102">102</a>
-<a href="#103" id="103">103</a>
-<a href="#104" id="104">104</a>
-<a href="#105" id="105">105</a>
-<a href="#106" id="106">106</a>
-<a href="#107" id="107">107</a>
-<a href="#108" id="108">108</a>
-<a href="#109" id="109">109</a>
-<a href="#110" id="110">110</a>
-<a href="#111" id="111">111</a>
-<a href="#112" id="112">112</a>
-<a href="#113" id="113">113</a>
-<a href="#114" id="114">114</a>
-<a href="#115" id="115">115</a>
-<a href="#116" id="116">116</a>
-<a href="#117" id="117">117</a>
-<a href="#118" id="118">118</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::governance::error::RequestError;
 <span class="comment">// use crate::ledger::errors::LedgerManagerError;
 </span><span class="kw">use </span>thiserror::Error;
@@ -211,27 +188,4 @@
     <span class="attr">#[error(<span class="string">&quot;Governance subjects cannot refer to other governance and their schema_id must be \&quot;governance\&quot;.&quot;</span>)]
     </span>CantCreateGovernance,
 }
-
-<span class="comment">// #[derive(Error, Debug, Clone)]
-// pub enum RequestManagerError {
-//     #[error(&quot;Input Channel closed&quot;)]
-//     ChannelClosed,
-//     #[error(&quot;Channel with command Manager closed&quot;)]
-//     ComunicationWithCommandManagerClosed,
-//     #[error(&quot;Sign verification failed&quot;)]
-//     SignVerificationFailed,
-//     #[error(&quot;Event request signature was not possible&quot;)]
-//     SignError,
-//     #[error(&quot;Request Error&quot;)]
-//     RequestError(RequestError),
-//     #[error(&quot;Command Manager Error&quot;)]
-//     CommandManagerError {
-//         #[from]
-//         source: ResponseError,
-//     },
-//     #[error(&quot;Database corrupted {0}&quot;)]
-//     DatabaseCorrupted(String),
-//     #[error(&quot;A database error has ocurred at request manager&quot;)]
-//     DatabaseError(String)
-// }
-</span></code></pre></div></section></main></body></html>
+</code></pre></div></section></main></body></html>

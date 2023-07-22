@@ -123,24 +123,24 @@
 
 <span class="kw">use </span><span class="kw">super</span>::error::AuthorizedSubjectsError;
 
-<span class="doccomment">/// Estructura que maneja los sujetos preautorizados en un sistema y se comunica con otros componentes del sistema a través de un canal de mensajes.
+<span class="doccomment">/// Structure that manages the pre-authorized subjects in a system and communicates with other components of the system through a message channel.
 </span><span class="kw">pub struct </span>AuthorizedSubjects&lt;C: DatabaseCollection&gt; {
-    <span class="doccomment">/// Objeto que maneja la conexión a la base de datos.
+    <span class="doccomment">/// Object that handles the connection to the database.
     </span>database: DB&lt;C&gt;,
-    <span class="doccomment">/// Canal de mensajes que se utiliza para comunicarse con otros componentes del sistema.
+    <span class="doccomment">/// Message channel used to communicate with other system components.
     </span>message_channel: SenderEnd&lt;MessageTaskCommand&lt;TapleMessages&gt;, ()&gt;,
-    <span class="doccomment">/// Identificador único para el componente que utiliza esta estructura.
+    <span class="doccomment">/// Unique identifier for the component using this structure.
     </span>our_id: KeyIdentifier,
 }
 
 <span class="kw">impl</span>&lt;C: DatabaseCollection&gt; AuthorizedSubjects&lt;C&gt; {
-    <span class="doccomment">/// Crea una nueva instancia de la estructura `AuthorizedSubjects`.
+    <span class="doccomment">/// Creates a new instance of the `AuthorizedSubjects` structure.
     ///
     /// # Arguments
     ///
-    /// * `database` - Conexión a la base de datos.
-    /// * `message_channel` - Canal de mensajes.
-    /// * `our_id` - Identificador único.
+    /// * `database` - Database connection.
+    /// * `message_channel` - Message channel.
+    /// * `our_id` - Unique identifier.
     </span><span class="kw">pub fn </span>new(
         database: DB&lt;C&gt;,
         message_channel: SenderEnd&lt;MessageTaskCommand&lt;TapleMessages&gt;, ()&gt;,
@@ -153,13 +153,13 @@
         }
     }
 
-    <span class="doccomment">/// Obtiene todos los sujetos preautorizados y envía un mensaje a los proveedores asociados a través del canal de mensajes.
+    <span class="doccomment">/// Obtains all pre-authorized subjects and sends a message to the associated providers through the message channel.
     ///
     /// # Errors
     ///
-    /// Devuelve un error si no se pueden obtener los sujetos preautorizados o si no se puede enviar un mensaje a través del canal de mensajes.
+    /// Returns an error if the preauthorized subjects cannot be obtained or if a message cannot be sent through the message channel.
     </span><span class="kw">pub async fn </span>ask_for_all(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;(), AuthorizedSubjectsError&gt; {
-        <span class="comment">// Obtenemos todos los sujetos preautorizados de la base de datos.
+        <span class="comment">// We obtain all pre-authorized subjects from the database.
         </span><span class="kw">let </span>preauthorized_subjects = <span class="kw">match </span><span class="self">self
             </span>.database
             .get_allowed_subjects_and_providers(<span class="prelude-val">None</span>, <span class="number">10000</span>)
@@ -170,7 +170,7 @@
             },
         };
 
-        <span class="comment">// Para cada sujeto preautorizado, enviamos un mensaje a los proveedores asociados a través del canal de mensajes.
+        <span class="comment">// For each pre-authorized subject, we send a message to the associated providers through the message channel.
         </span><span class="kw">for </span>(subject_id, providers) <span class="kw">in </span>preauthorized_subjects.into_iter() {
             <span class="kw">if </span>!providers.is_empty() {
                 <span class="self">self</span>.message_channel
@@ -189,16 +189,16 @@
         <span class="prelude-val">Ok</span>(())
     }
 
-    <span class="doccomment">/// Agrega un nuevo sujeto preautorizado y envía un mensaje a los proveedores asociados a través del canal de mensajes.
+    <span class="doccomment">/// Add a new pre-authorized subject and send a message to the associated suppliers through the message channel.
     ///
     /// # Arguments
     ///
-    /// * `subject_id` - Identificador del nuevo sujeto preautorizado.
-    /// * `providers` - Conjunto de identificadores de proveedores asociados.
+    /// * `subject_id` - Identifier of the new pre-authorized subject.
+    /// * `providers` - Set of associated provider identifiers.
     ///
     /// # Errors
     ///
-    /// Devuelve un error si no se puede enviar un mensaje a través del canal de mensajes.
+    /// Returns an error if a message cannot be sent through the message channel.
     </span><span class="kw">pub async fn </span>new_authorized_subject(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         subject_id: DigestIdentifier,

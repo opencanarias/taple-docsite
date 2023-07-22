@@ -233,6 +233,8 @@
 <a href="#233" id="233">233</a>
 <a href="#234" id="234">234</a>
 <a href="#235" id="235">235</a>
+<a href="#236" id="236">236</a>
+<a href="#237" id="237">237</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>ed25519_dalek::ed25519;
 <span class="kw">use </span>std::convert::Infallible;
 <span class="kw">use </span>thiserror::Error;
@@ -449,7 +451,9 @@
     },
 }
 
-<span class="attr">#[derive(Error, Debug, Clone)]
+
+<span class="doccomment">/// Errors that can occur during the generation of a [ListenAddr].
+</span><span class="attr">#[derive(Error, Debug, Clone)]
 </span><span class="kw">pub enum </span>ListenAddrErrors {
     <span class="attr">#[error(<span class="string">&quot;Invalid ListenAddr provided. Neither a valid IP or memory multiaddress&quot;</span>)]
     </span>InvalidListenAddr,

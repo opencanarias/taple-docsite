@@ -346,16 +346,6 @@
 <a href="#346" id="346">346</a>
 <a href="#347" id="347">347</a>
 <a href="#348" id="348">348</a>
-<a href="#349" id="349">349</a>
-<a href="#350" id="350">350</a>
-<a href="#351" id="351">351</a>
-<a href="#352" id="352">352</a>
-<a href="#353" id="353">353</a>
-<a href="#354" id="354">354</a>
-<a href="#355" id="355">355</a>
-<a href="#356" id="356">356</a>
-<a href="#357" id="357">357</a>
-<a href="#358" id="358">358</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>async_trait::async_trait;
 
 <span class="kw">use crate</span>::{
@@ -488,8 +478,7 @@
                 (<span class="prelude-val">None</span>, data)
             }
         };
-        <span class="comment">// log::error!(&quot;MENSAJE RECIBIDO EN EL LEDGER: {:?}&quot;, data);
-        </span><span class="kw">let </span>response = {
+        <span class="kw">let </span>response = {
             <span class="kw">match </span>data {
                 LedgerCommand::GenerateKey(derivator) =&gt; {
                     <span class="kw">let </span>response = <span class="self">self</span>.inner_ledger.generate_key(derivator).<span class="kw">await</span>;
@@ -522,7 +511,6 @@
                         </span>.inner_ledger
                         .event_validated(event, signatures, validation_proof)
                         .<span class="kw">await</span>;
-                    <span class="macro">log::info!</span>(<span class="string">&quot;RESPUESTA DE OWN EVENT {:?}&quot;</span>, response);
                     <span class="kw">match </span>response {
                         <span class="prelude-val">Err</span>(error) =&gt; <span class="kw">match </span>error {
                             LedgerError::ChannelClosed =&gt; {
@@ -538,7 +526,7 @@
                                 <span class="kw">return </span><span class="prelude-val">Err</span>(LedgerError::ChannelClosed);
                             }
                             <span class="kw">_ </span>=&gt; {
-                                <span class="macro">log::error!</span>(<span class="string">&quot;ERROR EN LEDGER {}&quot;</span>, error);
+                                <span class="macro">log::error!</span>(<span class="string">&quot;ERROR IN LEDGER {}&quot;</span>, error);
                             }
                         },
                         <span class="kw">_ </span>=&gt; {}
@@ -554,7 +542,6 @@
                         </span>.inner_ledger
                         .genesis(event, signatures, validation_proof)
                         .<span class="kw">await</span>;
-                    <span class="macro">log::info!</span>(<span class="string">&quot;RESPUESTA DE GENESIS {:?}&quot;</span>, response);
                     <span class="kw">match </span>response {
                         <span class="prelude-val">Err</span>(error) =&gt; <span class="kw">match </span>error {
                             LedgerError::ChannelClosed =&gt; {
@@ -585,7 +572,6 @@
                         </span>.inner_ledger
                         .external_event(event, signatures, sender, validation_proof)
                         .<span class="kw">await</span>;
-                    <span class="macro">log::info!</span>(<span class="string">&quot;External Event Response: {:?}&quot;</span>, response);
                     <span class="kw">match </span>response {
                         <span class="prelude-val">Err</span>(error) =&gt; <span class="kw">match </span>error {
                             LedgerError::ChannelClosed =&gt; {
@@ -608,7 +594,6 @@
                 }
                 LedgerCommand::ExternalIntermediateEvent { event } =&gt; {
                     <span class="kw">let </span>response = <span class="self">self</span>.inner_ledger.external_intermediate_event(event).<span class="kw">await</span>;
-                    <span class="macro">log::info!</span>(<span class="string">&quot;RESPUESTA DE EXTERNAL INTERMEDIATE EVENT {:?}&quot;</span>, response);
                     <span class="kw">match </span>response {
                         <span class="prelude-val">Err</span>(error) =&gt; <span class="kw">match </span>error {
                             LedgerError::ChannelClosed =&gt; {
@@ -650,7 +635,6 @@
                         },
                         <span class="prelude-val">Ok</span>(event) =&gt; <span class="prelude-val">Ok</span>(event),
                     };
-                    <span class="macro">log::info!</span>(<span class="string">&quot;RESPUESTA DE GET EVENT {:?}&quot;</span>, response);
                     LedgerResponse::GetEvent(response)
                 }
                 LedgerCommand::GetLCE {
@@ -673,7 +657,6 @@
                         },
                         <span class="prelude-val">Ok</span>(event) =&gt; <span class="prelude-val">Ok</span>(event),
                     };
-                    <span class="macro">log::info!</span>(<span class="string">&quot;RESPUESTA DE GET LCE {:?}&quot;</span>, response);
                     LedgerResponse::GetLCE(response)
                 }
                 LedgerCommand::GetNextGov {
@@ -688,7 +671,6 @@
                     <span class="kw">let </span>response = <span class="kw">match </span>response {
                         <span class="prelude-val">Err</span>(error) =&gt; <span class="kw">match </span>error.clone() {
                             LedgerError::ChannelClosed =&gt; {
-                                <span class="macro">log::error!</span>(<span class="string">&quot;Channel Closed&quot;</span>);
                                 <span class="self">self</span>.shutdown_sender.send(()).expect(<span class="string">&quot;Channel Closed&quot;</span>);
                                 <span class="kw">return </span><span class="prelude-val">Err</span>(LedgerError::ChannelClosed);
                             }
@@ -699,11 +681,9 @@
                             <span class="kw">_ </span>=&gt; <span class="prelude-val">Err</span>(error),
                         },
                         <span class="prelude-val">Ok</span>(event) =&gt; {
-                            <span class="macro">log::warn!</span>(<span class="string">&quot;LLEGA EVENTO CON SN {}&quot;</span>, event.<span class="number">0</span>.content.sn);
                             <span class="prelude-val">Ok</span>(event)
                         }
                     };
-                    <span class="macro">log::info!</span>(<span class="string">&quot;RESPUESTA DE GNG {:?}&quot;</span>, response);
                     LedgerResponse::GetNextGov(response)
                 }
             }

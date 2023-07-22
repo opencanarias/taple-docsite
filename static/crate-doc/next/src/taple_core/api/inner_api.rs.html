@@ -392,6 +392,11 @@
 <a href="#392" id="392">392</a>
 <a href="#393" id="393">393</a>
 <a href="#394" id="394">394</a>
+<a href="#395" id="395">395</a>
+<a href="#396" id="396">396</a>
+<a href="#397" id="397">397</a>
+<a href="#398" id="398">398</a>
+<a href="#399" id="399">399</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">super</span>::error::APIInternalError;
 <span class="kw">use super</span>::{ApiResponses, GetAllowedSubjects};
 <span class="attr">#[cfg(feature = <span class="string">&quot;aproval&quot;</span>)]
@@ -488,6 +493,11 @@
                     <span class="string">&quot;Request {} not found&quot;</span>,
                     id_str
                 )))))
+            }
+            <span class="prelude-val">Err</span>(ApprovalErrorResponse::RequestAlreadyResponded) =&gt; {
+                <span class="kw">return </span><span class="prelude-val">Ok</span>(ApiResponses::VoteResolve(<span class="prelude-val">Err</span>(ApiError::Conflict(
+                    <span class="macro">format!</span>(<span class="string">&quot;Request already responded&quot;</span>),
+                ))))
             }
             <span class="prelude-val">Err</span>(ApprovalErrorResponse::APIChannelNotAvailable) =&gt; {
                 <span class="kw">return </span><span class="prelude-val">Err</span>(APIInternalError::ChannelError)

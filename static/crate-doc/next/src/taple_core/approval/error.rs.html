@@ -98,6 +98,8 @@
 <a href="#98" id="98">98</a>
 <a href="#99" id="99">99</a>
 <a href="#100" id="100">100</a>
+<a href="#101" id="101">101</a>
+<a href="#102" id="102">102</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>thiserror::Error;
 
 <span class="kw">use crate</span>::{DigestIdentifier, KeyIdentifier};
@@ -197,5 +199,7 @@
     </span>RequestNotFound,
     <span class="attr">#[error(<span class="string">&quot;Request is not pending&quot;</span>)]
     </span>NotPendingRequest,
+    <span class="attr">#[error(<span class="string">&quot;Request already Responded&quot;</span>)]
+    </span>RequestAlreadyResponded,
 }
 </code></pre></div></section></main></body></html>

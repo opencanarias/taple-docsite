@@ -136,6 +136,8 @@
 <a href="#136" id="136">136</a>
 <a href="#137" id="137">137</a>
 <a href="#138" id="138">138</a>
+<a href="#139" id="139">139</a>
+<a href="#140" id="140">140</a>
 </pre></div><pre class="rust"><code><span class="doccomment">//! Contains the data structures related to event  to send to approvers, or to validators if approval is not required.
 </span><span class="kw">use </span>std::hash::Hasher;
 
@@ -254,8 +256,10 @@
 </span><span class="kw">pub enum </span>ApprovalState {
     <span class="doccomment">/// The approval entity is pending a response.
     </span>Pending,
-    <span class="doccomment">/// The approval entity has received a response.
-    </span>Responded,
+    <span class="doccomment">/// Request for approval which is in responded status and accepted
+    </span>RespondedAccepted,
+    <span class="doccomment">/// Request for approval which is in responded status and rejected
+    </span>RespondedRejected,
     <span class="doccomment">/// The approval entity is obsolete.
     </span>Obsolete,
 }

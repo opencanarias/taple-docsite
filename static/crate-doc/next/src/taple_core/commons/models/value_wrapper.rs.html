@@ -171,7 +171,7 @@
 
 <span class="kw">use </span><span class="kw">super</span>::HashId;
 
-<span class="doccomment">/// A struct representing a wrapper around a JSON value.
+<span class="doccomment">/// Wrapper of serde_json::Value implementing serialization and deserialization with Borsh.
 </span><span class="attr">#[derive(Debug, Clone, Serialize, Deserialize, Eq, PartialEq)]
 </span><span class="kw">pub struct </span>ValueWrapper(<span class="kw">pub </span>Value);
 

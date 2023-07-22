@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"struct":["EventAPI","EventManager"],"trait":["EventAPIInterface"]};

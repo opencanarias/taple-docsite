@@ -304,7 +304,7 @@
 }
 
 <span class="kw">impl </span>Event {
-    <span class="kw">pub fn </span>get_approval_hash(
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>get_approval_hash(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         gov_id: DigestIdentifier,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;DigestIdentifier, SubjectError&gt; {

@@ -118,6 +118,18 @@
 <a href="#118" id="118">118</a>
 <a href="#119" id="119">119</a>
 <a href="#120" id="120">120</a>
+<a href="#121" id="121">121</a>
+<a href="#122" id="122">122</a>
+<a href="#123" id="123">123</a>
+<a href="#124" id="124">124</a>
+<a href="#125" id="125">125</a>
+<a href="#126" id="126">126</a>
+<a href="#127" id="127">127</a>
+<a href="#128" id="128">128</a>
+<a href="#129" id="129">129</a>
+<a href="#130" id="130">130</a>
+<a href="#131" id="131">131</a>
+<a href="#132" id="132">132</a>
 </pre></div><pre class="rust"><code><span class="doccomment">//! Define the data structures related to signatures
 </span><span class="kw">use crate</span>::{
     commons::errors::SubjectError,
@@ -164,13 +176,21 @@
     Hash,
 )]
 </span><span class="kw">pub struct </span>Signature {
-    <span class="kw">pub </span>signer: KeyIdentifier,
-    <span class="kw">pub </span>timestamp: TimeStamp,
-    <span class="kw">pub </span>value: SignatureIdentifier,
+    <span class="doccomment">/// Signer identifier
+    </span><span class="kw">pub </span>signer: KeyIdentifier,
+    <span class="doccomment">/// Timestamp of the signature
+    </span><span class="kw">pub </span>timestamp: TimeStamp,
+    <span class="doccomment">/// The signature itself
+    </span><span class="kw">pub </span>value: SignatureIdentifier,
 }
 
 <span class="kw">impl </span>Signature {
-    <span class="kw">pub fn </span>new&lt;T: HashId&gt;(
+    <span class="doccomment">/// It allows the creation of a new signature
+    /// # Arguments
+    /// - content: The content to sign
+    /// - signer: Identifier of the signer
+    /// - keys: The [KeyPair] to use to generate the signature
+    </span><span class="kw">pub fn </span>new&lt;T: HashId&gt;(
         content: <span class="kw-2">&amp;</span>T,
         signer: KeyIdentifier,
         keys: <span class="kw-2">&amp;</span>KeyPair,
@@ -190,7 +210,8 @@
             value: SignatureIdentifier::new(signer.to_signature_derivator(), <span class="kw-2">&amp;</span>signature),
         })
     }
-    <span class="kw">pub fn </span>verify&lt;T: HashId&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, content: <span class="kw-2">&amp;</span>T) -&gt; <span class="prelude-ty">Result</span>&lt;(), SubjectError&gt; {
+    <span class="doccomment">/// It allow verify the signature. It checks if the content and the signer are correct
+    </span><span class="kw">pub fn </span>verify&lt;T: HashId&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, content: <span class="kw-2">&amp;</span>T) -&gt; <span class="prelude-ty">Result</span>&lt;(), SubjectError&gt; {
         <span class="kw">let </span>content_hash = content.hash_id()<span class="question-mark">?</span>;
         <span class="kw">let </span>signature_hash =
             DigestIdentifier::from_serializable_borsh((<span class="kw-2">&amp;</span>content_hash, <span class="kw-2">&amp;</span><span class="self">self</span>.timestamp)).map_err(
@@ -205,7 +226,7 @@
 <span class="attr">#[derive(
     Debug, Clone, Serialize, Deserialize, Eq, BorshSerialize, BorshDeserialize, PartialOrd,
 )]
-</span><span class="kw">pub struct </span>UniqueSignature {
+</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct </span>UniqueSignature {
     <span class="kw">pub </span>signature: Signature,
 }
 
@@ -221,7 +242,8 @@
     }
 }
 
-<span class="attr">#[derive(
+<span class="doccomment">/// Represents any signed data entity
+</span><span class="attr">#[derive(
     Debug,
     Clone,
     Serialize,
@@ -235,7 +257,9 @@
 )]
 </span><span class="kw">pub struct </span>Signed&lt;T: BorshSerialize + BorshDeserialize + Clone&gt; {
     <span class="attr">#[serde(flatten)]
+    </span><span class="doccomment">/// The data that is signed
     </span><span class="kw">pub </span>content: T,
-    <span class="kw">pub </span>signature: Signature,
+    <span class="doccomment">/// The signature accompanying the data
+    </span><span class="kw">pub </span>signature: Signature,
 }
 </code></pre></div></section></main></body></html>

@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"mod":["derive","error"],"struct":["DigestIdentifier","KeyIdentifier","SignatureIdentifier"],"trait":["Derivable"]};
+window.SIDEBAR_ITEMS = {"mod":["derive"],"struct":["DigestIdentifier","KeyIdentifier","SignatureIdentifier"],"trait":["Derivable"]};

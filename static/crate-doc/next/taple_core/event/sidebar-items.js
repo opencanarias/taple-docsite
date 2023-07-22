@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"enum":["EventCommand","EventResponse"],"mod":["errors","event_completer","manager"]};
