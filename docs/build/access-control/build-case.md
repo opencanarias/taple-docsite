@@ -135,7 +135,7 @@ El contrato inteligente lo conforman tres métodos:
     <details>
       <summary>RemoveDriver method</summary>
 
-    ```rs
+    ```rust
         CarEvent::RemoveDriver {} => match lock.status {
             StatesCar::FREE => {}
             StatesCar::RENTED => {
@@ -153,7 +153,7 @@ El contrato inteligente lo conforman tres métodos:
     <details>
       <summary>AssingDriver method</summary>
 
-    ```rs
+    ```rust
         CarEvent::AssignDriver { id } => match lock.status {
             StatesCar::FREE => {
                 lock.status = StatesCar::RENTED;
@@ -171,7 +171,7 @@ El contrato inteligente lo conforman tres métodos:
     <details>
       <summary>OpenDoor method</summary>
 
-    ```rs
+    ```rust
         CarEvent::OpenDoor { id } => match lock.status {
             StatesCar::FREE => {
                 contract_result.approval_required = true;
