@@ -217,6 +217,11 @@ module.exports = {
               label: 'Tools',
               id: 'learn/client-tools',
             },
+            {
+              type: 'doc',
+              label: 'NAT Resolve',
+              id: 'learn/nat-resolve',
+            },
           ],
         },
       ]
