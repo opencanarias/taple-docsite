@@ -245,10 +245,10 @@ Ahora, debemos incluir en nuestra gobernanza al miembro que la ha creado, que en
         --data '{
             "request": {
                 "Fact": {
-                  "subject_id": "{{GOVERNANCE-ID}}",
+                    "subject_id": "{{GOVERNANCE-ID}}",
                     "payload": {
                         "Patch": {
-                              "data": [
+                            "data": [
                                 {
                                     "op": "add",
                                     "path": "/members/0",
@@ -361,8 +361,8 @@ A continuación procedemos a incluir como miembro de la gobernanza a la compañ�
                                     "op": "add",
                                     "path": "/members/1",
                                     "value": {
-                                    "id": "Ee-ZvImOQSgRBDR9XH0uQ5gbVv4828h_o5GuLbWFWaLI",
-                                    "name": "CleaningCompany"
+                                        "id": "Ee-ZvImOQSgRBDR9XH0uQ5gbVv4828h_o5GuLbWFWaLI",
+                                        "name": "CleaningCompany"
                                     }
                                 },
                                 {
@@ -687,9 +687,8 @@ Una vez creado el sujeto, ya estamos listos para transferir la propiedad de este
 Hasta ahora, al crear el sujeto, no hemos tenido que declarar su clave pública, aunque siempre hemos tenido la posibilidad de hacerlo. Sin embargo, en este caso, es diferente porque, durante la transferencia, el nuevo propietario debe generar una clave pública con la que quiera gestionar el sujeto que se le transfiere. Para ello, debemos ejecutar lo siguiente:
 
 ```bash
-    curl 'http://localhost:3004/api/keys' \
+    curl 'http://localhost:3003/api/keys' \
         --form 'algorithm="Ed25519"'
-
 ```
 
 :::tip
@@ -735,7 +734,7 @@ Ahora, necesitamos firmar la solicitud de transferencia con el material del nuev
 A continuación, tenemos que firmar la solicitud de transferencia con el material criptográfico del nuevo nodo. Para ello, utilizaremos nuestra herramienta **[TAPLE-Sign](../../learn/client-tools.md#taple-sign)** y ejecutaremos el siguiente comando:
 
 ```bash
-    taple-sing '2a71a0aff12c2de9e21d76e0538741aa9ac6da9ff7f467cf8b7211bd008a3198' '{"Transfer":{"subject_id":"{{SUBJECT-ID}}","public_key":"{{PUBLIC-KEY}}"}}'
+    taple-sign "6d3103185146ecedd28d3759df693999927e69aacb55e1aa9fe7ac17555da81c" '{"Transfer":{"subject_id":"{{SUBJECT-ID}}","public_key":"{{PUBLIC-KEY}}"}}'
 ```
 
 :::caution
@@ -758,7 +757,7 @@ Tenga en cuenta que en la petición, deberá sustituir **{{SIGN-RESULT}}** por e
 
 :::
 
-Esto generará una salida similar a la siguiente:
+Quedándonos algo similar a la siguiente:
 
 ```bash
     curl 'http://localhost:3000/api/event-requests' \
@@ -781,7 +780,7 @@ Esto generará una salida similar a la siguiente:
 Por último, el nuevo nodo debería ser capaz de visualizar este nuevo sujeto y verificar que es el nuevo propietario del mismo. Para ello, ejecutamos el siguiente comando:
 
 ```bash
-    curl 'http://localhost:3004/api/subjects/{{SUBJECT-ID}}''
+    curl 'http://localhost:3003/api/subjects/{{SUBJECT-ID}}''
 ```
 
 :::caution
