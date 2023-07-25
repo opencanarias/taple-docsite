@@ -129,8 +129,8 @@ This property allows us to define the conditions that must be met in the differe
 Defines the list of [schemas](../discover/schemas.md) that are allowed to be used in the subjects associated with governance. Each scheme includes the following properties:
 
 - **id**. Schema unique identifier.
-- **schema**. Schema description in JSON-Schema format.
-- **initial_value**. Value that takes a newly created subject for this schema, because you can't specify the properties in a Creation Event.
+- **schema**. Schema description in [JSON-Schema](./json-schema.md) format.
+- **initial_value**. JSON Object that represents the initial state of a newly created subject for this schema.
 - **contract**. The compiled [contract](../discover/smart-contracts.md) in Raw String base 64.
 
 :::info
@@ -173,10 +173,9 @@ This property defines the permissions of the users previously defined in the mem
 
 Lo que definen estos datos es el tipo de **quorum** al que se debe llegar para que el evento supere dicha fase. Existen 4 tipos de quorum:
 
-- **MAJORITY**: Es el más simple, significa que el 51% de los votantes deben firmar la petición. Siempre se redondea hacia arriba, por ejemplo en el caso de que haya 4 votantes, al quorum MAJORITY se llegaría cuando 3 den su firma.
+- **MAJORITY**: Es el más simple, significa que la mayoría, es decir, más del 50% de los votantes deben firmar la petición. Siempre se redondea hacia arriba, por ejemplo en el caso de que haya 4 votantes, al quorum MAJORITY se llegaría cuando 3 den su firma.
 - **FIXED**{fixed}: Es bastante sencillo, significa que un número fijo de votantes deben firmar la petición. Por ejemplo, si se especifica un quorum FIXED de 3, se llegará a dicho quorum cuando 3 votantes hayan firmado la petición.
 - **PORCENTAJE**{porcentaje}: Es un quorum que se calcula en base a un porcentaje de los votantes. Por ejemplo, si se especifica un quorum PORCENTAJE de 0.5, se llegará a dicho quorum cuando el 50% de los votantes hayan firmado la petición. Siempre se redondea hacia arriba.
-- **BFT**{BFT}: Aún no está implementado, se espera que en una próxima versión se pueda usar.
 
 In the event that a policy does not resolve for any member it will be returned to the governance owner. This allows, for example, that after the creation of the governance, when there are no declared members yet, the owner can evaluate, approve and validate the changes.
 
