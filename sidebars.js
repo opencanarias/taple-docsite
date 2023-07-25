@@ -217,13 +217,22 @@ module.exports = {
               label: 'Tools',
               id: 'learn/client-tools',
             },
-            {
-              type: 'doc',
-              label: 'NAT Resolve',
-              id: 'learn/nat-resolve',
-            },
           ],
         },
+        {
+          type: 'category',
+          label: 'Other topics',
+          collapsible: true,
+          link: { type: 'doc', id: 'learn/other-topics' },
+          collapsed: true,
+          items: [
+            {
+              type: 'doc',
+              label: 'TAPLE over Internet',
+              id: 'learn/taple-over-internet',
+            },
+          ]
+        }
       ]
     }
   ],
