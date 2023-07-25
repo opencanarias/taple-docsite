@@ -1,60 +1,62 @@
 # Basic usage
 
+## Compiling the code
+Rust versión 1.66 or higher is required.
+
+```bash
+$ git clone -b release-0.2 https://github.com/opencanarias/taple-client.git
+$ cd taple-client
+$ sudo apt install -y libprotobuf-dev protobuf-compiler cmake
+$ rustup target add wasm32-unknown-unknown
+$ cargo install --path client
+$ taple-client --version
+```
+
+However, if you prefer, you can run TAPLE-Client through the docker images without compiling the code.
+
 ## Running a node
 
 The minimum parameters required to start a Taple node are as follows:
 
-* **Secret Key**: This is the private key that the node will possess upon initialization. It is of utmost importance as it allows the identification of the node within the network. It can be generated using `taple-keygen`.
-* **Network Listen Addr**: [Multiaddr](https://docs.libp2p.io/concepts/fundamentals/addressing/) representing the network interfaces through which the node will listen for incoming connections. If no value is set, the default value will be `/ip4/0.0.0.0/tcp/40040`. The `0.0.0.0` represents that the node will listen on all available network interfaces through port `40040`. However, we can specify the interface and port as we see fit, for example, `/ip4/0.0.0.0/tcp/50000`.
+* **Secret Key**: This is the private key that the node will possess at the time of initialisation and represents its identity within the network. It can be generated using `taple-keygen`.
+* **Network Listen Addr**: [Multiaddr](https://docs.libp2p.io/concepts/fundamentals/addressing/) representing the network interfaces through which the node will listen for incoming connections. If no value is set, the default value will be `/ip4/0.0.0.0/tcp/40040`. The `0.0.0.0` represents that the node will listen on all available network interfaces, While `40040` indicates the listening port. However, we can specify the interface and port as we see fit, for example, `/ip4/0.0.0.0/tcp/50000`.
+* **Network Known Node**: Multiaddr representing known nodes at startup. Except for the first one, all other nodes in the network must specify at least one known node.
 
-For more information about all the available options to start our node, please refer to [this section](client-config.md).
+For more information about all the available options to start our node, please refer to [this section](./client-config.md).
 
-:::warning Exposing services
+We then start by generating our cryptographic material to identify the node. For this we use the [taple-keygen](./client-tools.md#taple-keygen) tool.
 
-We note that the REST API is likely useful for your internal network. However, if you choose to expose the REST API endpoint publicly, you should deploy an additional authentication or rate-limiting mechanism to prevent abuse. Remember that event requests, if not signed, will be signed with the node's own identity. 
-
-:::
-
-Comenzamos entonces generando nuestro material criptográfico para indentificar al nodo. Por tanto, primero ejecutaremos el archivo binario `taple-keygen` para obtenerlo: 
-
-```bash
-taple-keygen 
+```bash title="Basic usage example"
+taple-keygen
 ```
 
+```bash title="Output"
+controller_id: EOZZyrorTvTioKsOP8PcGCngSF0b49ZuRlie5xtkuyOU
+peer_id: 12D3KooWDhATtx42CRiKBCPJt9EgcwaLzwemK4m9SbyRHfJtNE7W
+private_key: b088fb74588dff74d5683b804d742418874db000e25ffec189fa313e825e1f7e
 ```
-PRIVATE KEY ED25519 (HEX): 7a747ddf55cf9b2ceb3b41a7c7ce9f88f835c120644e3c7522d97520668c8520
-CONTROLLER ID ED25519: Eup853UZkZaGQEqPBSUMY_dJWCLrmjy6BuPllWEiSdcM
-PeerID: 12D3KooWNNrpZmxF8WKoxM9yMBSixZNM7bic9scaGJDb2ioL4AQa
-```
 
-### Running with binary
+Now, to start our first node, we must execute the following command:
 
-Ahora, para iniciar nuestro primer nodo, debemos ejecutar el siguiente comando:
-
-```bash
-./taple-client --http \
-  --http.port 3000 \
-  -k 7a747ddf55cf9b2ceb3b41a7c7ce9f88f835c120644e3c7522d97520668c8520 \
+```bash title="Running binary"
+taple-client \
+  -k b088fb74588dff74d5683b804d742418874db000e25ffec189fa313e825e1f7e \
   --network.listen-addr "/ip4/0.0.0.0/tcp/50000"
 ```
 
-### Running with Docker
+If you prefer to run TAPLE-Client through its docker image, run the following:
 
-Ahora, para iniciar nuestro primero nodo, debemos ejecutar el siguiente comando:
-
-```bash
+```bash title="Running docker image"
 docker run \
-  -p 3000:3000 \
   -p 50000:50000 \
-  -e TAPLE_HTTP=true \
-  -e TAPLE_SECRET_KEY=74c417de2174f3a76b0b98343cea3aa35bfd3860cac8bf470092c3e751745c1a \
+  -e TAPLE_ID_PRIVATE_KEY=b088fb74588dff74d5683b804d742418874db000e25ffec189fa313e825e1f7e \
   -e TAPLE_NETWORK_LISTEN_ADDR=/ip4/0.0.0.0/tcp/50000 \
   opencanarias/taple-client:0.2
 ```
 
-## REST API
+### REST API
 
-Each node with TAPLE-Client has the capability to expose its REST API, as mentioned earlier. It is not mandatory, but it might be necessary depending on the role our node plays within the use case. In our case, enabling this feature and its documentation is necessary. We can achieve this by using the following three parameters:
+Each node with TAPLE-Client has the capability to expose its REST API, [as mentioned earlier](./taple-client.md#api-rest). It is not mandatory, but it might be necessary depending on the role our node plays within the use case. We can achieve this by using the following three parameters:
 
 * **http**: Enables the *API REST*.
 * **http.port**: Sets the communication port for the API REST; if not specified, it defaults to 3000.
@@ -62,33 +64,24 @@ Each node with TAPLE-Client has the capability to expose its REST API, as mentio
 
 Now, we will proceed to start the node. However, before doing so, we must ensure that we have turned off the nodes from the previous steps:
 
-```bash title="Binary option"
-./taple-client --http \
-  --http.port 3000 \
-  -k 7a747ddf55cf9b2ceb3b41a7c7ce9f88f835c120644e3c7522d97520668c8520 \
+```bash title="Enabling API REST"
+taple-client \
+  -k b088fb74588dff74d5683b804d742418874db000e25ffec189fa313e825e1f7e \
   --network.listen-addr "/ip4/0.0.0.0/tcp/50000" \
+  --http \
+  --http.port 3000 \
   --http.doc
 ```
 
-or
+If the previous node has been successfully initialized, you can access the node's documentation through [this link](http://localhost:3000/api/doc/json).
 
-```bash title="Docker option"
-docker run opencanarias/taple-client:0.2 \
-  -p 3000:3000 \
-  -p 50000:50000 \
-  -e TAPLE_HTTP=true \
-  -e TAPLE_SECRET_KEY=74c417de2174f3a76b0b98343cea3aa35bfd3860cac8bf470092c3e751745c1a \
-  -e TAPLE_NETWORK_LISTEN_ADDR=/ip4/0.0.0.0/tcp/50000 \
-  -e TAPLE_HTTP_DOC
-```
+:::warning Exposing services
 
-If the previous node has been successfully initialized, you can access the node's documentation through [this link](http://localhost:3000/api/documentation).
+We note that the REST API is likely useful for your internal network. However, if you choose to expose the REST API endpoint publicly, you should deploy an additional authentication or rate-limiting mechanism to prevent abuse. Remember that event requests, if not signed, will be signed with the node's own identity. 
 
-:::note
-To explore all the endpoints of this version of Taple without leaving the documentation, you can refer to [this section](../api-rest/create-event-request.api.mdx).
 :::
 
-## Backups
+### Database Backups
 
 To safely back up the database, you must stop the TAPLE node before backing up the database. This way, we will guarantee the consistency of the database at all times. This is because **TAPLE Client** is using **[LevelDB](https://github.com/google/leveldb)** as database, in which hot backups are not supported so far.
 
