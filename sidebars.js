@@ -135,6 +135,11 @@ module.exports = {
               id: 'learn/core-architecture',
             },
             {
+              type: 'doc',
+              label: 'Basic usage',
+              id: 'learn/core-usage',
+            },
+            {
               type: 'link',
               label: 'API',
               href: 'pathname:///crate-doc/next/taple_core/',
