@@ -125,7 +125,7 @@ module.exports = {
       items: [
         {
           type: 'category',
-          label: 'Core library',
+          label: 'TAPLE Core',
           link: { type: 'doc', id: 'learn/core-architecture' },
           collapsed: true,
           items: [
@@ -140,6 +140,41 @@ module.exports = {
               href: 'pathname:///crate-doc/next/taple_core/',
             },
           ]
+        },
+        {
+          type: 'category',
+          label: 'TAPLE Client',
+          collapsible: true,
+          link: { type: 'doc', id: 'learn/taple-client' },
+          collapsed: true,
+          items: [
+            {
+              type: 'doc',
+              label: 'Description',
+              id: 'learn/taple-client',
+            },
+            {
+              type: 'doc',
+              label: 'Basic usage',
+              id: 'learn/client-usage',
+            },
+            {
+              type: 'doc',
+              label: 'Configuration',
+              id: 'learn/client-config',
+            },
+            {
+              type: "category",
+              label: "REST API",
+              collapsed: true,
+              items: require("./docs/api-rest/sidebar.js"),
+            },
+            {
+              type: 'doc',
+              label: 'Tools',
+              id: 'learn/client-tools',
+            },
+          ],
         },
         {
           type: 'doc',
@@ -183,41 +218,6 @@ module.exports = {
               id: 'learn/governance-schema-and-contract',
             },
           ]
-        },
-        {
-          type: 'category',
-          label: 'TAPLE Client',
-          collapsible: true,
-          link: { type: 'doc', id: 'learn/taple-client' },
-          collapsed: true,
-          items: [
-            {
-              type: 'doc',
-              label: 'Description',
-              id: 'learn/taple-client',
-            },
-            {
-              type: 'doc',
-              label: 'Basic usage',
-              id: 'learn/client-usage',
-            },
-            {
-              type: 'doc',
-              label: 'Configuration',
-              id: 'learn/client-config',
-            },
-            {
-              type: "category",
-              label: "REST API",
-              collapsed: true,
-              items: require("./docs/api-rest/sidebar.js"),
-            },
-            {
-              type: 'doc',
-              label: 'Tools',
-              id: 'learn/client-tools',
-            },
-          ],
         },
         {
           type: 'category',
