@@ -80,7 +80,7 @@ serde_json = "=1.0.92"
 json-patch = "=0.2"
 thiserror = "=1.0"
 # Note: Change the tag label to the appropriate one
-taple-sc-rust = { git = "https://github.com/opencanarias/taple-sc-rust.git", tag = "0.2"}
+taple-sc-rust = { git = "https://github.com/opencanarias/taple-sc-rust.git", branch = "release-0.2"}
 ```
 
 The following will specify how to draw up a smart contract, accompanied by a basic example.

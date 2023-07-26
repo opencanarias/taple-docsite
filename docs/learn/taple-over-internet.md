@@ -7,8 +7,8 @@ description: TAPLE communications over Internet
 Communications between TAPLE nodes are carried out via P2P protocol. This means that there are no central nodes channelling communications. While this has great advantages, it also poses certain challenges when communications must be conducted over the Internet. When using taple over the internet, the following issues need to be addressed:
 - [Internet communications](#internet-communications)
   - [NAT](#nat)
-    - [Conexiones salientes](#conexiones-salientes)
-    - [Conexiones entrantes](#conexiones-entrantes)
+    - [Outgoing connections](#outgoing-connections)
+    - [Incoming connections](#incoming-connections)
   - [Node discovery and routing](#node-discovery-and-routing)
 
 ## NAT
@@ -17,37 +17,33 @@ Network address translation (NAT) is a method of mapping an IP address space int
 
 [^1]: https://en.wikipedia.org/wiki/Network_address_translation
 
-### Conexiones salientes
+### Outgoing connections
 
-Explicar con más detalle la problemática por la que surge NAT. Nat en si no es un problema, es una solución. Al ser limitadas las direcciones IP4 se tuvo que desarrollar un mecanismo para compartir direcciones, y aquí es donde surge NAT. Si tenemos una red privada tras un router u otro dispositivo de enroutamiento, cuando un paqueta sale desde la red privada hacia internet, el router le asigna un puerto aleatorio y guarda en una tabla la relación entre el puerto de salida asignado y la ip interna y su puerto. Además cambia la ip y el puerto de los paquetes IP que salen. De esta forma, cuando alguien quiere responder a ese paquete, lo hace utilizando la IP del router y el puerto asignado. El router, consultando la tabla es capaz de saber a que ip y puerto de la red privada enviar la información. 
+NAT in itself is not a problem. In fact, it is a solution to the problem of the finite set of IP4 addresses, since it allows a set of devices with private addresses to communicate over the Internet by sharing the same public address. Specifically, when a packet passes through the router, the router changes its IP but also assigns it a port, keeping the relationship between the actual device and the selected port. When an external device wants to issue a response to such an outgoing packet, it must do so by specifying the IP and ports assigned by NAT, so that, on arrival at the router, the router knows how to resolve the addressing.
 
-Poner imagen explicativa
+![output-nat](../img/output-nat.svg)
 
-### Conexiones entrantes
+### Incoming connections
 
-El comportamiento de NAT para conexiones salientes es automático, permitiendo qeu los equipos que estén en la red privada puedan comunicar con internet. Sin embargo, el proceso a la inversa no funciona. Si alguien desde internet quiere hablar directamente con alguien tras el router en la red privada no puede. el motivo es que el router ha asignado un puerto a las conexiones salientes del nodo interno, pero no sabe en que puertos está escuchando. 
+The process for incoming connections works differently, however. While NAT allows responses to outgoing messages, it is not possible for an external device to initiate the communication, i.e. it is not possible to handle incoming messages that are not responses from another device. This is because the router, upon receiving the packet, will not know how to redirect it, since it does not know on which port the device is listening. This implies the need to configure the router to redirect the traffic properly.
 
-Poner imagen explicativa
+:::info
+En TAPLE, este comportamiento también es necesario para poder recibir mensajes entrantes.
+:::
 
-Actualmente en taple la solución pasa por configurar el router para redirigir las comunicaciones entrantes a un puerto determinado a la dirección y puerto internas del nodo TAPLE. 
+![input-nat](../img/incoming-nat.svg)
 
 ## Node discovery and routing 
-Cuando un nodo TAPLE arranca, excepto el primer nodo de la red, necesita conocer al menos un nodo. Es la forma en la que un nodo entra a formar parte de la red. Cuando el nodo arranca conecta con el/los nodos conocidos e intercambia información. Aquí entran en juego 2 protocolos de Libp2p, Identify y Kademlia. 
+In TAPLE, nodes maintain a routing table that allows them to connect to others in the network. In order to enable its construction, it is necessary for the nodes in the network to know another node in the network beforehand. This is where two LIbP2P protocols come into play: Identify and Kademlia.
 
-A través de Identify, cada nodo se presenta a los nodos con los que conectan, enviando por ejemplo la información sobre que IPs y puertos utiliza para escuchar conexiones entrantes. Cuando al arrancar un nodo A conecta con un nodo B, ambos se intercambian esta información. A conocía previamente a B, pero B no conocía a A. A partir de este momento B conoce a A. 
+The second is the protocol that manages the routing table itself. When two nodes connect, Kademlia includes in its table the relationship that exists between the node identifier and its real address. This allows us to send packets to the nodes knowing only their identifier. Since it is also a routing protocol, it is not necessary for each node to know the entire network. In practice, each node knows a subset and the protocol is responsible for routing packets to those nodes that are not initially in the table.
+
+When two nodes connect to each other, the [Identify](https://github.com/libp2p/specs/blob/master/identify/README.md) protocol acts to produce an initial exchange of information, which is necessary for subsequent communications to be successful and includes, for example, the public keys that the nodes are going to use or their known listening addresses. The latter is especially relevant because it is directly related to the NAT mechanism mentioned above. The node itself is responsible for building the Identify packet with the set of listening addresses, but it does not know its public address and TAPLE does not implement, for the moment, any mechanism to discover it. This means that the packet will consist of the set of private addresses of the node, none of them addressable by an external node, so that even though the discovery process has been completed, in practice the nodes will not be able to communicate with each other, even if the router is properly configured.
+
+LibP2P offers several mechanisms to solve this problem, such as [AutoNAT](https://docs.libp2p.io/concepts/nat/autonat/) or [Hole Punching](https://docs.libp2p.io/concepts/nat/hole-punching/). However, in TAPLE we have chosen to modify the ***Identify*** packages to include a number of external interfaces that can be specified by the user through the node configuration itself. In order to be more precise, a user configures his router to forward traffic received on a port to a device within a private network with a TAPLE node and, through this [configuration](./client-config.md) variable called ***External Address***, specifies the address and port previously configured in the router. Thus, this information will be transmitted to the rest of the network nodes through the Identify protocol and they will be able to send their packets appropriately.
 
 ![smart-contracts-life-cycle](../img/nat-resolve.svg)
 
-Pero no todos los nodos tienen que conectar con todos los nodos para conocerse. Aquí es donde entra en juego Kademlia. Kademlia actua como una libreta de direcciones distribuida en la que poder localizar nodos a partir de su controller_id y obtener su multiaddr. Cuando un nodo conecta con éxito con otro nodo guardar en Kademlia la relación entre su identificador y su multiaddr. De esta forma, cualquier nodo de la red puede localizar a otro nodo de la red.
-
-Sin embargo, dentro del protoclo Identify la información de ips y puertos que se envían los nodos entre ellos se basa en las interfaces de red conocidas por el nodo en el momento del arranque. Si el nodo se encuentra en una red privada o detrás de un dispositivo de enrutamiento, las IPs que conoce no serán direccionables desde Internet. Esto significa que, aunque tengamos correctamente configurado el router para redirigir conexiones entrantes, únicamente aquellos que conozcan nuestra multiaddr correcta podrán conectar con nosotros, lo cual ocurre con los nodos principales de la red, sin embargo, el resto de nodos no será direccionable ya que no serán capaces de transmitir su multiaddr al resto de la red. (me he liado un poco explicándolo, si tienes dudas lo hablamos).
-
-LibP2p ofrece diferentes mecanismos para sortear este problema basado en servidores intermedios ... aquí puedes enganchar con lo que tienes debajo
-
-One way to solve this problem would be to somehow have the public addresses of the nodes included in the packets that are sent during the execution of the *Identify* protocol*. In this way, the routing tables of the nodes would be aware of them and would be able to route data packets. The TAPLE team has enabled the option to do just this via a [configuration](./client-config.md) variable specifiable during node startup. The variable named [External Address](./client-config.md#external-address), allows you to specify a list of listening addresses that will be injected into the *Identify* protocol packet and delivered to the other nodes in the network when a connection is established with them. It is important that these addresses are accompanied by the incoming port of the configured router.
-
 :::note
-
 Currently, these external addresses can only be specified at node startup and during node execution.
-
 :::
