@@ -1,11 +1,11 @@
 ---
 id: get-allowed-subject-data
-title: "Get Allowed Subject Data"
-description: "Get Allowed Subject Data"
-sidebar_label: "Get Allowed Subject Data"
+title: "Allows to obtain the list of subjects that have been pre-authorized by the node, as well as the identifiers of the nodes from which to obtain them."
+description: "Allows to obtain the list of subjects that have been pre-authorized by the node, as well as the identifiers of the nodes from which to obtain them."
+sidebar_label: "Allows to obtain the list of subjects that have been pre-authorized by the node, as well as the identifiers of the nodes from which to obtain them."
 hide_title: true
 hide_table_of_contents: true
-api: {"tags":["crate"],"operationId":"Get Allowed Subject Data","parameters":[{"name":"from","in":"query","description":"Id of initial subject","required":false,"schema":{"type":"string","nullable":true}},{"name":"quantity","in":"query","description":"Quantity of subjects requested","required":false,"schema":{"type":"integer","nullable":true}}],"responses":{"200":{"description":"Subject Data successfully retrieved","content":{"application/json":{"schema":{"type":"array","items":{"type":"object","required":["subject_id","providers"],"properties":{"providers":{"type":"array","items":{"type":"string"},"description":"Providers acting on a specific subject"},"subject_id":{"type":"string","description":"Subject identifier"}}}},"example":[{"providers":[],"subject_id":"JKZgYhPjQdWNWWwkac0wSwqLKoOJsT0QimJmj6zjimWc"}]}}},"400":{"description":"Bad Request"},"500":{"description":"Internal Server Error"}},"description":"Get Allowed Subject Data","method":"get","path":"/api/allowed-subjects","security":[],"securitySchemes":{"api_key":{"type":"apiKey","in":"header","name":"x-api-key"}},"info":{"title":"taple-client","description":"","contact":{"name":"Open Canarias S.L.","email":"taple@opencanarias.com"},"license":{"name":""},"version":"0.2.0-dev"},"postman":{"name":"Get Allowed Subject Data","description":{"type":"text/plain"},"url":{"path":["api","allowed-subjects"],"host":["{{baseUrl}}"],"query":[{"disabled":false,"description":{"content":"Id of initial subject","type":"text/plain"},"key":"from","value":""},{"disabled":false,"description":{"content":"Quantity of subjects requested","type":"text/plain"},"key":"quantity","value":""}],"variable":[]},"header":[{"key":"Accept","value":"application/json"}],"method":"GET"}}
+api: {"tags":["crate"],"description":"Allows to obtain the list of subjects that have been pre-authorized by the node, as well as the identifiers of the nodes from which to obtain them.","operationId":"Get Allowed Subject Data","parameters":[{"name":"from","in":"query","description":"Id of initial subject","required":false,"schema":{"type":"string","nullable":true}},{"name":"quantity","in":"query","description":"Quantity of subjects requested","required":false,"schema":{"type":"integer","nullable":true}}],"responses":{"200":{"description":"Subject Data successfully retrieved","content":{"application/json":{"schema":{"type":"array","items":{"type":"object","required":["subject_id","providers"],"properties":{"providers":{"type":"array","items":{"type":"string"},"description":"Providers acting on a specific subject"},"subject_id":{"type":"string","description":"Subject identifier"}}}},"example":[{"providers":[],"subject_id":"JKZgYhPjQdWNWWwkac0wSwqLKoOJsT0QimJmj6zjimWc"}]}}},"400":{"description":"Bad Request"},"500":{"description":"Internal Server Error"}},"method":"get","path":"/api/allowed-subjects","security":[],"securitySchemes":{"api_key":{"type":"apiKey","in":"header","name":"x-api-key"}},"info":{"title":"taple-client","description":"","contact":{"name":"Open Canarias S.L.","email":"taple@opencanarias.com"},"license":{"name":"AGPL-3.0-only","url":"https://raw.githubusercontent.com/opencanarias/taple-client/main/LICENSE"},"version":"0.2.0-dev"},"postman":{"name":"Allows to obtain the list of subjects that have been pre-authorized by the node, as well as the identifiers of the nodes from which to obtain them.","description":{"content":"Allows to obtain the list of subjects that have been pre-authorized by the node, as well as the identifiers of the nodes from which to obtain them.","type":"text/plain"},"url":{"path":["api","allowed-subjects"],"host":["{{baseUrl}}"],"query":[{"disabled":false,"description":{"content":"Id of initial subject","type":"text/plain"},"key":"from","value":""},{"disabled":false,"description":{"content":"Quantity of subjects requested","type":"text/plain"},"key":"quantity","value":""}],"variable":[]},"header":[{"key":"Accept","value":"application/json"}],"method":"GET"}}
 sidebar_class_name: "get api-method"
 info_path: docs/api-rest/taple-client
 ---
@@ -19,11 +19,11 @@ import SchemaTabs from "@theme/SchemaTabs";
 import DiscriminatorTabs from "@theme/DiscriminatorTabs";
 import TabItem from "@theme/TabItem";
 
-## Get Allowed Subject Data
+## Allows to obtain the list of subjects that have been pre-authorized by the node, as well as the identifiers of the nodes from which to obtain them.
 
 
 
-Get Allowed Subject Data
+Allows to obtain the list of subjects that have been pre-authorized by the node, as well as the identifiers of the nodes from which to obtain them.
 
 <details style={{"marginBottom":"1rem"}} data-collapsed={false} open={true}><summary style={{}}><strong>Query Parameters</strong></summary><div><ul><ParamsItem className={"paramsItem"} param={{"name":"from","in":"query","description":"Id of initial subject","required":false,"schema":{"type":"string","nullable":true}}}></ParamsItem><ParamsItem className={"paramsItem"} param={{"name":"quantity","in":"query","description":"Quantity of subjects requested","required":false,"schema":{"type":"integer","nullable":true}}}></ParamsItem></ul></div></details><div><ApiTabs><TabItem label={"200"} value={"200"}><div>
 

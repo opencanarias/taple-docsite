@@ -1,11 +1,11 @@
 ---
 id: create-keys
-title: "createKeys"
-description: "createKeys"
-sidebar_label: "createKeys"
+title: "It allows to generate a pair of cryptographic keys in the node that can then be assigned to a subject. The private key is never revealed."
+description: "It allows to generate a pair of cryptographic keys in the node that can then be assigned to a subject. The private key is never revealed."
+sidebar_label: "It allows to generate a pair of cryptographic keys in the node that can then be assigned to a subject. The private key is never revealed."
 hide_title: true
 hide_table_of_contents: true
-api: {"tags":["crate"],"operationId":"createKeys","parameters":[{"name":"algorithm","in":"path","description":"Type of algorithm to use (possibilities: Ed25519, Secp256k1)","required":true,"schema":{"type":"string"}}],"responses":{"201":{"description":"KeyPair Created Successfully","content":{"text/plain":{"schema":{"type":"string"},"example":"ELZ_b-kZzdPykcYuRNC2ZZe_2lCTCUoo60GXfR4cuXMw"}}},"400":{"description":"Bad Request"},"500":{"description":"Internal Server Error"}},"description":"createKeys","method":"post","path":"/api/keys","security":[],"securitySchemes":{"api_key":{"type":"apiKey","in":"header","name":"x-api-key"}},"info":{"title":"taple-client","description":"","contact":{"name":"Open Canarias S.L.","email":"taple@opencanarias.com"},"license":{"name":""},"version":"0.2.0-dev"},"postman":{"name":"create Keys","description":{"type":"text/plain"},"url":{"path":["api","keys"],"host":["{{baseUrl}}"],"query":[],"variable":[{"disabled":false,"description":{"content":"(Required) Type of algorithm to use (possibilities: Ed25519, Secp256k1)","type":"text/plain"},"type":"any","value":"","key":"algorithm"}]},"header":[{"key":"Accept","value":"text/plain"}],"method":"POST"}}
+api: {"tags":["crate"],"description":"It allows to generate a pair of cryptographic keys in the node that can then be assigned to a subject. The private key is never revealed.","operationId":"createKeys","parameters":[{"name":"algorithm","in":"path","description":"Type of algorithm to use (possibilities: Ed25519, Secp256k1)","required":true,"schema":{"type":"string"}}],"responses":{"201":{"description":"Public Key of the generated keypair","content":{"text/plain":{"schema":{"type":"string"},"example":{"public_key":"ELZ_b-kZzdPykcYuRNC2ZZe_2lCTCUoo60GXfR4cuXMw"}}}},"400":{"description":"Bad Request"},"500":{"description":"Internal Server Error"}},"method":"post","path":"/api/keys","security":[],"securitySchemes":{"api_key":{"type":"apiKey","in":"header","name":"x-api-key"}},"info":{"title":"taple-client","description":"","contact":{"name":"Open Canarias S.L.","email":"taple@opencanarias.com"},"license":{"name":"AGPL-3.0-only","url":"https://raw.githubusercontent.com/opencanarias/taple-client/main/LICENSE"},"version":"0.2.0-dev"},"postman":{"name":"It allows to generate a pair of cryptographic keys in the node that can then be assigned to a subject. The private key is never revealed.","description":{"content":"It allows to generate a pair of cryptographic keys in the node that can then be assigned to a subject. The private key is never revealed.","type":"text/plain"},"url":{"path":["api","keys"],"host":["{{baseUrl}}"],"query":[],"variable":[{"disabled":false,"description":{"content":"(Required) Type of algorithm to use (possibilities: Ed25519, Secp256k1)","type":"text/plain"},"type":"any","value":"","key":"algorithm"}]},"header":[{"key":"Accept","value":"text/plain"}],"method":"POST"}}
 sidebar_class_name: "post api-method"
 info_path: docs/api-rest/taple-client
 ---
@@ -19,17 +19,17 @@ import SchemaTabs from "@theme/SchemaTabs";
 import DiscriminatorTabs from "@theme/DiscriminatorTabs";
 import TabItem from "@theme/TabItem";
 
-## createKeys
+## It allows to generate a pair of cryptographic keys in the node that can then be assigned to a subject. The private key is never revealed.
 
 
 
-createKeys
+It allows to generate a pair of cryptographic keys in the node that can then be assigned to a subject. The private key is never revealed.
 
 <details style={{"marginBottom":"1rem"}} data-collapsed={false} open={true}><summary style={{}}><strong>Path Parameters</strong></summary><div><ul><ParamsItem className={"paramsItem"} param={{"name":"algorithm","in":"path","description":"Type of algorithm to use (possibilities: Ed25519, Secp256k1)","required":true,"schema":{"type":"string"}}}></ParamsItem></ul></div></details><div><ApiTabs><TabItem label={"201"} value={"201"}><div>
 
-KeyPair Created Successfully
+Public Key of the generated keypair
 
-</div><div><MimeTabs schemaType={"response"}><TabItem label={"text/plain"} value={"text/plain"}><SchemaTabs><TabItem label={"Schema"} value={"Schema"}><details style={{}} data-collapsed={false} open={true}><summary style={{"textAlign":"left"}}><strong>Schema</strong></summary><div style={{"textAlign":"left","marginLeft":"1rem"}}></div><ul style={{"marginLeft":"1rem"}}><li><div><strong>string</strong></div></li></ul></details></TabItem><TabItem label={"Example"} value={"Example"}><ResponseSamples responseExample={"ELZ_b-kZzdPykcYuRNC2ZZe_2lCTCUoo60GXfR4cuXMw"} language={"shell"}></ResponseSamples></TabItem></SchemaTabs></TabItem></MimeTabs></div></TabItem><TabItem label={"400"} value={"400"}><div>
+</div><div><MimeTabs schemaType={"response"}><TabItem label={"text/plain"} value={"text/plain"}><SchemaTabs><TabItem label={"Schema"} value={"Schema"}><details style={{}} data-collapsed={false} open={true}><summary style={{"textAlign":"left"}}><strong>Schema</strong></summary><div style={{"textAlign":"left","marginLeft":"1rem"}}></div><ul style={{"marginLeft":"1rem"}}><li><div><strong>string</strong></div></li></ul></details></TabItem><TabItem label={"Example"} value={"Example"}><ResponseSamples responseExample={"{\n  \"public_key\": \"ELZ_b-kZzdPykcYuRNC2ZZe_2lCTCUoo60GXfR4cuXMw\"\n}"} language={"shell"}></ResponseSamples></TabItem></SchemaTabs></TabItem></MimeTabs></div></TabItem><TabItem label={"400"} value={"400"}><div>
 
 Bad Request
 
