@@ -28,7 +28,7 @@ NAT in itself is not a problem. In fact, it is a solution to the problem of the 
 The process for incoming connections works differently, however. While NAT allows responses to outgoing messages, it is not possible for an external device to initiate the communication, i.e. it is not possible to handle incoming messages that are not responses from another device. This is because the router, upon receiving the packet, will not know how to redirect it, since it does not know on which port the device is listening. This implies the need to configure the router to redirect the traffic properly.
 
 :::info
-En TAPLE, este comportamiento también es necesario para poder recibir mensajes entrantes.
+In TAPLE, this behavior is also required to be able to receive incoming messages.
 :::
 
 ![input-nat](../img/incoming-nat.svg)
