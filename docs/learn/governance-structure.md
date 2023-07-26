@@ -171,11 +171,11 @@ This property defines the permissions of the users previously defined in the mem
 - **evaluate**. Defines who the evaluators are for the subjects that are created with that schema. Also, the quorum required to consider an event as evaluated.
 - **validate**. Defines who the validators are for the subjects that are created with that schema. Also, the quorum required to consider an event as validated.
 
-Lo que definen estos datos es el tipo de **quorum** al que se debe llegar para que el evento supere dicha fase. Existen 4 tipos de quorum:
+What these data define is the type of **quorum** that must be reached for the event to pass this phase. There are 4 types of quorum:
 
-- **MAJORITY**: Es el más simple, significa que la mayoría, es decir, más del 50% de los votantes deben firmar la petición. Siempre se redondea hacia arriba, por ejemplo en el caso de que haya 4 votantes, al quorum MAJORITY se llegaría cuando 3 den su firma.
-- **FIXED**{fixed}: Es bastante sencillo, significa que un número fijo de votantes deben firmar la petición. Por ejemplo, si se especifica un quorum FIXED de 3, se llegará a dicho quorum cuando 3 votantes hayan firmado la petición.
-- **PORCENTAJE**{porcentaje}: Es un quorum que se calcula en base a un porcentaje de los votantes. Por ejemplo, si se especifica un quorum PORCENTAJE de 0.5, se llegará a dicho quorum cuando el 50% de los votantes hayan firmado la petición. Siempre se redondea hacia arriba.
+- **MAJORITY**: This is the simplest one, it means that the majority, that is, more than 50% of the voters must sign the petition. It always rounds up, for example, in the case where there are 4 voters, the MAJORITY quorum would be reached when 3 give their signature.
+- **FIXED**{fixed}: It's pretty straightforward, it means that a fixed number of voters must sign the petition. For example, if a FIXED quorum of 3 is specified, this quorum will be reached when 3 voters have signed the petition.
+- **PORCENTAJE**{porcentaje}: This is a quorum that is calculated based on a percentage of the voters. For example, if a PERCENTAGE quorum of 0.5 is specified, this quorum will be reached when 50% of the voters have signed the petition. It always rounds up.
 
 In the event that a policy does not resolve for any member it will be returned to the governance owner. This allows, for example, that after the creation of the governance, when there are no declared members yet, the owner can evaluate, approve and validate the changes.
 
