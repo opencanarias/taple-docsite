@@ -35,25 +35,13 @@ Governances in Taple are special subjects. Governances have a specific schema an
         {
           "type": "object",
           "properties": {
-            "PORCENTAJE": {
+            "PERCENTAGE": {
               "type": "number",
               "minimum": 0,
               "maximum": 1
             }
           },
-          "required": ["PORCENTAJE"],
-          "additionalProperties": false
-        },
-        {
-          "type": "object",
-          "properties": {
-            "BFT": {
-              "type": "number",
-              "minimum": 0,
-              "maximum": 1
-            }
-          },
-          "required": ["BFT"],
+          "required": ["PERCENTAGE"],
           "additionalProperties": false
         }
       ]
@@ -766,11 +754,10 @@ impl<'de> Deserialize<'de> for Who {
             where
                 A: serde::de::MapAccess<'de>,
             {
-                // Solo deberían tener una entrada
+                // They should only have one entry
                 let Some(key) = map.next_key::<String>()? else {
                     return Err(serde::de::Error::missing_field("ID or NAME"))
                 };
-                println!("KEY {}", key);
                 let result = match key.as_str() {
                     "ID" => {
                         let id: String = map.next_value()?;
@@ -791,7 +778,6 @@ impl<'de> Deserialize<'de> for Who {
             where
                 E: serde::de::Error,
             {
-                println!("STR");
                 match v.as_str() {
                     "MEMBERS" => Ok(Who::MEMBERS),
                     "ALL" => Ok(Who::ALL),
@@ -806,7 +792,6 @@ impl<'de> Deserialize<'de> for Who {
             where
                 E: serde::de::Error,
             {
-                println!("BORR STR");
                 match v {
                     "MEMBERS" => Ok(Who::MEMBERS),
                     "ALL" => Ok(Who::ALL),
@@ -863,7 +848,7 @@ impl<'de> Deserialize<'de> for SchemaEnum {
             where
                 A: serde::de::MapAccess<'de>,
             {
-                // Solo deberían tener una entrada
+                // They should only have one entry
                 let Some(key) = map.next_key::<String>()? else {
                     return Err(serde::de::Error::missing_field("ID"))
                 };
@@ -944,9 +929,8 @@ pub struct Contract {
 #[allow(non_camel_case_types)]
 pub enum Quorum {
     MAJORITY,
-    FIXED(u64), // TODO: Es posible que tenga que ser estructura vacía
-    PORCENTAJE(f64),
-    BFT(f64),
+    FIXED(u64),
+    PERCENTAGE(f64),
 }
 
 #[derive(Serialize, Deserialize, Clone)]
@@ -965,8 +949,7 @@ pub struct Policy {
 #[derive(Serialize, Deserialize, Clone)]
 pub struct Schema {
     id: String,
-    schema: serde_json::Value, // TODO: QUIZÁS STRING
-    // #[serde(rename = "Initial-Value")]
+    schema: serde_json::Value,
     initial_value: serde_json::Value,
     contract: Contract,
 }
@@ -980,7 +963,7 @@ pub struct Governance {
     policies: Vec<Policy>,
 }
 
-// Definir "Familia de eventos"
+// Define "Event family".
 #[derive(Serialize, Deserialize, Debug)]
 pub enum GovernanceEvent {
     Patch { data: ValueWrapper },
@@ -991,20 +974,20 @@ pub unsafe fn main_function(state_ptr: i32, event_ptr: i32, is_owner: i32) -> u3
     sdk::execute_contract(state_ptr, event_ptr, is_owner, contract_logic)
 }
 
-// Lógica del contrato con los tipos de datos esperados
-// Devuelve el puntero a los datos escritos con el estado modificado
+// Contract logic with expected data types
+// Returns the pointer to the data written with the modified state.
 fn contract_logic(
     context: &sdk::Context<Governance, GovernanceEvent>,
     contract_result: &mut sdk::ContractResult<Governance>,
 ) {
-    // Sería posible añadir gestión de errores
-    // Podría ser interesante hacer las operaciones directamente como serde_json:Value en lugar de "Custom Data"
+    // It would be possible to add error handling
+    // It could be interesting to do the operations directly as serde_json:Value instead of "Custom Data".
     let state = &mut contract_result.final_state;
     let _is_owner = &context.is_owner;
     match &context.event {
         GovernanceEvent::Patch { data } => {
-            // Se recibe un JSON PATCH
-            // Se aplica directamente al estado
+            // A JSON PATCH is received
+            // It is applied directly to the state
             let patched_state = sdk::apply_patch(data.0.clone(), &context.initial_state).unwrap();
             if let Ok(_) = check_governance_state(&patched_state) {
                 *state = patched_state;
@@ -1036,13 +1019,13 @@ enum StateError {
 }
 
 fn check_governance_state(state: &Governance) -> Result<(), StateError> {
-    // Debemos comprobar varios aspectos del estado.
-    // No pueden haber miembros duplicados, ya sean en name o en ID
+    // We must check several aspects of the status.
+    // There cannot be duplicate members, either in name or ID.
     check_members(&state.members)?;
-    // No pueden haber policies duplicadas y la asociada a la propia gobernanza debe estar presente
+    // There can be no duplicate policies and the one associated with the governance itself must be present.
     let policies_names = check_policies(&state.policies)?;
-    // No se pueden indicar policies de schema que no existen. Así mismo, no pueden haber
-    // schemas sin policies. La correlación debe ser uno-uno
+    // Schema policies that do not exist cannot be indicated. Likewise, there cannot be
+    // schemas without policies. The correlation must be one-to-one
     check_schemas(&state.schemas, policies_names)
 }
 
@@ -1063,7 +1046,7 @@ fn check_members(members: &Vec<Member>) -> Result<(), StateError> {
 }
 
 fn check_policies(policies: &Vec<Policy>) -> Result<HashSet<String>, StateError> {
-    // Se comprueban de que no hayan policies duplicadas y de que se incluya la de gobernanza
+    // Check that there are no duplicate policies and that the governance policy is included.
     let mut is_governance_present = false;
     let mut id_set = HashSet::new();
     for policy in policies {
@@ -1086,16 +1069,16 @@ fn check_schemas(
     schemas: &Vec<Schema>,
     mut policies_names: HashSet<String>,
 ) -> Result<(), StateError> {
-    // Comprobamos que no hayan esquemas duplicados
-    // También se tiene que comprobar que los estados iniciales sean válidos según el json_schema
-    // Así mismo no puede haber un schema con id "governance"
+    // We check that there are no duplicate schemas.
+    // We also have to check that the initial states are valid according to the json_schema
+    // Also, there cannot be a schema with id "governance".
     for schema in schemas {
         if &schema.id == "governance" {
             return Err(StateError::GovernanceShchemaIDDetected);
         }
-        // No pueden haber duplicados y tienen que tener correspondencia con policies_names
+        // There can be no duplicates and they must be matched with policies_names
         if !policies_names.remove(&schema.id) {
-            // No tiene relación con policies_names
+            // Not related to policies_names
             return Err(StateError::NoCorrelationSchemaPolicy);
         }
     }
