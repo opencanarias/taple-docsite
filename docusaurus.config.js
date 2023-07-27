@@ -39,13 +39,13 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
           docLayoutComponent: "@theme/DocPage",
           // Derived from docusaurus-theme-openapi-docs
           docItemComponent: "@theme/ApiItem",
-          lastVersion: '0.1',
+          lastVersion: '0.2',
           versions: {
             current: {
               label: 'Next',
               banner: 'unreleased'
             },
-            0.1: {
+            0.2: {
               banner: 'none'
             }
           },
