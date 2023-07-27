@@ -8,11 +8,11 @@ Partiendo de los participantes mencionados en el apartado anterior, vamos a habl
 - Empresa de limpieza: Se necesita un nodo TAPLE ya que es un participante conocido y conformará parte de la gobernanza.
 - Empresa de seguros: Se necesita un nodo TAPLE ya que es un participante conocido y conformará parte de la gobernanza.
 - Cerradura inteligente: Cada vehículo dispondrá de un nodo TAPLE al que será transferida la propiedad del sujeto que representa al propio vehículo. Cabe destacar, que este nodo no conformará parte de la gobernanza ya que no va a tener ningún rol dentro de la mismo sino simplemente van a ser holders de los sujetos.
-- Cliente: No se necesita un nodo TAPLE, ya que el caso de uso traza los accesos a los vehículos, por lo que los clientes no necesitan tener esa información. Ellos, solamente necesitan un sistema para abrir las cerraduras inteligentes y para eso lo único que se requiere, es una identidad con la que generar las invocaciones que provocarán la apertura de la cerradura inteligente si están autorizados.
-- Trabajadores de limpieza: No se necesita un nodo TAPLE, ya que el caso de uso traza los accesos a los vehículos, por lo que los trabajadores no necesitan tener esa información. Ellos solamente necesitan un sistema para abrir las cerraduras inteligentes y para eso lo único que se requiere, es una identidad con la que generar las invocaciones que provocarán la apertura de la cerradura inteligente si están autorizados.
+- Cliente: No se necesita un nodo TAPLE, ya que el caso de uso traza los accesos a los vehículos, por lo que los clientes no necesitan tener esa información. Ellos, solamente necesitan un sistema para abrir las cerraduras inteligentes y para eso lo único que se requiere, es una identidad con la que generar las invocaciones que provocarán una solicitud de apertura de la cerradura inteligente.
+- Trabajadores de limpieza: No se necesita un nodo TAPLE, ya que el caso de uso traza los accesos a los vehículos, por lo que los trabajadores no necesitan tener esa información. Ellos solamente necesitan un sistema para abrir las cerraduras inteligentes y para eso lo único que se requiere, es una identidad con la que generar las invocaciones que provocarán una solicitud de apertura de la cerradura inteligente.
 
 ## Subjects
-Cada una de las cerraduras gestionaría un sujeto cuyo estado estaría reflejado en las cerraduras de los vehículos. Para reflejar el estado del sujeto será necesario la definición de un esquema el cual contendrá el estado del vehículo así como el identificador del conductor autorizado para su uso. 
+Cada una de las cerraduras gestionaría un sujeto cuyo estado estaría reflejado en las cerraduras de los vehículos. Para reflejar el estado del sujeto será necesario la definición de un esquema el cual contendrá el estado del vehículo así como la geolocalización del vehículo. 
 
 ## Governance
 Para conformar la gobernanza, partimos de la gobernanza por defecto y a continuación vamos aplicando los cambios necesarios para nuestro caso de uso.
@@ -94,7 +94,7 @@ Como ya habíamos mencionado con anterioridad, la gobernanza estará compuesta p
 Cabe destacar, que la compañía de alquiler será la propietaria de la misma.
 
 ### Schema
-En el schema definiremos el estado en el que se encuentra el coche, que podrá ser libre o alquilado y además se definirá el identificador del conductor que tendrá acceso al vehículo en cuestión. En caso de estar libre, este campo estará vacío.
+En el schema definiremos el estado en el que se encuentra el coche, que podrá ser libre o alquilado y además se definirá la geolocalización del vehículo.
 
 <details>
   <summary>Schema JSON</summary>
@@ -109,14 +109,24 @@ En el schema definiremos el estado en el que se encuentra el coche, que podrá s
                 "type": "string",
                 "enum": ["FREE", "RENTED"]
             },
-            "driver": {
-                "description": "Contiene el identificador del cliente autorizado para su uso",
-                "type": "string"
+            "last_position": {
+                "description": "Contiene el registro de la última posición del coche",
+                "type": "object",
+                "properties": {
+                    "latitude": {
+                        "description": "Define la latitud de la geolocalización del coche",
+                        "type": "number"
+                    },
+                    "longitude": {
+                        "description": "Define la longitud de la geolocalización del coche",
+                        "type": "number"
+                    }
+                }
             }
         },
         "required": [
             "status",
-            "driver"
+            "last_position"
         ],
         "additionalProperties": false
     }
@@ -125,22 +135,19 @@ En el schema definiremos el estado en el que se encuentra el coche, que podrá s
 </details>
 
 ### Smart Contract
-Dentro del contrato inteligente, definiremos la lógica de negocio. Cuando un usuario desea realizar la apertura de una cerradura inteligente de un vehículo, será necesario que envíe una petición de evento firmada. A partir de esta firma, si el identificador de la petición del solicitante, coincide con el identificador del conductor autorizado para su uso especificado en el estado, el vehículo se abrirá. En caso contrario, la compañía de renting y la compañía de limpieza/mantenimiento recibirían una solicitud de aprobación sobre la invocación realizada de manera que cada una de ellas deberá comprobar en sus sistemas internos si la identidad del emisor es válida. Si se trata de un usuario autorizado en la compañía de renting, ésta votará afirmativamente y se desbloqueará la cerradura. De la misma manera, si se trata del personal de limpieza, la compañía de limpieza votará afirmativamente y por tanto podrá acceder al vehículo. Por el contrario, si se trata de un invocador no válido, ambos rechazarán la solicitud, denegando el acceso al vehículo. Cabe destacar que el control de acceso lo podemos resolver de dos maneras posibles:
-- Si se trata de un cliente, el control de acceso se implementa en un contrato inteligente.
-- Si no se trata de un cliente, el control de acceso se requiere la fase de aprobación. Ésta es realizada por un agente externo denominado aprobador.
+Dentro del contrato inteligente, definiremos la lógica de negocio. Cuando un usuario desea realizar la apertura de una cerradura inteligente de un vehículo, será necesario que envíe una petición de evento firmada. A continuación, la compañía de renting y la compañía de limpieza/mantenimiento recibirían una solicitud de aprobación sobre la invocación realizada de manera que cada una de ellas deberá comprobar en sus sistemas internos si la identidad del emisor es válida. Si se trata de un usuario autorizado en la compañía de renting, ésta votará afirmativamente y se desbloqueará la cerradura. De la misma manera, si se trata del personal de limpieza, la compañía de limpieza votará afirmativamente y por tanto podrá acceder al vehículo. Por el contrario, si se trata de un invocador no válido, ambos rechazarán la solicitud, denegando el acceso al vehículo.
 
-El contrato inteligente lo conforman tres métodos:
-- RemoveDriver: Este método se encarga de pasar el estado del coche de RENTED a FREE y poner el id del conductor vacío.
+El contrato inteligente lo conforman cuatro métodos:
+- Unrental: Este método se encarga de pasar el estado del coche de RENTED a FREE.
 
     <details>
-      <summary>RemoveDriver method</summary>
+      <summary>Unrental method</summary>
 
     ```rust
-        CarEvent::RemoveDriver {} => match lock.status {
+        CarEvent::Unrental {} => match car.status {
             StatesCar::FREE => {}
             StatesCar::RENTED => {
-                lock.status = StatesCar::FREE;
-                lock.driver = "".to_string();
+                car.status = StatesCar::FREE;
                 contract_result.success = true;
             }
         }
@@ -148,16 +155,15 @@ El contrato inteligente lo conforman tres métodos:
 
     </details>
 
-- AssingDriver: Este método se encarga de pasar el estado del coche de FREE a RENTED y rellenar el id con el identficador del conductor.
+- Rent: Este método se encarga de pasar el estado del coche de FREE a RENTED.
 
     <details>
-      <summary>AssingDriver method</summary>
+      <summary>Rent method</summary>
 
     ```rust
-        CarEvent::AssignDriver { id } => match lock.status {
+        CarEvent::Rent {} => match car.status {
             StatesCar::FREE => {
-                lock.status = StatesCar::RENTED;
-                lock.driver = id.to_string();
+                car.status = StatesCar::RENTED;
                 contract_result.success = true;
             }
             StatesCar::RENTED => {}
@@ -166,21 +172,44 @@ El contrato inteligente lo conforman tres métodos:
 
     </details>
 
-- OpenDoor: Este método se encarga de comprobar si la persona que intente abrir el coche se corresponde con la persona especificada en el id del conductor. En caso de ser la misma, el coche se abre y en caso contrario, se solicita aprobación.
+- Open: Este método se encarga de comprobar si la persona que intente abrir el coche se corresponde con una persona autorizada. Para ello, se solicita aprobación.
 
     <details>
-      <summary>OpenDoor method</summary>
+      <summary>Open method</summary>
 
     ```rust
-        CarEvent::OpenDoor { id } => match lock.status {
+        CarEvent::Open {} => match car.status {
             StatesCar::FREE => {
                 contract_result.approval_required = true;
                 contract_result.success = true;
             }
             StatesCar::RENTED => {
-                if lock.driver != id.to_string() {
-                    contract_result.approval_required = true;
-                }
+                contract_result.approval_required = true;
+                contract_result.success = true;
+            }
+        }
+    ```
+
+    </details>
+
+- UpdatePosition: Este método se encarga de actualizar la geolocalización del coche cada 10 minutos.
+
+    <details>
+      <summary>UpdatePosition method</summary>
+
+    ```rust
+        CarEvent::UpdatePosition {
+            latitude,
+            longitude,
+        } => match car.status {
+            StatesCar::FREE => {
+                car.last_position.latitude = latitude.round();
+                car.last_position.longitude = longitude.round();
+                contract_result.success = true;
+            }
+            StatesCar::RENTED => {
+                car.last_position.latitude = latitude.round();
+                car.last_position.longitude = longitude.round();
                 contract_result.success = true;
             }
         }
@@ -195,14 +224,14 @@ Para añadir el contrato inteligente, antes debemos pasarlo a base64. Para ello,
 
 ```json
     "contract": {
-        "raw": "dXNlIHNlcmRlOjp7RGVzZXJpYWxpemUsIFNlcmlhbGl6ZX07DQp1c2UgdGFwbGVfc2NfcnVzdCBhcyBzZGs7DQoNCiNbZGVyaXZlKFNlcmlhbGl6ZSwgRGVzZXJpYWxpemUsIENsb25lKV0NCmVudW0gU3RhdGVzQ2FyIHsNCiAgICBGUkVFLA0KICAgIFJFTlRFRCwNCn0NCg0KI1tkZXJpdmUoU2VyaWFsaXplLCBEZXNlcmlhbGl6ZSwgQ2xvbmUpXQ0Kc3RydWN0IENhciB7DQogICAgcHViIHN0YXR1czogU3RhdGVzQ2FyLCAvLyBGUkVFIFJFTlRFRA0KICAgIHB1YiBkcml2ZXI6IFN0cmluZywgICAgLy8gRHJpdmVyIElEDQp9DQoNCiNbZGVyaXZlKFNlcmlhbGl6ZSwgRGVzZXJpYWxpemUpXQ0KZW51bSBDYXJFdmVudCB7DQogICAgUmVtb3ZlRHJpdmVyIHt9LA0KICAgIEFzc2lnbkRyaXZlciB7IGlkOiBTdHJpbmcgfSwNCiAgICBPcGVuRG9vciB7IGlkOiBTdHJpbmcgfSwNCn0NCg0KI1tub19tYW5nbGVdDQpwdWIgdW5zYWZlIGZuIG1haW5fZnVuY3Rpb24oc3RhdGVfcHRyOiBpMzIsIGV2ZW50X3B0cjogaTMyLCBpc19vd25lcjogaTMyKSAtPiB1MzIgew0KICAgIHNkazo6ZXhlY3V0ZV9jb250cmFjdChzdGF0ZV9wdHIsIGV2ZW50X3B0ciwgaXNfb3duZXIsIGNvbnRyYWN0X2xvZ2ljKQ0KfQ0KDQpmbiBjb250cmFjdF9sb2dpYygNCiAgICBjb250ZXh0OiAmc2RrOjpDb250ZXh0PENhciwgQ2FyRXZlbnQ+LA0KICAgIGNvbnRyYWN0X3Jlc3VsdDogJm11dCBzZGs6OkNvbnRyYWN0UmVzdWx0PENhcj4sDQopIHsNCiAgICBsZXQgbG9jayA9ICZtdXQgY29udHJhY3RfcmVzdWx0LmZpbmFsX3N0YXRlOw0KICAgIG1hdGNoICZjb250ZXh0LmV2ZW50IHsNCiAgICAgICAgQ2FyRXZlbnQ6OlJlbW92ZURyaXZlciB7fSA9PiBtYXRjaCBsb2NrLnN0YXR1cyB7DQogICAgICAgICAgICBTdGF0ZXNDYXI6OkZSRUUgPT4ge30NCiAgICAgICAgICAgIFN0YXRlc0Nhcjo6UkVOVEVEID0+IHsNCiAgICAgICAgICAgICAgICBsb2NrLnN0YXR1cyA9IFN0YXRlc0Nhcjo6RlJFRTsNCiAgICAgICAgICAgICAgICBsb2NrLmRyaXZlciA9ICIiLnRvX3N0cmluZygpOw0KICAgICAgICAgICAgICAgIGNvbnRyYWN0X3Jlc3VsdC5zdWNjZXNzID0gdHJ1ZTsNCiAgICAgICAgICAgIH0NCiAgICAgICAgfSwNCiAgICAgICAgQ2FyRXZlbnQ6OkFzc2lnbkRyaXZlciB7IGlkIH0gPT4gbWF0Y2ggbG9jay5zdGF0dXMgew0KICAgICAgICAgICAgU3RhdGVzQ2FyOjpGUkVFID0+IHsNCiAgICAgICAgICAgICAgICBsb2NrLnN0YXR1cyA9IFN0YXRlc0Nhcjo6UkVOVEVEOw0KICAgICAgICAgICAgICAgIGxvY2suZHJpdmVyID0gaWQudG9fc3RyaW5nKCk7DQogICAgICAgICAgICAgICAgY29udHJhY3RfcmVzdWx0LnN1Y2Nlc3MgPSB0cnVlOw0KICAgICAgICAgICAgfQ0KICAgICAgICAgICAgU3RhdGVzQ2FyOjpSRU5URUQgPT4ge30NCiAgICAgICAgfSwNCiAgICAgICAgQ2FyRXZlbnQ6Ok9wZW5Eb29yIHsgaWQgfSA9PiBtYXRjaCBsb2NrLnN0YXR1cyB7DQogICAgICAgICAgICBTdGF0ZXNDYXI6OkZSRUUgPT4gew0KICAgICAgICAgICAgICAgIGNvbnRyYWN0X3Jlc3VsdC5hcHByb3ZhbF9yZXF1aXJlZCA9IHRydWU7DQogICAgICAgICAgICAgICAgY29udHJhY3RfcmVzdWx0LnN1Y2Nlc3MgPSB0cnVlOw0KICAgICAgICAgICAgfQ0KICAgICAgICAgICAgU3RhdGVzQ2FyOjpSRU5URUQgPT4gew0KICAgICAgICAgICAgICAgIGlmIGxvY2suZHJpdmVyICE9IGlkLnRvX3N0cmluZygpIHsNCiAgICAgICAgICAgICAgICAgICAgY29udHJhY3RfcmVzdWx0LmFwcHJvdmFsX3JlcXVpcmVkID0gdHJ1ZTsNCiAgICAgICAgICAgICAgICB9DQogICAgICAgICAgICAgICAgY29udHJhY3RfcmVzdWx0LnN1Y2Nlc3MgPSB0cnVlOw0KICAgICAgICAgICAgfQ0KICAgICAgICB9LA0KICAgIH0NCn0NCg=="
+        "raw":"dXNlIHNlcmRlOjp7RGVzZXJpYWxpemUsIFNlcmlhbGl6ZX07DQp1c2UgdGFwbGVfc2NfcnVzdCBhcyBzZGs7DQoNCiNbZGVyaXZlKFNlcmlhbGl6ZSwgRGVzZXJpYWxpemUsIENsb25lKV0NCmVudW0gU3RhdGVzQ2FyIHsNCiAgICBGUkVFLA0KICAgIFJFTlRFRCwNCn0NCg0KI1tkZXJpdmUoU2VyaWFsaXplLCBEZXNlcmlhbGl6ZSwgQ2xvbmUpXQ0Kc3RydWN0IFBvc2l0aW9uIHsNCiAgICBsYXRpdHVkZTogZjMyLA0KICAgIGxvbmdpdHVkZTogZjMyLA0KfQ0KDQojW2Rlcml2ZShTZXJpYWxpemUsIERlc2VyaWFsaXplLCBDbG9uZSldDQpzdHJ1Y3QgQ2FyIHsNCiAgICBwdWIgc3RhdHVzOiBTdGF0ZXNDYXIsICAgICAgIC8vIEZSRUUgUkVOVEVEDQogICAgcHViIGxhc3RfcG9zaXRpb246IFBvc2l0aW9uLCAvLyBsYXRpdHVkZSBsb25naXR1ZGUNCn0NCg0KI1tkZXJpdmUoU2VyaWFsaXplLCBEZXNlcmlhbGl6ZSldDQplbnVtIENhckV2ZW50IHsNCiAgICBVbnJlbnRhbCB7fSwNCiAgICBSZW50IHt9LA0KICAgIE9wZW4ge30sDQogICAgVXBkYXRlUG9zaXRpb24geyBsYXRpdHVkZTogZjMyLCBsb25naXR1ZGU6IGYzMiB9LA0KfQ0KDQojW25vX21hbmdsZV0NCnB1YiB1bnNhZmUgZm4gbWFpbl9mdW5jdGlvbihzdGF0ZV9wdHI6IGkzMiwgZXZlbnRfcHRyOiBpMzIsIGlzX293bmVyOiBpMzIpIC0+IHUzMiB7DQogICAgc2RrOjpleGVjdXRlX2NvbnRyYWN0KHN0YXRlX3B0ciwgZXZlbnRfcHRyLCBpc19vd25lciwgY29udHJhY3RfbG9naWMpDQp9DQoNCmZuIGNvbnRyYWN0X2xvZ2ljKA0KICAgIGNvbnRleHQ6ICZzZGs6OkNvbnRleHQ8Q2FyLCBDYXJFdmVudD4sDQogICAgY29udHJhY3RfcmVzdWx0OiAmbXV0IHNkazo6Q29udHJhY3RSZXN1bHQ8Q2FyPiwNCikgew0KICAgIGxldCBjYXIgPSAmbXV0IGNvbnRyYWN0X3Jlc3VsdC5maW5hbF9zdGF0ZTsNCiAgICBtYXRjaCAmY29udGV4dC5ldmVudCB7DQogICAgICAgIENhckV2ZW50OjpVbnJlbnRhbCB7fSA9PiBtYXRjaCBjYXIuc3RhdHVzIHsNCiAgICAgICAgICAgIFN0YXRlc0Nhcjo6RlJFRSA9PiB7fQ0KICAgICAgICAgICAgU3RhdGVzQ2FyOjpSRU5URUQgPT4gew0KICAgICAgICAgICAgICAgIGNhci5zdGF0dXMgPSBTdGF0ZXNDYXI6OkZSRUU7DQogICAgICAgICAgICAgICAgY29udHJhY3RfcmVzdWx0LnN1Y2Nlc3MgPSB0cnVlOw0KICAgICAgICAgICAgfQ0KICAgICAgICB9LA0KICAgICAgICBDYXJFdmVudDo6UmVudCB7fSA9PiBtYXRjaCBjYXIuc3RhdHVzIHsNCiAgICAgICAgICAgIFN0YXRlc0Nhcjo6RlJFRSA9PiB7DQogICAgICAgICAgICAgICAgY2FyLnN0YXR1cyA9IFN0YXRlc0Nhcjo6UkVOVEVEOw0KICAgICAgICAgICAgICAgIGNvbnRyYWN0X3Jlc3VsdC5zdWNjZXNzID0gdHJ1ZTsNCiAgICAgICAgICAgIH0NCiAgICAgICAgICAgIFN0YXRlc0Nhcjo6UkVOVEVEID0+IHt9DQogICAgICAgIH0sDQogICAgICAgIENhckV2ZW50OjpPcGVuIHt9ID0+IG1hdGNoIGNhci5zdGF0dXMgew0KICAgICAgICAgICAgU3RhdGVzQ2FyOjpGUkVFID0+IHsNCiAgICAgICAgICAgICAgICBjb250cmFjdF9yZXN1bHQuYXBwcm92YWxfcmVxdWlyZWQgPSB0cnVlOw0KICAgICAgICAgICAgICAgIGNvbnRyYWN0X3Jlc3VsdC5zdWNjZXNzID0gdHJ1ZTsNCiAgICAgICAgICAgIH0NCiAgICAgICAgICAgIFN0YXRlc0Nhcjo6UkVOVEVEID0+IHsNCiAgICAgICAgICAgICAgICBjb250cmFjdF9yZXN1bHQuYXBwcm92YWxfcmVxdWlyZWQgPSB0cnVlOw0KICAgICAgICAgICAgICAgIGNvbnRyYWN0X3Jlc3VsdC5zdWNjZXNzID0gdHJ1ZTsNCiAgICAgICAgICAgIH0NCiAgICAgICAgfSwNCiAgICAgICAgQ2FyRXZlbnQ6OlVwZGF0ZVBvc2l0aW9uIHsNCiAgICAgICAgICAgIGxhdGl0dWRlLA0KICAgICAgICAgICAgbG9uZ2l0dWRlLA0KICAgICAgICB9ID0+IG1hdGNoIGNhci5zdGF0dXMgew0KICAgICAgICAgICAgU3RhdGVzQ2FyOjpGUkVFID0+IHsNCiAgICAgICAgICAgICAgICBjYXIubGFzdF9wb3NpdGlvbi5sYXRpdHVkZSA9IGxhdGl0dWRlLnJvdW5kKCk7DQogICAgICAgICAgICAgICAgY2FyLmxhc3RfcG9zaXRpb24ubG9uZ2l0dWRlID0gbG9uZ2l0dWRlLnJvdW5kKCk7DQogICAgICAgICAgICAgICAgY29udHJhY3RfcmVzdWx0LnN1Y2Nlc3MgPSB0cnVlOw0KICAgICAgICAgICAgfQ0KICAgICAgICAgICAgU3RhdGVzQ2FyOjpSRU5URUQgPT4gew0KICAgICAgICAgICAgICAgIGNhci5sYXN0X3Bvc2l0aW9uLmxhdGl0dWRlID0gbGF0aXR1ZGUucm91bmQoKTsNCiAgICAgICAgICAgICAgICBjYXIubGFzdF9wb3NpdGlvbi5sb25naXR1ZGUgPSBsb25naXR1ZGUucm91bmQoKTsNCiAgICAgICAgICAgICAgICBjb250cmFjdF9yZXN1bHQuc3VjY2VzcyA9IHRydWU7DQogICAgICAgICAgICB9DQogICAgICAgIH0sDQogICAgfQ0KfQ=="
     }
 ```
 
 </details>
 
 ### Policies
-Para garantizar un mejor control y una mayor seguridad sobre la red, definiremos las policies con quorum de mayoría, evitándonos de esta manera un monopolio en el que puedan aparecer situaciones anómalas.
+Para garantizar un mejor control y una mayor seguridad sobre la red, definiremos las policies sobre el sujeto.
 
 <details>
   <summary>Policies JSON</summary>
@@ -213,7 +242,9 @@ Para garantizar un mejor control y una mayor seguridad sobre la red, definiremos
         "path": "/policies/1",
         "value": {
             "approve": {
-                "quorum": "MAJORITY"
+                "quorum": {
+                    "FIXED": 1
+                }
             },
             "evaluate": {
                 "quorum": "MAJORITY"
@@ -229,7 +260,73 @@ Para garantizar un mejor control y una mayor seguridad sobre la red, definiremos
 </details>
 
 ### Roles of participants
-- Compañía de alquiler: Propietaria de la gobernanza y evaludadora de los contratos inteligentes. Al ser propietaria de la gobernanza, no es necesario especificar roles sobre la misma ya que por defecto los adquiere todos.
+- Compañía de alquiler: Propietaria de la gobernanza y evaludadora de los contratos inteligentes. Al ser propietaria de la gobernanza, no es necesario especificar roles sobre la misma ya que por defecto los adquiere todos. Sin embargo, si debemos definir los roles sobre el sujeto.
+
+    <details>
+      <summary>Roles rental company</summary>
+
+    ```json
+        [
+            {
+                "op": "add",
+                "path": "/roles/1",
+                "value": {
+                    "namespace": "",
+                    "role": "CREATOR",
+                    "schema": {
+                        "ID": "car"
+                    },
+                    "who": {
+                        "NAME": "RentalCompany"
+                    }
+                }
+            },
+            {
+                "op": "add",
+                "path": "/roles/2",
+                "value": {
+                    "namespace": "",
+                    "role": "APPROVER",
+                    "schema": {
+                        "ID": "car"
+                    },
+                    "who": {
+                        "NAME": "RentalCompany"
+                    }
+                }
+            },
+            {
+                "op": "add",
+                "path": "/roles/3",
+                "value": {
+                    "namespace": "",
+                    "role": "WITNESS",
+                    "schema": {
+                        "ID": "car"
+                    },
+                    "who": {
+                        "NAME": "RentalCompany"
+                    }
+                }
+            },
+            {
+                "op": "add",
+                "path": "/roles/4",
+                "value": {
+                    "namespace": "",
+                    "role": "ISSUER",
+                    "schema": {
+                        "ID": "car"
+                    },
+                    "who": {
+                        "NAME": "RentalCompany"
+                    }
+                }
+            }
+        ]
+    ```
+
+    </details>
 
 - Compañía de limpieza: Aprobador del personal de limpieza y testigo para tener un registro de las limpiezas realizadas.
 
@@ -240,7 +337,7 @@ Para garantizar un mejor control y una mayor seguridad sobre la red, definiremos
         [
             {
                 "op": "add",
-                "path": "/roles/1",
+                "path": "/roles/5",
                 "value": {
                     "namespace": "",
                     "role": "WITNESS",
@@ -254,7 +351,7 @@ Para garantizar un mejor control y una mayor seguridad sobre la red, definiremos
             },
             {
                 "op": "add",
-                "path": "/roles/2",
+                "path": "/roles/6",
                 "value": {
                     "namespace": "",
                     "role": "WITNESS",
@@ -268,10 +365,24 @@ Para garantizar un mejor control y una mayor seguridad sobre la red, definiremos
             },
             {
                 "op": "add",
-                "path": "/roles/3",
+                "path": "/roles/7",
                 "value": {
                     "namespace": "",
                     "role": "APPROVER",
+                    "schema": {
+                        "ID": "car"
+                    },
+                    "who": {
+                        "NAME": "CleaningCompany"
+                    }
+                }
+            },
+            {
+                "op": "add",
+                "path": "/roles/8",
+                "value": {
+                    "namespace": "",
+                    "role": "ISSUER",
                     "schema": {
                         "ID": "car"
                     },
@@ -294,7 +405,7 @@ Para garantizar un mejor control y una mayor seguridad sobre la red, definiremos
         [
             {
                 "op": "add",
-                "path": "/roles/4",
+                "path": "/roles/9",
                 "value": {
                     "namespace": "",
                     "role": "WITNESS",
@@ -308,7 +419,7 @@ Para garantizar un mejor control y una mayor seguridad sobre la red, definiremos
             },                        
             {
                 "op": "add",
-                "path": "/roles/5",
+                "path": "/roles/10",
                 "value": {
                     "namespace": "",
                     "role": "EVALUATOR",
@@ -322,7 +433,7 @@ Para garantizar un mejor control y una mayor seguridad sobre la red, definiremos
             },
             {
                 "op": "add",
-                "path": "/roles/6",
+                "path": "/roles/11",
                 "value": {
                     "namespace": "",
                     "role": "WITNESS",

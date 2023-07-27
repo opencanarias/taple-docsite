@@ -401,8 +401,8 @@ module.exports = {
                 },
                 {
                   type: 'doc',
-                  label: 'Interactuar con la red',
-                  id: 'build/access-control/interactuar-red',
+                  label: 'Interacting with the network',
+                  id: 'build/access-control/interacting-network',
                 }
               ],
             },

@@ -8,7 +8,7 @@ Para llevar a cabo el control de acceso, las cerraduras de los vehículos han si
 
 El objetivo final, es que sólo puedan abrir los vehículos los clientes registrados en el sistema de la compañía de renting o el personal autorizado. Esto, lo trataremos en base al estado del vehículo, los cuales son los siguientes:
 - Libre: Este estado representa que le vehículo no se encuentra a disposición de ningún cliente y por tanto puede ser alquilado.
-- Alquilado: Este estado representa que el vehículo se encuentra a disposición de un cliente y por tanto no puede se adjudicado a otro hasta el momento que se encuentre libre.
+- Alquilado: Este estado representa que el vehículo se encuentra a disposición de un cliente y por tanto no puede ser adjudicado a otro hasta el momento que se encuentre libre.
 De esta manera, dependiendo del estado en el que se encuentre el vehículo, podremos gestionarlo de diferente manera.
 
 ## Participants
