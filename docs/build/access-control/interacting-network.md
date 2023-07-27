@@ -441,3 +441,16 @@ donde podemos apreciar que ha incrementado el campo "**sn**" y que el evento se 
         "success": false
     }
 ```
+
+## Compañía de seguros
+Como la compañía de seguros es testigo tanto de la gobernanza como de los vehículos, ésta podrá ir visualizando en cualquier momento el estado de las mismas. Para ello, debe ejecutar el siguiente comando:
+
+```bash
+    curl 'http://localhost:3002/api/subjects/{{SUBJECT-ID}}'
+```
+
+:::caution
+
+Tenga en cuenta que en la petición, deberá sustituir **{{SUBJECT-ID}}** por el hash identificador correspondiente.
+
+:::
