@@ -1,7 +1,5 @@
 # Basic usage
 
-TAPLE Core is a library that implements most of the functionality of the TAPLE protocols. The most straightforward way to develop a TAPLE-compliant application is to use this library as, for example, [TAPLE Client](./taple-client.md) does.
-
 TAPLE Core exposes a Taple object that represents the node to be started. To build this object you need to define a number of additional configurations and provide a database implementation that meets the needs of TAPLE Core. TAPLE Core includes an in-memory database implementation for testing but without persistence capability. TAPLE Client includes an implementation based on [LevelDB](./taple-client.md#database). 
 
 Once we have built our Taple object, we can interact with it through 2 mechanisms:
@@ -105,3 +103,9 @@ async fn main() -> Result<(), ()> {
     Ok(())
 }
 ```
+
+:::info
+
+The complete example can be found in the [TAPLE Core repository](https://github.com/opencanarias/taple-core)
+
+:::
