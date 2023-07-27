@@ -67,15 +67,17 @@ We must again approve the new request as in the previous case.
 The first node is going to be sending the events of the governance subject to the controller **E6AL_cLzXRIAnc3Hy2oX5K8CgnzPXPmyL1KyDo36DNdM**, whose PeerId (identification in LibP2P, the communication library) is **12D3KooWRS3QVwqBtNp7rUCG4SF3nBrinQqJYC1N5qc1Wdr4jrze**. Unfortunately, it will not find it on its network because they are not connected, so we will proceed to raise the second node and connect it to the first:
 
 ```bash
-docker run -p 3001:3000 -p 50001:50000 \ 
--e TAPLE_ID_PRIVATE_KEY=388e07385cfd8871f990fe05f82610af1989f7abf5d4e42884c8337498086ba0 \ 
--e TAPLE_HTTP=true opencanarias/taple-client:0.2 \ 
--e TAPLE_NETWORK_KNOWN_NODE=/ip4/127.0.0.1/tcp/50000/p2p/12D3KooWLXexpg81PjdjnrhmHUxN7U5EtfXJgr9cahei1SJ9Ub3B \ 
+docker run -p 3001:3000 -p 50001:50000 \
+-e TAPLE_ID_PRIVATE_KEY=388e07385cfd8871f990fe05f82610af1989f7abf5d4e42884c8337498086ba0 \
+-e TAPLE_HTTP=true \
+-e TAPLE_NETWORK_KNOWN_NODE=/ip4/172.17.0.1/tcp/50000/p2p/12D3KooWLXexpg81PjdjnrhmHUxN7U5EtfXJgr9cahei1SJ9Ub3B \
 -e TAPLE_NETWORK_LISTEN_ADDR=/ip4/0.0.0.0/tcp/50000 \
 opencanarias/taple-client:0.2.0
 ```
 
-Replace addr with the ip that the second node can find the first. It depends on whether the containers are launched on a docker network, on the host network... here we are assuming that they are on the host network.
+:::caution
+Pay attention to the IP address specified in TAPLE_NETWORK_KNOWN_NODE as it may be different in your case. You should specify an IP that allows the second container to communicate with the first one.
+:::
 
 Now that it is up and finds the others from a bootstrap on **TAPLE_NETWORK_KNOWN_NODE**. Events from the governance will begin to arrive at the second node, although they will not yet be saved in its database. This is because governances always have to be pre-authorized to allow the reception of their events. For this, the endpoint **/api/allowed-subjects/{{governance_id}}** and the **PUT** method are used. Remember that in this case it must be launched on the second node, which, due to the configuration we have set, will be listening on port 3001 of localhost. The second node will now correctly update with the governance subject.
 

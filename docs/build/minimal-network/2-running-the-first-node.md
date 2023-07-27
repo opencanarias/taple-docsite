@@ -35,9 +35,10 @@ Another environment variable we must add is **TAPLE_HTTP**, which will allow us 
 Once we have these two variables, we will be able to launch the node with the minimum configuration (port 3000 is the default for the http service).
 
 ```bash
-docker run -p 3000:3000 -p 50000:50000 \ 
--e TAPLE_ID_PRIVATE_KEY=f78e9b42c3f265d0c5bf613f47bf4fb8fa3f18b3b38dd4e90ca7eed497e3394a \ 
--e TAPLE_HTTP=true opencanarias/taple-client:0.2 \ 
+docker run -p 3000:3000 -p 50000:50000 \
+-e TAPLE_ID_PRIVATE_KEY=f78e9b42c3f265d0c5bf613f47bf4fb8fa3f18b3b38dd4e90ca7eed497e3394a \
+-e TAPLE_HTTP=true \
 -e TAPLE_NETWORK_LISTEN_ADDR=/ip4/0.0.0.0/tcp/50000 \
+-e RUST_LOG=info \
 opencanarias/taple-client:0.2
 ```
