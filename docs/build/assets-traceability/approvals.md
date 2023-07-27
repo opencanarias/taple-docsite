@@ -287,7 +287,7 @@ curl --location --request POST 'http://localhost:3000/api/event-requests' \
 --data-raw '{
     "request": {
         "Fact": {
-            "subject_id": "JL1CyfvH9BpwSdeEZkqLjhtqB_T7t5MBLbqUkz8nTHHY",
+            "subject_id": {{GOVERNANCE_ID}},
             "payload": {
                 "Patch": {
                     "data": [
