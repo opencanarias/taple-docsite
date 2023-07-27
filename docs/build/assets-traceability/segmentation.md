@@ -961,7 +961,7 @@ Save the `subject_id` of the **subject**, as you will need it for subsequent ste
 To check our new wine bottle, execute the following command:
 
 ```bash title="Node: WPO"
-curl --request GET 'http://localhost:3000/api/subjects/{{SUBJECT-ID}}'
+curl --request GET 'http://localhost:3001/api/subjects/{{SUBJECT-ID}}'
 ```
 
 ```json
@@ -988,6 +988,14 @@ curl --request GET 'http://localhost:3000/api/subjects/{{SUBJECT-ID}}'
     "active": true
 }
 ```
+
+But if we execute:
+
+```bash title="Node: WPO"
+curl --request GET 'http://localhost:3000/api/subjects/{{SUBJECT-ID}}'
+```
+
+We get 404 arror because of the segmentation we have applied changing the namespace, which determine who are the witnesses of the subject.
 
 :::caution
 Copy its `subject_id` as it will be necessary for the following steps.
@@ -1056,7 +1064,7 @@ The result of this execution will be included in the following request:
 ```bash title="Node: Premium Wines"
 curl --request POST 'http://localhost:3001/api/event-requests' \
 --header 'Content-Type: application/json' \
---data-raw 'SIGN-RESULT'
+--data-raw {{SIGN-RESULT}}
 ```
 
 This will give us a result similar to the following:
@@ -1108,8 +1116,8 @@ curl --request GET 'http://localhost:3001/api/subjects?subject_type=all&governan
 
 ```json
 {
-    "subject_id": "JGptSjgfJyXX4AZekYBAbcFDZNmJQKexenqxu8A4UKvE",
-    "governance_id": "JqqF3qMDn6aNjdcExVzRQ4yn9-zQVXLJ6guGFT2RIz60",
+    "subject_id": {{SUBJECT_ID}},
+    "governance_id": {{GOVERNANCE_ID}},
     "sn": 2,
     "public_key": "E5DkRaljajwUZ1HrpgdkIxdTu0fbrg-nqoBJFHqm6GJY",
     "namespace": "France",

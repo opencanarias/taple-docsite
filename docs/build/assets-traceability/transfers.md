@@ -49,7 +49,7 @@ curl --request PUT 'http://localhost:3004/api/allowed-subjects/{{SUBJECT-ID}}' \
 Now, we need to sign the transfer request with the material from the new node. To do this, we will use our [TAPLE-Sign tool](../../learn/client-tools.md#taple-sign) and execute the following command:
 
 ```bash title="Another terminal"
-taple-sing '2a71a0aff12c2de9e21d76e0538741aa9ac6da9ff7f467cf8b7211bd008a3198' '{"Transfer":{"subject_id":"{{SUBJECT-ID}}","public_key":"{{PUBLIC-KEY}}"}}'
+taple-sign '2a71a0aff12c2de9e21d76e0538741aa9ac6da9ff7f467cf8b7211bd008a3198' '{"Transfer":{"subject_id":"{{SUBJECT-ID}}","public_key":"{{PUBLIC-KEY}}"}}'
 ```
 
 The result of this execution will be included in the following request:

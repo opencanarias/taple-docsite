@@ -540,7 +540,7 @@ The result of this execution will be included in the following request:
 ```bash title="Node: Premium Wines"
 curl --request POST 'http://localhost:3001/api/event-requests' \
 --header 'Content-Type: application/json' \
---data-raw 'SIGN-RESULT'
+--data-raw {{SIGN-RESULT}}
 ```
 
 Tras realizarla, debería aparecer la solicitud de aprobación a los nodos **WFO** y **SFO**. Puedes comprobarlo de la siguiente manera:
