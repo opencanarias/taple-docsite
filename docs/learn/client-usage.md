@@ -54,6 +54,12 @@ docker run \
   opencanarias/taple-client:0.2
 ```
 
+:::warning
+
+The TAPLE Client docker image sets, by default, an internal path to the container itself to host the database. In a production environment you will need to set an external path to the container to host the database in order not to lose the information. For this you will need to set the configuration variable [DB_PATH](./client-config.md#database-path).
+
+:::
+
 ### REST API
 
 Each node with TAPLE-Client has the capability to expose its REST API, [as mentioned earlier](./taple-client.md#api-rest). It is not mandatory, but it might be necessary depending on the role our node plays within the use case. We can achieve this by using the following three parameters:
