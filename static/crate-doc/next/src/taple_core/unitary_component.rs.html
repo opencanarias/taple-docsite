@@ -642,7 +642,6 @@
 <a href="#642" id="642">642</a>
 <a href="#643" id="643">643</a>
 <a href="#644" id="644">644</a>
-<a href="#645" id="645">645</a>
 </pre></div><pre class="rust"><code><span class="attr">#[cfg(feature = <span class="string">&quot;aproval&quot;</span>)]
 </span><span class="kw">use </span><span class="kw">crate</span>::approval::manager::{ApprovalAPI, ApprovalManager};
 <span class="attr">#[cfg(feature = <span class="string">&quot;aproval&quot;</span>)]
@@ -1008,7 +1007,6 @@
             </span>sender_network,
             kp.clone(),
             shutdown_sender.subscribe(),
-            SendMode::Tell,
             external_addresses(<span class="kw-2">&amp;</span><span class="self">self</span>.settings.network.external_address)<span class="question-mark">?</span>,
         )
         .<span class="kw">await

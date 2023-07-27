@@ -880,12 +880,12 @@
         <span class="kw">match </span>quorum {
             Quorum::MAJORITY =&gt; <span class="prelude-val">Ok</span>(<span class="prelude-val">Ok</span>((signers.len() <span class="kw">as </span>u32 / <span class="number">2</span>) + <span class="number">1</span>)),
             Quorum::FIXED { fixed } =&gt; <span class="prelude-val">Ok</span>(<span class="prelude-val">Ok</span>(fixed)),
-            Quorum::PORCENTAJE { porcentaje } =&gt; {
-                <span class="kw">let </span>result = (signers.len() <span class="kw">as </span>f64 * porcentaje).ceil() <span class="kw">as </span>u32;
+            Quorum::PERCENTAGE { percentage } =&gt; {
+                <span class="kw">let </span>result = (signers.len() <span class="kw">as </span>f64 * percentage).ceil() <span class="kw">as </span>u32;
                 <span class="prelude-val">Ok</span>(<span class="prelude-val">Ok</span>(result))
             }
-            Quorum::BFT { .. } =&gt; <span class="macro">todo!</span>(),
-        }
+            <span class="comment">// Quorum::BFT { .. } =&gt; todo!(),
+        </span>}
     }
 
     <span class="comment">// NEW

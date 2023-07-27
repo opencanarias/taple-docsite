@@ -311,9 +311,9 @@
 </span><span class="kw">pub enum </span>Quorum {
     MAJORITY,
     FIXED { fixed: u32 },
-    PORCENTAJE { porcentaje: f64 },
-    BFT { BFT: f64 },
-}
+    PERCENTAGE { percentage: f64 },
+    <span class="comment">// BFT { BFT: f64 },
+</span>}
 
 <span class="kw">impl </span>Serialize <span class="kw">for </span>Quorum {
     <span class="kw">fn </span>serialize&lt;S&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, serializer: S) -&gt; <span class="prelude-ty">Result</span>&lt;S::Ok, S::Error&gt;
@@ -327,17 +327,17 @@
                 map.serialize_entry(<span class="string">&quot;FIXED&quot;</span>, fixed)<span class="question-mark">?</span>;
                 map.end()
             }
-            Quorum::PORCENTAJE { porcentaje } =&gt; {
+            Quorum::PERCENTAGE { percentage } =&gt; {
                 <span class="kw">let </span><span class="kw-2">mut </span>map = serializer.serialize_map(<span class="prelude-val">Some</span>(<span class="number">1</span>))<span class="question-mark">?</span>;
-                map.serialize_entry(<span class="string">&quot;PORCENTAJE&quot;</span>, porcentaje)<span class="question-mark">?</span>;
+                map.serialize_entry(<span class="string">&quot;PERCENTAGE&quot;</span>, percentage)<span class="question-mark">?</span>;
                 map.end()
             }
-            Quorum::BFT { BFT } =&gt; {
-                <span class="kw">let </span><span class="kw-2">mut </span>map = serializer.serialize_map(<span class="prelude-val">Some</span>(<span class="number">1</span>))<span class="question-mark">?</span>;
-                map.serialize_entry(<span class="string">&quot;BFT&quot;</span>, BFT)<span class="question-mark">?</span>;
-                map.end()
-            }
-        }
+            <span class="comment">// Quorum::BFT { BFT } =&gt; {
+            //     let mut map = serializer.serialize_map(Some(1))?;
+            //     map.serialize_entry(&quot;BFT&quot;, BFT)?;
+            //     map.end()
+            // }
+        </span>}
     }
 }
 
@@ -358,25 +358,25 @@
             {
                 <span class="comment">// Solo deberían tener una entrada
                 </span><span class="kw">let </span><span class="prelude-val">Some</span>(key) = map.next_key::&lt;String&gt;()<span class="question-mark">? </span><span class="kw">else </span>{
-                    <span class="kw">return </span><span class="prelude-val">Err</span>(serde::de::Error::missing_field(<span class="string">&quot;FIXED, BFT or PORCENTAJE&quot;</span>))
+                    <span class="kw">return </span><span class="prelude-val">Err</span>(serde::de::Error::missing_field(<span class="string">&quot;FIXED or PERCENTAGE&quot;</span>))
                 };
                 <span class="kw">let </span>result = <span class="kw">match </span>key.as_str() {
                     <span class="string">&quot;FIXED&quot; </span>=&gt; {
                         <span class="kw">let </span>fixed: u32 = map.next_value()<span class="question-mark">?</span>;
                         Quorum::FIXED { fixed }
                     }
-                    <span class="string">&quot;BFT&quot; </span>=&gt; {
-                        <span class="kw">let </span>bft: f64 = map.next_value()<span class="question-mark">?</span>;
-                        Quorum::BFT { BFT: bft }
-                    }
-                    <span class="string">&quot;PORCENTAJE&quot; </span>=&gt; {
-                        <span class="kw">let </span>porcentaje: f64 = map.next_value()<span class="question-mark">?</span>;
-                        Quorum::PORCENTAJE { porcentaje }
+                    <span class="comment">// &quot;BFT&quot; =&gt; {
+                    //     let bft: f64 = map.next_value()?;
+                    //     Quorum::BFT { BFT: bft }
+                    // }
+                    </span><span class="string">&quot;PERCENTAGE&quot; </span>=&gt; {
+                        <span class="kw">let </span>percentage: f64 = map.next_value()<span class="question-mark">?</span>;
+                        Quorum::PERCENTAGE { percentage }
                     }
                     <span class="kw">_ </span>=&gt; {
                         <span class="kw">return </span><span class="prelude-val">Err</span>(serde::de::Error::unknown_field(
                             <span class="kw-2">&amp;</span>key,
-                            <span class="kw-2">&amp;</span>[<span class="string">&quot;FIXED&quot;</span>, <span class="string">&quot;BFT&quot;</span>, <span class="string">&quot;PORCENTAJE&quot;</span>],
+                            <span class="kw-2">&amp;</span>[<span class="string">&quot;FIXED&quot;</span>, <span class="string">&quot;PERCENTAGE&quot;</span>],
                         ))
                     }
                 };

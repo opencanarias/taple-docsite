@@ -708,15 +708,6 @@
 <a href="#708" id="708">708</a>
 <a href="#709" id="709">709</a>
 <a href="#710" id="710">710</a>
-<a href="#711" id="711">711</a>
-<a href="#712" id="712">712</a>
-<a href="#713" id="713">713</a>
-<a href="#714" id="714">714</a>
-<a href="#715" id="715">715</a>
-<a href="#716" id="716">716</a>
-<a href="#717" id="717">717</a>
-<a href="#718" id="718">718</a>
-<a href="#719" id="719">719</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>jsonschema::JSONSchema;
 <span class="kw">use </span>serde_json::{json, Value};
 <span class="kw">use </span>std::str::FromStr;
@@ -792,27 +783,15 @@
             {
               <span class="string">&quot;type&quot;</span>: <span class="string">&quot;object&quot;</span>,
               <span class="string">&quot;properties&quot;</span>: {
-                <span class="string">&quot;PORCENTAJE&quot;</span>: {
+                <span class="string">&quot;PERCENTAGE&quot;</span>: {
                   <span class="string">&quot;type&quot;</span>: <span class="string">&quot;number&quot;</span>,
                   <span class="string">&quot;minimum&quot;</span>: <span class="number">0</span>,
                   <span class="string">&quot;maximum&quot;</span>: <span class="number">1
                 </span>}
               },
-              <span class="string">&quot;required&quot;</span>: [<span class="string">&quot;PORCENTAJE&quot;</span>],
+              <span class="string">&quot;required&quot;</span>: [<span class="string">&quot;PERCENTAGE&quot;</span>],
               <span class="string">&quot;additionalProperties&quot;</span>: <span class="bool-val">false
             </span>},
-            {
-              <span class="string">&quot;type&quot;</span>: <span class="string">&quot;object&quot;</span>,
-              <span class="string">&quot;properties&quot;</span>: {
-                <span class="string">&quot;BFT&quot;</span>: {
-                  <span class="string">&quot;type&quot;</span>: <span class="string">&quot;number&quot;</span>,
-                  <span class="string">&quot;minimum&quot;</span>: <span class="number">0</span>,
-                  <span class="string">&quot;maximum&quot;</span>: <span class="number">1
-                </span>}
-              },
-              <span class="string">&quot;required&quot;</span>: [<span class="string">&quot;BFT&quot;</span>],
-              <span class="string">&quot;additionalProperties&quot;</span>: <span class="bool-val">false
-            </span>}
           ]
         }
       },
@@ -836,6 +815,9 @@
               <span class="string">&quot;id&quot;</span>: {
                 <span class="string">&quot;type&quot;</span>: <span class="string">&quot;string&quot;</span>,
                 <span class="string">&quot;format&quot;</span>: <span class="string">&quot;keyidentifier&quot;
+              </span>},
+              <span class="string">&quot;description&quot;</span>: {
+                <span class="string">&quot;type&quot;</span>: <span class="string">&quot;string&quot;
               </span>}
             },
             <span class="string">&quot;required&quot;</span>: [
