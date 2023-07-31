@@ -373,7 +373,7 @@ module.exports = {
                 },
               ],
             },
-            /*{
+            {
               type: 'category',
               label: 'Access control',
               collapsible: true,
@@ -405,7 +405,7 @@ module.exports = {
                   id: 'build/access-control/interacting-network',
                 }
               ],
-            },*/
+            },
             {
               type: 'doc',
               label: 'Issues and Workarounds',
