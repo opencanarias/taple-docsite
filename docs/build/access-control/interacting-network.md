@@ -109,7 +109,7 @@ Note that in the above requests, you must replace **{{SUBJECT-ID}}** with the ha
 :::
 
 ## Opening of the vehicle to the assigned driver
-Before proceeding to unlock the vehicle, the client must generate a key pair using the **[TAPLE Keygen](../.../learn/client-tools.md#taple-keygen)** tool as follows:
+Before proceeding to unlock the vehicle, the client must generate a key pair using the **[TAPLE Keygen](../../learn/client-tools.md#taple-keygen)** tool as follows:
 
 ```bash
     taple-keygen

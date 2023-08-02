@@ -1130,7 +1130,7 @@ So far, when creating the subject, we have not had to declare its public key, al
 
 **Note:** Save the "**public_key**" field, as it will be needed for later steps in the tutorial.
 
-Next, we need to sign the transfer request with the cryptographic material of the new node. To do this, we will use our **[TAPLE-Sign](../.../learn/client-tools.md#taple-sign)** tool and execute the following command:
+Next, we need to sign the transfer request with the cryptographic material of the new node. To do this, we will use our **[TAPLE-Sign](../../learn/client-tools.md#taple-sign)** tool and execute the following command:
 
 ```bash title="Another terminal"
     taple-sign "2a71a0aff12c2de9e21d76e0538741aa9ac6da9ff7f467cf8b7211bd008a3198" '{"Transfer":{"subject_id":"{{SUBJECT-ID}}","public_key":"{{PUBLIC-KEY}}"}}'
