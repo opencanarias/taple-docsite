@@ -1,7 +1,7 @@
 # Basic usage
 
 ## Compiling the code
-Rust versión 1.66 or higher is required.
+Rust versión 1.67 or higher is required.
 
 ```bash
 $ git clone -b release-0.2 https://github.com/opencanarias/taple-client.git
