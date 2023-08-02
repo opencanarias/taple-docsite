@@ -23,34 +23,34 @@ To set up the governance, we start with the default governance and then apply th
   <summary>Governance JSON</summary>
 
 ```json
-    {
-      "members": [],
-      "policies": [
+{
+    "members": [],
+    "policies": [
         {
-          "approve": {
+        "approve": {
             "quorum": "MAJORITY"
-          },
-          "evaluate": {
+        },
+        "evaluate": {
             "quorum": "MAJORITY"
-          },
-          "id": "governance",
-          "validate": {
+        },
+        "id": "governance",
+        "validate": {
             "quorum": "MAJORITY"
-          }
         }
-      ],
-      "roles": [
+        }
+    ],
+    "roles": [
         {
-          "namespace": "",
-          "role": "WITNESS",
-          "schema": {
+        "namespace": "",
+        "role": "WITNESS",
+        "schema": {
             "ID": "governance"
-          },
-          "who": "MEMBERS"
+        },
+        "who": "MEMBERS"
         }
-      ],
-      "schemas": []
-    }
+    ],
+    "schemas": []
+}
 ```
 
 </details>
@@ -63,10 +63,10 @@ As previously mentioned, the governance will be composed of the following member
       <summary>Member rental company JSON</summary>
 
     ```json
-        {
-            "id": "EbwR0yYrCYpTzlN5i5GX_MtAbKRw5y2euv3TqiTgwggs",
-            "name": "RentalCompany"
-        }
+    {
+        "id": "EbwR0yYrCYpTzlN5i5GX_MtAbKRw5y2euv3TqiTgwggs",
+        "name": "RentalCompany"
+    }
     ```
 
     </details>
@@ -77,10 +77,10 @@ As previously mentioned, the governance will be composed of the following member
       <summary>Member cleaning company JSON</summary>
 
     ```json
-        {
-            "id": "Ee-ZvImOQSgRBDR9XH0uQ5gbVv4828h_o5GuLbWFWaLI",
-            "name": "CleaningCompany"
-        }
+    {
+        "id": "Ee-ZvImOQSgRBDR9XH0uQ5gbVv4828h_o5GuLbWFWaLI",
+        "name": "CleaningCompany"
+    }
     ```
 
     </details>
@@ -91,10 +91,10 @@ As previously mentioned, the governance will be composed of the following member
       <summary>Member security company JSON</summary>
 
     ```json
-        {
-            "id": "EICgJYOXXRFqDMiFsrCcUgPYnCSgUT-zwe66LP8rDpPU",
-            "name": "SecurityCompany"
-        }
+    {
+        "id": "EICgJYOXXRFqDMiFsrCcUgPYnCSgUT-zwe66LP8rDpPU",
+        "name": "SecurityCompany"
+    }
     ```
 
     </details>
@@ -108,36 +108,36 @@ In the schema we will define the state in which the car is, which can be free or
   <summary>Schema JSON</summary>
 
 ```json
-    "schema": {
-        "description": "State_of_car",
-        "type": "object",
-        "properties": {
-            "status": {
-                "description": "Defines_whether_the_car_is_free_or_rented",
-                "type": "string",
-                "enum": ["FREE", "RENTED"]
-            },
-            "last_position": {
-                "description": "Contains_the_record_of_the_last_position_of_the_car",
-                "type": "object",
-                "properties": {
-                    "latitude": {
-                        "description": "Define_the_latitude_of_the_car_geolocation",
-                        "type": "number"
-                    },
-                    "longitude": {
-                        "description": "Define_the_length_of_the_car_geolocation",
-                        "type": "number"
-                    }
+"schema": {
+    "description": "State_of_car",
+    "type": "object",
+    "properties": {
+        "status": {
+            "description": "Defines_whether_the_car_is_free_or_rented",
+            "type": "string",
+            "enum": ["FREE", "RENTED"]
+        },
+        "last_position": {
+            "description": "Contains_the_record_of_the_last_position_of_the_car",
+            "type": "object",
+            "properties": {
+                "latitude": {
+                    "description": "Define_the_latitude_of_the_car_geolocation",
+                    "type": "number"
+                },
+                "longitude": {
+                    "description": "Define_the_length_of_the_car_geolocation",
+                    "type": "number"
                 }
             }
-        },
-        "required": [
-            "status",
-            "last_position"
-        ],
-        "additionalProperties": false
-    }
+        }
+    },
+    "required": [
+        "status",
+        "last_position"
+    ],
+    "additionalProperties": false
+}
 ```
 
 </details>
@@ -152,13 +152,13 @@ The smart contract is made up of four methods:
       <summary>Unrental method</summary>
 
     ```rust
-        CarEvent::Unrental {} => match car.status {
-            StatesCar::FREE => {}
-            StatesCar::RENTED => {
-                car.status = StatesCar::FREE;
-                contract_result.success = true;
-            }
+    CarEvent::Unrental {} => match car.status {
+        StatesCar::FREE => {}
+        StatesCar::RENTED => {
+            car.status = StatesCar::FREE;
+            contract_result.success = true;
         }
+    }
     ```
 
     </details>
@@ -169,13 +169,13 @@ The smart contract is made up of four methods:
       <summary>Rent method</summary>
 
     ```rust
-        CarEvent::Rent {} => match car.status {
-            StatesCar::FREE => {
-                car.status = StatesCar::RENTED;
-                contract_result.success = true;
-            }
-            StatesCar::RENTED => {}
+    CarEvent::Rent {} => match car.status {
+        StatesCar::FREE => {
+            car.status = StatesCar::RENTED;
+            contract_result.success = true;
         }
+        StatesCar::RENTED => {}
+    }
     ```
 
     </details>
@@ -186,10 +186,10 @@ The smart contract is made up of four methods:
       <summary>Open method</summary>
 
     ```rust
-        CarEvent::Open {} => {
-            contract_result.approval_required = true;
-            contract_result.success = true;
-        }
+    CarEvent::Open {} => {
+        contract_result.approval_required = true;
+        contract_result.success = true;
+    }
     ```
 
     </details>
@@ -200,37 +200,37 @@ The smart contract is made up of four methods:
       <summary>UpdatePosition method</summary>
 
     ```rust
-        CarEvent::UpdatePosition {
-            latitude,
-            longitude,
-        } => {
-            car.last_position.latitude = latitude.round();
-            car.last_position.longitude = longitude.round();
-            contract_result.success = true;
-        }
+    CarEvent::UpdatePosition {
+        latitude,
+        longitude,
+    } => {
+        car.last_position.latitude = latitude.round();
+        car.last_position.longitude = longitude.round();
+        contract_result.success = true;
+    }
     ```
 
     </details>
 
 To add the smart contract, we must first convert it to base64. To do this, you can use the **[base64](https://manpages.ubuntu.com/manpages/xenial/en/man1/base64.1.html)** utility available on Linux. Below, you can see an example:
 
-```bash title="Another terminal"
-    base64 main.rs
+```bash title="In terminal"
+base64 main.rs
 ```
 
 The result returned will be the base64 encoded contract. In this case, it is as follows:
 
-```bash title="Another terminal"
-    dXNlIHNlcmRlOjp7RGVzZXJpYWxpemUsIFNlcmlhbGl6ZX07CnVzZSB0YXBsZV9zY19ydXN0IGFzIHNkazsKCiNbZGVyaXZlKFNlcmlhbGl6ZSwgRGVzZXJpYWxpemUsIENsb25lKV0KZW51bSBTdGF0ZXNDYXIgewogICAgRlJFRSwKICAgIFJFTlRFRCwKfQoKI1tkZXJpdmUoU2VyaWFsaXplLCBEZXNlcmlhbGl6ZSwgQ2xvbmUpXQpzdHJ1Y3QgUG9zaXRpb24gewogICAgbGF0aXR1ZGU6IGYzMiwKICAgIGxvbmdpdHVkZTogZjMyLAp9CgojW2Rlcml2ZShTZXJpYWxpemUsIERlc2VyaWFsaXplLCBDbG9uZSldCnN0cnVjdCBDYXIgewogICAgcHViIHN0YXR1czogU3RhdGVzQ2FyLCAgICAgICAvLyBGUkVFIFJFTlRFRAogICAgcHViIGxhc3RfcG9zaXRpb246IFBvc2l0aW9uLCAvLyBsYXRpdHVkZSBsb25naXR1ZGUKfQoKI1tkZXJpdmUoU2VyaWFsaXplLCBEZXNlcmlhbGl6ZSldCmVudW0gQ2FyRXZlbnQgewogICAgVW5yZW50YWwge30sCiAgICBSZW50IHt9LAogICAgT3BlbiB7fSwKICAgIFVwZGF0ZVBvc2l0aW9uIHsgbGF0aXR1ZGU6IGYzMiwgbG9uZ2l0dWRlOiBmMzIgfSwKfQoKI1tub19tYW5nbGVdCnB1YiB1bnNhZmUgZm4gbWFpbl9mdW5jdGlvbihzdGF0ZV9wdHI6IGkzMiwgZXZlbnRfcHRyOiBpMzIsIGlzX293bmVyOiBpMzIpIC0+IHUzMiB7CiAgICBzZGs6OmV4ZWN1dGVfY29udHJhY3Qoc3RhdGVfcHRyLCBldmVudF9wdHIsIGlzX293bmVyLCBjb250cmFjdF9sb2dpYykKfQoKZm4gY29udHJhY3RfbG9naWMoCiAgICBjb250ZXh0OiAmc2RrOjpDb250ZXh0PENhciwgQ2FyRXZlbnQ+LAogICAgY29udHJhY3RfcmVzdWx0OiAmbXV0IHNkazo6Q29udHJhY3RSZXN1bHQ8Q2FyPiwKKSB7CiAgICBsZXQgY2FyID0gJm11dCBjb250cmFjdF9yZXN1bHQuZmluYWxfc3RhdGU7CiAgICBtYXRjaCAmY29udGV4dC5ldmVudCB7CiAgICAgICAgQ2FyRXZlbnQ6OlVucmVudGFsIHt9ID0+IG1hdGNoIGNhci5zdGF0dXMgewogICAgICAgICAgICBTdGF0ZXNDYXI6OkZSRUUgPT4ge30KICAgICAgICAgICAgU3RhdGVzQ2FyOjpSRU5URUQgPT4gewogICAgICAgICAgICAgICAgY2FyLnN0YXR1cyA9IFN0YXRlc0Nhcjo6RlJFRTsKICAgICAgICAgICAgICAgIGNvbnRyYWN0X3Jlc3VsdC5zdWNjZXNzID0gdHJ1ZTsKICAgICAgICAgICAgfQogICAgICAgIH0sCiAgICAgICAgQ2FyRXZlbnQ6OlJlbnQge30gPT4gbWF0Y2ggY2FyLnN0YXR1cyB7CiAgICAgICAgICAgIFN0YXRlc0Nhcjo6RlJFRSA9PiB7CiAgICAgICAgICAgICAgICBjYXIuc3RhdHVzID0gU3RhdGVzQ2FyOjpSRU5URUQ7CiAgICAgICAgICAgICAgICBjb250cmFjdF9yZXN1bHQuc3VjY2VzcyA9IHRydWU7CiAgICAgICAgICAgIH0KICAgICAgICAgICAgU3RhdGVzQ2FyOjpSRU5URUQgPT4ge30KICAgICAgICB9LAogICAgICAgIENhckV2ZW50OjpPcGVuIHt9ID0+IHsKICAgICAgICAgICAgY29udHJhY3RfcmVzdWx0LmFwcHJvdmFsX3JlcXVpcmVkID0gdHJ1ZTsKICAgICAgICAgICAgY29udHJhY3RfcmVzdWx0LnN1Y2Nlc3MgPSB0cnVlOwogICAgICAgIH0KICAgICAgICBDYXJFdmVudDo6VXBkYXRlUG9zaXRpb24gewogICAgICAgICAgICBsYXRpdHVkZSwKICAgICAgICAgICAgbG9uZ2l0dWRlLAogICAgICAgIH0gPT4gewogICAgICAgICAgICBjYXIubGFzdF9wb3NpdGlvbi5sYXRpdHVkZSA9IGxhdGl0dWRlLnJvdW5kKCk7CiAgICAgICAgICAgIGNhci5sYXN0X3Bvc2l0aW9uLmxvbmdpdHVkZSA9IGxvbmdpdHVkZS5yb3VuZCgpOwogICAgICAgICAgICBjb250cmFjdF9yZXN1bHQuc3VjY2VzcyA9IHRydWU7CiAgICAgICAgfQogICAgfQp9Cg==
+```bash title="In terminal"
+dXNlIHNlcmRlOjp7RGVzZXJpYWxpemUsIFNlcmlhbGl6ZX07CnVzZSB0YXBsZV9zY19ydXN0IGFzIHNkazsKCiNbZGVyaXZlKFNlcmlhbGl6ZSwgRGVzZXJpYWxpemUsIENsb25lKV0KZW51bSBTdGF0ZXNDYXIgewogICAgRlJFRSwKICAgIFJFTlRFRCwKfQoKI1tkZXJpdmUoU2VyaWFsaXplLCBEZXNlcmlhbGl6ZSwgQ2xvbmUpXQpzdHJ1Y3QgUG9zaXRpb24gewogICAgbGF0aXR1ZGU6IGYzMiwKICAgIGxvbmdpdHVkZTogZjMyLAp9CgojW2Rlcml2ZShTZXJpYWxpemUsIERlc2VyaWFsaXplLCBDbG9uZSldCnN0cnVjdCBDYXIgewogICAgcHViIHN0YXR1czogU3RhdGVzQ2FyLCAgICAgICAvLyBGUkVFIFJFTlRFRAogICAgcHViIGxhc3RfcG9zaXRpb246IFBvc2l0aW9uLCAvLyBsYXRpdHVkZSBsb25naXR1ZGUKfQoKI1tkZXJpdmUoU2VyaWFsaXplLCBEZXNlcmlhbGl6ZSldCmVudW0gQ2FyRXZlbnQgewogICAgVW5yZW50YWwge30sCiAgICBSZW50IHt9LAogICAgT3BlbiB7fSwKICAgIFVwZGF0ZVBvc2l0aW9uIHsgbGF0aXR1ZGU6IGYzMiwgbG9uZ2l0dWRlOiBmMzIgfSwKfQoKI1tub19tYW5nbGVdCnB1YiB1bnNhZmUgZm4gbWFpbl9mdW5jdGlvbihzdGF0ZV9wdHI6IGkzMiwgZXZlbnRfcHRyOiBpMzIsIGlzX293bmVyOiBpMzIpIC0+IHUzMiB7CiAgICBzZGs6OmV4ZWN1dGVfY29udHJhY3Qoc3RhdGVfcHRyLCBldmVudF9wdHIsIGlzX293bmVyLCBjb250cmFjdF9sb2dpYykKfQoKZm4gY29udHJhY3RfbG9naWMoCiAgICBjb250ZXh0OiAmc2RrOjpDb250ZXh0PENhciwgQ2FyRXZlbnQ+LAogICAgY29udHJhY3RfcmVzdWx0OiAmbXV0IHNkazo6Q29udHJhY3RSZXN1bHQ8Q2FyPiwKKSB7CiAgICBsZXQgY2FyID0gJm11dCBjb250cmFjdF9yZXN1bHQuZmluYWxfc3RhdGU7CiAgICBtYXRjaCAmY29udGV4dC5ldmVudCB7CiAgICAgICAgQ2FyRXZlbnQ6OlVucmVudGFsIHt9ID0+IG1hdGNoIGNhci5zdGF0dXMgewogICAgICAgICAgICBTdGF0ZXNDYXI6OkZSRUUgPT4ge30KICAgICAgICAgICAgU3RhdGVzQ2FyOjpSRU5URUQgPT4gewogICAgICAgICAgICAgICAgY2FyLnN0YXR1cyA9IFN0YXRlc0Nhcjo6RlJFRTsKICAgICAgICAgICAgICAgIGNvbnRyYWN0X3Jlc3VsdC5zdWNjZXNzID0gdHJ1ZTsKICAgICAgICAgICAgfQogICAgICAgIH0sCiAgICAgICAgQ2FyRXZlbnQ6OlJlbnQge30gPT4gbWF0Y2ggY2FyLnN0YXR1cyB7CiAgICAgICAgICAgIFN0YXRlc0Nhcjo6RlJFRSA9PiB7CiAgICAgICAgICAgICAgICBjYXIuc3RhdHVzID0gU3RhdGVzQ2FyOjpSRU5URUQ7CiAgICAgICAgICAgICAgICBjb250cmFjdF9yZXN1bHQuc3VjY2VzcyA9IHRydWU7CiAgICAgICAgICAgIH0KICAgICAgICAgICAgU3RhdGVzQ2FyOjpSRU5URUQgPT4ge30KICAgICAgICB9LAogICAgICAgIENhckV2ZW50OjpPcGVuIHt9ID0+IHsKICAgICAgICAgICAgY29udHJhY3RfcmVzdWx0LmFwcHJvdmFsX3JlcXVpcmVkID0gdHJ1ZTsKICAgICAgICAgICAgY29udHJhY3RfcmVzdWx0LnN1Y2Nlc3MgPSB0cnVlOwogICAgICAgIH0KICAgICAgICBDYXJFdmVudDo6VXBkYXRlUG9zaXRpb24gewogICAgICAgICAgICBsYXRpdHVkZSwKICAgICAgICAgICAgbG9uZ2l0dWRlLAogICAgICAgIH0gPT4gewogICAgICAgICAgICBjYXIubGFzdF9wb3NpdGlvbi5sYXRpdHVkZSA9IGxhdGl0dWRlLnJvdW5kKCk7CiAgICAgICAgICAgIGNhci5sYXN0X3Bvc2l0aW9uLmxvbmdpdHVkZSA9IGxvbmdpdHVkZS5yb3VuZCgpOwogICAgICAgICAgICBjb250cmFjdF9yZXN1bHQuc3VjY2VzcyA9IHRydWU7CiAgICAgICAgfQogICAgfQp9Cg==
 ```
 
 <details>
   <summary>Smart Contract in base64</summary>
 
 ```json
-    "contract": {
-        "raw":"dXNlIHNlcmRlOjp7RGVzZXJpYWxpemUsIFNlcmlhbGl6ZX07CnVzZSB0YXBsZV9zY19ydXN0IGFzIHNkazsKCiNbZGVyaXZlKFNlcmlhbGl6ZSwgRGVzZXJpYWxpemUsIENsb25lKV0KZW51bSBTdGF0ZXNDYXIgewogICAgRlJFRSwKICAgIFJFTlRFRCwKfQoKI1tkZXJpdmUoU2VyaWFsaXplLCBEZXNlcmlhbGl6ZSwgQ2xvbmUpXQpzdHJ1Y3QgUG9zaXRpb24gewogICAgbGF0aXR1ZGU6IGYzMiwKICAgIGxvbmdpdHVkZTogZjMyLAp9CgojW2Rlcml2ZShTZXJpYWxpemUsIERlc2VyaWFsaXplLCBDbG9uZSldCnN0cnVjdCBDYXIgewogICAgcHViIHN0YXR1czogU3RhdGVzQ2FyLCAgICAgICAvLyBGUkVFIFJFTlRFRAogICAgcHViIGxhc3RfcG9zaXRpb246IFBvc2l0aW9uLCAvLyBsYXRpdHVkZSBsb25naXR1ZGUKfQoKI1tkZXJpdmUoU2VyaWFsaXplLCBEZXNlcmlhbGl6ZSldCmVudW0gQ2FyRXZlbnQgewogICAgVW5yZW50YWwge30sCiAgICBSZW50IHt9LAogICAgT3BlbiB7fSwKICAgIFVwZGF0ZVBvc2l0aW9uIHsgbGF0aXR1ZGU6IGYzMiwgbG9uZ2l0dWRlOiBmMzIgfSwKfQoKI1tub19tYW5nbGVdCnB1YiB1bnNhZmUgZm4gbWFpbl9mdW5jdGlvbihzdGF0ZV9wdHI6IGkzMiwgZXZlbnRfcHRyOiBpMzIsIGlzX293bmVyOiBpMzIpIC0+IHUzMiB7CiAgICBzZGs6OmV4ZWN1dGVfY29udHJhY3Qoc3RhdGVfcHRyLCBldmVudF9wdHIsIGlzX293bmVyLCBjb250cmFjdF9sb2dpYykKfQoKZm4gY29udHJhY3RfbG9naWMoCiAgICBjb250ZXh0OiAmc2RrOjpDb250ZXh0PENhciwgQ2FyRXZlbnQ+LAogICAgY29udHJhY3RfcmVzdWx0OiAmbXV0IHNkazo6Q29udHJhY3RSZXN1bHQ8Q2FyPiwKKSB7CiAgICBsZXQgY2FyID0gJm11dCBjb250cmFjdF9yZXN1bHQuZmluYWxfc3RhdGU7CiAgICBtYXRjaCAmY29udGV4dC5ldmVudCB7CiAgICAgICAgQ2FyRXZlbnQ6OlVucmVudGFsIHt9ID0+IG1hdGNoIGNhci5zdGF0dXMgewogICAgICAgICAgICBTdGF0ZXNDYXI6OkZSRUUgPT4ge30KICAgICAgICAgICAgU3RhdGVzQ2FyOjpSRU5URUQgPT4gewogICAgICAgICAgICAgICAgY2FyLnN0YXR1cyA9IFN0YXRlc0Nhcjo6RlJFRTsKICAgICAgICAgICAgICAgIGNvbnRyYWN0X3Jlc3VsdC5zdWNjZXNzID0gdHJ1ZTsKICAgICAgICAgICAgfQogICAgICAgIH0sCiAgICAgICAgQ2FyRXZlbnQ6OlJlbnQge30gPT4gbWF0Y2ggY2FyLnN0YXR1cyB7CiAgICAgICAgICAgIFN0YXRlc0Nhcjo6RlJFRSA9PiB7CiAgICAgICAgICAgICAgICBjYXIuc3RhdHVzID0gU3RhdGVzQ2FyOjpSRU5URUQ7CiAgICAgICAgICAgICAgICBjb250cmFjdF9yZXN1bHQuc3VjY2VzcyA9IHRydWU7CiAgICAgICAgICAgIH0KICAgICAgICAgICAgU3RhdGVzQ2FyOjpSRU5URUQgPT4ge30KICAgICAgICB9LAogICAgICAgIENhckV2ZW50OjpPcGVuIHt9ID0+IHsKICAgICAgICAgICAgY29udHJhY3RfcmVzdWx0LmFwcHJvdmFsX3JlcXVpcmVkID0gdHJ1ZTsKICAgICAgICAgICAgY29udHJhY3RfcmVzdWx0LnN1Y2Nlc3MgPSB0cnVlOwogICAgICAgIH0KICAgICAgICBDYXJFdmVudDo6VXBkYXRlUG9zaXRpb24gewogICAgICAgICAgICBsYXRpdHVkZSwKICAgICAgICAgICAgbG9uZ2l0dWRlLAogICAgICAgIH0gPT4gewogICAgICAgICAgICBjYXIubGFzdF9wb3NpdGlvbi5sYXRpdHVkZSA9IGxhdGl0dWRlLnJvdW5kKCk7CiAgICAgICAgICAgIGNhci5sYXN0X3Bvc2l0aW9uLmxvbmdpdHVkZSA9IGxvbmdpdHVkZS5yb3VuZCgpOwogICAgICAgICAgICBjb250cmFjdF9yZXN1bHQuc3VjY2VzcyA9IHRydWU7CiAgICAgICAgfQogICAgfQp9Cg=="
-    }
+"contract": {
+    "raw":"dXNlIHNlcmRlOjp7RGVzZXJpYWxpemUsIFNlcmlhbGl6ZX07CnVzZSB0YXBsZV9zY19ydXN0IGFzIHNkazsKCiNbZGVyaXZlKFNlcmlhbGl6ZSwgRGVzZXJpYWxpemUsIENsb25lKV0KZW51bSBTdGF0ZXNDYXIgewogICAgRlJFRSwKICAgIFJFTlRFRCwKfQoKI1tkZXJpdmUoU2VyaWFsaXplLCBEZXNlcmlhbGl6ZSwgQ2xvbmUpXQpzdHJ1Y3QgUG9zaXRpb24gewogICAgbGF0aXR1ZGU6IGYzMiwKICAgIGxvbmdpdHVkZTogZjMyLAp9CgojW2Rlcml2ZShTZXJpYWxpemUsIERlc2VyaWFsaXplLCBDbG9uZSldCnN0cnVjdCBDYXIgewogICAgcHViIHN0YXR1czogU3RhdGVzQ2FyLCAgICAgICAvLyBGUkVFIFJFTlRFRAogICAgcHViIGxhc3RfcG9zaXRpb246IFBvc2l0aW9uLCAvLyBsYXRpdHVkZSBsb25naXR1ZGUKfQoKI1tkZXJpdmUoU2VyaWFsaXplLCBEZXNlcmlhbGl6ZSldCmVudW0gQ2FyRXZlbnQgewogICAgVW5yZW50YWwge30sCiAgICBSZW50IHt9LAogICAgT3BlbiB7fSwKICAgIFVwZGF0ZVBvc2l0aW9uIHsgbGF0aXR1ZGU6IGYzMiwgbG9uZ2l0dWRlOiBmMzIgfSwKfQoKI1tub19tYW5nbGVdCnB1YiB1bnNhZmUgZm4gbWFpbl9mdW5jdGlvbihzdGF0ZV9wdHI6IGkzMiwgZXZlbnRfcHRyOiBpMzIsIGlzX293bmVyOiBpMzIpIC0+IHUzMiB7CiAgICBzZGs6OmV4ZWN1dGVfY29udHJhY3Qoc3RhdGVfcHRyLCBldmVudF9wdHIsIGlzX293bmVyLCBjb250cmFjdF9sb2dpYykKfQoKZm4gY29udHJhY3RfbG9naWMoCiAgICBjb250ZXh0OiAmc2RrOjpDb250ZXh0PENhciwgQ2FyRXZlbnQ+LAogICAgY29udHJhY3RfcmVzdWx0OiAmbXV0IHNkazo6Q29udHJhY3RSZXN1bHQ8Q2FyPiwKKSB7CiAgICBsZXQgY2FyID0gJm11dCBjb250cmFjdF9yZXN1bHQuZmluYWxfc3RhdGU7CiAgICBtYXRjaCAmY29udGV4dC5ldmVudCB7CiAgICAgICAgQ2FyRXZlbnQ6OlVucmVudGFsIHt9ID0+IG1hdGNoIGNhci5zdGF0dXMgewogICAgICAgICAgICBTdGF0ZXNDYXI6OkZSRUUgPT4ge30KICAgICAgICAgICAgU3RhdGVzQ2FyOjpSRU5URUQgPT4gewogICAgICAgICAgICAgICAgY2FyLnN0YXR1cyA9IFN0YXRlc0Nhcjo6RlJFRTsKICAgICAgICAgICAgICAgIGNvbnRyYWN0X3Jlc3VsdC5zdWNjZXNzID0gdHJ1ZTsKICAgICAgICAgICAgfQogICAgICAgIH0sCiAgICAgICAgQ2FyRXZlbnQ6OlJlbnQge30gPT4gbWF0Y2ggY2FyLnN0YXR1cyB7CiAgICAgICAgICAgIFN0YXRlc0Nhcjo6RlJFRSA9PiB7CiAgICAgICAgICAgICAgICBjYXIuc3RhdHVzID0gU3RhdGVzQ2FyOjpSRU5URUQ7CiAgICAgICAgICAgICAgICBjb250cmFjdF9yZXN1bHQuc3VjY2VzcyA9IHRydWU7CiAgICAgICAgICAgIH0KICAgICAgICAgICAgU3RhdGVzQ2FyOjpSRU5URUQgPT4ge30KICAgICAgICB9LAogICAgICAgIENhckV2ZW50OjpPcGVuIHt9ID0+IHsKICAgICAgICAgICAgY29udHJhY3RfcmVzdWx0LmFwcHJvdmFsX3JlcXVpcmVkID0gdHJ1ZTsKICAgICAgICAgICAgY29udHJhY3RfcmVzdWx0LnN1Y2Nlc3MgPSB0cnVlOwogICAgICAgIH0KICAgICAgICBDYXJFdmVudDo6VXBkYXRlUG9zaXRpb24gewogICAgICAgICAgICBsYXRpdHVkZSwKICAgICAgICAgICAgbG9uZ2l0dWRlLAogICAgICAgIH0gPT4gewogICAgICAgICAgICBjYXIubGFzdF9wb3NpdGlvbi5sYXRpdHVkZSA9IGxhdGl0dWRlLnJvdW5kKCk7CiAgICAgICAgICAgIGNhci5sYXN0X3Bvc2l0aW9uLmxvbmdpdHVkZSA9IGxvbmdpdHVkZS5yb3VuZCgpOwogICAgICAgICAgICBjb250cmFjdF9yZXN1bHQuc3VjY2VzcyA9IHRydWU7CiAgICAgICAgfQogICAgfQp9Cg=="
+}
 ```
 
 </details>
@@ -242,20 +242,20 @@ To ensure better control and greater security over the network, we will define p
   <summary>Policies JSON</summary>
 
 ```json
-    {
-        "approve": {
-            "quorum": {
-                "FIXED": 1
-            }
-        },
-        "evaluate": {
-            "quorum": "MAJORITY"
-        },
-        "id": "car",
-        "validate": {
-            "quorum": "MAJORITY"
+{
+    "approve": {
+        "quorum": {
+            "FIXED": 1
         }
+    },
+    "evaluate": {
+        "quorum": "MAJORITY"
+    },
+    "id": "car",
+    "validate": {
+        "quorum": "MAJORITY"
     }
+}
 ```
 
 </details>
@@ -274,56 +274,56 @@ An approval quorum of the form **"FIXED": 1** is defined, as we only need either
       <summary>Roles rental company</summary>
 
     ```json
-        [
-            {
-                "namespace": "",
-                "role": "CREATOR",
-                "schema": {
-                    "ID": "car"
-                },
-                "who": {
-                    "NAME": "RentalCompany"
-                }
+    [
+        {
+            "namespace": "",
+            "role": "CREATOR",
+            "schema": {
+                "ID": "car"
             },
-            {
-                "namespace": "",
-                "role": "APPROVER",
-                "schema": {
-                    "ID": "car"
-                },
-                "who": {
-                    "NAME": "RentalCompany"
-                }
-            },
-            {
-                "namespace": "",
-                "role": "WITNESS",
-                "schema": {
-                    "ID": "car"
-                },
-                "who": {
-                    "NAME": "RentalCompany"
-                }
-            },
-            {
-                "namespace": "",
-                "role": "ISSUER",
-                "schema": {
-                    "ID": "car"
-                },
-                "who": {
-                    "NAME": "RentalCompany"
-                }
+            "who": {
+                "NAME": "RentalCompany"
             }
-        ]
+        },
+        {
+            "namespace": "",
+            "role": "APPROVER",
+            "schema": {
+                "ID": "car"
+            },
+            "who": {
+                "NAME": "RentalCompany"
+            }
+        },
+        {
+            "namespace": "",
+            "role": "WITNESS",
+            "schema": {
+                "ID": "car"
+            },
+            "who": {
+                "NAME": "RentalCompany"
+            }
+        },
+        {
+            "namespace": "",
+            "role": "ISSUER",
+            "schema": {
+                "ID": "car"
+            },
+            "who": {
+                "NAME": "RentalCompany"
+            }
+        }
+    ]
     ```
 
     </details>
 
 - Cleaning company: Approver of the cleaning personnel and witness to have a record of the cleanings performed. In this case, the following roles will be defined:
 
-    - WITNESS (governance): You should be a witness to governance so that you have a record of what happens.
-    - WITNESS (car): You will need to witness the subject, as you need to have a record of the subject.
+    - WITNESS (governance): Should be a witness to governance so that you have a record of what happens.
+    - WITNESS (car): Will need to witness the subject, as you need to have a record of the subject.
     - APPROVER: Because it will be involved in the approval phase when a vehicle opening is required.
     - ISSUER: Since it is necessary to perform events on the subject.
 
@@ -331,48 +331,48 @@ An approval quorum of the form **"FIXED": 1** is defined, as we only need either
       <summary>Roles cleaning company</summary>
 
     ```json
-        [
-            {
-                "namespace": "",
-                "role": "WITNESS",
-                "schema": {
-                    "ID": "governance"
-                },
-                "who": {
-                    "NAME": "CleaningCompany"
-                }
+    [
+        {
+            "namespace": "",
+            "role": "WITNESS",
+            "schema": {
+                "ID": "governance"
             },
-            {
-                "namespace": "",
-                "role": "WITNESS",
-                "schema": {
-                    "ID": "car"
-                },
-                "who": {
-                    "NAME": "CleaningCompany"
-                }
-            },
-            {
-                "namespace": "",
-                "role": "APPROVER",
-                "schema": {
-                    "ID": "car"
-                },
-                "who": {
-                    "NAME": "CleaningCompany"
-                }
-            },
-            {
-                "namespace": "",
-                "role": "ISSUER",
-                "schema": {
-                    "ID": "car"
-                },
-                "who": {
-                    "NAME": "CleaningCompany"
-                }
+            "who": {
+                "NAME": "CleaningCompany"
             }
-        ]
+        },
+        {
+            "namespace": "",
+            "role": "WITNESS",
+            "schema": {
+                "ID": "car"
+            },
+            "who": {
+                "NAME": "CleaningCompany"
+            }
+        },
+        {
+            "namespace": "",
+            "role": "APPROVER",
+            "schema": {
+                "ID": "car"
+            },
+            "who": {
+                "NAME": "CleaningCompany"
+            }
+        },
+        {
+            "namespace": "",
+            "role": "ISSUER",
+            "schema": {
+                "ID": "car"
+            },
+            "who": {
+                "NAME": "CleaningCompany"
+            }
+        }
+    ]
     ```
 
     </details>
@@ -380,45 +380,45 @@ An approval quorum of the form **"FIXED": 1** is defined, as we only need either
 - Security company: Witness to have a control of the use of the car and evaluator to guarantee the security of the network. In this case, the following roles will be defined:
 
     - EVALUATOR: In this way, we ensure that the network is more secure.
-    - WITNESS (governance): You should be a witness to governance so that you have a record of what happens.
-    - WITNESS (car): You will need to witness the subject, as you need to monitor the subject.
+    - WITNESS (governance): Should be a witness to governance so that you have a record of what happens.
+    - WITNESS (car): Will need to witness the subject, as you need to monitor the subject.
 
     <details>
       <summary>Roles security company</summary>
 
     ```json
-        [
-            {
-                "namespace": "",
-                "role": "WITNESS",
-                "schema": {
-                    "ID": "governance"
-                },
-                "who": {
-                    "NAME": "SecurityCompany"
-                }
+    [
+        {
+            "namespace": "",
+            "role": "WITNESS",
+            "schema": {
+                "ID": "governance"
             },
-            {
-                "namespace": "",
-                "role": "EVALUATOR",
-                "schema": {
-                    "ID": "governance"
-                },
-                "who": {
-                    "NAME": "SecurityCompany"
-                }
-            },       
-            {
-                "namespace": "",
-                "role": "WITNESS",
-                "schema": {
-                    "ID": "car"
-                },
-                "who": {
-                    "NAME": "SecurityCompany"
-                }
+            "who": {
+                "NAME": "SecurityCompany"
             }
-        ]
+        },
+        {
+            "namespace": "",
+            "role": "EVALUATOR",
+            "schema": {
+                "ID": "governance"
+            },
+            "who": {
+                "NAME": "SecurityCompany"
+            }
+        },       
+        {
+            "namespace": "",
+            "role": "WITNESS",
+            "schema": {
+                "ID": "car"
+            },
+            "who": {
+                "NAME": "SecurityCompany"
+            }
+        }
+    ]
     ```
 
     </details>
@@ -429,17 +429,17 @@ Finally, we must add permissions to issue external events on the subject, as cli
 <details>
   <summary>External roles</summary>
 
- ```json
-    [
-        {
-            "namespace": "",
-            "role": "ISSUER",
-            "schema": {
-                "ID": "car"
-            },
-            "who": "NOT_MEMBERS"
-        }
-    ]
+```json
+[
+    {
+        "namespace": "",
+        "role": "ISSUER",
+        "schema": {
+            "ID": "car"
+        },
+        "who": "NOT_MEMBERS"
+    }
+]
 ```
 
  </details>
