@@ -642,9 +642,9 @@
 <a href="#642" id="642">642</a>
 <a href="#643" id="643">643</a>
 <a href="#644" id="644">644</a>
-</pre></div><pre class="rust"><code><span class="attr">#[cfg(feature = <span class="string">&quot;aproval&quot;</span>)]
+</pre></div><pre class="rust"><code><span class="attr">#[cfg(feature = <span class="string">&quot;approval&quot;</span>)]
 </span><span class="kw">use </span><span class="kw">crate</span>::approval::manager::{ApprovalAPI, ApprovalManager};
-<span class="attr">#[cfg(feature = <span class="string">&quot;aproval&quot;</span>)]
+<span class="attr">#[cfg(feature = <span class="string">&quot;approval&quot;</span>)]
 </span><span class="kw">use </span><span class="kw">crate</span>::approval::{ApprovalMessages, ApprovalResponses};
 <span class="kw">use </span><span class="kw">crate</span>::authorized_subjecs::manager::{AuthorizedSubjectsAPI, AuthorizedSubjectsManager};
 <span class="kw">use </span><span class="kw">crate</span>::authorized_subjecs::{AuthorizedSubjectsCommand, AuthorizedSubjectsResponse};
@@ -674,7 +674,7 @@
     MessageContent, MessageReceiver, MessageSender, MessageTaskCommand, MessageTaskManager,
     NetworkEvent,
 };
-<span class="kw">use </span><span class="kw">crate</span>::network::network::{NetworkProcessor, SendMode};
+<span class="kw">use </span><span class="kw">crate</span>::network::network::{NetworkProcessor};
 <span class="kw">use </span><span class="kw">crate</span>::protocol::protocol_message_manager::{ProtocolManager, TapleMessages};
 <span class="kw">use </span><span class="kw">crate</span>::signature::Signed;
 <span class="attr">#[cfg(feature = <span class="string">&quot;validation&quot;</span>)]
@@ -971,7 +971,7 @@
             <span class="prelude-ty">Result</span>&lt;(), DistributionErrorResponses&gt;,
         &gt;::new(BUFFER_SIZE);
         <span class="comment">// Receiver and sender of approval messages
-        </span><span class="attr">#[cfg(feature = <span class="string">&quot;aproval&quot;</span>)]
+        </span><span class="attr">#[cfg(feature = <span class="string">&quot;approval&quot;</span>)]
         </span><span class="kw">let </span>(approval_receiver, approval_sender) =
             MpscChannel::&lt;ApprovalMessages, ApprovalResponses&gt;::new(BUFFER_SIZE);
         <span class="comment">// Receiver and sender of evaluation messages
@@ -1043,7 +1043,7 @@
             <span class="attr">#[cfg(feature = <span class="string">&quot;validation&quot;</span>)]
             </span>validation_sender.clone(),
             event_sender.clone(),
-            <span class="attr">#[cfg(feature = <span class="string">&quot;aproval&quot;</span>)]
+            <span class="attr">#[cfg(feature = <span class="string">&quot;approval&quot;</span>)]
             </span>approval_sender.clone(),
             ledger_sender.clone(),
             shutdown_sender.clone(),
@@ -1095,7 +1095,7 @@
         </span><span class="kw">let </span>api = API::new(
             <span class="self">self</span>.api_input.take().unwrap(),
             EventAPI::new(event_sender),
-            <span class="attr">#[cfg(feature = <span class="string">&quot;aproval&quot;</span>)]
+            <span class="attr">#[cfg(feature = <span class="string">&quot;approval&quot;</span>)]
             </span>ApprovalAPI::new(approval_sender),
             AuthorizedSubjectsAPI::new(as_sender),
             EventManagerAPI::new(ledger_sender),
@@ -1118,7 +1118,7 @@
             task_sender.clone(),
         );
         <span class="comment">// Creation ApprovalManager
-        </span><span class="attr">#[cfg(feature = <span class="string">&quot;aproval&quot;</span>)]
+        </span><span class="attr">#[cfg(feature = <span class="string">&quot;approval&quot;</span>)]
         </span><span class="kw">let </span>approval_manager = ApprovalManager::new(
             GovernanceAPI::new(governance_sender.clone()),
             approval_receiver,
@@ -1183,7 +1183,7 @@
         tokio::spawn(<span class="kw">async move </span>{
             distribution_manager.start().<span class="kw">await</span>;
         });
-        <span class="attr">#[cfg(feature = <span class="string">&quot;aproval&quot;</span>)]
+        <span class="attr">#[cfg(feature = <span class="string">&quot;approval&quot;</span>)]
         </span>tokio::spawn(<span class="kw">async move </span>{
             approval_manager.start().<span class="kw">await</span>;
         });

@@ -198,6 +198,9 @@
 <a href="#198" id="198">198</a>
 <a href="#199" id="199">199</a>
 <a href="#200" id="200">200</a>
+<a href="#201" id="201">201</a>
+<a href="#202" id="202">202</a>
+<a href="#203" id="203">203</a>
 </pre></div><pre class="rust"><code><span class="kw">mod </span>db;
 <span class="kw">mod </span>error;
 <span class="kw">mod </span>layers;
@@ -250,9 +253,9 @@
         <span class="kw">mod </span><span class="macro-nonterminal">$name </span>{
             <span class="attr">#[allow(unused_imports)]
             </span><span class="kw">use super</span>::<span class="kw-2">*</span>;
-            <span class="kw">use </span>serde::{Deserialize, Serialize};
+            <span class="kw">use </span>borsh::{BorshDeserialize, BorshSerialize};
 
-            <span class="attr">#[derive(Serialize, Deserialize, Clone, PartialEq, Eq, Debug)]
+            <span class="attr">#[derive(BorshSerialize, BorshDeserialize, Clone, PartialEq, Eq, Debug)]
             </span><span class="kw">struct </span>Data {
                 id: usize,
                 value: String,
@@ -272,15 +275,18 @@
                     id: <span class="number">3</span>,
                     value: <span class="string">&quot;C&quot;</span>.into(),
                 };
-                <span class="kw">let </span><span class="prelude-val">Ok</span>(data1) = bincode::serialize::&lt;Data&gt;(<span class="kw-2">&amp;</span>data1) <span class="kw">else </span>{
-                                    <span class="kw">return </span><span class="prelude-val">Err</span>(Error::SerializeError);
-                                };
-                <span class="kw">let </span><span class="prelude-val">Ok</span>(data2) = bincode::serialize::&lt;Data&gt;(<span class="kw-2">&amp;</span>data2) <span class="kw">else </span>{
-                                    <span class="kw">return </span><span class="prelude-val">Err</span>(Error::SerializeError);
-                                };
-                <span class="kw">let </span><span class="prelude-val">Ok</span>(data3) = bincode::serialize::&lt;Data&gt;(<span class="kw-2">&amp;</span>data3) <span class="kw">else </span>{
-                                    <span class="kw">return </span><span class="prelude-val">Err</span>(Error::SerializeError);
-                                };
+                <span class="attr">#[rustfmt::skip] </span><span class="comment">// let-else not supported yet
+                </span><span class="kw">let </span><span class="prelude-val">Ok</span>(data1) = data1.try_to_vec() <span class="kw">else </span>{
+                    <span class="kw">return </span><span class="prelude-val">Err</span>(Error::SerializeError);
+                };
+                <span class="attr">#[rustfmt::skip] </span><span class="comment">// let-else not supported yet
+                </span><span class="kw">let </span><span class="prelude-val">Ok</span>(data2) = data2.try_to_vec() <span class="kw">else </span>{
+                    <span class="kw">return </span><span class="prelude-val">Err</span>(Error::SerializeError);
+                };
+                <span class="attr">#[rustfmt::skip] </span><span class="comment">// let-else not supported yet
+                </span><span class="kw">let </span><span class="prelude-val">Ok</span>(data3) = data3.try_to_vec() <span class="kw">else </span>{
+                    <span class="kw">return </span><span class="prelude-val">Err</span>(Error::SerializeError);
+                };
                 <span class="prelude-val">Ok</span>(<span class="macro">vec!</span>[data1, data2, data3])
             }
 

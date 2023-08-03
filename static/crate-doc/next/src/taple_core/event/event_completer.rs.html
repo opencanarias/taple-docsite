@@ -2729,9 +2729,9 @@
         };
         <span class="kw">let </span>subject_id = <span class="kw">match </span><span class="kw-2">&amp;</span>approval_request.content.event_request.content {
             <span class="comment">// The transfer is not approved
-            </span>EventRequest::Transfer(<span class="kw">_</span>) =&gt; <span class="kw">return </span><span class="prelude-val">Err</span>(EventError::NoAprovalForTransferEvents),
+            </span>EventRequest::Transfer(<span class="kw">_</span>) =&gt; <span class="kw">return </span><span class="prelude-val">Err</span>(EventError::NoApprovalForTransferEvents),
             <span class="comment">// EOL is not approved
-            </span>EventRequest::EOL(<span class="kw">_</span>) =&gt; <span class="kw">return </span><span class="prelude-val">Err</span>(EventError::NoAprovalForEOLEvents),
+            </span>EventRequest::EOL(<span class="kw">_</span>) =&gt; <span class="kw">return </span><span class="prelude-val">Err</span>(EventError::NoApprovalForEOLEvents),
             EventRequest::Create(<span class="kw">_</span>) =&gt; {
                 <span class="kw">return </span><span class="prelude-val">Err</span>(EventError::EvaluationOrApprovationInCreationEvent)
             }

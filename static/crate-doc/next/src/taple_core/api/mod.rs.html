@@ -111,7 +111,7 @@
 <a href="#111" id="111">111</a>
 <a href="#112" id="112">112</a>
 <a href="#113" id="113">113</a>
-</pre></div><pre class="rust"><code><span class="attr">#[cfg(feature = <span class="string">&quot;aproval&quot;</span>)]
+</pre></div><pre class="rust"><code><span class="attr">#[cfg(feature = <span class="string">&quot;approval&quot;</span>)]
 </span><span class="kw">use </span><span class="kw">crate</span>::commons::models::approval::ApprovalEntity;
 <span class="kw">use </span><span class="kw">crate</span>::commons::models::request::TapleRequest;
 <span class="kw">use </span><span class="kw">crate</span>::commons::models::state::SubjectData;
@@ -138,12 +138,12 @@
     GetSubject(GetSubject),
     GetEvent(DigestIdentifier, u64),
     GetEvents(GetEvents),
-    <span class="attr">#[cfg(feature = <span class="string">&quot;aproval&quot;</span>)]
+    <span class="attr">#[cfg(feature = <span class="string">&quot;approval&quot;</span>)]
     </span>VoteResolve(bool, DigestIdentifier),
     ExternalRequest(Signed&lt;EventRequest&gt;),
-    <span class="attr">#[cfg(feature = <span class="string">&quot;aproval&quot;</span>)]
+    <span class="attr">#[cfg(feature = <span class="string">&quot;approval&quot;</span>)]
     </span>GetPendingRequests,
-    <span class="attr">#[cfg(feature = <span class="string">&quot;aproval&quot;</span>)]
+    <span class="attr">#[cfg(feature = <span class="string">&quot;approval&quot;</span>)]
     </span>GetSingleRequest(DigestIdentifier),
     SetPreauthorizedSubject(DigestIdentifier, HashSet&lt;KeyIdentifier&gt;),
     GetAllPreauthorizedSubjects(GetAllowedSubjects),
@@ -151,9 +151,9 @@
     GetValidationProof(DigestIdentifier),
     GetRequest(DigestIdentifier),
     GetGovernanceSubjects(GetGovernanceSubjects),
-    <span class="attr">#[cfg(feature = <span class="string">&quot;aproval&quot;</span>)]
+    <span class="attr">#[cfg(feature = <span class="string">&quot;approval&quot;</span>)]
     </span>GetApproval(DigestIdentifier),
-    <span class="attr">#[cfg(feature = <span class="string">&quot;aproval&quot;</span>)]
+    <span class="attr">#[cfg(feature = <span class="string">&quot;approval&quot;</span>)]
     </span>GetApprovals(GetApprovals),
     Shutdown,
 }
@@ -166,20 +166,20 @@
     GetSubject(<span class="prelude-ty">Result</span>&lt;SubjectData, ApiError&gt;),
     GetEvents(<span class="prelude-ty">Result</span>&lt;Vec&lt;Signed&lt;Event&gt;&gt;, ApiError&gt;),
     HandleExternalRequest(<span class="prelude-ty">Result</span>&lt;DigestIdentifier, ApiError&gt;),
-    <span class="attr">#[cfg(feature = <span class="string">&quot;aproval&quot;</span>)]
+    <span class="attr">#[cfg(feature = <span class="string">&quot;approval&quot;</span>)]
     </span>VoteResolve(<span class="prelude-ty">Result</span>&lt;ApprovalEntity, ApiError&gt;),
-    <span class="attr">#[cfg(feature = <span class="string">&quot;aproval&quot;</span>)]
+    <span class="attr">#[cfg(feature = <span class="string">&quot;approval&quot;</span>)]
     </span>GetPendingRequests(<span class="prelude-ty">Result</span>&lt;Vec&lt;ApprovalEntity&gt;, ApiError&gt;),
-    <span class="attr">#[cfg(feature = <span class="string">&quot;aproval&quot;</span>)]
+    <span class="attr">#[cfg(feature = <span class="string">&quot;approval&quot;</span>)]
     </span>GetSingleRequest(<span class="prelude-ty">Result</span>&lt;ApprovalEntity, ApiError&gt;),
     GetEvent(<span class="prelude-ty">Result</span>&lt;Signed&lt;Event&gt;, ApiError&gt;),
     AddKeys(<span class="prelude-ty">Result</span>&lt;KeyIdentifier, ApiError&gt;),
     GetValidationProof(<span class="prelude-ty">Result</span>&lt;(HashSet&lt;Signature&gt;, ValidationProof), ApiError&gt;),
     GetRequest(<span class="prelude-ty">Result</span>&lt;TapleRequest, ApiError&gt;),
     GetGovernanceSubjects(<span class="prelude-ty">Result</span>&lt;Vec&lt;SubjectData&gt;, ApiError&gt;),
-    <span class="attr">#[cfg(feature = <span class="string">&quot;aproval&quot;</span>)]
+    <span class="attr">#[cfg(feature = <span class="string">&quot;approval&quot;</span>)]
     </span>GetApproval(<span class="prelude-ty">Result</span>&lt;ApprovalEntity, ApiError&gt;),
-    <span class="attr">#[cfg(feature = <span class="string">&quot;aproval&quot;</span>)]
+    <span class="attr">#[cfg(feature = <span class="string">&quot;approval&quot;</span>)]
     </span>GetApprovals(<span class="prelude-ty">Result</span>&lt;Vec&lt;ApprovalEntity&gt;, ApiError&gt;),
     ShutdownCompleted,
     SetPreauthorizedSubjectCompleted,

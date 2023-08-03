@@ -969,22 +969,22 @@
         <span class="self">self</span>.approvals_db.get_approvals_by_subject(subject_id)
     }
 
-    <span class="kw">pub fn </span>del_subject_aproval_index(
+    <span class="kw">pub fn </span>del_subject_approval_index(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         subject_id: <span class="kw-2">&amp;</span>DigestIdentifier,
         request_id: <span class="kw-2">&amp;</span>DigestIdentifier,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;(), Error&gt; {
         <span class="self">self</span>.approvals_db
-            .del_subject_aproval_index(subject_id, request_id)
+            .del_subject_approval_index(subject_id, request_id)
     }
 
-    <span class="kw">pub fn </span>set_subject_aproval_index(
+    <span class="kw">pub fn </span>set_subject_approval_index(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         subject_id: <span class="kw-2">&amp;</span>DigestIdentifier,
         request_id: <span class="kw-2">&amp;</span>DigestIdentifier,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;(), Error&gt; {
         <span class="self">self</span>.approvals_db
-            .set_subject_aproval_index(subject_id, request_id)
+            .set_subject_approval_index(subject_id, request_id)
     }
 
     <span class="kw">pub fn </span>get_approvals_by_governance(
@@ -994,22 +994,22 @@
         <span class="self">self</span>.approvals_db.get_approvals_by_governance(governance_id)
     }
 
-    <span class="kw">pub fn </span>del_governance_aproval_index(
+    <span class="kw">pub fn </span>del_governance_approval_index(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         governance_id: <span class="kw-2">&amp;</span>DigestIdentifier,
         request_id: <span class="kw-2">&amp;</span>DigestIdentifier,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;(), Error&gt; {
         <span class="self">self</span>.approvals_db
-            .del_governance_aproval_index(governance_id, request_id)
+            .del_governance_approval_index(governance_id, request_id)
     }
 
-    <span class="kw">pub fn </span>set_governance_aproval_index(
+    <span class="kw">pub fn </span>set_governance_approval_index(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         governance_id: <span class="kw-2">&amp;</span>DigestIdentifier,
         request_id: <span class="kw-2">&amp;</span>DigestIdentifier,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;(), Error&gt; {
         <span class="self">self</span>.approvals_db
-            .set_governance_aproval_index(governance_id, request_id)
+            .set_governance_approval_index(governance_id, request_id)
     }
 }
 </code></pre></div></section></main></body></html>

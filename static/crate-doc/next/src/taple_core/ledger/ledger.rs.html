@@ -2914,7 +2914,6 @@
 <a href="#2914" id="2914">2914</a>
 <a href="#2915" id="2915">2915</a>
 <a href="#2916" id="2916">2916</a>
-<a href="#2917" id="2917">2917</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::commons::crypto::KeyGenerator;
 <span class="kw">use </span><span class="kw">crate</span>::commons::models::approval::ApprovalState;
 <span class="kw">use </span><span class="kw">crate</span>::commons::models::state::generate_subject_id;
@@ -5122,7 +5121,7 @@
                                             },
                                         );
                                         <span class="self">self</span>.database.del_lce_validation_proof(<span class="kw-2">&amp;</span>subject_id)<span class="question-mark">?</span>;
-                                        
+
                                         <span class="self">self</span>.distribution_channel
                                             .tell(DistributionMessagesNew::SignaturesNeeded {
                                                 subject_id: subject_id.clone(),
@@ -5168,7 +5167,6 @@
                                 }
                             }
                             <span class="prelude-val">None </span>=&gt; {
-
                                 <span class="comment">// The following is event 0
                                 </span><span class="kw">if </span>event.content.sn == <span class="number">0 </span>{
                                     <span class="comment">// Check that event 0 is the one I need

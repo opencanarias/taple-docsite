@@ -221,7 +221,7 @@
 <span class="kw">use </span>serde::{Deserialize, Serialize};
 
 <span class="kw">use </span><span class="kw">crate</span>::approval::ApprovalMessages;
-<span class="attr">#[cfg(feature = <span class="string">&quot;aproval&quot;</span>)]
+<span class="attr">#[cfg(feature = <span class="string">&quot;approval&quot;</span>)]
 </span><span class="kw">use </span><span class="kw">crate</span>::approval::ApprovalResponses;
 <span class="kw">use </span><span class="kw">crate</span>::evaluator::EvaluatorMessage;
 <span class="attr">#[cfg(feature = <span class="string">&quot;evaluation&quot;</span>)]
@@ -261,7 +261,7 @@
     <span class="attr">#[cfg(feature = <span class="string">&quot;validation&quot;</span>)]
     </span>validation_sx: SenderEnd&lt;ValidationCommand, ValidationResponse&gt;,
     event_sx: SenderEnd&lt;EventCommand, EventResponse&gt;,
-    <span class="attr">#[cfg(feature = <span class="string">&quot;aproval&quot;</span>)]
+    <span class="attr">#[cfg(feature = <span class="string">&quot;approval&quot;</span>)]
     </span>approval_sx: SenderEnd&lt;ApprovalMessages, ApprovalResponses&gt;,
     ledger_sx: SenderEnd&lt;LedgerCommand, LedgerResponse&gt;,
     shutdown_sender: tokio::sync::broadcast::Sender&lt;()&gt;,
@@ -281,7 +281,7 @@
             ValidationResponse,
         &gt;,
         event_sx: SenderEnd&lt;EventCommand, EventResponse&gt;,
-        <span class="attr">#[cfg(feature = <span class="string">&quot;aproval&quot;</span>)] </span>approval_sx: SenderEnd&lt;ApprovalMessages, ApprovalResponses&gt;,
+        <span class="attr">#[cfg(feature = <span class="string">&quot;approval&quot;</span>)] </span>approval_sx: SenderEnd&lt;ApprovalMessages, ApprovalResponses&gt;,
         ledger_sx: SenderEnd&lt;LedgerCommand, LedgerResponse&gt;,
         shutdown_sender: tokio::sync::broadcast::Sender&lt;()&gt;,
     ) -&gt; <span class="self">Self </span>{
@@ -293,7 +293,7 @@
             <span class="attr">#[cfg(feature = <span class="string">&quot;validation&quot;</span>)]
             </span>validation_sx,
             event_sx,
-            <span class="attr">#[cfg(feature = <span class="string">&quot;aproval&quot;</span>)]
+            <span class="attr">#[cfg(feature = <span class="string">&quot;approval&quot;</span>)]
             </span>approval_sx,
             ledger_sx,
             shutdown_receiver: shutdown_sender.subscribe(),
@@ -404,7 +404,7 @@
                 </span><span class="macro">log::trace!</span>(<span class="string">&quot;Validation Message received. Current node is not able to validate&quot;</span>);
             }
             TapleMessages::ApprovalMessages(data) =&gt; {
-                <span class="attr">#[cfg(feature = <span class="string">&quot;aproval&quot;</span>)]
+                <span class="attr">#[cfg(feature = <span class="string">&quot;approval&quot;</span>)]
                 </span>{
                     <span class="kw">let </span>approval_command = <span class="kw">match </span>data {
                         ApprovalMessages::RequestApproval(approval) =&gt; {
@@ -424,8 +424,8 @@
                         .<span class="kw">await
                         </span>.map_err(|<span class="kw">_</span>| ProtocolErrors::ChannelClosed)<span class="question-mark">?</span>);
                 }
-                <span class="attr">#[cfg(not(feature = <span class="string">&quot;aproval&quot;</span>))]
-                </span><span class="macro">log::trace!</span>(<span class="string">&quot;Aproval Message received. Current node is not able to aprove&quot;</span>);
+                <span class="attr">#[cfg(not(feature = <span class="string">&quot;approval&quot;</span>))]
+                </span><span class="macro">log::trace!</span>(<span class="string">&quot;Approval Message received. Current node is not able to aprove&quot;</span>);
             }
             TapleMessages::LedgerMessages(data) =&gt; <span class="self">self
                 </span>.ledger_sx

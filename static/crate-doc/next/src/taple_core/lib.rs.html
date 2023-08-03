@@ -161,7 +161,6 @@
 <a href="#161" id="161">161</a>
 <a href="#162" id="162">162</a>
 <a href="#163" id="163">163</a>
-<a href="#164" id="164">164</a>
 </pre></div><pre class="rust"><code><span class="attr">#![recursion_limit = <span class="string">&quot;256&quot;</span>]
 </span><span class="doccomment">//! TAPLE is a DLT focused on traceability characterized by its level of scalability,
 //! its flexibility to be employed in different devices and use cases and its reduced resource consumption,
@@ -179,7 +178,7 @@
 //! # Basic usage
 //! ```
 //! use std::str::FromStr;
-//! 
+//!
 //! use taple_core::crypto;
 //! use taple_core::crypto::Ed25519KeyPair;
 //! use taple_core::crypto::KeyGenerator;
@@ -197,7 +196,7 @@
 //! use taple_core::MemoryManager;
 //! use taple_core::Notification;
 //! use taple_core::Taple;
-//! 
+//!
 //! /**
 //!  * Basic usage of TAPLE Core. It includes:
 //!  * - Node inicialization with on-memory DB (only for testing purpouse)
@@ -211,25 +210,25 @@
 //!         node_key_pair.get_key_derivator(),
 //!         &amp;node_key_pair.public_key_bytes(),
 //!     );
-//! 
+//!
 //!     // Build and start up the TAPLE node
 //!     let mut settings = get_default_settings();
 //!     settings.node.secret_key = Some(hex::encode(&amp;node_key_pair.secret_key_bytes()));
-//! 
+//!
 //!     let mut taple = Taple::new(settings, MemoryManager::new());
 //!     let mut notifier = taple.get_notification_handler();
 //!     let shutdown_manager = taple.get_shutdown_manager();
 //!     let api = taple.get_api();
-//! 
+//!
 //!     taple.start().await.expect(&quot;TAPLE started&quot;);
-//! 
+//!
 //!     // Create a minimal governance
 //!     // Compose and sign the subject creation request
 //!     let new_key = api
 //!         .add_keys(KeyDerivator::Ed25519)
 //!         .await
 //!         .expect(&quot;Error getting server response&quot;);
-//! 
+//!
 //!     let create_subject_request = EventRequest::Create(StartRequest {
 //!         governance_id: DigestIdentifier::default(),
 //!         name: &quot;&quot;.to_string(),
@@ -237,16 +236,16 @@
 //!         schema_id: &quot;governance&quot;.to_string(),
 //!         public_key: new_key,
 //!     });
-//! 
+//!
 //!     let signed_request = Signed::&lt;EventRequest&gt; {
 //!         content: create_subject_request.clone(),
 //!         signature: Signature::new(&amp;create_subject_request, node_identifier, &amp;node_key_pair)
 //!             .unwrap(),
 //!     };
-//! 
+//!
 //!     // Send the signed request to the node
 //!     let _request_id = api.external_request(signed_request).await.unwrap();
-//! 
+//!
 //!     // Wait until notification of subject creation
 //!     let subject_id =
 //!         if let Notification::NewSubject { subject_id } = notifier.receive().await.unwrap() {
@@ -254,21 +253,21 @@
 //!         } else {
 //!             panic!(&quot;Unexpected notification&quot;);
 //!         };
-//! 
+//!
 //!     // Get the new subject data
 //!     let subject_id =
 //!         DigestIdentifier::from_str(&amp;subject_id).expect(&quot;DigestIdentifier from str failed&quot;);
-//! 
+//!
 //!     let subject = api.get_subject(subject_id.clone()).await.expect(&amp;format!(
 //!         &quot;Error getting subject content with id: {}&quot;,
 //!         subject_id.to_str()
 //!     ));
-//! 
+//!
 //!     println!(&quot;{:#?}&quot;, subject);
-//! 
+//!
 //!     // Shutdown the TAPLE node
 //!     shutdown_manager.shutdown().await;
-//! 
+//!
 //!     Ok(())
 //! }
 //! ```
@@ -292,10 +291,7 @@
 <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">mod </span>protocol;
 
 <span class="kw">mod </span>unitary_component;
-<span class="kw">pub use </span>api::{
-    ApiError, ApiModuleInterface,
-    NodeAPI,
-};
+<span class="kw">pub use </span>api::{ApiError, ApiModuleInterface, NodeAPI};
 <span class="comment">// pub(crate) use api::APICommands;
 </span><span class="kw">pub use </span>commons::crypto;
 <span class="kw">pub use </span>commons::identifier;
@@ -321,7 +317,9 @@
     models::value_wrapper::ValueWrapper,
 };
 <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">use </span>database::DB;
-<span class="kw">pub use </span>database::{DatabaseCollection, DatabaseManager, Error <span class="kw">as </span>DbError, MemoryManager, MemoryCollection};
+<span class="kw">pub use </span>database::{
+    DatabaseCollection, DatabaseManager, Error <span class="kw">as </span>DbError, MemoryCollection, MemoryManager,
+};
 <span class="kw">pub use </span>error::Error;
 <span class="kw">pub use </span>unitary_component::{
     get_default_settings, NotificationHandler, Taple, TapleShutdownManager,

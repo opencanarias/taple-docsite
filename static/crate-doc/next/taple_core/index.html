@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="TAPLE is a DLT focused on traceability characterized by its level of scalability, its flexibility to be employed in different devices and use cases and its reduced resource consumption, including power consumption."><title>taple_core - Rust</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../static.files/rustdoc-f3501f0f5ae15dfb.css" id="mainThemeStyle"><div id="rustdoc-vars" data-root-path="../" data-static-root-path="../static.files/" data-current-crate="taple_core" data-themes="" data-resource-suffix="" data-rustdoc-version="1.71.0 (8ede3aae2 2023-07-12)" data-search-js="search-4926e5fc22a5646a.js" data-settings-js="settings-de11bff964e9d4e5.js" data-settings-css="settings-8c76f75bfb6bd192.css" data-theme-light-css="light-0f8c037637f9eb3e.css" data-theme-dark-css="dark-1097f8e92a01e3cf.css" data-theme-ayu-css="ayu-614652228113ac93.css" ></div><script src="../static.files/storage-62ce34ea385b278a.js"></script><script defer src="../crates.js"></script><script defer src="../static.files/main-f0540c1d82cde29b.js"></script><noscript><link rel="stylesheet" media="(prefers-color-scheme:light)" href="../static.files/light-0f8c037637f9eb3e.css"><link rel="stylesheet" media="(prefers-color-scheme:dark)" href="../static.files/dark-1097f8e92a01e3cf.css"><link rel="stylesheet" href="../static.files/noscript-13285aec31fa243e.css"></noscript><link rel="alternate icon" type="image/png" href="../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc mod crate"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="logo-container" href="../taple_core/index.html"><img class="rust-logo" src="../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><h2></h2></nav><nav class="sidebar"><a class="logo-container" href="../taple_core/index.html"><img class="rust-logo" src="../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><h2 class="location"><a href="#">Crate taple_core</a></h2><div class="sidebar-elems"><ul class="block"><li class="version">Version 0.2.0-dev</li><li><a id="all-types" href="all.html">All Items</a></li></ul><section><ul class="block"><li><a href="#reexports">Re-exports</a></li><li><a href="#modules">Modules</a></li><li><a href="#macros">Macros</a></li><li><a href="#structs">Structs</a></li><li><a href="#enums">Enums</a></li><li><a href="#traits">Traits</a></li><li><a href="#functions">Functions</a></li></ul></section></div></nav><main><div class="width-limiter"><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="main-heading"><h1>Crate <a class="mod" href="#">taple_core</a><button id="copy-path" title="Copy item path to clipboard"><img src="../static.files/clipboard-7571035ce49a181d.svg" width="19" height="18" alt="Copy item path"></button></h1><span class="out-of-band"><a class="srclink" href="../src/taple_core/lib.rs.html#1-164">source</a> · <button id="toggle-all-docs" title="collapse all docs">[<span>&#x2212;</span>]</button></span></div><details class="toggle top-doc" open><summary class="hideme"><span>Expand description</span></summary><div class="docblock"><p>TAPLE is a DLT focused on traceability characterized by its level of scalability,
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="TAPLE is a DLT focused on traceability characterized by its level of scalability, its flexibility to be employed in different devices and use cases and its reduced resource consumption, including power consumption."><title>taple_core - Rust</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../static.files/rustdoc-f3501f0f5ae15dfb.css" id="mainThemeStyle"><div id="rustdoc-vars" data-root-path="../" data-static-root-path="../static.files/" data-current-crate="taple_core" data-themes="" data-resource-suffix="" data-rustdoc-version="1.71.0 (8ede3aae2 2023-07-12)" data-search-js="search-4926e5fc22a5646a.js" data-settings-js="settings-de11bff964e9d4e5.js" data-settings-css="settings-8c76f75bfb6bd192.css" data-theme-light-css="light-0f8c037637f9eb3e.css" data-theme-dark-css="dark-1097f8e92a01e3cf.css" data-theme-ayu-css="ayu-614652228113ac93.css" ></div><script src="../static.files/storage-62ce34ea385b278a.js"></script><script defer src="../crates.js"></script><script defer src="../static.files/main-f0540c1d82cde29b.js"></script><noscript><link rel="stylesheet" media="(prefers-color-scheme:light)" href="../static.files/light-0f8c037637f9eb3e.css"><link rel="stylesheet" media="(prefers-color-scheme:dark)" href="../static.files/dark-1097f8e92a01e3cf.css"><link rel="stylesheet" href="../static.files/noscript-13285aec31fa243e.css"></noscript><link rel="alternate icon" type="image/png" href="../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc mod crate"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="logo-container" href="../taple_core/index.html"><img class="rust-logo" src="../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><h2></h2></nav><nav class="sidebar"><a class="logo-container" href="../taple_core/index.html"><img class="rust-logo" src="../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><h2 class="location"><a href="#">Crate taple_core</a></h2><div class="sidebar-elems"><ul class="block"><li class="version">Version 0.3.0-dev</li><li><a id="all-types" href="all.html">All Items</a></li></ul><section><ul class="block"><li><a href="#reexports">Re-exports</a></li><li><a href="#modules">Modules</a></li><li><a href="#macros">Macros</a></li><li><a href="#structs">Structs</a></li><li><a href="#enums">Enums</a></li><li><a href="#traits">Traits</a></li><li><a href="#functions">Functions</a></li></ul></section></div></nav><main><div class="width-limiter"><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="main-heading"><h1>Crate <a class="mod" href="#">taple_core</a><button id="copy-path" title="Copy item path to clipboard"><img src="../static.files/clipboard-7571035ce49a181d.svg" width="19" height="18" alt="Copy item path"></button></h1><span class="out-of-band"><a class="srclink" href="../src/taple_core/lib.rs.html#1-163">source</a> · <button id="toggle-all-docs" title="collapse all docs">[<span>&#x2212;</span>]</button></span></div><details class="toggle top-doc" open><summary class="hideme"><span>Expand description</span></summary><div class="docblock"><p>TAPLE is a DLT focused on traceability characterized by its level of scalability,
 its flexibility to be employed in different devices and use cases and its reduced resource consumption,
 including power consumption.</p>
 <p>The TAPLE crate provides the library that allows instantiating nodes of this DLT in order to create a
@@ -10,7 +10,7 @@ according to the user’s needs.</p>
 that can be obtained when interacting with the API or, in some cases, may be necessary to interact with it.</p>
 <h2 id="basic-usage"><a href="#basic-usage">Basic usage</a></h2>
 <div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use </span>std::str::FromStr;
- 
+
 <span class="kw">use </span>taple_core::crypto;
 <span class="kw">use </span>taple_core::crypto::Ed25519KeyPair;
 <span class="kw">use </span>taple_core::crypto::KeyGenerator;
@@ -28,7 +28,7 @@ that can be obtained when interacting with the API or, in some cases, may be nec
 <span class="kw">use </span>taple_core::MemoryManager;
 <span class="kw">use </span>taple_core::Notification;
 <span class="kw">use </span>taple_core::Taple;
- 
+
 <span class="doccomment">/**
  * Basic usage of TAPLE Core. It includes:
  * - Node inicialization with on-memory DB (only for testing purpouse)
@@ -42,25 +42,25 @@ that can be obtained when interacting with the API or, in some cases, may be nec
         node_key_pair.get_key_derivator(),
         <span class="kw-2">&amp;</span>node_key_pair.public_key_bytes(),
     );
- 
+
     <span class="comment">// Build and start up the TAPLE node
     </span><span class="kw">let </span><span class="kw-2">mut </span>settings = get_default_settings();
     settings.node.secret_key = <span class="prelude-val">Some</span>(hex::encode(<span class="kw-2">&amp;</span>node_key_pair.secret_key_bytes()));
- 
+
     <span class="kw">let </span><span class="kw-2">mut </span>taple = Taple::new(settings, MemoryManager::new());
     <span class="kw">let </span><span class="kw-2">mut </span>notifier = taple.get_notification_handler();
     <span class="kw">let </span>shutdown_manager = taple.get_shutdown_manager();
     <span class="kw">let </span>api = taple.get_api();
- 
+
     taple.start().<span class="kw">await</span>.expect(<span class="string">&quot;TAPLE started&quot;</span>);
- 
+
     <span class="comment">// Create a minimal governance
     // Compose and sign the subject creation request
     </span><span class="kw">let </span>new_key = api
         .add_keys(KeyDerivator::Ed25519)
         .<span class="kw">await
         </span>.expect(<span class="string">&quot;Error getting server response&quot;</span>);
- 
+
     <span class="kw">let </span>create_subject_request = EventRequest::Create(StartRequest {
         governance_id: DigestIdentifier::default(),
         name: <span class="string">&quot;&quot;</span>.to_string(),
@@ -68,16 +68,16 @@ that can be obtained when interacting with the API or, in some cases, may be nec
         schema_id: <span class="string">&quot;governance&quot;</span>.to_string(),
         public_key: new_key,
     });
- 
+
     <span class="kw">let </span>signed_request = Signed::&lt;EventRequest&gt; {
         content: create_subject_request.clone(),
         signature: Signature::new(<span class="kw-2">&amp;</span>create_subject_request, node_identifier, <span class="kw-2">&amp;</span>node_key_pair)
             .unwrap(),
     };
- 
+
     <span class="comment">// Send the signed request to the node
     </span><span class="kw">let </span>_request_id = api.external_request(signed_request).<span class="kw">await</span>.unwrap();
- 
+
     <span class="comment">// Wait until notification of subject creation
     </span><span class="kw">let </span>subject_id =
         <span class="kw">if let </span>Notification::NewSubject { subject_id } = notifier.receive().<span class="kw">await</span>.unwrap() {
@@ -85,21 +85,21 @@ that can be obtained when interacting with the API or, in some cases, may be nec
         } <span class="kw">else </span>{
             <span class="macro">panic!</span>(<span class="string">&quot;Unexpected notification&quot;</span>);
         };
- 
+
     <span class="comment">// Get the new subject data
     </span><span class="kw">let </span>subject_id =
         DigestIdentifier::from_str(<span class="kw-2">&amp;</span>subject_id).expect(<span class="string">&quot;DigestIdentifier from str failed&quot;</span>);
- 
+
     <span class="kw">let </span>subject = api.get_subject(subject_id.clone()).<span class="kw">await</span>.expect(<span class="kw-2">&amp;</span><span class="macro">format!</span>(
         <span class="string">&quot;Error getting subject content with id: {}&quot;</span>,
         subject_id.to_str()
     ));
- 
+
     <span class="macro">println!</span>(<span class="string">&quot;{:#?}&quot;</span>, subject);
- 
+
     <span class="comment">// Shutdown the TAPLE node
     </span>shutdown_manager.shutdown().<span class="kw">await</span>;
- 
+
     <span class="prelude-val">Ok</span>(())
 }</code></pre></div>
 </div></details><h2 id="reexports" class="small-section-header"><a href="#reexports">Re-exports</a></h2><ul class="item-table"><li><div class="item-name" id="reexport.Error"><code>pub use error::<a class="enum" href="error/enum.Error.html" title="enum taple_core::error::Error">Error</a>;</code></div></li></ul><h2 id="modules" class="small-section-header"><a href="#modules">Modules</a></h2><ul class="item-table"><li><div class="item-name"><a class="mod" href="crypto/index.html" title="mod taple_core::crypto">crypto</a></div><div class="desc docblock-short">This module provides the structs and traits for the generation of key pairs for

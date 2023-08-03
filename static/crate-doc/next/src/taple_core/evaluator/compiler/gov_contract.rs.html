@@ -430,9 +430,6 @@
 <a href="#430" id="430">430</a>
 <a href="#431" id="431">431</a>
 <a href="#432" id="432">432</a>
-<a href="#433" id="433">433</a>
-<a href="#434" id="434">434</a>
-<a href="#435" id="435">435</a>
 </pre></div><pre class="rust"><code><span class="kw">pub fn </span>get_gov_contract() -&gt; String {
     <span class="string">r#&quot;
 use taple_sc_rust as sdk;
@@ -494,7 +491,6 @@ impl&lt;&#39;de&gt; Deserialize&lt;&#39;de&gt; for Who {
                 let Some(key) = map.next_key::&lt;String&gt;()? else {
                     return Err(serde::de::Error::missing_field(&quot;ID or NAME&quot;))
                 };
-                println!(&quot;KEY {}&quot;, key);
                 let result = match key.as_str() {
                     &quot;ID&quot; =&gt; {
                         let id: String = map.next_value()?;
@@ -515,7 +511,6 @@ impl&lt;&#39;de&gt; Deserialize&lt;&#39;de&gt; for Who {
             where
                 E: serde::de::Error,
             {
-                println!(&quot;STR&quot;);
                 match v.as_str() {
                     &quot;MEMBERS&quot; =&gt; Ok(Who::MEMBERS),
                     &quot;ALL&quot; =&gt; Ok(Who::ALL),
@@ -530,7 +525,6 @@ impl&lt;&#39;de&gt; Deserialize&lt;&#39;de&gt; for Who {
             where
                 E: serde::de::Error,
             {
-                println!(&quot;BORR STR&quot;);
                 match v {
                     &quot;MEMBERS&quot; =&gt; Ok(Who::MEMBERS),
                     &quot;ALL&quot; =&gt; Ok(Who::ALL),
