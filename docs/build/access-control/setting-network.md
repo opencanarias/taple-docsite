@@ -954,7 +954,7 @@ curl --request POST 'http://localhost:3000/api/event-requests' \
 
 :::caution
 
-Note that in the request, you must replace {{GOVERNANCE-ID}} with the previously saved governance hash identifier.
+Note that in the request, you must replace **{{GOVERNANCE-ID}}** with the previously saved governance hash identifier.
 
 :::
 
@@ -974,7 +974,7 @@ curl --request PATCH 'http://localhost:3000/api/approval-requests/{{PREVIUS-ID}}
 
 :::caution
 
-Note that in the request, you must replace {{PREVIUS-ID}} with the value copied from above.
+Note that in the request, you must replace **{{PREVIUS-ID}}** with the value copied from above.
 
 :::
 
@@ -1014,7 +1014,7 @@ curl 'http://localhost:3002/api/subjects/{{GOVERNANCE-ID}}'
 
 :::caution
 
-Note that in the above requests, you must replace {{GOVERNANCE-ID}} with the previously saved governance hash identifier.
+Note that in the above requests, you must replace **{{GOVERNANCE-ID}}** with the previously saved governance hash identifier.
 
 :::
 

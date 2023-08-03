@@ -47,12 +47,12 @@ curl --request POST 'http://localhost:3003/api/event-requests' \
     --header 'Content-Type: application/json' \
     --data-raw '{
         "request": {
-        "Fact": {
-            "subject_id": "{{SUBJECT-ID}}",
-            "payload": {
-                "Rent": {}
+            "Fact": {
+                "subject_id": "{{SUBJECT-ID}}",
+                "payload": {
+                    "Rent": {}
+                }
             }
-        }
         },
         "signature": {
         "signer": "EbwR0yYrCYpTzlN5i5GX_MtAbKRw5y2euv3TqiTgwggs",
@@ -111,13 +111,13 @@ Note that in the above requests, you must replace **{{SUBJECT-ID}}** with the ha
 ## Opening of the vehicle to the assigned driver
 Before proceeding to unlock the vehicle, the client must generate a key pair using the **[TAPLE Keygen](../../learn/client-tools.md#taple-keygen)** tool as follows:
 
-```bash
+```bash title="Another terminal"
 taple-keygen
 ```
 
 obtaining as output the following:
 
-```bash
+```bash title="Another terminal"
 controller_id: EHQNUnel9CCeL9E8Ov8UmQyn436zBUOBb_zJVf0qs04M
 peer_id: 12D3KooWBmcwLJ9JyjgeBHo1gVT5Xc9YEMexNxqCracbYC4AsjEi
 private_key: 3a7bd6128eb89f9c6f2e7f82575bf1c9cad7521a29e2ca56f87920b41ae84507
@@ -132,12 +132,12 @@ curl --request POST 'http://localhost:3003/api/event-requests' \
     --header 'Content-Type: application/json' \
     --data-raw '{
         "request": {
-        "Fact": {
-            "subject_id": "{{SUBJECT_ID}}",
-            "payload": {
-                "Open": {}
+            "Fact": {
+                "subject_id": "{{SUBJECT_ID}}",
+                "payload": {
+                    "Open": {}
+                }
             }
-        }
         },
         "signature": {
         "signer": "EHQNUnel9CCeL9E8Ov8UmQyn436zBUOBb_zJVf0qs04M",
@@ -146,6 +146,8 @@ curl --request POST 'http://localhost:3003/api/event-requests' \
         }
     }'
 ```
+
+**Note:** Save the "**request_id**" for future steps. 
 
 :::caution
 
@@ -245,18 +247,6 @@ where we can see that the event has been performed correctly, obtaining an outpu
 }
 ```
 
-If both companies had voted negative on the application, the application would be rejected and the vehicle would not be opened. The output we would get would be similar to the following:
-
-```bash
-{
-    "id": "{{REQUEST-ID}}",
-    "subject_id": "{{SUBJECT-ID}}",
-    "sn": 4,
-    "state": "finished",
-    "success": false
-}
-```
-
 ## Unrental vehicle
 Then, when the client has finished with the disposal of the vehicle, the rental company must update its status to set it as free. To do this, we must issue an event on the subject by means of an external invocation. It should be noted that the current state of the subject is as follows:
 
@@ -303,12 +293,12 @@ curl --request POST 'http://localhost:3003/api/event-requests' \
     --header 'Content-Type: application/json' \
     --data-raw '{
         "request": {
-        "Fact": {
-            "subject_id": "{{SUBJECT-ID}}",
-            "payload": {
-                "Unrental": {}
+            "Fact": {
+                "subject_id": "{{SUBJECT-ID}}",
+                "payload": {
+                    "Unrental": {}
+                }
             }
-        }
         },
         "signature": {
         "signer": "EbwR0yYrCYpTzlN5i5GX_MtAbKRw5y2euv3TqiTgwggs",
@@ -333,13 +323,13 @@ Note that in the request, you must substitute **{{SUBJECT-ID}}** for the hash id
 ## Opening of the vehicle to cleaning personnel
 Now, we are faced with the use case that a cleaning/maintenance personnel wants to open the vehicle. Before proceeding to open the vehicle, the awarded personnel must generate a key pair using the **[TAPLE Keygen](../../learn/client-tools.md#taple-keygen)** tool as follows:
 
-```bash
+```bash title="Another terminal"
 taple-keygen
 ```
 
 obtaining as output the following:
 
-```bash
+```bash title="Another terminal"
 controller_id: EBKUYdoJZCkIr2UnIc22LmeAIHKDQQIFFDFzoMN34gC4
 peer_id: 12D3KooWA8VozHkYiNv9hwYKh37B61o8JSEzXCGA1WfxbZbAgwS5
 private_key: e34a939ab13fd7a2785949ddd180f4c502dcd4a28c98788edd3933834c7f88bb
@@ -354,12 +344,12 @@ curl --request POST 'http://localhost:3003/api/event-requests' \
     --header 'Content-Type: application/json' \
     --data-raw '{
         "request": {
-        "Fact": {
-            "subject_id": "{{SUBJECT_ID}}",
-            "payload": {
-                "Open": {}
+            "Fact": {
+                "subject_id": "{{SUBJECT_ID}}",
+                "payload": {
+                    "Open": {}
+                }
             }
-        }
         },
         "signature": {
         "signer": "EBKUYdoJZCkIr2UnIc22LmeAIHKDQQIFFDFzoMN34gC4",
@@ -368,6 +358,8 @@ curl --request POST 'http://localhost:3003/api/event-requests' \
         }
     }'
 ```
+
+**Note:** Save the "**request_id**" for future steps. 
 
 :::caution
 
@@ -467,20 +459,8 @@ where we can see that the event has been performed correctly, obtaining an outpu
 }
 ```
 
-If both companies had voted negative on the application, the application would be rejected and the vehicle would not be opened. The output we would get would be similar to the following:
-
-```bash
-{
-    "id": "{{REQUEST-ID}}",
-    "subject_id": "{{SUBJECT-ID}}",
-    "sn": 6,
-    "state": "finished",
-    "success": false
-}
-```
-
-## Event rejected
-As a last case, we must check what happens if we try to release a car that is already free or if we try to rent a vehicle that is already rented. In this case, we will do it about releasing a car that is already free, but it would be the same way for the other case. It should be noted that the current status of the subject is as follows:
+## Opening rejected
+As a last case, we need to check what happens when a user not identified by the rental company or the cleaning company tries to open a vehicle. Currently, the current status of the subject is as follows:
 
 ```json
 {
@@ -492,57 +472,115 @@ As a last case, we must check what happens if we try to release a car that is al
 }
 ```
 
-Before making the request, we will generate the signature of the event we want to issue using **[TAPLE-Sign](../../learn/client-tools.md#taple-sign)** with the following command:
+Next, the user generates his key pair using the **[TAPLE Keygen](../../learn/client-tools.md#taple-keygen)** tool as follows:
 
 ```bash title="Another terminal"
-taple-sign "74c417de2174f3a76b0b98343cea3aa35bfd3860cac8bf470092c3e751745c1a" '{"Fact":{"subject_id":"{{SUBJECT-ID}}","payload":{"Unrental":{}}}}'
+taple-keygen
 ```
 
-:::caution
+obtaining as output the following:
 
-Note that in the request, you must replace **{{SUBJECT-ID}}** with the hash identifier of the subject.
-
-:::
-
-We will then include the result of the previous execution in the next request:
-
-```bash title="Node: Vehicle"
-curl --request POST 'http://localhost:3003/api/event-requests' \
-    --header 'Content-Type: application/json' \
-    --data-raw '{{SIGN-RESULT}}'
+```bash title="Another terminal"
+controller_id: E-Hl0GnPy0DY0iQYzVC64g8GmfRcEUtMES9UnI80XqEk
+peer_id: 12D3KooWSYJh63cUkuUFFJGPwxqxsywA4V1pJR2YRuVDAop3ruX6
+private_key: b03e9ac64f00da2df13e0f7498fcfccf87ecf467294ad93df46072716627ca05
 ```
 
-:::caution
-
-Note that in the request, you must replace **{{SIGN-RESULT}}** with the result of the previous request.
-
-:::
-
-Leaving us with something similar to the following:
+Now, this user arrives at the vehicle and using their NFC, causes the car to issue a signed event request similar to the following:
 
 ```bash title="Node: Vehicle"
 curl --request POST 'http://localhost:3003/api/event-requests' \
     --header 'Content-Type: application/json' \
     --data-raw '{
         "request": {
-        "Fact": {
-            "subject_id": "{{SUBJECT-ID}}",
-            "payload": {
-                "Unrental": {}
+            "Fact": {
+                "subject_id": "{{SUBJECT-ID}}",
+                "payload": {
+                    "Open": {}
+                }
             }
-        }
         },
         "signature": {
-        "signer": "EbwR0yYrCYpTzlN5i5GX_MtAbKRw5y2euv3TqiTgwggs",
-        "timestamp": 1690449443680394417,
-        "value": "SE515s9pudglgPnny6xDu3T-roK2nrbKCjWcqmdHNmNvmiIceIIF9e7aZYXq8YZysaNoM1lCShjUiiLw-4R2AjDw"
+            "signer": "E-Hl0GnPy0DY0iQYzVC64g8GmfRcEUtMES9UnI80XqEk",
+            "timestamp": 1691067255233609384,
+            "value": "SEsYld7XVNdDX68PMUIRj4_Cn3I7mEXPocHnghQ__MjxEHyvDlMjshHiKuICh9X_tUL5MWaCjCoP9a8G5HNpdSAQ"
         }
     }'
 ```
 
-Once the above command is executed, the "**request-id**" of the event will be returned. It is necessary to save it for future steps.
+**Note:** Save the "**request_id**" for future steps.
 
-Then, we execute the following command to check the status of the request:
+:::caution
+
+Note that to generate the content of the above request it is necessary to execute the following command:
+
+```bash title="Another terminal"
+taple-sign "b03e9ac64f00da2df13e0f7498fcfccf87ecf467294ad93df46072716627ca05" '{"Fact":{"subject_id":"{{SUBJECT-ID}}","payload":{"Open":{}}}}'
+```
+Remember to replace the **{{SUBJECT-ID}}**.
+
+:::
+
+Then, the rental company and the cleaning/maintenance company would receive an approval request on the invocation made, so each of them must check in their internal systems whether the identity of the issuer is valid and vote yes or no. In this case, the user is not registered neither in the system of the rental company nor in the cleaning/maintenance company, so both should deny it and therefore, the vehicle will not be opened. Before proceeding to the voting phase, it will be necessary to obtain approval of the new request. To do this, we execute the following commands:
+
+```bash title="Node: Rental Company"
+curl 'http://localhost:3000/api/approval-requests?status=Pending'
+```
+
+```bash title="Node: Cleaning Company"
+curl 'http://localhost:3001/api/approval-requests?status=Pending'
+```
+
+Both will return the following:
+
+```json
+[
+    {
+        "id": "JMiikHnC7e7EdcZFVWS1ETcEQnSPcUh1pRtk0X63IvwA",
+        "request": {
+            "event_request": {
+                "Fact": {
+                    "subject_id": "{{SUBJECT-ID}}",
+                    "payload": {
+                        "Open": {}
+                    }
+                },
+                "signature": {
+                    "signer": "EBKUYdoJZCkIr2UnIc22LmeAIHKDQQIFFDFzoMN34gC4",
+                    "timestamp": 1691065644674220886,
+                    "value": "SEzHNvQCRhgUni13-uJFDtSsMzFYSjWgm4SdOHR-9D5TLKq3DXEYczFslCM3FzKs0vEvlr7w_UHCI0rW59O5G7Ag"
+                }
+            },
+            "sn": 7,
+            "gov_version": 1,
+            "patch": [],
+            "state_hash": "JccxUyFfgLYAsoo2rhT-KwZvc7vMNSg2MBeehabEzDFw",
+            "hash_prev_event": "JZPjlTBzEZk5p9MVfmWvJQ81XBgAQE5ILIGIB6p6ilGI",
+            "signature": {
+                "signer": "EpN8qH2SHltNrT_qEqWvUmWuz34xIzmOZ9pmgvwdT4Gg",
+                "timestamp": 1691065663855558219,
+                "value": "SEHJjcopBk1AddD8vEdeIy_HJg-Cnmrua1jVRi8ayqzNRDorxYiMXcXPfdRdeUSGvPWUb_yG44hhjOS6P9TNKQAA"
+            }
+        },
+        "reponse": null,
+        "state": "Pending"
+    }
+]
+```
+
+where we can check that the "**signer**" corresponds to the user's identifier.
+
+**Note:** Save the value of the "**id**" field returned by the previous request.
+
+Now, we are ready for the approval phase. To do this, we must execute the following commands:
+
+```bash title="Node: Rental Company"
+curl --request POST 'http://localhost:3000/api/approval-requests/{{PREVIUS-ID}}' \
+    --header 'Content-Type: application/json' \
+    --data '{"state": "RespondedRejected"}'
+```
+
+If we check the status of the request, we can see how the status is still in process, since having a quourum of 1, the cleaning company could vote in favor and in this case be accepted.
 
 ```bash title="Node: Vehicle"
 curl 'http://localhost:3003/api/event-requests/{{REQUEST-ID}}/state'
@@ -554,7 +592,36 @@ Note that in the request, you must replace **{{REQUEST-ID}}** with the value cop
 
 :::
 
-where we can see that it has incremented the field "**sn**" and that the event has been rejected, obtaining an output similar to the following:
+
+```json
+{
+    "id": "{{REQUEST-ID}}",
+    "subject_id": "{{SUBJECT-ID}}",
+    "sn": 7,
+    "state": "proccesing",
+    "success": null
+}
+```
+
+Finally, we proceed to vote with the cleaning company, refusing access as follows:
+
+```bash title="Node: Cleaning Company"
+curl --request POST 'http://localhost:3001/api/approval-requests/{{PREVIUS-ID}}' \
+    --header 'Content-Type: application/json' \
+    --data '{"state": "RespondedRejected"}'
+```
+
+Finally, if we check the status of the application again, we see that it has finished and has been rejected, so the opening of the vehicle will be denied.
+
+```bash title="Node: Vehicle"
+curl 'http://localhost:3003/api/event-requests/{{REQUEST-ID}}/state'
+```
+
+:::caution
+
+Note that in the request, you must replace **{{REQUEST-ID}}** with the value copied above.
+
+:::
 
 ```json
 {
