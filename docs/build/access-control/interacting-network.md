@@ -31,7 +31,7 @@ We will then include the result of the previous execution in the next request:
 ```bash title="Node: Vehicle"
 curl --request POST 'http://localhost:3003/api/event-requests' \
     --header 'Content-Type: application/json' \
-    --data-raw {{SIGN-RESULT}}
+    --data-raw '{{SIGN-RESULT}}'
 ```
 
 :::caution
@@ -50,7 +50,7 @@ curl --request POST 'http://localhost:3003/api/event-requests' \
         "Fact": {
             "subject_id": "{{SUBJECT-ID}}",
             "payload": {
-            "Rent": {}
+                "Rent": {}
             }
         }
         },
@@ -135,7 +135,7 @@ curl --request POST 'http://localhost:3003/api/event-requests' \
         "Fact": {
             "subject_id": "{{SUBJECT_ID}}",
             "payload": {
-            "Open": {}
+                "Open": {}
             }
         }
         },
@@ -146,6 +146,17 @@ curl --request POST 'http://localhost:3003/api/event-requests' \
         }
     }'
 ```
+
+:::caution
+
+Note that to generate the content of the above request it is necessary to execute the following command:
+
+```bash title="Another terminal"
+taple-sign "3a7bd6128eb89f9c6f2e7f82575bf1c9cad7521a29e2ca56f87920b41ae84507" '{"Fact":{"subject_id":"{{SUBJECT-ID}}","payload":{"Open":{}}}}'
+```
+Remember to replace the **{{SUBJECT-ID}}**.
+
+:::
 
 Then, the rental company and the cleaning/maintenance company would receive a request for approval on the invocation made so that each of them must check in their internal systems if the identity of the issuer is valid and vote yes or no. In this case, it is the driver to whom the car has been leased, so the rental company must accept the request and the cleaning/maintenance company must deny it. In this case, it is the driver to whom the car has been rented so the reting company should accept the request and the cleaning/maintenance company should deny the request. As we are facing a quorum of 1, the request will be accepted and therefore the vehicle will be opened. Before moving on to the voting phase, it will be necessary to get the new request for approval. To do so, we execute the following:
 
@@ -276,7 +287,7 @@ We will then include the result of the previous execution in the next request:
 ```bash title="Node: Vehicle"
 curl --request POST 'http://localhost:3003/api/event-requests' \
     --header 'Content-Type: application/json' \
-    --data-raw {{SIGN-RESULT}}
+    --data-raw '{{SIGN-RESULT}}'
 ```
 
 :::caution
@@ -295,7 +306,7 @@ curl --request POST 'http://localhost:3003/api/event-requests' \
         "Fact": {
             "subject_id": "{{SUBJECT-ID}}",
             "payload": {
-            "Unrental": {}
+                "Unrental": {}
             }
         }
         },
@@ -344,9 +355,9 @@ curl --request POST 'http://localhost:3003/api/event-requests' \
     --data-raw '{
         "request": {
         "Fact": {
-            "subject_id": "J0g3fCvz5BVYyCWtFhFbc7czlLYgZgoV8DYTjVNWxMOk",
+            "subject_id": "{{SUBJECT_ID}}",
             "payload": {
-            "Open": {}
+                "Open": {}
             }
         }
         },
@@ -357,6 +368,17 @@ curl --request POST 'http://localhost:3003/api/event-requests' \
         }
     }'
 ```
+
+:::caution
+
+Note that to generate the content of the above request it is necessary to execute the following command:
+
+```bash title="Another terminal"
+taple-sign "e34a939ab13fd7a2785949ddd180f4c502dcd4a28c98788edd3933834c7f88bb" '{"Fact":{"subject_id":"{{SUBJECT-ID}}","payload":{"Open":{}}}}'
+```
+Remember to replace the **{{SUBJECT-ID}}**.
+
+:::
 
 Then, the rental company and the cleaning/maintenance company would receive a request for approval on the invocation made so that each of them must check in their internal systems if the identity of the issuer is valid and vote yes or no. In this case, it is the cleaning/maintenance personnel, so the cleaning/maintenance company will accept the request and the vehicle will be opened since we are facing a quorum of 1. In this case, we are dealing with cleaning/maintenance personnel, so the cleaning/maintenance company will accept the request and the vehicle will be opened since we are facing a quorum of 1. Before moving on to the voting phase, it will be necessary to obtain the new update request. To do this, we run the following:
 
@@ -487,7 +509,7 @@ We will then include the result of the previous execution in the next request:
 ```bash title="Node: Vehicle"
 curl --request POST 'http://localhost:3003/api/event-requests' \
     --header 'Content-Type: application/json' \
-    --data-raw {{SIGN-RESULT}}
+    --data-raw '{{SIGN-RESULT}}'
 ```
 
 :::caution
@@ -506,7 +528,7 @@ curl --request POST 'http://localhost:3003/api/event-requests' \
         "Fact": {
             "subject_id": "{{SUBJECT-ID}}",
             "payload": {
-            "Unrental": {}
+                "Unrental": {}
             }
         }
         },

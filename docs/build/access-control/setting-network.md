@@ -682,7 +682,7 @@ curl --request POST 'http://localhost:3000/api/event-requests' \
     --data '{
         "request": {
             "Fact": {
-                "subject_id": {{GOVERNANCE-ID}},
+                "subject_id": "{{GOVERNANCE-ID}}",
                 "payload": {
                     "Patch": {
                         "data": [
@@ -1146,7 +1146,7 @@ We will then include the result of the previous execution in the next request:
 ```bash title="Node: Rental Company"
 curl 'http://localhost:3000/api/event-requests' \
     --header 'Content-Type: application/json' \
-    --data-raw {{SIGN-RESULT}}
+    --data-raw '{{SIGN-RESULT}}'
 ```
 
 :::caution
@@ -1163,8 +1163,8 @@ curl 'http://localhost:3000/api/event-requests' \
 --data-raw '{
     "request": {
         "Transfer": {
-        "subject_id": {{SUBJECT-ID}},
-        "public_key": {{PUBLIC-KEY}}
+        "subject_id": "{{SUBJECT-ID}}",
+        "public_key": "{{PUBLIC-KEY}}"
         }
     },
     "signature": {
