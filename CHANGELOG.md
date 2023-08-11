@@ -11,7 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - TAPLE 0.2 version added
 
-## [0.1.0] - 2022-09-02
+## [0.1.0] - 2023-02-09
 
 ### Added
 
