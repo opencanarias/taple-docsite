@@ -424,6 +424,10 @@
               "type": "category",
               "collapsible": true,
               "collapsed": true,
+              "link": {
+                "type": "doc",
+                "id": "build/minimal-network/introduction"
+              },
               "label": "Minimal network",
               "items": [
                 {
@@ -462,6 +466,10 @@
               "type": "category",
               "collapsible": true,
               "collapsed": true,
+              "link": {
+                "type": "doc",
+                "id": "build/assets-traceability/use-case-definition"
+              },
               "label": "Assets traceability",
               "items": [
                 {
@@ -536,6 +544,10 @@
               "label": "Access control",
               "collapsible": true,
               "collapsed": true,
+              "link": {
+                "type": "doc",
+                "id": "build/access-control/introduction"
+              },
               "items": [
                 {
                   "type": "doc",

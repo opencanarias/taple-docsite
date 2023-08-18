@@ -39,7 +39,7 @@ curl --silent --location 'http://localhost:3000/api/event-requests' \
 The response we get when launching the event request is the id of the request itself. If we want to know what ended up being the SubjectId of the governance, we must consult the endpoint **/api/event-requests/{id}** and the method **GET**. The response to this endpoint returns information about the request that includes the SubjectId of the governance.
 
 ```bash
-curl --silent 'http://127.0.0.1:3000/api/event-requests/Jr4kWJOgdIhdtUMTqyLbu676-k8-eVCd8VQ9ZmLWpSdg/state' \
+curl --silent 'http://127.0.0.1:3000/api/event-requests/Jr4kWJOgdIhdtUMTqyLbu676-k8-eVCd8VQ9ZmLWpSdg/state'
 ```
 
 Response:

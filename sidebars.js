@@ -266,6 +266,7 @@ module.exports = {
               type: 'category',
               collapsible: true,
               collapsed: true,
+              link: { type: 'doc', id: 'build/minimal-network/introduction' },
               label: 'Minimal network',
               items: [
                 {
@@ -304,6 +305,7 @@ module.exports = {
               type: 'category',
               collapsible: true,
               collapsed: true,
+              link: { type: 'doc', id: 'build/assets-traceability/use-case-definition' },
               label: 'Assets traceability',
               items: [
                 {
@@ -376,6 +378,7 @@ module.exports = {
             {
               type: 'category',
               label: 'Access control',
+              link: { type: 'doc', id: 'build/access-control/introduction' },
               collapsible: true,
               collapsed: true,
               items: [

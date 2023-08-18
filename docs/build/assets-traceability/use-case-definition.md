@@ -1,3 +1,7 @@
+---
+# DO NOT REMOVE pagination_next. #fix TAP-1680
+pagination_next: build/assets-traceability/running-node
+---
 # Wine Track
 
 ## Introduction

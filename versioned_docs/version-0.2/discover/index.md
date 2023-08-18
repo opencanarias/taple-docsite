@@ -1,3 +1,8 @@
+---
+# DO NOT REMOVE pagination_next. #fix TAP-1680
+pagination_next: discover/use-cases
+pagination_prev: 
+---
 # TAPLE
 
 TAPLE (pronounced T+🍎 ['tapəl]​) stands for *Tracking (Autonomous) of Provenance and Lifecycle Events​*. TAPLE is a permissioned [DLT](#dlt) solution for traceability of assets and processes.

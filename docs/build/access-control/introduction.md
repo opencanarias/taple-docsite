@@ -1,3 +1,7 @@
+---
+# DO NOT REMOVE pagination_next. #fix TAP-1680
+pagination_next: build/access-control/use-case
+---
 # Introduction
 
 In this tutorial, we are going to learn the following concepts about TAPLE:

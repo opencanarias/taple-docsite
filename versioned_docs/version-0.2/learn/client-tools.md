@@ -111,7 +111,6 @@ Currently the [contract that handles governance changes](./governance-schema-and
 JSON-Patch is a data format that represents changes to JSON data structures. Thus, starting from an initial structure, after applying the JSON-Patch, an updated structure is obtained. In the case of TAPLE, the JSON-Patch defines the changes to be made to the data structure that represents governance when it needs to be modified. TAPLE Patch allows us to calculate the JSON-Patch in a simple way if we have the original governance and the modified governance.
 
 ```bash title="Basic usage example"
-# This example is not functional as it does not represent full valid governance.
 taple-patch '{"members":[]}' '{"members":[{"id":"EtbFWPL6eVOkvMMiAYV8qio291zd3viCMepUL6sY7RjA","name":"ACME"}]}'
 ```
 

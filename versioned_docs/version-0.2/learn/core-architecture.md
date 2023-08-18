@@ -1,3 +1,7 @@
+---
+# DO NOT REMOVE pagination_next. #fix TAP-1680
+pagination_next: learn/core-usage
+---
 # Core Architecture
 
 TAPLE Core is a library that implements most of the functionality of the TAPLE protocols. The most straightforward way to develop a TAPLE-compliant application is to use this library as, for example, [TAPLE Client](./taple-client.md) does.

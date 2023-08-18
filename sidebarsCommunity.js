@@ -11,7 +11,7 @@ module.exports = {
                 {
                     type: 'doc',
                     label: 'Licenses',
-                    id: 'index',
+                    id: 'licenses',
                 },
                 {
                     type: 'doc',
