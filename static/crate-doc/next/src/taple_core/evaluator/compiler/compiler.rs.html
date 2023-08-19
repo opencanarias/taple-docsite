@@ -215,13 +215,25 @@
 <a href="#215" id="215">215</a>
 <a href="#216" id="216">216</a>
 <a href="#217" id="217">217</a>
+<a href="#218" id="218">218</a>
+<a href="#219" id="219">219</a>
+<a href="#220" id="220">220</a>
+<a href="#221" id="221">221</a>
+<a href="#222" id="222">222</a>
+<a href="#223" id="223">223</a>
+<a href="#224" id="224">224</a>
+<a href="#225" id="225">225</a>
+<a href="#226" id="226">226</a>
+<a href="#227" id="227">227</a>
+<a href="#228" id="228">228</a>
+<a href="#229" id="229">229</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::database::Error <span class="kw">as </span>DbError;
 <span class="kw">use </span><span class="kw">crate</span>::evaluator::errors::CompilerError;
 <span class="kw">use </span><span class="kw">crate</span>::governance::GovernanceInterface;
 <span class="kw">use </span><span class="kw">crate</span>::identifier::{Derivable, DigestIdentifier};
 <span class="kw">use crate</span>::{database::DB, evaluator::errors::CompilerErrorResponses, DatabaseCollection};
 <span class="kw">use </span>async_std::fs;
-<span class="kw">use </span>log::debug;
+<span class="kw">use </span>log::{debug, info};
 <span class="kw">use </span>std::collections::HashSet;
 <span class="kw">use </span>std::fs::create_dir;
 <span class="kw">use </span>std::path::Path;
@@ -274,6 +286,7 @@
                     <span class="kw">super</span>::gov_contract::get_gov_contract(),
                     <span class="string">&quot;taple&quot;</span>,
                     <span class="string">&quot;governance&quot;</span>,
+                    <span class="number">0</span>,
                 )
                 .<span class="kw">await
                 </span>.map_err(|e| CompilerError::InitError(e.to_string()))<span class="question-mark">?</span>;
@@ -336,8 +349,13 @@
                     <span class="kw">continue</span>;
                 }
             }
-            <span class="self">self</span>.compile(contract_info.raw, <span class="kw-2">&amp;</span>governance_id.to_str(), <span class="kw-2">&amp;</span>schema_id)
-                .<span class="kw">await</span><span class="question-mark">?</span>;
+            <span class="self">self</span>.compile(
+                contract_info.raw,
+                <span class="kw-2">&amp;</span>governance_id.to_str(),
+                <span class="kw-2">&amp;</span>schema_id,
+                governance_version,
+            )
+            .<span class="kw">await</span><span class="question-mark">?</span>;
             <span class="kw">let </span>compiled_contract = <span class="self">self</span>.add_contract().<span class="kw">await</span><span class="question-mark">?</span>;
             <span class="self">self</span>.database
                 .put_contract(
@@ -357,10 +375,12 @@
         contract: String,
         governance_id: <span class="kw-2">&amp;</span>str,
         schema_id: <span class="kw-2">&amp;</span>str,
+        sn: u64,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;(), CompilerErrorResponses&gt; {
         fs::write(<span class="macro">format!</span>(<span class="string">&quot;{}/src/lib.rs&quot;</span>, <span class="self">self</span>.contracts_path), contract)
             .<span class="kw">await
             </span>.map_err(|<span class="kw">_</span>| CompilerErrorResponses::WriteFileError)<span class="question-mark">?</span>;
+        <span class="macro">info!</span>(<span class="string">&quot;Compiling contract: {} {} {}&quot;</span>, schema_id, governance_id, sn);
         <span class="kw">let </span>status = Command::new(<span class="string">&quot;cargo&quot;</span>)
             .arg(<span class="string">&quot;build&quot;</span>)
             .arg(<span class="macro">format!</span>(
@@ -373,6 +393,10 @@
             .output()
             <span class="comment">// Does not show stdout. Generates child process and waits
             </span>.map_err(|<span class="kw">_</span>| CompilerErrorResponses::CargoExecError)<span class="question-mark">?</span>;
+        <span class="macro">info!</span>(
+            <span class="string">&quot;Compiled success contract: {} {} {}&quot;</span>,
+            schema_id, governance_id, sn
+        );
         <span class="macro">debug!</span>(<span class="string">&quot;status {:?}&quot;</span>, status);
         <span class="kw">if </span>!status.status.success() {
             <span class="kw">return </span><span class="prelude-val">Err</span>(CompilerErrorResponses::CargoExecError);
