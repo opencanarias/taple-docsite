@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `core/src/evaluator/manager.rs`."><title>manager.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-f3501f0f5ae15dfb.css" id="mainThemeStyle"><div id="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="taple_core" data-themes="" data-resource-suffix="" data-rustdoc-version="1.71.1 (eb26296b5 2023-08-03)" data-search-js="search-4926e5fc22a5646a.js" data-settings-js="settings-de11bff964e9d4e5.js" data-settings-css="settings-8c76f75bfb6bd192.css" data-theme-light-css="light-0f8c037637f9eb3e.css" data-theme-dark-css="dark-1097f8e92a01e3cf.css" data-theme-ayu-css="ayu-614652228113ac93.css" ></div><script src="../../../static.files/storage-62ce34ea385b278a.js"></script><script defer src="../../../static.files/source-script-11255107d0a65077.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../static.files/main-f0540c1d82cde29b.js"></script><noscript><link rel="stylesheet" media="(prefers-color-scheme:light)" href="../../../static.files/light-0f8c037637f9eb3e.css"><link rel="stylesheet" media="(prefers-color-scheme:dark)" href="../../../static.files/dark-1097f8e92a01e3cf.css"><link rel="stylesheet" href="../../../static.files/noscript-13285aec31fa243e.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../../taple_core/index.html"><img class="rust-logo" src="../../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `core/src/evaluator/manager.rs`."><title>manager.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-9bb858ba049f1f21.css" id="mainThemeStyle"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="taple_core" data-themes="" data-resource-suffix="" data-rustdoc-version="1.72.0 (5680fa18f 2023-08-23)" data-channel="1.72.0" data-search-js="search-f6292fe389d70017.js" data-settings-js="settings-de11bff964e9d4e5.js" data-settings-css="settings-8c76f75bfb6bd192.css" data-theme-light-css="light-0f8c037637f9eb3e.css" data-theme-dark-css="dark-1097f8e92a01e3cf.css" data-theme-ayu-css="ayu-614652228113ac93.css" ><script src="../../../static.files/storage-59fd9b8ccb335783.js"></script><script defer src="../../../static.files/source-script-106908c7a7964ba4.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../static.files/main-0795b7d26be81095.js"></script><noscript><link rel="stylesheet" media="(prefers-color-scheme:light)" href="../../../static.files/light-0f8c037637f9eb3e.css"><link rel="stylesheet" media="(prefers-color-scheme:dark)" href="../../../static.files/dark-1097f8e92a01e3cf.css"><link rel="stylesheet" href="../../../static.files/noscript-13285aec31fa243e.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../../taple_core/index.html"><img class="rust-logo" src="../../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -975,6 +975,54 @@
 <a href="#975" id="975">975</a>
 <a href="#976" id="976">976</a>
 <a href="#977" id="977">977</a>
+<a href="#978" id="978">978</a>
+<a href="#979" id="979">979</a>
+<a href="#980" id="980">980</a>
+<a href="#981" id="981">981</a>
+<a href="#982" id="982">982</a>
+<a href="#983" id="983">983</a>
+<a href="#984" id="984">984</a>
+<a href="#985" id="985">985</a>
+<a href="#986" id="986">986</a>
+<a href="#987" id="987">987</a>
+<a href="#988" id="988">988</a>
+<a href="#989" id="989">989</a>
+<a href="#990" id="990">990</a>
+<a href="#991" id="991">991</a>
+<a href="#992" id="992">992</a>
+<a href="#993" id="993">993</a>
+<a href="#994" id="994">994</a>
+<a href="#995" id="995">995</a>
+<a href="#996" id="996">996</a>
+<a href="#997" id="997">997</a>
+<a href="#998" id="998">998</a>
+<a href="#999" id="999">999</a>
+<a href="#1000" id="1000">1000</a>
+<a href="#1001" id="1001">1001</a>
+<a href="#1002" id="1002">1002</a>
+<a href="#1003" id="1003">1003</a>
+<a href="#1004" id="1004">1004</a>
+<a href="#1005" id="1005">1005</a>
+<a href="#1006" id="1006">1006</a>
+<a href="#1007" id="1007">1007</a>
+<a href="#1008" id="1008">1008</a>
+<a href="#1009" id="1009">1009</a>
+<a href="#1010" id="1010">1010</a>
+<a href="#1011" id="1011">1011</a>
+<a href="#1012" id="1012">1012</a>
+<a href="#1013" id="1013">1013</a>
+<a href="#1014" id="1014">1014</a>
+<a href="#1015" id="1015">1015</a>
+<a href="#1016" id="1016">1016</a>
+<a href="#1017" id="1017">1017</a>
+<a href="#1018" id="1018">1018</a>
+<a href="#1019" id="1019">1019</a>
+<a href="#1020" id="1020">1020</a>
+<a href="#1021" id="1021">1021</a>
+<a href="#1022" id="1022">1022</a>
+<a href="#1023" id="1023">1023</a>
+<a href="#1024" id="1024">1024</a>
+<a href="#1025" id="1025">1025</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>std::marker::PhantomData;
 <span class="kw">use </span>std::sync::Arc;
 
@@ -1073,6 +1121,7 @@
                     }
                 },
                 <span class="kw">_ </span>= <span class="self">self</span>.shutdown_receiver.recv() =&gt; {
+                    <span class="macro">log::debug!</span>(<span class="string">&quot;Evaluator module shutdown received&quot;</span>);
                     <span class="kw">break</span>;
                 }
             }
@@ -1167,6 +1216,18 @@
                         <span class="prelude-val">Err</span>(ExecutorErrorResponses::DatabaseError(error)) =&gt; {
                             <span class="kw">return </span><span class="prelude-val">Err</span>(EvaluatorError::DatabaseError(error))
                         }
+                        <span class="prelude-val">Err</span>(ExecutorErrorResponses::ContractNotFound(schema, gov)) =&gt; {
+                            <span class="macro">log::error!</span>(<span class="string">&quot;Contract not found: {}, {}&quot;</span>, schema, gov);
+                            <span class="kw">return </span><span class="prelude-val">Ok</span>(());
+                        }
+                        <span class="prelude-val">Err</span>(ExecutorErrorResponses::ContractNotUpdated) =&gt; {
+                            <span class="macro">log::error!</span>(<span class="string">&quot;Contract not Updated&quot;</span>);
+                            <span class="kw">return </span><span class="prelude-val">Ok</span>(());
+                        }
+                        <span class="prelude-val">Err</span>(ExecutorErrorResponses::GovernanceNotFound) =&gt; {
+                            <span class="macro">log::error!</span>(<span class="string">&quot;Governance not found&quot;</span>);
+                            <span class="kw">return </span><span class="prelude-val">Ok</span>(());
+                        }
                         <span class="prelude-val">Err</span>(
                             ExecutorErrorResponses::StateJSONDeserializationFailed
                             | ExecutorErrorResponses::JSONPATCHDeserializationFailed,
@@ -1200,7 +1261,7 @@
 <span class="attr">#[cfg(test)]
 </span><span class="kw">mod </span>test {
 
-    <span class="kw">use </span>std::{collections::HashSet, str::FromStr, sync::Arc};
+    <span class="kw">use </span>std::{collections::HashSet, fs, str::FromStr, sync::Arc};
 
     <span class="kw">use </span>async_trait::async_trait;
     <span class="kw">use </span>json_patch::diff;
@@ -1236,6 +1297,39 @@
 
     <span class="kw">use </span><span class="kw">crate</span>::evaluator::manager::EvaluatorManager;
 
+    <span class="kw">const </span>SC_DIR: <span class="kw-2">&amp;</span>str = <span class="string">&quot;/tmp/taple_contracts/&quot;</span>;
+
+    <span class="kw">pub fn </span>create_dir() {
+        remove_dir();
+        <span class="kw">match </span>fs::create_dir(SC_DIR) {
+            <span class="prelude-val">Ok</span>(<span class="kw">_</span>) =&gt; (),
+            <span class="prelude-val">Err</span>(err) =&gt; {
+                <span class="macro">println!</span>(<span class="string">&quot;Error creating directory: {}&quot;</span>, err);
+                <span class="macro">assert!</span>(<span class="bool-val">false</span>);
+            }
+        }
+    }
+
+    <span class="kw">pub fn </span>remove_dir() {
+        <span class="kw">if </span>fs::metadata(SC_DIR).is_ok() {
+            <span class="kw">match </span>fs::remove_dir_all(SC_DIR) {
+                <span class="prelude-val">Ok</span>(<span class="kw">_</span>) =&gt; (),
+                <span class="prelude-val">Err</span>(err) =&gt; {
+                    <span class="macro">println!</span>(<span class="string">&quot;Error removing directory: {}&quot;</span>, err);
+                    <span class="macro">assert!</span>(<span class="bool-val">false</span>);
+                }
+            }
+        }
+    }
+
+    <span class="comment">// Subject State
+    </span><span class="attr">#[derive(Serialize, Deserialize, Debug)]
+    </span><span class="kw">pub struct </span>Data {
+        <span class="kw">pub </span>one: u32,
+        <span class="kw">pub </span>two: u32,
+        <span class="kw">pub </span>three: u32,
+    }
+
     <span class="comment">// Event Family
     </span><span class="attr">#[derive(Serialize, Deserialize, Debug)]
     </span><span class="kw">pub enum </span>EventType {
@@ -1260,14 +1354,6 @@
         },
     }
 
-    <span class="comment">// Subject State
-    </span><span class="attr">#[derive(Serialize, Deserialize, Debug)]
-    </span><span class="kw">pub struct </span>Data {
-        <span class="kw">pub </span>one: u32,
-        <span class="kw">pub </span>two: u32,
-        <span class="kw">pub </span>three: u32,
-    }
-
     <span class="attr">#[derive(Clone)]
     </span><span class="kw">struct </span>GovernanceMockup {}
 
@@ -1275,7 +1361,7 @@
         String::from(
             <span class="string">r#&quot;
         #[no_mangle]
-        pub unsafe fn main_function(state_ptr: i32, event_ptr: i32, roles_ptr: i32) {
+        pub unsafe fn main_function(state_ptr: i32, event_ptr: i32, is_owner: i32) {
             
         }
         &quot;#</span>,
@@ -1286,7 +1372,7 @@
         String::from(
             <span class="string">r#&quot;
         #[no_mangle]
-        pub unsafe fn main_function(state_ptr: i32, event_ptr: i32, roles_ptr: i32) -&gt; i32 {
+        pub unsafe fn main_function(state_ptr: i32, event_ptr: i32, is_owner: i32) -&gt; i32 {
             4
         }
         &quot;#</span>,
@@ -1296,13 +1382,12 @@
     <span class="kw">fn </span>get_file() -&gt; String {
         String::from(
             <span class="string">r#&quot;
-            mod sdk;
+            use taple_sc_rust as sdk;
             use serde::{Deserialize, Serialize};
             
             // Intento de simulación de cómo podría ser un contrato
             
-            // Definir &quot;estado del sujeto&quot;
-            #[repr(C)]
+            // Subject State
             #[derive(Serialize, Deserialize, Clone)]
             pub struct Data {
                 pub one: u32,
@@ -1310,20 +1395,19 @@
                 pub three: u32,
             }
             
-            // Definir &quot;Familia de eventos&quot;
+            // Event Family
             #[derive(Serialize, Deserialize, Debug)]
             pub enum EventType {
-                Notify,
-                Patch { data: String },
-                ModOne { data: u32 },
-                ModTwo { data: u32 },
-                ModThree { data: u32 },
-                ModAll { data: (u32, u32, u32) },
+                Notify { chunk: Vec&lt;u8&gt; },
+                ModOne { data: u32, chunk: Vec&lt;u8&gt; },
+                ModTwo { data: u32, chunk: Vec&lt;u8&gt; },
+                ModThree { data: u32, chunk: Vec&lt;u8&gt; },
+                ModAll { data: (u32, u32, u32), chunk: Vec&lt;u8&gt; },
             }
             
             #[no_mangle]
-            pub unsafe fn main_function(state_ptr: i32, event_ptr: i32, roles_ptr: i32) -&gt; u32 {
-                sdk::execute_contract(state_ptr, event_ptr, roles_ptr, contract_logic)
+            pub unsafe fn main_function(state_ptr: i32, event_ptr: i32, is_owner: i32) -&gt; u32 {
+                sdk::execute_contract(state_ptr, event_ptr, is_owner, contract_logic)
             }
             
             /*
@@ -1341,42 +1425,34 @@
                 // Sería posible añadir gestión de errores
                 // Podría ser interesante hacer las operaciones directamente como serde_json:Value en lugar de &quot;Custom Data&quot;
                 let state = &amp;mut contract_result.final_state;
-                let roles = &amp;context.roles;
                 match &amp;context.event {
-                    EventType::ModAll { data } =&gt; {
+                    EventType::Notify { chunk: _ } =&gt; {
+                        // Evento que no modifica el estado
+                        // Estos eventos se añadirían a la cadena, pero dentro del contrato apenas harían algo
+                    }
+                    EventType::ModOne { data, chunk: _ } =&gt; {
+                        // Evento que modifica Data.one
+                        if context.is_owner {
+                            state.one = *data;
+                        }
+                    }
+                    EventType::ModTwo { data, chunk: _ } =&gt; {
+                        // Evento que modifica Data.two
+                        state.two = *data;
+                    }
+                    EventType::ModThree { data, chunk: _ } =&gt; {
+                        // Evento que modifica Data.three
+                        state.three = *data;
+                    }
+                    EventType::ModAll { data, chunk: _ } =&gt; {
                         // Evento que modifica el estado entero
                         state.one = data.0;
                         state.two = data.1;
                         state.three = data.2;
                     }
-                    EventType::ModOne { data } =&gt; {
-                        // Evento que modifica Data.one
-                        if roles.contains(&amp;&quot;RolA&quot;.into()) {
-                            state.one = *data;
-                        }
-                    }
-                    EventType::ModTwo { data } =&gt; {
-                        // Evento que modifica Data.two
-                        state.two = *data;
-                    }
-                    EventType::ModThree { data } =&gt; {
-                        // Evento que modifica Data.three
-                        state.three = *data;
-                    }
-                    EventType::Notify =&gt; {
-                        // Evento que no modifica el estado
-                        // Estos eventos se añadirían a la cadena, pero dentro del contrato apenas harían algo
-                    }
-                    EventType::Patch { data } =&gt; {
-                        // Se recibe un JSON PATCH
-                        // Se aplica directamente al estado
-                        let patched_state = sdk::apply_patch(&amp;data, &amp;context.initial_state).unwrap();
-                        *state = patched_state;
-                        // El usuario debería añadir una función que compruebe el estado del sujeto.
-                    }
                 }
                 contract_result.success = true;
-            }            
+            }
         &quot;#</span>,
         )
     }
@@ -1389,7 +1465,11 @@
             _schema_id: String,
             _governance_version: u64,
         ) -&gt; <span class="prelude-ty">Result</span>&lt;ValueWrapper, RequestError&gt; {
-            <span class="macro">unimplemented!</span>()
+            <span class="kw">return </span><span class="prelude-val">Ok</span>(ValueWrapper(<span class="macro">serde_json::json!</span>({
+                <span class="string">&quot;one&quot;</span>: <span class="number">10</span>,
+                <span class="string">&quot;two&quot;</span>: <span class="number">11</span>,
+                <span class="string">&quot;three&quot;</span>: <span class="number">13</span>,
+            })));
         }
 
         <span class="kw">async fn </span>get_schema(
@@ -1398,7 +1478,23 @@
             _schema_id: String,
             _governance_version: u64,
         ) -&gt; <span class="prelude-ty">Result</span>&lt;ValueWrapper, RequestError&gt; {
-            <span class="macro">unimplemented!</span>()
+            <span class="kw">return </span><span class="prelude-val">Ok</span>(ValueWrapper(<span class="macro">serde_json::json!</span>({
+                <span class="string">&quot;id&quot;</span>: <span class="string">&quot;test&quot;</span>,
+                <span class="string">&quot;type&quot;</span>: <span class="string">&quot;object&quot;</span>,
+                <span class="string">&quot;properties&quot;</span>: {
+                    <span class="string">&quot;one&quot;</span>: {
+                        <span class="string">&quot;type&quot;</span>: <span class="string">&quot;number&quot;
+                    </span>},
+                    <span class="string">&quot;two&quot;</span>: {
+                        <span class="string">&quot;type&quot;</span>: <span class="string">&quot;number&quot;
+                    </span>},
+                    <span class="string">&quot;three&quot;</span>: {
+                        <span class="string">&quot;type&quot;</span>: <span class="string">&quot;number&quot;
+                    </span>},
+                },
+                <span class="string">&quot;required&quot;</span>: [ <span class="string">&quot;one&quot;</span>, <span class="string">&quot;two&quot;</span>, <span class="string">&quot;three&quot; </span>],
+                <span class="string">&quot;additionalProperties&quot;</span>: <span class="bool-val">false
+            </span>})));
         }
 
         <span class="kw">async fn </span>get_signers(
@@ -1517,7 +1613,7 @@
             .set_subject(
                 <span class="kw-2">&amp;</span>DigestIdentifier::from_str(<span class="string">&quot;JGSPR6FL-vE7iZxWMd17o09qn7NeTqlcImDVWmijXczw&quot;</span>)
                     .unwrap(),
-                create_governance_test(),
+                create_governance_test(signature_manager.identifier.clone()),
             )
             .unwrap();
         <span class="kw">let </span>manager = EvaluatorManager::new(
@@ -1528,13 +1624,13 @@
             shutdown_sx,
             shutdown_rx,
             governance,
-            <span class="string">&quot;../../contracts&quot;</span>.into(),
+            SC_DIR.to_string(),
             msg_sx,
         );
         (manager, sx, sx_compiler, signature_manager, msg_rx)
     }
 
-    <span class="kw">fn </span>create_governance_test() -&gt; Subject {
+    <span class="kw">fn </span>create_governance_test(identifier: KeyIdentifier) -&gt; Subject {
         <span class="kw">let </span>initial_state = Data {
             one: <span class="number">10</span>,
             two: <span class="number">11</span>,
@@ -1547,17 +1643,15 @@
                 .unwrap(),
             governance_id: DigestIdentifier::from_str(<span class="string">&quot;&quot;</span>).unwrap(),
             sn: <span class="number">0</span>,
-            public_key: KeyIdentifier::from_str(<span class="string">&quot;EF3E6fTSLrsEWzkD2tkB6QbJU9R7IOkunImqp0PB_ejg&quot;</span>)
-                .unwrap(),
+            public_key: identifier.clone(),
             namespace: <span class="string">&quot;namespace1&quot;</span>.into(),
             schema_id: <span class="string">&quot;test&quot;</span>.into(),
-            owner: KeyIdentifier::from_str(<span class="string">&quot;EF3E6fTSLrsEWzkD2tkB6QbJU9R7IOkunImqp0PB_ejg&quot;</span>).unwrap(),
-            creator: KeyIdentifier::from_str(<span class="string">&quot;EF3E6fTSLrsEWzkD2tkB6QbJU9R7IOkunImqp0PB_ejg&quot;</span>)
-                .unwrap(),
+            owner: identifier.clone(),
+            creator: identifier,
             properties: ValueWrapper(initial_state_json),
             active: <span class="bool-val">true</span>,
             name: <span class="string">&quot;&quot;</span>.to_owned(),
-            genesis_gov_version: <span class="number">3</span>,
+            genesis_gov_version: <span class="number">0</span>,
         }
     }
 
@@ -1587,8 +1681,12 @@
     </span><span class="kw">fn </span>contract_execution() {
         <span class="kw">let </span>rt = tokio::runtime::Runtime::new().unwrap();
         rt.block_on(<span class="kw">async move </span>{
+            create_dir();
             <span class="kw">let </span>(evaluator, sx_evaluator, sx_compiler, signature_manager, <span class="kw-2">mut </span>msg_rx) =
                 build_module();
+            <span class="kw">let </span>handler = tokio::spawn(<span class="kw">async move </span>{
+                evaluator.start().<span class="kw">await</span>;
+            });
             <span class="kw">let </span>initial_state = Data {
                 one: <span class="number">10</span>,
                 two: <span class="number">11</span>,
@@ -1599,40 +1697,39 @@
                 data: <span class="number">100</span>,
                 chunk: <span class="macro">vec!</span>[<span class="number">123</span>, <span class="number">45</span>, <span class="number">20</span>],
             };
-
-            <span class="kw">let </span>handler = tokio::spawn(<span class="kw">async move </span>{
-                evaluator.start().<span class="kw">await</span>;
-            });
-            tokio::time::sleep(tokio::time::Duration::from_secs(<span class="number">5</span>)).<span class="kw">await</span>; <span class="comment">// Pausa para compilar el contrato
-            </span>sx_compiler
+            <span class="kw">let </span>governance_id =
+                DigestIdentifier::from_str(<span class="string">&quot;JGSPR6FL-vE7iZxWMd17o09qn7NeTqlcImDVWmijXczw&quot;</span>).unwrap();
+            <span class="macro">println!</span>(<span class="string">&quot;Compiling governance contract&quot;</span>);
+            tokio::time::sleep(tokio::time::Duration::from_secs(<span class="number">20</span>)).<span class="kw">await</span>; <span class="comment">// Pausa para compilar el contrato de la gobernanza
+            </span><span class="macro">println!</span>(<span class="string">&quot;Finish compiling&quot;</span>);
+            sx_compiler
                 .send(GovernanceUpdatedMessage::GovernanceUpdated {
-                    governance_id: DigestIdentifier::from_str(
-                        <span class="string">&quot;JGSPR6FL-vE7iZxWMd17o09qn7NeTqlcImDVWmijXczw&quot;</span>,
-                    )
-                    .unwrap(),
+                    governance_id: governance_id.to_owned(),
                     governance_version: <span class="number">0</span>,
                 })
                 .unwrap();
-            tokio::time::sleep(tokio::time::Duration::from_secs(<span class="number">5</span>)).<span class="kw">await</span>; <span class="comment">// Pausa para compilar el contrato
-            </span><span class="kw">let </span>response = sx_evaluator
-                .ask(EvaluatorMessage::AskForEvaluation(EvaluationRequest {
-                    event_request: create_event_request(
-                        serde_json::to_value(<span class="kw-2">&amp;</span>event).unwrap(),
-                        <span class="kw-2">&amp;</span>signature_manager,
-                    ),
-                    context: SubjectContext {
-                        governance_id: DigestIdentifier::from_str(
-                            <span class="string">&quot;JGSPR6FL-vE7iZxWMd17o09qn7NeTqlcImDVWmijXczw&quot;</span>,
-                        )
-                        .unwrap(),
-                        schema_id: <span class="string">&quot;test&quot;</span>.into(),
-                        namespace: <span class="string">&quot;namespace1&quot;</span>.into(),
-                        is_owner: <span class="bool-val">true</span>,
-                        state: ValueWrapper(<span class="macro">serde_json::json!</span>(<span class="string">&quot;{}&quot;</span>)),
+            <span class="macro">println!</span>(<span class="string">&quot;Compiling simulation contract&quot;</span>);
+            tokio::time::sleep(tokio::time::Duration::from_secs(<span class="number">5</span>)).<span class="kw">await</span>; <span class="comment">// Pausa para compilar el contrato de la simulación
+            </span><span class="macro">println!</span>(<span class="string">&quot;Finish compiling&quot;</span>);
+            <span class="kw">let </span>response = sx_evaluator
+                .ask(EvaluatorMessage::EvaluationEvent {
+                    evaluation_request: EvaluationRequest {
+                        event_request: create_event_request(
+                            serde_json::to_value(<span class="kw-2">&amp;</span>event).unwrap(),
+                            <span class="kw-2">&amp;</span>signature_manager,
+                        ),
+                        context: SubjectContext {
+                            governance_id: governance_id.to_owned(),
+                            schema_id: <span class="string">&quot;test&quot;</span>.into(),
+                            namespace: <span class="string">&quot;namespace1&quot;</span>.into(),
+                            is_owner: <span class="bool-val">true</span>,
+                            state: ValueWrapper(initial_state_json.clone()),
+                        },
+                        sn: <span class="number">1</span>,
+                        gov_version: <span class="number">0</span>,
                     },
-                    sn: <span class="number">1</span>,
-                    gov_version: <span class="number">0</span>,
-                }))
+                    sender: signature_manager.identifier.clone(),
+                })
                 .<span class="kw">await
                 </span>.unwrap();
             <span class="kw">let </span>EvaluatorResponse::AskForEvaluation(result) = response;
@@ -1662,13 +1759,12 @@
                 three: <span class="number">13</span>,
             };
             <span class="kw">let </span>new_state_json = serde_json::to_value(<span class="kw-2">&amp;</span>new_state).unwrap();
-            <span class="comment">// let hash = DigestIdentifier::from_serializable_borsh(new_state_json).unwrap();
-            // assert_eq!(hash, evaluation.state_hash); // arreglar
-            </span><span class="kw">let </span>patch = generate_json_patch(initial_state_json, new_state_json);
-            <span class="macro">assert_eq!</span>(patch, evaluator_response.content.patch.<span class="number">0</span>); <span class="comment">// arreglar
-                                                                   // let own_identifier = signature_manager.get_own_identifier();
-                                                                   // assert_eq!(evaluation..signer, own_identifier); // arreglar
-            </span>handler.abort();
+            <span class="kw">let </span>patch = generate_json_patch(initial_state_json, new_state_json);
+            <span class="macro">assert_eq!</span>(patch, evaluator_response.content.patch.<span class="number">0</span>);
+            <span class="kw">let </span>own_identifier = signature_manager.identifier.to_owned();
+            <span class="macro">assert_eq!</span>(evaluator_response.signature.signer, own_identifier);
+            remove_dir();
+            handler.abort();
         });
     }
 

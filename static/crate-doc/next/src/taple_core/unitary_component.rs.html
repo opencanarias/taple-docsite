@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `core/src/unitary_component.rs`."><title>unitary_component.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-f3501f0f5ae15dfb.css" id="mainThemeStyle"><div id="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="taple_core" data-themes="" data-resource-suffix="" data-rustdoc-version="1.71.1 (eb26296b5 2023-08-03)" data-search-js="search-4926e5fc22a5646a.js" data-settings-js="settings-de11bff964e9d4e5.js" data-settings-css="settings-8c76f75bfb6bd192.css" data-theme-light-css="light-0f8c037637f9eb3e.css" data-theme-dark-css="dark-1097f8e92a01e3cf.css" data-theme-ayu-css="ayu-614652228113ac93.css" ></div><script src="../../static.files/storage-62ce34ea385b278a.js"></script><script defer src="../../static.files/source-script-11255107d0a65077.js"></script><script defer src="../../source-files.js"></script><script defer src="../../static.files/main-f0540c1d82cde29b.js"></script><noscript><link rel="stylesheet" media="(prefers-color-scheme:light)" href="../../static.files/light-0f8c037637f9eb3e.css"><link rel="stylesheet" media="(prefers-color-scheme:dark)" href="../../static.files/dark-1097f8e92a01e3cf.css"><link rel="stylesheet" href="../../static.files/noscript-13285aec31fa243e.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../taple_core/index.html"><img class="rust-logo" src="../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `core/src/unitary_component.rs`."><title>unitary_component.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-9bb858ba049f1f21.css" id="mainThemeStyle"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="taple_core" data-themes="" data-resource-suffix="" data-rustdoc-version="1.72.0 (5680fa18f 2023-08-23)" data-channel="1.72.0" data-search-js="search-f6292fe389d70017.js" data-settings-js="settings-de11bff964e9d4e5.js" data-settings-css="settings-8c76f75bfb6bd192.css" data-theme-light-css="light-0f8c037637f9eb3e.css" data-theme-dark-css="dark-1097f8e92a01e3cf.css" data-theme-ayu-css="ayu-614652228113ac93.css" ><script src="../../static.files/storage-59fd9b8ccb335783.js"></script><script defer src="../../static.files/source-script-106908c7a7964ba4.js"></script><script defer src="../../source-files.js"></script><script defer src="../../static.files/main-0795b7d26be81095.js"></script><noscript><link rel="stylesheet" media="(prefers-color-scheme:light)" href="../../static.files/light-0f8c037637f9eb3e.css"><link rel="stylesheet" media="(prefers-color-scheme:dark)" href="../../static.files/dark-1097f8e92a01e3cf.css"><link rel="stylesheet" href="../../static.files/noscript-13285aec31fa243e.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../taple_core/index.html"><img class="rust-logo" src="../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -642,6 +642,23 @@
 <a href="#642" id="642">642</a>
 <a href="#643" id="643">643</a>
 <a href="#644" id="644">644</a>
+<a href="#645" id="645">645</a>
+<a href="#646" id="646">646</a>
+<a href="#647" id="647">647</a>
+<a href="#648" id="648">648</a>
+<a href="#649" id="649">649</a>
+<a href="#650" id="650">650</a>
+<a href="#651" id="651">651</a>
+<a href="#652" id="652">652</a>
+<a href="#653" id="653">653</a>
+<a href="#654" id="654">654</a>
+<a href="#655" id="655">655</a>
+<a href="#656" id="656">656</a>
+<a href="#657" id="657">657</a>
+<a href="#658" id="658">658</a>
+<a href="#659" id="659">659</a>
+<a href="#660" id="660">660</a>
+<a href="#661" id="661">661</a>
 </pre></div><pre class="rust"><code><span class="attr">#[cfg(feature = <span class="string">&quot;approval&quot;</span>)]
 </span><span class="kw">use </span><span class="kw">crate</span>::approval::manager::{ApprovalAPI, ApprovalManager};
 <span class="attr">#[cfg(feature = <span class="string">&quot;approval&quot;</span>)]
@@ -775,28 +792,33 @@
 <span class="doccomment">/// Structure that allows a signal to be emitted to stop the TAPLE node.
 /// It can also be used to detect internal shutdown signals, which occur when an internal error occurs.
 </span><span class="kw">pub struct </span>TapleShutdownManager {
-    shutdown_sender: tokio::sync::broadcast::Sender&lt;()&gt;,
-    shutdown_receiver: tokio::sync::broadcast::Receiver&lt;()&gt;,
+    <span class="comment">// shutdown_sender: tokio::sync::broadcast::Sender&lt;()&gt;,
+    </span>shutdown_receiver: tokio::sync::broadcast::Receiver&lt;()&gt;,
 }
 
-<span class="kw">impl </span>TapleShutdownManager {
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>new(sender: tokio::sync::broadcast::Sender&lt;()&gt;) -&gt; <span class="self">Self </span>{
+<span class="comment">// impl Clone for TapleShutdownManager {
+//     fn clone(&amp;self) -&gt; Self {
+//         TapleShutdownManager::new(self.shutdown_receiver.clone())
+//     }
+// }
+
+</span><span class="kw">impl </span>TapleShutdownManager {
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>new(shutdown_receiver: tokio::sync::broadcast::Receiver&lt;()&gt;) -&gt; <span class="self">Self </span>{
         <span class="self">Self </span>{
-            shutdown_receiver: sender.subscribe(),
-            shutdown_sender: sender,
+            shutdown_receiver,
         }
     }
     <span class="doccomment">/// Allows to obtain the underlying channel to receive messages
-    </span><span class="kw">pub fn </span>get_raw_receiver(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; tokio::sync::broadcast::Receiver&lt;()&gt; {
-        <span class="self">self</span>.shutdown_sender.subscribe()
-    }
+    </span><span class="comment">// pub fn get_raw_receiver(&amp;self) -&gt; tokio::sync::broadcast::Receiver&lt;()&gt; {
+    //     self.shutdown_sender.subscribe()
+    // }
 
-    <span class="doccomment">/// Allows to obtain the underlying channel to send messages
-    </span><span class="kw">pub fn </span>get_raw_sender(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; tokio::sync::broadcast::Sender&lt;()&gt; {
-        <span class="self">self</span>.shutdown_sender.clone()
-    }
+    </span><span class="doccomment">/// Allows to obtain the underlying channel to send messages
+    </span><span class="comment">// pub fn get_raw_sender(&amp;self) -&gt; tokio::sync::broadcast::Sender&lt;()&gt; {
+    //     self.shutdown_sender.clone()
+    // }
 
-    <span class="doccomment">/// Wait until a shutdown signal is received from the node.
+    </span><span class="doccomment">/// Wait until a shutdown signal is received from the node.
     </span><span class="kw">pub async fn </span>wait_for_shutdown(<span class="kw-2">mut </span><span class="self">self</span>) {
         <span class="kw">loop </span>{
             <span class="kw">match </span><span class="self">self</span>.shutdown_receiver.recv().<span class="kw">await </span>{
@@ -806,18 +828,18 @@
         }
     }
 
-    <span class="doccomment">/// It issues a shutdown signal and waits until the node has processed it correctly.
-    </span><span class="kw">pub async fn </span>shutdown(<span class="kw-2">mut </span><span class="self">self</span>) {
-        <span class="self">self</span>.shutdown_sender.send(()).unwrap();
-        drop(<span class="self">self</span>.shutdown_sender);
-        <span class="kw">loop </span>{
-            <span class="kw">match </span><span class="self">self</span>.shutdown_receiver.recv().<span class="kw">await </span>{
-                <span class="prelude-val">Err</span>(RecvError::Closed) =&gt; <span class="kw">break</span>,
-                <span class="kw">_ </span>=&gt; <span class="kw">continue</span>,
-            }
-        }
-    }
-}
+    <span class="comment">// /// It issues a shutdown signal and waits until the node has processed it correctly.
+    // pub async fn shutdown(mut self) {
+    //     self.shutdown_sender.send(()).unwrap();
+    //     drop(self.shutdown_sender);
+    //     loop {
+    //         match self.shutdown_receiver.recv().await {
+    //             Err(RecvError::Closed) =&gt; break,
+    //             _ =&gt; continue,
+    //         }
+    //     }
+    // }
+</span>}
 
 <span class="doccomment">/// Structure representing a node of a TAPLE network.
 ///
@@ -834,7 +856,7 @@
     notification_sender: tokio::sync::broadcast::Sender&lt;Notification&gt;,
     settings: TapleSettings,
     database: <span class="prelude-ty">Option</span>&lt;M&gt;,
-    shutdown_sender: <span class="prelude-ty">Option</span>&lt;tokio::sync::broadcast::Sender&lt;()&gt;&gt;,
+    shutdown_sender: tokio::sync::broadcast::Sender&lt;()&gt;,
     _shutdown_receiver: tokio::sync::broadcast::Receiver&lt;()&gt;,
     _c: PhantomData&lt;C&gt;,
 }
@@ -880,7 +902,7 @@
     <span class="doccomment">/// This method allows to get the receiver of the shutdown channel used by the node.
     /// This can be used by the user/client to detect when the node has emmited the signal to .
     </span><span class="kw">pub fn </span>get_shutdown_manager(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; TapleShutdownManager {
-        TapleShutdownManager::new(<span class="self">self</span>.shutdown_sender.as_ref().unwrap().clone())
+        TapleShutdownManager::new(<span class="self">self</span>.shutdown_sender.subscribe())
     }
 
     <span class="doccomment">/// This method allows the creation of cryptographic material through a
@@ -920,9 +942,22 @@
             notification_sender: sender,
             settings,
             database: <span class="prelude-val">Some</span>(database),
-            shutdown_sender: <span class="prelude-val">Some</span>(bsx),
+            shutdown_sender: bsx,
             _shutdown_receiver: brx,
             _c: PhantomData::default(),
+        }
+    }
+
+    <span class="doccomment">/// It issues a shutdown signal and waits until the node has processed it correctly.
+    </span><span class="kw">pub async fn </span>shutdown(<span class="self">self</span>) {
+        <span class="kw">let </span><span class="kw-2">mut </span>shutdown_receiver = <span class="self">self</span>.shutdown_sender.subscribe();
+        <span class="self">self</span>.shutdown_sender.send(()).unwrap();
+        drop(<span class="self">self</span>.shutdown_sender);
+        <span class="kw">loop </span>{
+            <span class="kw">match </span>shutdown_receiver.recv().<span class="kw">await </span>{
+                <span class="prelude-val">Err</span>(RecvError::Closed) =&gt; <span class="kw">break</span>,
+                <span class="kw">_ </span>=&gt; <span class="kw">continue</span>,
+            }
         }
     }
 
@@ -938,8 +973,7 @@
     /// This method panics if it has not been possible to generate the network layer.
     </span><span class="kw">pub async fn </span>start(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;(), Error&gt; {
         <span class="comment">// Create channels
-        </span><span class="kw">let </span>shutdown_sender = <span class="self">self</span>.shutdown_sender.take().unwrap();
-        <span class="comment">// Channels for network
+        // Channels for network
         </span><span class="kw">let </span>(sender_network, receiver_network): (
             tokio::sync::mpsc::Sender&lt;NetworkEvent&gt;,
             tokio::sync::mpsc::Receiver&lt;NetworkEvent&gt;,
@@ -1006,7 +1040,7 @@
             network_access_points(<span class="kw-2">&amp;</span><span class="self">self</span>.settings.network.known_nodes)<span class="question-mark">?</span>, <span class="comment">// TODO: Provide Bootraps nodes per configuration
             </span>sender_network,
             kp.clone(),
-            shutdown_sender.subscribe(),
+            <span class="self">self</span>.shutdown_sender.subscribe(),
             external_addresses(<span class="kw-2">&amp;</span><span class="self">self</span>.settings.network.external_address)<span class="question-mark">?</span>,
         )
         .<span class="kw">await
@@ -1018,7 +1052,7 @@
         </span><span class="kw">let </span>network_receiver = MessageReceiver::new(
             receiver_network,
             protocol_sender,
-            shutdown_sender.subscribe(),
+            <span class="self">self</span>.shutdown_sender.subscribe(),
             signature_manager.get_own_identifier(),
         );
         <span class="comment">// Creation NetworkSender
@@ -1031,8 +1065,8 @@
         </span><span class="kw">let </span><span class="kw-2">mut </span>task_manager = MessageTaskManager::new(
             network_sender.clone(),
             task_receiver,
-            shutdown_sender.clone(),
-            shutdown_sender.subscribe(),
+            <span class="self">self</span>.shutdown_sender.clone(),
+            <span class="self">self</span>.shutdown_sender.subscribe(),
         );
         <span class="comment">// Creation ProtocolManager
         </span><span class="kw">let </span>protocol_manager = ProtocolManager::new(
@@ -1046,13 +1080,13 @@
             <span class="attr">#[cfg(feature = <span class="string">&quot;approval&quot;</span>)]
             </span>approval_sender.clone(),
             ledger_sender.clone(),
-            shutdown_sender.clone(),
+            <span class="self">self</span>.shutdown_sender.clone(),
         );
         <span class="comment">// Creation Governance
         </span><span class="kw">let </span><span class="kw-2">mut </span>governance_manager = Governance::&lt;M, C&gt;::new(
             governance_receiver,
-            shutdown_sender.clone(),
-            shutdown_sender.subscribe(),
+            <span class="self">self</span>.shutdown_sender.clone(),
+            <span class="self">self</span>.shutdown_sender.subscribe(),
             DB::new(db.clone()),
             governance_update_sx.clone(),
         );
@@ -1062,8 +1096,8 @@
             governance_update_rx,
             GovernanceAPI::new(governance_sender.clone()),
             DB::new(db.clone()),
-            shutdown_sender.clone(),
-            shutdown_sender.subscribe(),
+            <span class="self">self</span>.shutdown_sender.clone(),
+            <span class="self">self</span>.shutdown_sender.subscribe(),
             task_sender.clone(),
             <span class="self">self</span>.notification_sender.clone(),
             ledger_sender.clone(),
@@ -1073,8 +1107,8 @@
         <span class="comment">// Creation LedgerManager
         </span><span class="kw">let </span>ledger_manager = LedgerManager::new(
             ledger_receiver,
-            shutdown_sender.clone(),
-            shutdown_sender.subscribe(),
+            <span class="self">self</span>.shutdown_sender.clone(),
+            <span class="self">self</span>.shutdown_sender.subscribe(),
             <span class="self">self</span>.notification_sender.clone(),
             GovernanceAPI::new(governance_sender.clone()),
             DB::new(db.clone()),
@@ -1088,8 +1122,8 @@
             DB::new(db.clone()),
             task_sender.clone(),
             key_identifier.clone(),
-            shutdown_sender.clone(),
-            shutdown_sender.subscribe(),
+            <span class="self">self</span>.shutdown_sender.clone(),
+            <span class="self">self</span>.shutdown_sender.subscribe(),
         );
         <span class="comment">// Creation API module
         </span><span class="kw">let </span>api = API::new(
@@ -1100,8 +1134,8 @@
             AuthorizedSubjectsAPI::new(as_sender),
             EventManagerAPI::new(ledger_sender),
             wath_sender,
-            shutdown_sender.clone(),
-            shutdown_sender.subscribe(),
+            <span class="self">self</span>.shutdown_sender.clone(),
+            <span class="self">self</span>.shutdown_sender.subscribe(),
             DB::new(db.clone()),
         );
         <span class="attr">#[cfg(feature = <span class="string">&quot;evaluation&quot;</span>)]
@@ -1111,8 +1145,8 @@
             db.clone(),
             signature_manager.clone(),
             governance_update_sx.subscribe(),
-            shutdown_sender.clone(),
-            shutdown_sender.subscribe(),
+            <span class="self">self</span>.shutdown_sender.clone(),
+            <span class="self">self</span>.shutdown_sender.subscribe(),
             GovernanceAPI::new(governance_sender.clone()),
             <span class="self">self</span>.settings.node.smartcontracts_directory.clone(),
             task_sender.clone(),
@@ -1122,8 +1156,8 @@
         </span><span class="kw">let </span>approval_manager = ApprovalManager::new(
             GovernanceAPI::new(governance_sender.clone()),
             approval_receiver,
-            shutdown_sender.clone(),
-            shutdown_sender.subscribe(),
+            <span class="self">self</span>.shutdown_sender.clone(),
+            <span class="self">self</span>.shutdown_sender.subscribe(),
             task_sender.clone(),
             governance_update_sx.subscribe(),
             signature_manager.clone(),
@@ -1135,8 +1169,8 @@
         </span><span class="kw">let </span>distribution_manager = DistributionManager::new(
             distribution_receiver,
             governance_update_sx.subscribe(),
-            shutdown_sender.clone(),
-            shutdown_sender.subscribe(),
+            <span class="self">self</span>.shutdown_sender.clone(),
+            <span class="self">self</span>.shutdown_sender.subscribe(),
             task_sender.clone(),
             GovernanceAPI::new(governance_sender.clone()),
             signature_manager.clone(),
@@ -1149,8 +1183,8 @@
             GovernanceAPI::new(governance_sender),
             DB::new(db.clone()),
             signature_manager,
-            shutdown_sender.clone(),
-            shutdown_sender.subscribe(),
+            <span class="self">self</span>.shutdown_sender.clone(),
+            <span class="self">self</span>.shutdown_sender.subscribe(),
             task_sender,
         );
         <span class="comment">// Module initialization
