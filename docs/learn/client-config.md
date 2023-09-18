@@ -193,7 +193,7 @@ The configuration of a TAPLE-Cient node can be done in different ways. The suppo
 <table>
   <tr>
     <td ><b>Description</b></td>
-    <td >Enable/disable API REST documentation</td>
+    <td >Enable/disable API REST documentation. If enabled, documentation is available at <code>/doc</code></td>
   </tr>
   <tr>
     <td ><b>EnvVar</b></td>

@@ -79,7 +79,7 @@ taple-client \
   --http.doc
 ```
 
-If the previous node has been successfully initialized, you can access the node's documentation through [this link](http://localhost:3000/api/doc/json).
+If the previous node has been successfully initialized, you can access the node's documentation through [this link](http://localhost:3000/doc).
 
 :::warning Exposing services
 
