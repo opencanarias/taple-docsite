@@ -77,6 +77,17 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
       },
     ],
     [
+      '@docusaurus/plugin-client-redirects',
+      {
+        redirects: [
+          {
+            to: '/docs/api-rest/subjects',
+            from: '/docs/api-rest',
+          },
+        ]
+      }
+    ],
+    [
       'content-docs',
       /** @type {import('@docusaurus/plugin-content-docs').Options} */
       ({
