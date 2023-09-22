@@ -7,7 +7,7 @@ Below, we will describe the steps to create the WPO node:
 * First, make sure to download the appropriate Taple Client image from Dockerhub:
 
     ```bash bash title="Node: WPO"
-    docker pull opencanarias/taple-client:0.2
+    docker pull opencanarias/taple-client:0.3
     ```
 
 * Next, we will start the node using the following command:
@@ -19,5 +19,5 @@ Below, we will describe the steps to create the WPO node:
         -e TAPLE_HTTP=true \
         -e TAPLE_ID_PRIVATE_KEY=74c417de2174f3a76b0b98343cea3aa35bfd3860cac8bf470092c3e751745c1a \
         -e TAPLE_NETWORK_LISTEN_ADDR=/ip4/0.0.0.0/tcp/50000 \
-        opencanarias/taple-client:0.2
+        opencanarias/taple-client:0.3
     ```

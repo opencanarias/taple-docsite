@@ -18,7 +18,7 @@ docker run -p 3002:3000 -p 50002:50000 \
 -e TAPLE_HTTP=true \
 -e TAPLE_NETWORK_KNOWN_NODE=/ip4/172.17.0.1/tcp/50000/p2p/12D3KooWLXexpg81PjdjnrhmHUxN7U5EtfXJgr9cahei1SJ9Ub3B \
 -e TAPLE_NETWORK_LISTEN_ADDR=/ip4/0.0.0.0/tcp/50000 \
-opencanarias/taple-client:0.2
+opencanarias/taple-client:0.3
 ```
 
 ## Modify the governance

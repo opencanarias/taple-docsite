@@ -9,7 +9,7 @@ There are different ways in which the user can acquire these tools. The first an
 ### Compiling binaries
 
 ```bash
-git clone -b release-0.2 https://github.com/opencanarias/taple-client.git
+git clone -b release-0.3 https://github.com/opencanarias/taple-client.git
 cd taple-client
 sudo apt install -y libprotobuf-dev protobuf-compiler cmake
 cargo install --path tools/keygen
@@ -23,7 +23,7 @@ taple-patch -h
 ### Using docker images
 
 ```bash
-git clone -b release-0.2 https://github.com/opencanarias/taple-client.git
+git clone -b release-0.3 https://github.com/opencanarias/taple-client.git
 cd taple-client
 chmod +x ./tools/scripts/taple-keygen
 chmod +x ./tools/scripts/taple-sign

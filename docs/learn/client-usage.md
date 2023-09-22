@@ -4,7 +4,7 @@
 Rust versión 1.67 or higher is required.
 
 ```bash
-$ git clone -b release-0.2 https://github.com/opencanarias/taple-client.git
+$ git clone -b release-0.3 https://github.com/opencanarias/taple-client.git
 $ cd taple-client
 $ sudo apt install -y libprotobuf-dev protobuf-compiler cmake
 $ rustup target add wasm32-unknown-unknown
@@ -51,7 +51,7 @@ docker run \
   -p 50000:50000 \
   -e TAPLE_ID_PRIVATE_KEY=b088fb74588dff74d5683b804d742418874db000e25ffec189fa313e825e1f7e \
   -e TAPLE_NETWORK_LISTEN_ADDR=/ip4/0.0.0.0/tcp/50000 \
-  opencanarias/taple-client:0.2
+  opencanarias/taple-client:0.3
 ```
 
 :::warning

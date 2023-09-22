@@ -5,13 +5,13 @@ To launch a taple node, you must execute the [taple-client](https://github.com/o
 If we do not have the image or we do not have the latest version, download it with:
 
 ```bash
-docker pull opencanarias/taple-client:0.2
+docker pull opencanarias/taple-client:0.3
 ```
 
 We can execute it by launching:
 
 ```bash
-docker run opencanarias/taple-client:0.2
+docker run opencanarias/taple-client:0.3
 ```
 
 However, this will give us an error, as we must specify certain aspects of the configuration mandatorily.
@@ -40,5 +40,5 @@ docker run -p 3000:3000 -p 50000:50000 \
 -e TAPLE_HTTP=true \
 -e TAPLE_NETWORK_LISTEN_ADDR=/ip4/0.0.0.0/tcp/50000 \
 -e RUST_LOG=info \
-opencanarias/taple-client:0.2
+opencanarias/taple-client:0.3
 ```
