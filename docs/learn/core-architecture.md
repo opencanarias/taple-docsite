@@ -8,7 +8,7 @@ TAPLE Core is a library that implements most of the functionality of the TAPLE p
 
 Internally, it is structured in a series of layers with different responsibilities. A continuación se presenta una visión simplificada a nivel de capas y bloques de la estructura de TAPLE Core. 
 
-![taple-client](../img/core-architecture.svg)
+![core-architecture](../img/core-architecture.svg)
 
 ## Network
 Layer in charge of managing network communications, i.e., the sending and receiving of information between the different nodes of the network. Internally, the implementation is based on the use of [LibP2P](https://docs.libp2p.io/) to resolve point-to-point communications. For this purpose, the following protocols are used:

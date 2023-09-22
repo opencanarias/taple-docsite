@@ -144,6 +144,11 @@ module.exports = {
               label: 'API',
               href: 'pathname:///crate-doc/next/taple_core/',
             },
+            {
+              type: 'doc',
+              label: 'FFI',
+              id: 'learn/core-ffi',
+            },
           ]
         },
         {
@@ -252,7 +257,7 @@ module.exports = {
       items: [
         {
           type: 'category',
-          label: 'Using TAPLE Client',
+          label: 'TAPLE Client',
           link: { type: 'doc', id: 'build/taple-client' },
           collapsible: true,
           collapsed: false,
@@ -415,6 +420,11 @@ module.exports = {
               id: 'build/issues-and-workarounds',
             },
           ]
+        },
+        {
+          type: 'doc',
+          label: 'Mobile',
+          id: 'build/mobile'
         },
       ]
     }
