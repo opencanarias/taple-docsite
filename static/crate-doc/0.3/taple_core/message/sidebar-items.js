@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":[["Command",""],["MessageTaskCommand",""],["NetworkEvent",""]],"struct":[["MessageConfig",""],["MessageContent",""],["MessageReceiver",""],["MessageSender","Network MessageSender struct"],["MessageTaskManager",""]],"trait":[["TaskCommandContent",""]]};
