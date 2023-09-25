@@ -157,7 +157,7 @@
             {
               "type": "link",
               "label": "API",
-              "href": "pathname:///crate-doc/0.3/taple_core/"
+              "href": "https://docs.rs/taple-core/0.3/taple_core/"
             },
             {
               "type": "doc",
