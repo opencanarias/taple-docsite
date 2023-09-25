@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `core/src/event/event_completer.rs`."><title>event_completer.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-9bb858ba049f1f21.css" id="mainThemeStyle"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="taple_core" data-themes="" data-resource-suffix="" data-rustdoc-version="1.72.0 (5680fa18f 2023-08-23)" data-channel="1.72.0" data-search-js="search-f6292fe389d70017.js" data-settings-js="settings-de11bff964e9d4e5.js" data-settings-css="settings-8c76f75bfb6bd192.css" data-theme-light-css="light-0f8c037637f9eb3e.css" data-theme-dark-css="dark-1097f8e92a01e3cf.css" data-theme-ayu-css="ayu-614652228113ac93.css" ><script src="../../../static.files/storage-59fd9b8ccb335783.js"></script><script defer src="../../../static.files/source-script-106908c7a7964ba4.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../static.files/main-0795b7d26be81095.js"></script><noscript><link rel="stylesheet" media="(prefers-color-scheme:light)" href="../../../static.files/light-0f8c037637f9eb3e.css"><link rel="stylesheet" media="(prefers-color-scheme:dark)" href="../../../static.files/dark-1097f8e92a01e3cf.css"><link rel="stylesheet" href="../../../static.files/noscript-13285aec31fa243e.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../../taple_core/index.html"><img class="rust-logo" src="../../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `core/src/event/event_completer.rs`."><title>event_completer.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-9bb858ba049f1f21.css" id="mainThemeStyle"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="taple_core" data-themes="" data-resource-suffix="" data-rustdoc-version="1.72.1 (d5c2e9c34 2023-09-13)" data-channel="1.72.1" data-search-js="search-f6292fe389d70017.js" data-settings-js="settings-de11bff964e9d4e5.js" data-settings-css="settings-8c76f75bfb6bd192.css" data-theme-light-css="light-0f8c037637f9eb3e.css" data-theme-dark-css="dark-1097f8e92a01e3cf.css" data-theme-ayu-css="ayu-614652228113ac93.css" ><script src="../../../static.files/storage-59fd9b8ccb335783.js"></script><script defer src="../../../static.files/source-script-106908c7a7964ba4.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../static.files/main-0795b7d26be81095.js"></script><noscript><link rel="stylesheet" media="(prefers-color-scheme:light)" href="../../../static.files/light-0f8c037637f9eb3e.css"><link rel="stylesheet" media="(prefers-color-scheme:dark)" href="../../../static.files/dark-1097f8e92a01e3cf.css"><link rel="stylesheet" href="../../../static.files/noscript-13285aec31fa243e.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../../taple_core/index.html"><img class="rust-logo" src="../../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -1631,6 +1631,10 @@
 <a href="#1631" id="1631">1631</a>
 <a href="#1632" id="1632">1632</a>
 <a href="#1633" id="1633">1633</a>
+<a href="#1634" id="1634">1634</a>
+<a href="#1635" id="1635">1635</a>
+<a href="#1636" id="1636">1636</a>
+<a href="#1637" id="1637">1637</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>std::collections::{HashMap, HashSet};
 
 <span class="kw">use </span>json_patch::{patch, Patch};
@@ -1680,7 +1684,7 @@
     gov_api: GovernanceAPI,
     database: DB&lt;C&gt;,
     message_channel: SenderEnd&lt;MessageTaskCommand&lt;TapleMessages&gt;, ()&gt;,
-    notification_sender: tokio::sync::broadcast::Sender&lt;Notification&gt;,
+    notification_tx: tokio::sync::mpsc::Sender&lt;Notification&gt;,
     ledger_sender: SenderEnd&lt;LedgerCommand, LedgerResponse&gt;,
     own_identifier: KeyIdentifier,
     subjects_by_governance: HashMap&lt;DigestIdentifier, HashSet&lt;DigestIdentifier&gt;&gt;,
@@ -1710,7 +1714,7 @@
         gov_api: GovernanceAPI,
         database: DB&lt;C&gt;,
         message_channel: SenderEnd&lt;MessageTaskCommand&lt;TapleMessages&gt;, ()&gt;,
-        notification_sender: tokio::sync::broadcast::Sender&lt;Notification&gt;,
+        notification_tx: tokio::sync::mpsc::Sender&lt;Notification&gt;,
         ledger_sender: SenderEnd&lt;LedgerCommand, LedgerResponse&gt;,
         own_identifier: KeyIdentifier,
         signature_manager: SelfSignatureManager,
@@ -1719,7 +1723,7 @@
             gov_api,
             database,
             message_channel,
-            notification_sender,
+            notification_tx,
             ledger_sender,
             subjects_completing_event: HashMap::new(),
             <span class="comment">// actual_sn: HashMap::new(),
@@ -1920,7 +1924,7 @@
                     <span class="kw">match </span><span class="self">self</span>.database.get_request(subject_id) {
                         <span class="prelude-val">Ok</span>(event_request) =&gt; {
                             <span class="kw">let </span>EventRequest::Fact(<span class="kw">_</span>) = <span class="kw-2">&amp;</span>event_request.content <span class="kw">else </span>{
-                                <span class="kw">return </span><span class="prelude-val">Err</span>(EventError::GenesisInGovUpdate)
+                                <span class="kw">return </span><span class="prelude-val">Err</span>(EventError::GenesisInGovUpdate);
                             };
                             <span class="self">self</span>.new_event(event_request).<span class="kw">await</span><span class="question-mark">?</span>;
                         }
@@ -2083,7 +2087,7 @@
         <span class="kw">let </span>approval_request = ApprovalRequest {
             event_request: event_request.clone(),
             sn: subject.sn + <span class="number">1</span>,
-            gov_version: gov_version,
+            gov_version,
             patch: ValueWrapper(
                 serde_json::from_str(<span class="string">&quot;[]&quot;</span>)
                     .map_err(|<span class="kw">_</span>| EventError::CryptoError(<span class="string">&quot;Error parsing empty json&quot;</span>.to_string()))<span class="question-mark">?</span>,
@@ -2444,7 +2448,9 @@
             EventRequest::Fact(state_request) =&gt; state_request.subject_id.clone(),
         };
         <span class="comment">// Look at the status of the event, whether it is under evaluation or not.
-        </span><span class="kw">let </span><span class="prelude-val">Some</span>((ValidationStage::Evaluate, signers, quorum_size)) = <span class="self">self</span>.subjects_completing_event.get(<span class="kw-2">&amp;</span>subject_id) <span class="kw">else </span>{
+        </span><span class="kw">let </span><span class="prelude-val">Some</span>((ValidationStage::Evaluate, signers, quorum_size)) =
+            <span class="self">self</span>.subjects_completing_event.get(<span class="kw-2">&amp;</span>subject_id)
+        <span class="kw">else </span>{
             <span class="kw">return </span><span class="prelude-val">Err</span>(EventError::WrongEventPhase);
         };
         <span class="kw">let </span>signer = evaluator_response.signature.signer.clone();
@@ -2713,7 +2719,9 @@
             }
             EventRequest::Fact(state_request) =&gt; state_request.subject_id.clone(),
         };
-        <span class="kw">let </span><span class="prelude-val">Some</span>((ValidationStage::Approve, signers, quorum_size)) = <span class="self">self</span>.subjects_completing_event.get(<span class="kw-2">&amp;</span>subject_id) <span class="kw">else </span>{
+        <span class="kw">let </span><span class="prelude-val">Some</span>((ValidationStage::Approve, signers, quorum_size)) =
+            <span class="self">self</span>.subjects_completing_event.get(<span class="kw-2">&amp;</span>subject_id)
+        <span class="kw">else </span>{
             <span class="kw">return </span><span class="prelude-val">Err</span>(EventError::WrongEventPhase);
         };
         <span class="kw">let </span>signer = approval.signature.signer.clone();
@@ -2898,7 +2906,7 @@
             <span class="prelude-val">Some</span>(event) =&gt; event,
             <span class="prelude-val">None </span>=&gt; {
                 <span class="kw">return </span><span class="prelude-val">Err</span>(EventError::CryptoError(String::from(
-                    <span class="string">&quot;The hash of the event does not match any of the events&quot;</span>,
+                    <span class="string">&quot;The hash of the event does not match any of the events 1&quot;</span>,
                 )));
             }
         };
@@ -2989,7 +2997,9 @@
             </span><span class="kw">return </span><span class="prelude-val">Ok</span>(());
         }
         <span class="comment">// Check phase
-        </span><span class="kw">let </span><span class="prelude-val">Some</span>((ValidationStage::Validate, signers, quorum_size)) = <span class="self">self</span>.subjects_completing_event.get(<span class="kw-2">&amp;</span>subject_id) <span class="kw">else </span>{
+        </span><span class="kw">let </span><span class="prelude-val">Some</span>((ValidationStage::Validate, signers, quorum_size)) =
+            <span class="self">self</span>.subjects_completing_event.get(<span class="kw-2">&amp;</span>subject_id)
+        <span class="kw">else </span>{
             <span class="kw">return </span><span class="prelude-val">Err</span>(EventError::WrongEventPhase);
         };
         <span class="kw">let </span>signer = signature.signer.clone();
@@ -3000,9 +3010,7 @@
             )));
         }
         <span class="comment">// Check that everything is cryptographically correct
-        </span><span class="kw">let </span>event_hash = DigestIdentifier::from_serializable_borsh(<span class="kw-2">&amp;</span>validation_event.proof)
-            .map_err(|error| EventError::CryptoError(error.to_string()))<span class="question-mark">?</span>;
-        signature
+        </span>signature
             .verify(<span class="kw-2">&amp;</span>validation_event.proof)
             .map_err(|error| EventError::CryptoError(error.to_string()))<span class="question-mark">?</span>;
         <span class="comment">// Save validation
@@ -3024,15 +3032,7 @@
         <span class="kw">let </span>quorum_size = quorum_size.to_owned();
         <span class="comment">// Check if we reach Quorum and if so stop asking for signatures.
         </span><span class="kw">if </span>(validation_set.len() <span class="kw">as </span>u32) &lt; quorum_size.<span class="number">0 </span>{
-            <span class="kw">let </span>validation_event = <span class="kw">match </span><span class="self">self</span>.event_validation_events.get(<span class="kw-2">&amp;</span>event_hash) {
-                <span class="prelude-val">Some</span>(validation_event) =&gt; validation_event.to_owned(),
-                <span class="prelude-val">None </span>=&gt; {
-                    <span class="kw">return </span><span class="prelude-val">Err</span>(EventError::CryptoError(String::from(
-                        <span class="string">&quot;The hash of the event does not match any of the events&quot;</span>,
-                    )))
-                }
-            };
-            <span class="kw">let </span>event_message = create_validator_request(validation_event);
+            <span class="kw">let </span>event_message = create_validator_request(validation_event.to_owned());
             <span class="kw">let </span><span class="kw-2">mut </span>new_signers: HashSet&lt;KeyIdentifier&gt; =
                 signers.into_iter().map(|s| s.clone()).collect();
             new_signers.remove(<span class="kw-2">&amp;</span>signer);
@@ -3055,23 +3055,27 @@
                 .map(|unique_signature| unique_signature.signature.clone())
                 .collect();
             <span class="comment">// If quorum is reached we send it to the ledger.
+            // Message to Ledger Are in ask because is we use tell we can accept anotheer event with same sn if the ledger function has not finished and block the subject for validation
             </span><span class="kw">if </span>event.content.sn == <span class="number">0 </span>{
-                <span class="comment">// TODO: Go from tell to ask to check that it goes well and that there are no weird glitches?
-                </span><span class="self">self</span>.ledger_sender
-                    .tell(LedgerCommand::Genesis {
+                <span class="kw">let </span>response = <span class="self">self
+                    </span>.ledger_sender
+                    .ask(LedgerCommand::Genesis {
                         event: event.clone(),
                         signatures: validation_signatures,
                         validation_proof: validation_event.proof.clone(),
                     })
                     .<span class="kw">await</span><span class="question-mark">?</span>;
+                <span class="macro">log::debug!</span>(<span class="string">&quot;LEDGER RESPONSE: {:?}&quot;</span>, response);
             } <span class="kw">else </span>{
-                <span class="self">self</span>.ledger_sender
-                    .tell(LedgerCommand::OwnEvent {
+                <span class="kw">let </span>response = <span class="self">self
+                    </span>.ledger_sender
+                    .ask(LedgerCommand::OwnEvent {
                         event: event.clone(),
                         signatures: validation_signatures,
                         validation_proof: validation_event.proof.clone(),
                     })
                     .<span class="kw">await</span><span class="question-mark">?</span>;
+                <span class="macro">log::debug!</span>(<span class="string">&quot;LEDGER RESPONSE: {:?}&quot;</span>, response);
             }
             <span class="self">self</span>.database
                 .del_prevalidated_event(<span class="kw-2">&amp;</span>subject_id)
@@ -3252,11 +3256,15 @@
         <span class="prelude-val">Ok</span>(state_hash_calculated == evaluation.state_hash)
     } <span class="kw">else </span>{
         <span class="kw">let </span><span class="prelude-val">Ok</span>(patch_json) = serde_json::from_value::&lt;Patch&gt;(json_patch.<span class="number">0</span>) <span class="kw">else </span>{
-            <span class="kw">return </span><span class="prelude-val">Err</span>(EventError::ErrorParsingJsonString(<span class="string">&quot;Error Parsing Patch&quot;</span>.to_owned()));
-    };
+            <span class="kw">return </span><span class="prelude-val">Err</span>(EventError::ErrorParsingJsonString(
+                <span class="string">&quot;Error Parsing Patch&quot;</span>.to_owned(),
+            ));
+        };
         <span class="kw">let </span><span class="prelude-val">Ok</span>(()) = patch(<span class="kw-2">&amp;mut </span>prev_properties.<span class="number">0</span>, <span class="kw-2">&amp;</span>patch_json) <span class="kw">else </span>{
-        <span class="kw">return </span><span class="prelude-val">Err</span>(EventError::ErrorApplyingPatch(<span class="string">&quot;Error applying patch&quot;</span>.to_owned()));
-    };
+            <span class="kw">return </span><span class="prelude-val">Err</span>(EventError::ErrorApplyingPatch(
+                <span class="string">&quot;Error applying patch&quot;</span>.to_owned(),
+            ));
+        };
         <span class="kw">let </span>state_hash_calculated = DigestIdentifier::from_serializable_borsh(<span class="kw-2">&amp;</span>prev_properties)
             .map_err(|<span class="kw">_</span>| {
                 EventError::CryptoError(String::from(<span class="string">&quot;Error calculating the hash of the state&quot;</span>))

@@ -1,3 +1,3 @@
 (function() {var implementors = {
-"taple_core":[["impl <a class=\"trait\" href=\"https://doc.rust-lang.org/1.72.0/core/cmp/trait.Ord.html\" title=\"trait core::cmp::Ord\">Ord</a> for <a class=\"struct\" href=\"taple_core/struct.TimeStamp.html\" title=\"struct taple_core::TimeStamp\">TimeStamp</a>"]]
+"taple_core":[["impl <a class=\"trait\" href=\"https://doc.rust-lang.org/1.72.1/core/cmp/trait.Ord.html\" title=\"trait core::cmp::Ord\">Ord</a> for <a class=\"struct\" href=\"taple_core/struct.TimeStamp.html\" title=\"struct taple_core::TimeStamp\">TimeStamp</a>"]]
 };if (window.register_implementors) {window.register_implementors(implementors);} else {window.pending_implementors = implementors;}})()
