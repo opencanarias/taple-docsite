@@ -12,7 +12,8 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
   onBrokenMarkdownLinks: 'warn',
   favicon: 'img/favicon.ico',
   organizationName: 'opencanarias', // Usually your GitHub org/user name.
-  projectName: 'taple', // Usually your repo name.
+  projectName: 'taple-docsite', // Usually your repo name.
+  trailingSlash: false,
   customFields: {
   },
   // Even if you don't use internalization, you can use this field to set useful
