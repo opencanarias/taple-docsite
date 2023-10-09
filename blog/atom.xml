@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+    <id>https://taple.es/blog</id>
+    <title>TAPLE Blog</title>
+    <updated>2023-10-09T13:40:23.000Z</updated>
+    <generator>https://github.com/jpmonette/feed</generator>
+    <link rel="alternate" href="https://taple.es/blog"/>
+    <subtitle>TAPLE Blog</subtitle>
+    <icon>https://taple.es/img/favicon.ico</icon>
+    <entry>
+        <title type="html"><![CDATA[do-not-delete]]></title>
+        <id>/do-not-delete</id>
+        <link href="https://taple.es/blog/do-not-delete"/>
+        <updated>2023-10-09T13:40:23.000Z</updated>
+        <summary type="html"><![CDATA[This file must not be deleted.]]></summary>
+        <content type="html"><![CDATA[<p>This file must not be deleted.</p>]]></content>
+    </entry>
+</feed>
