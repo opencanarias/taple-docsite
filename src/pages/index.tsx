@@ -22,7 +22,7 @@ function HomepageHeader() {
             </Translate>
           </p>
         </div>
-        <HomepageFeatures />
+        <HomepageFeatures baseURL={siteConfig.baseUrl} />
       </div>
     </header>
   );
