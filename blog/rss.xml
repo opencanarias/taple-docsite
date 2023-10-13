@@ -2,17 +2,17 @@
 <rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/">
     <channel>
         <title>TAPLE Blog</title>
-        <link>https://taple.es/taple-docsite/blog</link>
+        <link>https://taple.es/blog</link>
         <description>TAPLE Blog</description>
-        <lastBuildDate>Fri, 13 Oct 2023 10:06:39 GMT</lastBuildDate>
+        <lastBuildDate>Fri, 13 Oct 2023 10:43:06 GMT</lastBuildDate>
         <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
         <generator>https://github.com/jpmonette/feed</generator>
         <language>en</language>
         <item>
             <title><![CDATA[do-not-delete]]></title>
-            <link>https://taple.es/taple-docsite/blog/do-not-delete</link>
+            <link>https://taple.es/blog/do-not-delete</link>
             <guid>/do-not-delete</guid>
-            <pubDate>Fri, 13 Oct 2023 10:06:39 GMT</pubDate>
+            <pubDate>Fri, 13 Oct 2023 10:43:06 GMT</pubDate>
             <description><![CDATA[This file must not be deleted.]]></description>
             <content:encoded><![CDATA[<p>This file must not be deleted.</p>]]></content:encoded>
         </item>
