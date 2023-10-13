@@ -64,7 +64,7 @@ The configuration of a TAPLE-Cient node can be done in different ways. The suppo
 <table>
   <tr>
     <td ><b>Description</b></td>
-    <td >key derivative to be used by the Taple node.</td>
+    <td >Key derivative to be used by the Taple node.</td>
   </tr>
   <tr>
     <td ><b>EnvVar</b></td>
@@ -77,6 +77,56 @@ The configuration of a TAPLE-Cient node can be done in different ways. The suppo
   <tr>
     <td ><b>settings.toml</b></td>
     <td ><code>id-key-derivator</code></td>
+  </tr>
+  <tr>
+    <td ><b>Admited values</b></td>
+    <td ><code>ed25519 (default)</code>, <code>secp256k1</code></td>
+  </tr>
+</table>
+
+### Digest derivator
+
+<table>
+  <tr>
+    <td ><b>Description</b></td>
+    <td >Digest derivator to use when signing.</td>
+  </tr>
+  <tr>
+    <td ><b>EnvVar</b></td>
+    <td ><code>TAPLE_DIGEST_DERIVATOR</code></td>
+  </tr>
+  <tr>
+    <td ><b>Input param</b></td>
+    <td ><code>--digest-derivator</code></td>
+  </tr>
+  <tr>
+    <td ><b>settings.toml</b></td>
+    <td ><code>digest-derivator</code></td>
+  </tr>
+  <tr>
+    <td ><b>Admited values</b></td>
+    <td ><code>Blake3_256 (default)</code>, <code>Blake3_512</code>, <code>SHA2_256</code>, <code>SHA2_512</code>, <code>SHA3_256</code>, <code>SHA3_512</code></td>
+  </tr>
+</table>
+
+### Key derivator
+
+<table>
+  <tr>
+    <td ><b>Description</b></td>
+    <td >Key derivator to use when creating new key pairs.</td>
+  </tr>
+  <tr>
+    <td ><b>EnvVar</b></td>
+    <td ><code>TAPLE_KEY_DERIVATOR</code></td>
+  </tr>
+  <tr>
+    <td ><b>Input param</b></td>
+    <td ><code>--key-derivator</code></td>
+  </tr>
+  <tr>
+    <td ><b>settings.toml</b></td>
+    <td ><code>key-derivator</code></td>
   </tr>
   <tr>
     <td ><b>Admited values</b></td>
