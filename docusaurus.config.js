@@ -7,7 +7,7 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
   title: 'TAPLE',
   tagline: 'Tracking (Autonomous) of Provenance and Lifecycle Events',
   url: 'https://taple.es',
-  baseUrl: '/taple-docsite/',
+  baseUrl: '/',
   onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'warn',
   favicon: 'img/favicon.ico',
